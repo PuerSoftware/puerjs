@@ -41,7 +41,7 @@ const $$ = new function() {
 
 			eval(`window.Puer${name} = class Puer${name} extends PuerHtmlElement {}`)
 			const instance = new window[`Puer${name}`](attrs, children)
-			return instance.render()
+			return instance
 		}
 	}
 
@@ -51,14 +51,21 @@ const $$ = new function() {
 		}
 		$$[cls.name] = (props, children) => {
 			const instance = new cls(props, children)
-			return instance.render()
+			return instance
 		}
 		console.log('DEFINE', cls.name)
+	}
+
+	this.append = (selector, root) => {
+		let dom = root.render()
+		let el = document.querySelector(selector)
+		el.appendChild(dom)
 	}
 
 	for (const tag of tags) {
 		this.defineTag(tag)
 	}
+
 }
 
 class PuerComponent {
@@ -72,10 +79,21 @@ class PuerComponent {
 
 		for (let n in children) { children[n].parent = this }
 
+		this.constructor.prototype.toString = () => {
+			return `${this.className} ${JSON.stringify(this.props)}`
+		}
+
 		return new Proxy(this, {
 			get(self, prop) {
+				// if (prop === 'render') {
+				// 	console.log(self.toString())
+				// 	if (! self instanceof PuerHtmlElement) {
+				// 		return self.render().render()
+				// 	}
+				// 	return self.render()
+				// }
 				if (prop in self.props) {
-					console.log(`Getting component property: ${prop}`)
+					// console.log(`Getting component property: ${prop}`)
 					return self.props[prop]
 				} else if (self.isComputedProperty(prop)) {
 					// console.log(`Getting computed or other property: ${prop}`)
@@ -100,9 +118,12 @@ class PuerComponent {
 
 	rerender() {
 		if (this.parent) {
+			console.log('rerender at', this.constructor.name)
+
 			this.parent.rerender()
 		} else {
-			console.log('rerender at', this)
+			console.log('rerender at', this.constructor.name)
+			this.render()
 		}
 	}
 
@@ -123,16 +144,24 @@ class PuerComponent {
 	}
 }
 
+
 class PuerHtmlElement extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		console.log('Creating', this.className, props)
+		// console.log('Creating', this.className, props)
 	}
 	render() {
 		let el = document.createElement(this.className.replace('Puer', ''))
 		for (const attr in this.props) { el.setAttribute(attr, this.props[attr]) }
-		for (const child of this.children) { el.appendChild(child) }
-		if (!this.children.length) { el.innerHTML = this.text }
+		for (const child of this.children) {
+			console.log(JSON.stringify(child))
+			let dom = child
+			if (child instanceof PuerHtmlElement) {
+				dom = child.render()
+			} 
+			el.appendChild(dom)
+		}
+		if (!this.children.length && this.text) { el.innerHTML = this.text }
 		return el
 	}
 }
