@@ -40,8 +40,7 @@ const $$ = new function() {
 			// console.log(css_class, attrs, children, text)
 
 			eval(`window.Puer${name} = class Puer${name} extends PuerHtmlElement {}`)
-			const instance = new window[`Puer${name}`](attrs, children)
-			return instance
+			return new window[`Puer${name}`](attrs, children)
 		}
 	}
 
@@ -50,22 +49,37 @@ const $$ = new function() {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
 		$$[cls.name] = (props, children) => {
-			const instance = new cls(props, children)
-			return instance
+			return new cls(props, children)
 		}
-		console.log('DEFINE', cls.name)
-	}
-
-	this.append = (selector, root) => {
-		let dom = root.render()
-		let el = document.querySelector(selector)
-		el.appendChild(dom)
 	}
 
 	for (const tag of tags) {
 		this.defineTag(tag)
 	}
 
+}
+
+class Puer {
+	constructor(selector, tree) {
+		tree.parent = this
+		this.tree = tree
+		this.dom  = null
+		this.root = document.querySelector(selector)
+		this.render()
+	}
+
+	render() {
+		// console.log('Puer.render()')
+		this.dom = this.tree.render()
+		let tree = this.dom.cloneNode(true)
+		this.root.innerHTML = null
+		this.root.appendChild(tree)
+	}
+
+	rerender() {
+		// console.log('Puer.rerender()')
+		this.render()
+	}
 }
 
 class PuerComponent {
@@ -79,19 +93,8 @@ class PuerComponent {
 
 		for (let n in children) { children[n].parent = this }
 
-		this.constructor.prototype.toString = () => {
-			return `${this.className} ${JSON.stringify(this.props)}`
-		}
-
 		return new Proxy(this, {
 			get(self, prop) {
-				// if (prop === 'render') {
-				// 	console.log(self.toString())
-				// 	if (! self instanceof PuerHtmlElement) {
-				// 		return self.render().render()
-				// 	}
-				// 	return self.render()
-				// }
 				if (prop in self.props) {
 					// console.log(`Getting component property: ${prop}`)
 					return self.props[prop]
@@ -102,34 +105,33 @@ class PuerComponent {
 				} else if (self.isClassProperty(prop)) {
 					// console.log(`Getting class-defined property: ${prop}`)
 				}
-
+				// console.log('PROXY GETTER return', prop, self[prop])
 				return self[prop]
 			},
 			set(self, prop, value) {
 				if (prop in self.props) {
-					console.log(`Setting component property: ${prop}=${value}`)
+					// console.log(`Setting component property: ${prop} = ${value}`)
 					self.props[prop] = value
 					self.rerender()
+				} else {
+					self[prop] = value
 				}
 				return true  // Indicates that the property was set successfully
+			},
+			toString() {
+				return self.toString()
 			}
 		})
 	}
 
 	rerender() {
+		// console.log('rerender at', this.constructor.name)
 		if (this.parent) {
-			console.log('rerender at', this.constructor.name)
-
 			this.parent.rerender()
-		} else {
-			console.log('rerender at', this.constructor.name)
-			this.render()
 		}
 	}
 
-	render() {
-		// Your render logic here
-	}
+	render() {}  // To be defined in child classes
 
 	isOwnProperty(prop) {
 		return Object.prototype.hasOwnProperty.call(this, prop)
@@ -141,6 +143,10 @@ class PuerComponent {
 
 	isComputedProperty(prop) {
 		return !this.isOwnProperty(prop) && !this.isClassProperty(prop)
+	}
+
+	toString() {
+		return `${this.className}::${JSON.stringify(this.props)}`
 	}
 }
 
@@ -154,11 +160,12 @@ class PuerHtmlElement extends PuerComponent {
 		let el = document.createElement(this.className.replace('Puer', ''))
 		for (const attr in this.props) { el.setAttribute(attr, this.props[attr]) }
 		for (const child of this.children) {
-			console.log(JSON.stringify(child))
-			let dom = child
+			let dom
 			if (child instanceof PuerHtmlElement) {
 				dom = child.render()
-			} 
+			} else {
+				dom = child.render().render()
+			}
 			el.appendChild(dom)
 		}
 		if (!this.children.length && this.text) { el.innerHTML = this.text }
