@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="puer.js"></script>
+	<title>Puer Test</title>
+</head>
+<body>
+	<div id="test"></div>
+	<button onclick="addProp()">Add Property</button>
+	<script>
+		let custom
+		new Puer('#test',
+			div([
+				form('test-form', {id: 'test-form', onsubmit: addProp},[
+					label({for: 'username'}, 'Username'),
+					input('username', {id: 'username', name: 'username', type: 'text'}),
+					label({for: 'password'}, 'Passowrd'),
+					input('password', {id: 'password', name: 'password', type: 'password'}),
+					input('s-button', {type: 'submit', value: 'Submit'})
+				]),
+				custom = $$.Custom({foo: 'bar', text: 'foobar'})
+			])
+		)
+		function addProp() {
+			custom.text = `${Math.random()}`
+			return false
+		}
+	</script>
+	<!-- <script>
+		new Puer('#test',
+			div('foo', {id: 'bar'}, [
+				div('foo1', [
+					input({type: 'password'}),
+					button('btn', 'Click'),
+				]),
+				custom = $$.Custom({foo: 'bar', text: 'foobar'})
+			])
+		)
+		// console.log(custom)
+
+		function addProp() {
+			custom.text = 'HelloWorld'
+		}
+	</script> -->
+</body>
+</html>

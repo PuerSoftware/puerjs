@@ -37,8 +37,12 @@ const $$ = new function() {
 			if (text) {
 				attrs['text'] = text
 			}
-			// console.log(css_class, attrs, children, text)
-
+			// console.log('defineTag',css_class, attrs, children, text)
+			for (a in attrs) {
+				if (this.type(attrs[a]) == 'function') {
+					attrs[a] = attrs[a].name + '()'
+				}
+			}
 			eval(`window.Puer${name} = class Puer${name} extends PuerHtmlElement {}`)
 			return new window[`Puer${name}`](attrs, children)
 		}
@@ -49,7 +53,9 @@ const $$ = new function() {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
 		$$[cls.name] = (props, children) => {
-			return new cls(props, children)
+			let instance = new cls(props, children)
+			// console.log('defineComponent', instance)
+			return instance
 		}
 	}
 
