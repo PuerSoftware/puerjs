@@ -4,7 +4,6 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 class PuerHtmlElement extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		// console.log('Creating', this.className, props)
 	}
 
 	_define() {} // Not defining custom component

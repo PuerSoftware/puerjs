@@ -1,29 +1,10 @@
+import PuerRoot        from './class.PuerRoot.js'
+import PuerHtmlElement from './class.PuerHtmlElement.js'
+
+
 class Puer {
-	constructor(selector, tree) {
-		tree.parent = this
-		this.tree = tree
-		this.dom  = null
-		this.root = document.querySelector(selector)
-		this.render()
-		this.tree.__onMount()
-	}
-
-	render() {
-		// console.log('Puer.render()')
-		this.dom = this.tree.__render()
-		let tree = this.dom.cloneNode(true)
-		this.root.innerHTML = null
-		this.root.appendChild(this.dom) // TODO: Virutalize dom
-	}
-
-	invalidate() {
-		this.render()
-	}
-
-	/**********************************************************************************/
-
 	static root(selector, tree) {
-		return new Puer(selector, tree)
+		return new PuerRoot(selector, tree)
 	}
 
 	static type(o) {
@@ -76,12 +57,6 @@ class Puer {
 			if (text)      { attrs['text']  = text }
 
 			// console.log(`${name}("${css_class}", ${JSON.stringify(attrs)}, [${children.length}], "${text}")`)
-			
-			// for (const attr in attrs) {
-			// 	if (this.type(attrs[attr]) == 'function') {
-			// 		attrs[attr] = attrs[attr].name + '()'
-			// 	}
-			// }
 			eval(`window.Puer${name} = class Puer${name} extends PuerHtmlElement {}`)
 			return new window[`Puer${name}`](attrs, children)
 		}
@@ -91,9 +66,9 @@ class Puer {
 		if (Puer[cls.name]) {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
+		
 		Puer[cls.name] = (props, children) => {
 			let instance = new cls(props, children)
-			// console.log('defineComponent', instance)
 			return instance
 		}
 	}
@@ -105,5 +80,6 @@ class Puer {
 		return Puer._defineComponent(m)
 	}
 }
+
 
 export default Puer

@@ -1,5 +1,6 @@
 import Puer from './class.Puer.js'
 
+
 (() => {
 	const tags = (
 		'a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,'    +
@@ -16,8 +17,5 @@ import Puer from './class.Puer.js'
 	}
 })()
 
-
-alert('yes')
-
+export { default as PuerComponent} from './class.PuerComponent.js'
 export default Puer
-

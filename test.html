@@ -10,14 +10,14 @@
 	<div id="demo"></div>
 	<button onclick="addProp()">Add Property</button>
 	<script type="module">
-		import Puer from './puer.js'
+		import Puer, {PuerComponent} from './puer.js'
 
 		Puer.define(
 			class MyCustomComponent extends PuerComponent {
 				constructor(props, children) {
 					super(props, children)
 					this.state.text = this.props.text
-					this.state.testArray = ['a', 'b', 'c']
+					// this.state.testArray = ['a', 'b', 'c']
 				}
 
 				setText(s) {
@@ -25,11 +25,11 @@
 				}
 
 				render() {
-					return div({text: `--> ${this.state.testArray[0].key}`})
+					return div({text: `--> ${this.state.text}`})
 				}
 			}
 		)
-
+		let custom
 		Puer.root('#demo',
 			div([
 				form('test-form', {id: 'test-form', onsubmit: addProp},[
@@ -42,16 +42,17 @@
 					input('s-button', {type: 'submit', value: 'Submit'}),
 					br(), br()
 				]),
-				custom = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
+				custom  = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
 			])
 		)
 		function addProp(e) {
-			// custom.state.text = `${Math.random()}`
+			console.log(e)
+			custom.state.text = `${Math.random()}`
 			// custom.state.testArray[0] = {
 			// 	key: `${Math.random()}`
 			// }
+
 			if (e) {
-				console.log(e)
 				e.preventDefault()
 			}
 		}

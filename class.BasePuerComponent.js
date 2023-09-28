@@ -1,10 +1,14 @@
+import Puer       from './class.Puer.js'
 import PuerObject from './class.PuerObject.js'
+import PuerState  from './class.PuerState.js'
+import String     from './library/class.String.js'
 
 
 class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.id       = null  // TODO
+		this.id       = props.id || String.random(8)
+		props.id      = this.id
 		this.element  = null
 		this.parent   = null
 		this.children = children
@@ -18,7 +22,6 @@ class BasePuerComponent extends PuerObject {
 
 	__onMount() {
 		this.children && this.children.forEach(child => { child.__onMount() })
-		this._addEvents()
 		return this.onMount()
 	}
 
@@ -29,6 +32,7 @@ class BasePuerComponent extends PuerObject {
 			this.element = this.element.render()
 		}
 		this.element.classList.add(this.cssClass)
+		this._addEvents()
 		return this.element
 	}
 
@@ -58,7 +62,6 @@ class BasePuerComponent extends PuerObject {
 	onMount() {}
 
 	invalidate() {
-		// console.log('invalidate')
 		if (this.parent) {
 			this.parent.invalidate()
 		}

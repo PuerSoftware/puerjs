@@ -1,6 +1,6 @@
 class PuerObject {
 	constructor() {
-		this.classProperties = Object.getOwnPropertyNames(PuerComponent.prototype)
+		this.classProperties = Object.getOwnPropertyNames(this.constructor.prototype)
 		this.className       = this.constructor.name
 	}
 
