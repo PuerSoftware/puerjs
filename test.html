@@ -4,45 +4,49 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="puer.js"></script>
-	<title>Puer Test</title>
+	<title>Puer Demo</title>
 </head>
 <body>
-	<div id="test"></div>
+	<h1>Puer Demo</h1>
+	<div id="demo"></div>
 	<button onclick="addProp()">Add Property</button>
 	<script>
-		let custom
-		new Puer('#test',
+		Puer.define(
+			class Custom extends PuerComponent {
+				constructor(props, children) {
+					super(props, children)
+					this.state.text = this.props.text
+				}
+
+				setText(s) {
+					this.state.text = s
+				}
+
+				render() {
+					return div('myclass', {text: `--> ${this.state.text}`})
+				}
+			}
+		)
+
+		Puer.root('#demo',
 			div([
 				form('test-form', {id: 'test-form', onsubmit: addProp},[
 					label({for: 'username'}, 'Username'),
 					input('username', {id: 'username', name: 'username', type: 'text'}),
+					br(),
 					label({for: 'password'}, 'Passowrd'),
 					input('password', {id: 'password', name: 'password', type: 'password'}),
-					input('s-button', {type: 'submit', value: 'Submit'})
+					br(),
+					input('s-button', {type: 'submit', value: 'Submit'}),
+					br(), br()
 				]),
-				custom = $$.Custom({foo: 'bar', text: 'foobar'})
+				custom = Puer.Custom({foo: 'bar', text: 'Click the button (if you dare)'})
 			])
 		)
 		function addProp() {
-			custom.text = `${Math.random()}`
+			custom.state.text = `${Math.random()}`
 			return false
 		}
 	</script>
-	<!-- <script>
-		new Puer('#test',
-			div('foo', {id: 'bar'}, [
-				div('foo1', [
-					input({type: 'password'}),
-					button('btn', 'Click'),
-				]),
-				custom = $$.Custom({foo: 'bar', text: 'foobar'})
-			])
-		)
-		// console.log(custom)
-
-		function addProp() {
-			custom.text = 'HelloWorld'
-		}
-	</script> -->
 </body>
 </html>
