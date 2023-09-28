@@ -8,7 +8,6 @@
 <body>
 	<h1>Puer Demo</h1>
 	<div id="demo"></div>
-	<button onclick="addProp()">Add Property</button>
 	<script type="module">
 		import Puer, {PuerComponent} from './puer.js'
 
@@ -42,7 +41,7 @@
 					input('s-button', {type: 'submit', value: 'Submit'}),
 					br(), br()
 				]),
-				custom  = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
+				custom = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
 			])
 		)
 		function addProp(e) {

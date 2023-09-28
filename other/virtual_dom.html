@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Virtual DOM</title>
+</head>
+<body>
+
+<div id="container"></div>
+
+<script>
+	function renderVirtual(prevTree, newTree, container) {
+		// Simulate a diffing algorithm
+		for (let i = 0; i < newTree.length; i++) {
+			if (!prevTree[i] || prevTree[i] !== newTree[i]) {
+				if (!container.childNodes[i]) {
+					const el = document.createElement('div')
+					container.appendChild(el)
+				}
+				container.childNodes[i].textContent = newTree[i]
+			}
+		}
+	}
+
+	function virtualDomRender() {
+		const container = document.getElementById('container')
+		let prevTree = []
+
+		const newTree = []
+		for (let i = 0; i < 1000; i++) {
+			newTree.push(i % 2 === 0 ? 'Even' : 'Odd')
+		}
+
+		renderVirtual(prevTree, newTree, container)
+		prevTree = newTree.slice()
+	}
+
+	const start = performance.now()
+	for (let i = 0; i < 100; i++) {
+		virtualDomRender()
+	}
+	console.log('Time taken (Virtual DOM):', performance.now() - start)
+</script>
+
+</body>
+</html>

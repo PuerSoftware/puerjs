@@ -7,7 +7,7 @@ current_folder = os.getcwd()
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
-    file_path = os.path.join(current_folder, filename)
+    file_path = os.path.join(current_folder, '..', filename)
 
     if os.path.exists(file_path):
         mime_type, _ = mimetypes.guess_type(file_path)
