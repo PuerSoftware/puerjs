@@ -5,11 +5,12 @@ class Puer {
 		this.dom  = null
 		this.root = document.querySelector(selector)
 		this.render()
+		this.tree.__onMount()
 	}
 
 	render() {
 		// console.log('Puer.render()')
-		this.dom = this.tree.render()
+		this.dom = this.tree.__render()
 		let tree = this.dom.cloneNode(true)
 		this.root.innerHTML = null
 		this.root.appendChild(tree)
@@ -94,6 +95,7 @@ class Puer {
 	}
 }
 
+/**********************************************************************************/
 
 (() => {
 	const tags = (
@@ -111,6 +113,7 @@ class Puer {
 	}
 })()
 
+/**********************************************************************************/
 
 class PuerObject {
 	constructor() {
@@ -123,6 +126,7 @@ class PuerObject {
 	isComputedProperty(prop) { return !this.isOwnProperty(prop) && !this.isClassProperty(prop) }
 }
 
+/**********************************************************************************/
 
 class PuerState extends PuerObject {
 	constructor(onChange) {
@@ -148,21 +152,45 @@ class PuerState extends PuerObject {
 	}
 }
 
-class PuerComponent extends PuerObject {
+/**********************************************************************************/
+
+class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.parent          = null
-		this.props           = props
-		this.children        = children
-		this.state           = new PuerState(this.invalidate.bind(this))
+		this.parent   = null
+		this.props    = props
+		this.children = children
+		this.state    = new PuerState(this.invalidate.bind(this))
+		this.element  = null
+		this.cssClass = this.className.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
 
 		for (let n in children) { children[n].parent = this }
 	}
+
+	__onMount() {
+		this.children && this.children.forEach(child => { child.__onMount() })
+		return this.onMount()
+	}
+	__render() {
+		this.children && this.children.forEach(child => { child.__render() })
+		this.element = this.render()
+		if (!(this.element instanceof Element)) {
+			this.element = this.element.render()
+		}
+		this.element.classList.add(this.cssClass)
+		return this.element
+	}
+
+	onMount() {}
 
 	invalidate() {
 		if (this.parent) {
 			this.parent.invalidate()
 		}
+	}
+
+	renderChildren() {
+		return this.children && this.children.map(child => { return child.element })
 	}
 
 	render() {}  // To be defined in child classes
@@ -172,8 +200,9 @@ class PuerComponent extends PuerObject {
 	}
 }
 
+/**********************************************************************************/
 
-class PuerHtmlElement extends PuerComponent {
+class PuerHtmlElement extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
 		// console.log('Creating', this.className, props)
@@ -189,18 +218,21 @@ class PuerHtmlElement extends PuerComponent {
 			}
 		}
 		for (const child of this.children) {
-			let dom
-			if (child instanceof PuerHtmlElement) {
-				dom = child.render()
-			} else {
-				dom = child.render().render()
-			}
-			el.appendChild(dom)
+			el.appendChild(child.element)
 		}
-		if (!this.children.length && 'text' in this.props) {
+		if (this.children.length == 0 && this.props['text']) {
 			el.innerHTML = this.props['text']
 		}
 		return el
+	}
+}
+
+/**********************************************************************************/
+
+class PuerComponent extends BasePuerComponent {
+	constructor(props, children) {
+		super(props, children)
+		// console.log('Creating', this.className, props)
 	}
 }
 

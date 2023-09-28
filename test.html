@@ -12,7 +12,7 @@
 	<button onclick="addProp()">Add Property</button>
 	<script>
 		Puer.define(
-			class Custom extends PuerComponent {
+			class MyCustomComponent extends PuerComponent {
 				constructor(props, children) {
 					super(props, children)
 					this.state.text = this.props.text
@@ -23,7 +23,7 @@
 				}
 
 				render() {
-					return div('myclass', {text: `--> ${this.state.text}`})
+					return div({text: `--> ${this.state.text}`})
 				}
 			}
 		)
@@ -40,7 +40,7 @@
 					input('s-button', {type: 'submit', value: 'Submit'}),
 					br(), br()
 				]),
-				custom = Puer.Custom({foo: 'bar', text: 'Click the button (if you dare)'})
+				custom = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
 			])
 		)
 		function addProp() {
