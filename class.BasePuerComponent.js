@@ -61,6 +61,8 @@ class BasePuerComponent extends PuerObject {
 
 	onMount() {}
 
+	render() {}  // To be defined in child classes
+
 	invalidate() {
 		if (this.parent) {
 			this.parent.invalidate()
@@ -71,10 +73,13 @@ class BasePuerComponent extends PuerObject {
 		return this.children && this.children.map(child => { return child.element })
 	}
 
-	render() {}  // To be defined in child classes
-
 	toString() {
 		return `${this.className}::${JSON.stringify(this.props)}`
+	}
+
+	append(child) {
+		this.children.push(child)
+		this.invalidate()
 	}
 }
 
