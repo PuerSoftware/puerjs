@@ -3,14 +3,15 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<script src="puer.js"></script>
 	<title>Puer Demo</title>
 </head>
 <body>
 	<h1>Puer Demo</h1>
 	<div id="demo"></div>
 	<button onclick="addProp()">Add Property</button>
-	<script>
+	<script type="module">
+		import Puer from './puer.js'
+
 		Puer.define(
 			class MyCustomComponent extends PuerComponent {
 				constructor(props, children) {
@@ -44,12 +45,15 @@
 				custom = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
 			])
 		)
-		function addProp() {
+		function addProp(e) {
 			// custom.state.text = `${Math.random()}`
-			custom.state.testArray[0] = {
-				key: `${Math.random()}`
+			// custom.state.testArray[0] = {
+			// 	key: `${Math.random()}`
+			// }
+			if (e) {
+				console.log(e)
+				e.preventDefault()
 			}
-			return false
 		}
 	</script>
 </body>
