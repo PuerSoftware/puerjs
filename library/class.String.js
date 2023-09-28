@@ -10,6 +10,14 @@ class String {
         }
         return result
     }
+
+    static capitalize(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+
+    static camelToDashedSnake(s) {
+        return s.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+    }
 }
 
 export default String

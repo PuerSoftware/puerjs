@@ -1,10 +1,11 @@
-import PuerRoot        from './class.PuerRoot.js'
+import PuerApp         from './class.PuerApp.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
-
+import String          from './library/class.String.js'
 
 class Puer {
-	static root(selector, tree) {
-		return new PuerRoot(selector, tree)
+	static app(selector, tree) {
+		Puer.App = new PuerApp(selector, tree)
+		return Puer.App
 	}
 
 	static type(o) {
@@ -49,16 +50,17 @@ class Puer {
 		}
 		window[name] = (...args) => {
 			// console.log(name, ...args)
-			let [ css_class, attrs,    children, text     ] = Puer.arganize(args,
+			let [ cssClass,  attrs,    children, text     ] = Puer.arganize(args,
 				[ 'string',  'object', 'array',  'string' ],
 				[ '',        {},       [],       ''       ]
 			)
-			if (css_class) { attrs['class'] = css_class + (attrs['class'] ? ' ' + attrs['class'] : '')}
+			if (cssClass)  { attrs['class'] = cssClass + (attrs['cssClass'] ? ' ' + attrs['cssClass'] : '')}
 			if (text)      { attrs['text']  = text }
 
 			// console.log(`${name}("${css_class}", ${JSON.stringify(attrs)}, [${children.length}], "${text}")`)
-			eval(`window.Puer${name} = class Puer${name} extends PuerHtmlElement {}`)
-			return new window[`Puer${name}`](attrs, children)
+			let className = 'Puer' + String.capitalize(name)
+			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
+			return new window[`${className}`](attrs, children)
 		}
 	}
 
@@ -78,6 +80,18 @@ class Puer {
 			return Puer._defineTag(m)
 		}
 		return Puer._defineComponent(m)
+	}
+
+	static addComponent(component) {
+		Puer.App.components[component.id] = component
+	}
+
+	static getComponent(id) {
+		return Puer.App.components[id]
+	}
+
+	static removeComponent(id) {
+		delete Puer.App.components[id]
 	}
 }
 

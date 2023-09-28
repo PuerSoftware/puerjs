@@ -9,7 +9,7 @@ class PuerHtmlElement extends BasePuerComponent {
 	_define() {} // Not defining custom component
 
 	render() {
-		let el = document.createElement(this.className.replace('Puer', ''))
+		let el = document.createElement(this.className.replace('Puer', '').toLowerCase())
 		for (const prop in this.props) {
 			if (prop !== 'text') {
 				el.setAttribute(prop, this.props[prop])

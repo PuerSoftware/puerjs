@@ -11,11 +11,13 @@ class BasePuerComponent extends PuerObject {
 		props.id      = this.id
 		this.element  = null
 		this.parent   = null
-		this.children = children
+		this.children = children || []
 		this.events   = {}
 		this.props    = this._processProps(props)
 		this.state    = new PuerState(this.invalidate.bind(this))
-		this.cssClass = this.className.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
+		this.cssClass = String.camelToDashedSnake(this.className)
+
+		this._listenerMap = new WeakMap()
 
 		for (let n in children) { children[n].parent = this }
 	}
@@ -23,6 +25,18 @@ class BasePuerComponent extends PuerObject {
 	__onMount() {
 		this.children && this.children.forEach(child => { child.__onMount() })
 		return this.onMount()
+	}
+
+	__register() {
+		let components = {}
+		components[this.id] = this
+		if (this.children.length) {
+			this.children.forEach(child => { 
+				components = Object.assign(components, child.__register())
+			})
+		} 
+		
+		return components
 	}
 
 	__render() {
@@ -38,7 +52,7 @@ class BasePuerComponent extends PuerObject {
 
 	_addEvents() {
 		for (const name in this.events) {
-			this.element.addEventListener(name, this.events[name])
+			this._on(name, this.events[name])
 		}
 	}
 
@@ -59,7 +73,25 @@ class BasePuerComponent extends PuerObject {
 		return _props
 	}
 
-	onMount() {}
+	_on(name, f, options) {
+		let _f = function(event) {
+			event.component = this
+			return f.call(this, event)
+		}
+		_f = _f.bind(this)
+		this._listenerMap.set(f, _f)
+		this.element.addEventListener(name, _f, options)
+	}
+
+	_off(name, f, options) {
+		if (this._listenerMap.has(listener)) {
+			const _f = this._listenerMap.get(f)
+			this.element.removeEventListener(name, _f, options)
+			this._listenerMap.delete(f)
+		}
+	}
+ 
+	onMount() {} // To be defined in child classes
 
 	render() {}  // To be defined in child classes
 
@@ -69,17 +101,39 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	renderChildren() {
-		return this.children && this.children.map(child => { return child.element })
-	}
+	// renderChildren() {
+	// 	return this.children && this.children.map(child => { return child.element })
+	// }
 
 	toString() {
 		return `${this.className}::${JSON.stringify(this.props)}`
 	}
 
 	append(child) {
+		child.parent = this
 		this.children.push(child)
 		this.invalidate()
+	}
+
+	prepend(child) {
+		child.parent = this
+		this.children.unshift(child)
+		this.invalidate()
+	}
+
+	addCssClass(name) {
+		this.element.classList.add(name)
+	}
+
+	removeCssClass(name) {
+		this.element.classList.remove(name)
+	}
+
+	attr(name, value=null) {
+		if (value) {
+			this.element.addAttribute(name, value)
+		}
+		return this.element.getAttribute(name)
 	}
 }
 
