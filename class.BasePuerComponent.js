@@ -19,7 +19,7 @@ class BasePuerComponent extends PuerObject {
 
 		this._listenerMap = new WeakMap()
 
-		for (let n in children) { children[n].parent = this }
+		for (let child of this.children) { child.parent = this }
 	}
 
 	__onMount() {
@@ -100,10 +100,6 @@ class BasePuerComponent extends PuerObject {
 			this.parent.invalidate()
 		}
 	}
-
-	// renderChildren() {
-	// 	return this.children && this.children.map(child => { return child.element })
-	// }
 
 	toString() {
 		return `${this.className}::${JSON.stringify(this.props)}`
