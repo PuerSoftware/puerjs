@@ -134,22 +134,35 @@ class PuerState extends PuerObject {
 		this.state    = {}
 		this.onChange = onChange
 
-		return new Proxy(this, {
-			get(that, name) {
-				// console.log('get state', name, that.state[name])
-				return name in that.state
-					? that.state[name]
-					: null
+		return PuerState._makeObservable(this.state, this.onChange)
+	}
+
+	static _makeObservable(obj, onChange) {
+		return new Proxy(obj, {
+			get(target, prop) {
+				const value = target[prop];
+				if (typeof value === 'object' && value !== null) {
+					return PuerState._makeObservable(value, onChange)  // Recursive call for nested object
+				}
+				return value
 			},
-			set(that, name, value) {
-				// console.log('set state', name, value)
-				let change = name in that.state
-				that.state[name] = value
-				if (change) { that.onChange(name, value) }
+			set(target, prop, value) {
+				let isChange = prop in target
+				target[prop] = value
+	
+				// Additional condition for arrays
+				if (Array.isArray(target)) {
+					isChange = true  // Array changes are always considered as changes
+				}
+	
+				if (isChange) {
+					onChange(prop, value)
+				}
+	
 				return true
 			}
-		})
-	}
+			})
+		}
 }
 
 /**********************************************************************************/
@@ -184,6 +197,7 @@ class BasePuerComponent extends PuerObject {
 	onMount() {}
 
 	invalidate() {
+		// console.log('invalidate')
 		if (this.parent) {
 			this.parent.invalidate()
 		}

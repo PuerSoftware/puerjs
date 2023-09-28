@@ -16,6 +16,7 @@
 				constructor(props, children) {
 					super(props, children)
 					this.state.text = this.props.text
+					this.state.testArray = ['a', 'b', 'c']
 				}
 
 				setText(s) {
@@ -23,7 +24,7 @@
 				}
 
 				render() {
-					return div({text: `--> ${this.state.text}`})
+					return div({text: `--> ${this.state.testArray[0].key}`})
 				}
 			}
 		)
@@ -44,7 +45,10 @@
 			])
 		)
 		function addProp() {
-			custom.state.text = `${Math.random()}`
+			// custom.state.text = `${Math.random()}`
+			custom.state.testArray[0] = {
+				key: `${Math.random()}`
+			}
 			return false
 		}
 	</script>
