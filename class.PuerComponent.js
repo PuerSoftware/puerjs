@@ -5,6 +5,10 @@ class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
 	}
+
+	checkType() {
+		return this.className
+	}
 }
 
 

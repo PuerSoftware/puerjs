@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<title>Puer Demo</title>
+</head>
+<body>
+	<h1>Puer Demo</h1>
+	<div id="demo"></div>
+	<script type="module">
+		import Puer, {PuerComponent} from './puer.js'
+		window.Puer = Puer;
+		window.PuerComponent = PuerComponent;
+	</script>
+	<script type="text/babel">
+		/** @jsx dom */
+
+		window.Puer = Puer;
+		window.PuerComponent = PuerComponent;
+
+		function dom(type, props = {}, ...children) {
+			console.log(type, props)
+			if (props && 'class' in props) {
+				props.className = props.class;
+				delete props.class;
+			}
+
+			if (typeof type === 'function') {
+				return type(props, children);
+			}
+
+			if (typeof type === 'string') {
+				if (type.startsWith('Puer.')) {
+					return `${type}(${JSON.stringify(props)}, [${children.join(', ')}])`;
+				}
+
+				// // If tag starts with an uppercase letter, treat as a Puer component
+				// else if (/^[A-Z]/.test(type)) {
+				// 	return `window.Puer.${type}(${JSON.stringify(props)}, [${children.join(', ')}])`;
+				// }
+				
+				// Normal HTML tags
+				return `${type}(${JSON.stringify(props)}, [${children.join(', ')}])`;
+			}
+		}
+
+
+		Puer.define(
+			class MyCustomComponent extends PuerComponent {
+				constructor(props, children) {
+					super(props, children)
+					this.state.text = this.props.text
+					// this.state.testArray = ['a', 'b', 'c']
+				}
+
+				setText(s) {
+					this.state.text = s
+				}
+
+				render() {
+					return div({text: `--> ${this.state.text}`})
+				}
+			}
+		)
+
+		function App() {
+			return (
+				<div>
+					<form class="test-form" id="test-form" onSubmit={addProp}>
+						<label htmlFor="username">Username</label>
+						<input id="username" name="username" type="text" />
+						<label htmlFor="password">Password</label>
+						<input id="password" name="password" type="password" />
+						<input type="submit" value="Submit" />
+					</form>
+					<Puer.MyCustomComponent foo="bar" text="Click the button (if you dare)" />
+				</div>
+			);
+		}
+
+		console.log(App());
+
+		// // let custom
+		// Puer.app('#demo',
+		// 	<div>
+		// 		<form id="test-form" onSubmit={addProp}>
+		// 			<label htmlFor="username">Username</label>
+		// 			<input id="username" name="username" type="text" />
+		// 			<label htmlFor="password">Password</label>
+		// 			<input id="password" name="password" type="password" />
+		// 			<input type="submit" value="Submit" />
+		// 		</form>
+		// 		<MyCustomComponent foo="bar" text="Click the button (if you dare)" />
+		// 	</div>
+		// )
+		function addProp(e) {
+			console.log(e)
+			custom.state.text = `${Math.random()}`
+			// custom.state.testArray[0] = {
+			// 	key: `${Math.random()}`
+			// }
+
+			if (e) {
+				e.preventDefault()
+			}
+		}
+	</script>
+</body>
+</html>

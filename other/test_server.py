@@ -1,9 +1,12 @@
-from flask import Flask, send_file, abort
 import os
+import sys
 import mimetypes
+
+from flask import Flask, send_file, abort
 
 app = Flask(__name__)
 current_folder = os.getcwd()
+entry_file = 'test.html'
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
@@ -17,8 +20,9 @@ def serve_file(filename):
 
 @app.route('/')
 def serve_index():
-    index_path = os.path.join(current_folder, 'test.html')
+    index_path = os.path.join(current_folder, entry_file)
     return send_file(index_path, mimetype='text/html')
 
 if __name__ == '__main__':
+    entry_file = sys.argv[1]
     app.run(debug=True)
