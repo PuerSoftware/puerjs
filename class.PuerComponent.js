@@ -9,6 +9,10 @@ class PuerComponent extends BasePuerComponent {
 	checkType() {
 		return this.className
 	}
+
+	isCustom() {
+		return true
+	}
 }
 
 

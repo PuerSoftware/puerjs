@@ -12,7 +12,7 @@ class PuerApp {
 
 	render() {
 		this.components = this.tree.__register()
-		console.log(this.components)
+		// console.log(this.components)
 		this.dom = this.tree.__render()
 		// let tree = this.dom.cloneNode(true)
 		this.root.innerHTML = null

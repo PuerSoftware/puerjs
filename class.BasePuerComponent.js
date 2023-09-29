@@ -10,6 +10,7 @@ class BasePuerComponent extends PuerObject {
 		this.id       = props.id || String.random(8)
 		props.id      = this.id
 		this.element  = null
+		this.root     = this
 		this.parent   = null
 		this.children = children || []
 		this.events   = {}
@@ -43,6 +44,7 @@ class BasePuerComponent extends PuerObject {
 		this.children && this.children.forEach(child => { child.__render() })
 		this.element = this.render()
 		if (!(this.element instanceof Element)) {
+			this.root    = this.element
 			this.element = this.element.render()
 		}
 		this.element.classList.add(this.cssClass)
@@ -78,7 +80,8 @@ class BasePuerComponent extends PuerObject {
 			event.component = this
 			return f.call(this, event)
 		}
-		_f = _f.bind(this)
+		console.log('_on', this.getCustomParent())
+		_f = _f.bind(this.getCustomParent())
 		this._listenerMap.set(f, _f)
 		this.element.addEventListener(name, _f, options)
 	}
@@ -130,6 +133,21 @@ class BasePuerComponent extends PuerObject {
 			this.element.addAttribute(name, value)
 		}
 		return this.element.getAttribute(name)
+	}
+
+	isCustom() {
+		return false
+	}
+
+	getCustomParent() {
+		if (this.isCustom()) {
+			return this
+		} else {
+			if (this.parent) {
+				return this.parent.getCustomParent()
+			}
+			return null
+		}
 	}
 }
 
