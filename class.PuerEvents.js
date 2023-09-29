@@ -1,0 +1,84 @@
+
+
+class PuerEvents extends EventTarget {
+	static instance = null
+
+	constructor() {
+		if (!PuerEvents.instance) {
+			super()
+			this.socket       = null
+			this.cache        = []
+			this.is_connected = false
+			this._listenerMap = new WeakMap()
+			PuerEvents.instance   = this
+		}
+		return PuerEvents.instance
+	}
+
+	_cache(name, data) {
+		this.cache.push({
+			name : name,
+			data : data
+		})
+	}
+
+	_uncache() {
+		this.cache.forEach((event) => {
+			this.send(event.name, event.data)
+		})
+		this.cache = []
+	}
+
+	connect(endpoint) {
+		this.socket = new WebSocket(endpoint)
+
+		this.socket.onopen = () => {
+			this.is_connected = true
+			this._uncache()
+		}
+
+		this.socket.onmessage = (event) => {
+			const data = JSON.parse(event.data)
+			console.log('Received event: ', data.name, data.data)
+	
+			if (Array.isArray(data.data)) {
+				data.data.forEach((item) => {
+					this.trigger(data.name, item)
+				})
+			} else {
+				this.trigger(data.name, data.data)
+			}
+			this.send(Event.SYS_CONFIRM, {name: data.name, key: data.key})
+		}
+
+		this.socket.onclose = (event) => {
+			console.log('WebSocket connection closed:', event)
+		}
+	}
+
+	once(name, f) {
+		this.on(name, f, true)
+	}
+	on(name, f, once=false) {
+		let _f = (e) => { return f(e.type, e.detail) }
+		this._listenerMap.set(f, _f)
+		this.addEventListener(name, _f, {once: once})
+	}
+	off(name, f) {
+		let _f = this._listenerMap.get(f)
+		this.removeEventListener(name, _f)
+	}
+	trigger(name, data) {
+		this.dispatchEvent(new CustomEvent(name, { detail: data }))
+	}
+	send(name, data) {
+		if (!this.is_connected) {
+			this._cache(event, data)
+		} else {
+			console.log('Sent event:', event, data)
+			this.socket.send(JSON.stringify({ 'name' : event, 'data' : data }))
+		}
+	}
+}
+
+export default PuerEvents

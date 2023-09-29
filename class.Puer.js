@@ -1,10 +1,12 @@
 import PuerApp         from './class.PuerApp.js'
+import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import String          from './library/class.String.js'
 
 class Puer {
 	static app(selector, tree) {
-		Puer.App = new PuerApp(selector, tree)
+		Puer.App    = new PuerApp(selector, tree)
+		Puer.Events = new PuerEvents()
 		return Puer.App
 	}
 
