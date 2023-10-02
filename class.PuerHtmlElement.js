@@ -9,19 +9,19 @@ class PuerHtmlElement extends BasePuerComponent {
 	_define() {} // Not defining custom component
 
 	render() {
-		let el = document.createElement(this.className.replace('Puer', '').toLowerCase())
+		this.element = document.createElement(this.className.replace('Puer', '').toLowerCase())
 		for (const prop in this.props) {
 			if (prop !== 'text') {
-				el.setAttribute(prop, this.props[prop])
+				this.element.setAttribute(prop, this.props[prop])
 			}
 		}
 		for (const child of this.children) {
-			el.appendChild(child.element)
+			this.element.appendChild(child.element)
 		}
 		if (this.children.length == 0 && this.props['text']) {
-			el.innerHTML = this.props['text']
+			this.element.innerHTML = this.props['text']
 		}
-		return el
+		return this.element
 	}
 }
 

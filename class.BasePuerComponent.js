@@ -1,4 +1,5 @@
 import Puer       from './class.Puer.js'
+import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerObject from './class.PuerObject.js'
 import PuerState  from './class.PuerState.js'
 import String     from './library/class.String.js'
@@ -7,21 +8,24 @@ import String     from './library/class.String.js'
 class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.id       = props.id || String.random(8)
-		props.id      = this.id
-		this.element  = null
-		this.root     = this
-		this.parent   = null
-		this.children = children || []
-		this.events   = {}
-		this.props    = this._processProps(props)
-		this.state    = new PuerState(this.invalidate.bind(this))
-		this.cssClass = String.camelToDashedSnake(this.className)
+		this.id            = props.id || String.random(8)
+		props.id           = this.id
+		this.element       = null
+		this.rootComponent = this
+		this.parent        = null
+		this.children      = children || []
+		this.events        = {}
+		this.props         = this._processProps(props)
+		this.state         = new PuerState(this.invalidate.bind(this))
+		this.cssClass      = String.camelToDashedSnake(this.className)
 
-		this._listenerMap = new WeakMap()
+		this._listenerMap  = new WeakMap()
 
 		for (let child of this.children) { child.parent = this }
 	}
+
+	/********************** FRAMEWORK **********************/
+
 
 	__onMount() {
 		this.children && this.children.forEach(child => { child.__onMount() })
@@ -42,15 +46,20 @@ class BasePuerComponent extends PuerObject {
 
 	__render() {
 		this.children && this.children.forEach(child => { child.__render() })
-		this.element = this.render()
-		if (!(this.element instanceof Element)) {
-			this.root    = this.element
-			this.element = this.element.render()
+		let rendered = this.render()
+		if (!(rendered instanceof Element)) {
+			this.rootComponent        = rendered
+			this.rootComponent.parent = this
+			this.rootComponent.__render()
+
+			this.element = rendered.render()
+			this.element.classList.add(this.cssClass)
 		}
-		this.element.classList.add(this.cssClass)
 		this._addEvents()
 		return this.element
 	}
+
+	/*********************** PRIVATE ***********************/
 
 	_addEvents() {
 		for (const name in this.events) {
@@ -76,11 +85,11 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, options) {
+		let targetComponent = this
 		let _f = function(event) {
-			event.component = this
+			event.targetComponent = targetComponent
 			return f.call(this, event)
 		}
-		console.log('_on', this.getCustomParent())
 		_f = _f.bind(this.getCustomParent())
 		this._listenerMap.set(f, _f)
 		this.element.addEventListener(name, _f, options)
@@ -93,10 +102,33 @@ class BasePuerComponent extends PuerObject {
 			this._listenerMap.delete(f)
 		}
 	}
- 
-	onMount() {} // To be defined in child classes
+	
+	/*********************** GETTERS ***********************/
 
-	render() {}  // To be defined in child classes
+	getCustomParent() {
+		if (this.isCustom()) {
+			return this
+		} else {
+			if (this.parent) {
+				return this.parent.getCustomParent()
+			}
+			return null
+		}
+	}
+	
+	/*********************** CASTING ***********************/
+
+	toString() {
+		return `${this.className}::${JSON.stringify(this.props)}`
+	}
+
+	/********************** PREDICATE **********************/
+
+	isCustom() {
+		return false
+	}
+
+	/********************** DIRECTIVE **********************/
 
 	invalidate() {
 		if (this.parent) {
@@ -104,9 +136,12 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	toString() {
-		return `${this.className}::${JSON.stringify(this.props)}`
-	}
+	/************************ HOOKS ************************/
+
+	onMount() {} // To be defined in child classes
+	render() {}  // To be defined in child classes
+
+	/********************* DOM METHODS *********************/
 
 	append(child) {
 		child.parent = this
@@ -118,6 +153,14 @@ class BasePuerComponent extends PuerObject {
 		child.parent = this
 		this.children.unshift(child)
 		this.invalidate()
+	}
+
+	findAll(selector) {
+		return this.element.querySelectorAll(selector)
+	}
+
+	find(selector) {
+		return this.element.querySelector(selector)
 	}
 
 	addCssClass(name) {
@@ -133,21 +176,6 @@ class BasePuerComponent extends PuerObject {
 			this.element.addAttribute(name, value)
 		}
 		return this.element.getAttribute(name)
-	}
-
-	isCustom() {
-		return false
-	}
-
-	getCustomParent() {
-		if (this.isCustom()) {
-			return this
-		} else {
-			if (this.parent) {
-				return this.parent.getCustomParent()
-			}
-			return null
-		}
 	}
 }
 

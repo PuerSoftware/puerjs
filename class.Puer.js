@@ -4,11 +4,22 @@ import PuerHtmlElement from './class.PuerHtmlElement.js'
 import String          from './library/class.String.js'
 
 class Puer {
-	static app(selector, tree) {
-		Puer.App    = new PuerApp(selector, tree)
+
+	static init(events=[]) {
+		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
+		for (const event of events) {
+			Puer.Event[event] = event
+		}
+		Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
+		return Puer
+	}
+
+	static app(selector, tree) {
+		Puer.App = new PuerApp(selector, tree)
 		return Puer.App
 	}
+
 
 	static type(o) {
 		if (o == null) { return o + '' }

@@ -1,3 +1,4 @@
+import Puer from './class.Puer.js'
 
 
 class PuerEvents extends EventTarget {
@@ -48,7 +49,7 @@ class PuerEvents extends EventTarget {
 			} else {
 				this.trigger(data.name, data.data)
 			}
-			this.send(Event.SYS_CONFIRM, {name: data.name, key: data.key})
+			this.send(Puer.Event.SYS_CONFIRM, {name: data.name, key: data.key})
 		}
 
 		this.socket.onclose = (event) => {
@@ -73,10 +74,10 @@ class PuerEvents extends EventTarget {
 	}
 	send(name, data) {
 		if (!this.is_connected) {
-			this._cache(event, data)
+			this._cache(name, data)
 		} else {
-			console.log('Sent event:', event, data)
-			this.socket.send(JSON.stringify({ 'name' : event, 'data' : data }))
+			console.log('Sent event:', name, data)
+			this.socket.send(JSON.stringify({ 'name' : name, 'data' : data }))
 		}
 	}
 }
