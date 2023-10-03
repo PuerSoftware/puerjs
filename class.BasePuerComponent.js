@@ -8,8 +8,7 @@ import String     from './library/class.String.js'
 class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.id            = props.id || String.random(8)
-		props.id           = this.id
+		this.id            = null
 		this.element       = null
 		this.rootComponent = this
 		this.parent        = null
@@ -26,37 +25,13 @@ class BasePuerComponent extends PuerObject {
 
 	/********************** FRAMEWORK **********************/
 
+	__render() {
+		this.children && this.children.forEach(child => { child.__render() })
+	}
 
 	__onMount() {
 		this.children && this.children.forEach(child => { child.__onMount() })
 		return this.onMount()
-	}
-
-	__register() {
-		let components = {}
-		components[this.id] = this
-		if (this.children.length) {
-			this.children.forEach(child => { 
-				components = Object.assign(components, child.__register())
-			})
-		} 
-		
-		return components
-	}
-
-	__render() {
-		this.children && this.children.forEach(child => { child.__render() })
-		let rendered = this.render()
-		if (!(rendered instanceof Element)) {
-			this.rootComponent        = rendered
-			this.rootComponent.parent = this
-			this.rootComponent.__render()
-
-			this.element = rendered.render()
-			this.element.classList.add(this.cssClass)
-		}
-		this._addEvents()
-		return this.element
 	}
 
 	/*********************** PRIVATE ***********************/
@@ -102,7 +77,7 @@ class BasePuerComponent extends PuerObject {
 			this._listenerMap.delete(f)
 		}
 	}
-	
+
 	/*********************** GETTERS ***********************/
 
 	getCustomParent() {

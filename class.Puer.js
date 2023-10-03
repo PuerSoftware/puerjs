@@ -1,6 +1,7 @@
 import PuerApp         from './class.PuerApp.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
+import PuerConstructor from './class.PuerConstructor.js'
 import String          from './library/class.String.js'
 
 class Puer {
@@ -16,7 +17,8 @@ class Puer {
 	}
 
 	static app(selector, tree) {
-		Puer.App = new PuerApp(selector, tree)
+		Puer.App = new PuerApp(selector)
+		Puer.App.init(tree)
 		return Puer.App
 	}
 
@@ -63,17 +65,16 @@ class Puer {
 		}
 		window[name] = (...args) => {
 			// console.log(name, ...args)
-			let [ cssClass,  attrs,    children, text     ] = Puer.arganize(args,
+			let [ cssClass,  props,    children, text     ] = Puer.arganize(args,
 				[ 'string',  'object', 'array',  'string' ],
 				[ '',        {},       [],       ''       ]
 			)
-			if (cssClass)  { attrs['class'] = cssClass + (attrs['cssClass'] ? ' ' + attrs['cssClass'] : '')}
-			if (text)      { attrs['text']  = text }
-
-			// console.log(`${name}("${css_class}", ${JSON.stringify(attrs)}, [${children.length}], "${text}")`)
+			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
+			if (text)      { props['text']  = text }
+			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}], "${text}")`)
 			let className = 'Puer' + String.capitalize(name)
 			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
-			return new window[`${className}`](attrs, children)
+			return new PuerConstructor(window[className], props, children, false)
 		}
 	}
 
@@ -83,8 +84,7 @@ class Puer {
 		}
 		
 		Puer[cls.name] = (props, children) => {
-			let instance = new cls(props, children)
-			return instance
+			return new PuerConstructor(cls, props, children, true)
 		}
 	}
 

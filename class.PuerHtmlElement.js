@@ -6,7 +6,22 @@ class PuerHtmlElement extends BasePuerComponent {
 		super(props, children)
 	}
 
+	/********************** FRAMEWORK **********************/
+
+	__render() {
+		super.__render()
+		if (!this.element) {
+			this.element = this.render()
+			this._addEvents()
+		}
+		return this.element
+	}
+
+	/*********************** PRIVATE ***********************/
+
 	_define() {} // Not defining custom component
+	
+	/************************ HOOKS ************************/
 
 	render() {
 		this.element = document.createElement(this.className.replace('Puer', '').toLowerCase())
