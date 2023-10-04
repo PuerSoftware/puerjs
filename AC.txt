@@ -1,0 +1,31 @@
+1. First Render
+2. Subsequent Render
+ Must work EXACTLY as First Render
+3. Register
+ MyCustomComp.Ul1.Li1.Comp2.H1.remove()
+ MyCustomComp.Ul1.Li1.Comp2.H1.append(Div('', 'haha'))
+4. State Update
+
+5. Dynamic adding children
+6. Events
+7. User of Component Class interface should not account(know) for(of) changes that happen on re-render
+8. State must not change between renders
+    Store a state in PuerApp, hashed by component id.
+
+
+class MyComp {
+ constructor() {
+  Puer.Events.on(MY_EVENT, _onMyEvent)
+ }
+
+ _onMyEvent() {}
+
+ render() {
+  return div({text: this.state.myText}, [
+   Comp2()
+  ])
+ }
+}
+
+
+MyComp.state.MyText = 'haha1'

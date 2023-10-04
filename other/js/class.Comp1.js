@@ -8,10 +8,22 @@ class Comp1 extends PuerComponent {
 		super(props)
 	}
 
+	init() {
+		Puer.Events.send('Event', {})
+	}
+
+	_onClick(e) {
+
+	}
+
+	myFunc() {
+		this.root.onclick = null
+	}
+
 	render() {
-		return div('', [
+		return div('', {onclick: this._onClick}, [
 			Puer.Comp2([
-				h1('', 'H1')
+				h1('', {myProp: this.props.myProp}, 'H1')
 			])
 		])
 	}
