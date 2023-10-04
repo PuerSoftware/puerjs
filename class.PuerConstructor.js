@@ -13,45 +13,56 @@ class PuerConstructor extends PuerObject {
         this.xPath    = null
     }
 
-    /********************** FRAMEWORK **********************/
-
-    __register(xPath, app, parent, index=0) {
-        this.xPath = xPath + '>' + this.cls.name + `[${index}]`
-        this.props.id === 6 && console.log('__register', this.xPath, this.cls.name, this.props.id)
-
-        if (this.xPath in app.components) {
-            this.props.id === 6 && console.log('if', this.xPath, this.cls.name, this.props.id, app.components)
-            this.instance = app.components[this.xPath]
+    _getInstance(id) {
+        let instance = null
+        if (id in Puer.App.components) {
+            console.log('found in app.components', id)
+            instance = Puer.App.components[id]
+            // this.children = instance.children
+            // this.props    = instance.props
+            console.log('CHILDREN', this.children)
         } else {
-            this.props.id === 6 && console.log('else', this.xPath, this.cls.name, this.props.id)
+            console.log('NOT found in app.components', id)
+            instance          = new this.cls(this.props)
+            instance.id       = id
+            instance.isCustom = this.isCustom
 
-            this.instance = new this.cls(this.props, this.children)
-            this.instance.parent = parent
-            
-            app.components[this.xPath] = this.instance
-            this.instance.id = this.xPath
-            this.props.id === 6 && console.log('else___', app.components)
+            Puer.App.components[id] = instance
         }
-        if (this.isCustom) {
-            const rootConstructor = this.instance.render()
-            rootConstructor.__register(this.xPath, app, this.instance)
-        }
-
-        this.children && this.children.forEach((child, index) => {
-            child.__register(this.xPath, app, this.instance, index)
-        })
+        return instance
     }
 
-    __render(xPath, index=0) {
-        
-        this.xPath = xPath + '>' + this.cls.name + `[${index}]`
-        console.log('__render', Puer.App.components, this.xPath)
-        this.instance = Puer.App.components[this.xPath]
-        if (!this.instance) {
-            console.log(this.props.id)
-            console.log(this.cls.name)
+    /********************** FRAMEWORK **********************/
+
+    __register(xPath='PuerApp', index=0) {
+        this.xPath    = xPath + '>' + this.cls.name + `[${index}]`
+        this.instance = this._getInstance(this.xPath)
+
+        if (this.isCustom) {
+            this.instance.children    = this.children
+            const rootConstructor     = this.instance.render()
+            this.instance.root        = rootConstructor.__register(this.xPath)
+            this.instance.root.parent = this.instance
+        } else {
+            this.instance.root = this.instance
+            this.children && this.children.forEach((child, index) => {
+                // if (child.__register) {
+                    const childInstance = child.__register(this.xPath, index)
+                    this.instance.children.push(childInstance)
+                    childInstance.parent = this.instance
+                // }
+            })
         }
-        return this.instance.__render(this.xPath)
+
+        this.instance.isCustom = this.isCustom
+        this.instance.shadow   = this
+
+        // console.log(this.xPath, this.instance)
+        return this.instance
+    }
+
+    __render() {
+        return this.instance.__render()
     }
 
     __onMount() {

@@ -2,31 +2,23 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 
 
 class PuerComponent extends BasePuerComponent {
-	constructor(props, children) {
-		super(props, children)
+	constructor(props) {
+		super(props)
 	}
 
 	/********************** FRAMEWORK **********************/
 
 	__render() {
-		super.__render()
-		if (!this.element) {
-			this.rootConstructor        = this.render()
-			this.rootConstructor.parent = this
-			this.rootConstructor.__render()
-
-			let rendered = this.rootConstructor
-			if (!(this.rootConstructor  instanceof Element)) {
-				rendered = this.rootConstructor.render()
-			}
-			this.element = rendered
-			this.element.classList.add(this.cssClass)
-			
-			this._addEvents()
-		} else {
-			this.rootConstructor.__render()
-		}
+		// console.log('__render', this.id, this.parent)
+		this.element = this.root.__render()
+		this.element.classList.add(this.cssClass)
+		this._addEvents()
 		return this.element
+	}
+
+	__onMount() {
+		this.root.__onMount()
+		this.onMount()
 	}
 
 	/********************** PREDICATE **********************/
@@ -37,6 +29,21 @@ class PuerComponent extends BasePuerComponent {
 
 	isCustom() {
 		return true
+	}
+
+	/********************* DOM METHODS *********************/
+
+	append(child) {
+		child.parent = this
+		this.children.push(child)
+		console.log(this.children)
+		this.invalidate()
+	}
+
+	prepend(child) {
+		child.parent = this
+		this.children.unshift(child)
+		this.invalidate()
 	}
 }
 

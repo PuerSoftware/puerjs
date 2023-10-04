@@ -14,35 +14,18 @@ class BasePuerComponent extends PuerObject {
 		this.parent        = null
 		this.children      = children || []
 		this.events        = {}
-		this.props         = this._processProps(props)
+		this.props         = this._filterProps(props)
 		this.state         = new PuerState(this.invalidate.bind(this))
 		this.cssClass      = String.camelToDashedSnake(this.className)
+		this.shadow        = null
+		this.isCustom      = false
 
 		this._listenerMap  = new WeakMap()
-
-		for (let child of this.children) { child.parent = this }
-	}
-
-	/********************** FRAMEWORK **********************/
-
-	__render() {
-		this.children && this.children.forEach(child => { child.__render() })
-	}
-
-	__onMount() {
-		this.children && this.children.forEach(child => { child.__onMount() })
-		return this.onMount()
 	}
 
 	/*********************** PRIVATE ***********************/
 
-	_addEvents() {
-		for (const name in this.events) {
-			this._on(name, this.events[name])
-		}
-	}
-
-	_processProps(props) {
+	_filterProps(props) {
 		const _props = {}
 		for (const name in props) {
 			const value = props[name]
@@ -59,7 +42,14 @@ class BasePuerComponent extends PuerObject {
 		return _props
 	}
 
+	_addEvents() {
+		for (const name in this.events) {
+			this._on(name, this.events[name])
+		}
+	}
+
 	_on(name, f, options) {
+		console.log('_on', name, f)
 		let targetComponent = this
 		let _f = function(event) {
 			event.targetComponent = targetComponent
@@ -81,7 +71,7 @@ class BasePuerComponent extends PuerObject {
 	/*********************** GETTERS ***********************/
 
 	getCustomParent() {
-		if (this.isCustom()) {
+		if (this.isCustom) {
 			return this
 		} else {
 			if (this.parent) {
@@ -94,7 +84,7 @@ class BasePuerComponent extends PuerObject {
 	/*********************** CASTING ***********************/
 
 	toString() {
-		return `${this.className}::${JSON.stringify(this.props)}`
+		return `${this.className}(${JSON.stringify(this.props).slice(1, -1)})`
 	}
 
 	/********************** PREDICATE **********************/
@@ -114,21 +104,9 @@ class BasePuerComponent extends PuerObject {
 	/************************ HOOKS ************************/
 
 	onMount() {} // To be defined in child classes
-	render() {}  // To be defined in child classes
+	render()  {} // To be defined in child classes
 
 	/********************* DOM METHODS *********************/
-
-	append(child) {
-		child.parent = this
-		this.children.push(child)
-		this.invalidate()
-	}
-
-	prepend(child) {
-		child.parent = this
-		this.children.unshift(child)
-		this.invalidate()
-	}
 
 	findAll(selector) {
 		return this.element.querySelectorAll(selector)

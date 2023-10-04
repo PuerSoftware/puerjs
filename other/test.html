@@ -10,51 +10,10 @@
 	<div id="demo"></div>
 	<script type="module">
 		import Puer, {PuerComponent} from './puer.js'
+		import Comp1                 from './other/js/class.Comp1.js'
 
-		Puer.define(
-			class MyCustomComponent extends PuerComponent {
-				constructor(props, children) {
-					super(props, children)
-					this.state.text = this.props.text
-					// this.state.testArray = ['a', 'b', 'c']
-				}
-
-				setText(s) {
-					this.state.text = s
-				}
-
-				render() {
-					return div({text: `--> ${this.state.text}`})
-				}
-			}
-		)
-		let custom
-		Puer.app('#demo',
-			div([
-				form('test-form', {id: 'test-form', onsubmit: addProp},[
-					label({for: 'username'}, 'Username'),
-					input('username', {id: 'username', name: 'username', type: 'text'}),
-					br(),
-					label({for: 'password'}, 'Passowrd'),
-					input('password', {id: 'password', name: 'password', type: 'password'}),
-					br(),
-					input('s-button', {type: 'submit', value: 'Submit'}),
-					br(), br()
-				]),
-				custom = Puer.MyCustomComponent({foo: 'bar', text: 'Click the button (if you dare)'})
-			])
-		)
-		function addProp(e) {
-			console.log(e)
-			custom.state.text = `${Math.random()}`
-			// custom.state.testArray[0] = {
-			// 	key: `${Math.random()}`
-			// }
-
-			if (e) {
-				e.preventDefault()
-			}
-		}
+		Puer.init().app('#demo', Puer.Comp1())
+		
 	</script>
 </body>
 </html>

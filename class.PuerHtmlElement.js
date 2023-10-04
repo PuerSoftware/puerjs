@@ -2,19 +2,29 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 
 
 class PuerHtmlElement extends BasePuerComponent {
-	constructor(props, children) {
-		super(props, children)
+	constructor(props) {
+		super(props)
+		this.tagName = this.className.replace('Puer', '').toLowerCase()
 	}
 
 	/********************** FRAMEWORK **********************/
 
 	__render() {
-		super.__render()
-		if (!this.element) {
-			this.element = this.render()
-			this._addEvents()
+		// console.log('__render', this.id, this.parent)
+		this.element = this.render()
+		if (this.children) {
+			for (const child of this.children) {
+				child.__render()
+				this.element.appendChild(child.element)
+			}
 		}
+		this._addEvents()
 		return this.element
+	}
+
+	__onMount() {
+		this.children && this.children.forEach(child => { child.__onMount() })
+		return this.onMount()
 	}
 
 	/*********************** PRIVATE ***********************/
@@ -24,19 +34,29 @@ class PuerHtmlElement extends BasePuerComponent {
 	/************************ HOOKS ************************/
 
 	render() {
-		this.element = document.createElement(this.className.replace('Puer', '').toLowerCase())
+		const el = document.createElement(this.tagName)
+		if (this.props.hasOwnProperty('text')) {
+			el.appendChild(document.createTextNode(this.props.text))
+			delete this.props.text
+		}
 		for (const prop in this.props) {
-			if (prop !== 'text') {
-				this.element.setAttribute(prop, this.props[prop])
-			}
+			el.setAttribute(prop, this.props[prop])
 		}
-		for (const child of this.children) {
-			this.element.appendChild(child.element)
-		}
-		if (this.children.length == 0 && this.props['text']) {
-			this.element.innerHTML = this.props['text']
-		}
-		return this.element
+		return el
+	}
+
+	/********************* DOM METHODS *********************/
+
+	append(child) {
+		child.parent = this
+		this.children.push(child)
+		this.invalidate()
+	}
+
+	prepend(child) {
+		child.parent = this
+		this.children.unshift(child)
+		this.invalidate()
 	}
 }
 

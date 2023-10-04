@@ -5,12 +5,14 @@ import mimetypes
 from flask import Flask, send_file, abort
 
 app = Flask(__name__)
-current_folder = os.getcwd()
+current_folder = os.path.dirname(os.getcwd())
+print('pwd', current_folder)
 entry_file = 'test.html'
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
-    file_path = os.path.join(current_folder, '..', filename)
+    file_path = os.path.join(current_folder, filename)
+    print(file_path)
 
     if os.path.exists(file_path):
         mime_type, _ = mimetypes.guess_type(file_path)

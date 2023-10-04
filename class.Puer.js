@@ -83,7 +83,11 @@ class Puer {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
 		
-		Puer[cls.name] = (props, children) => {
+		Puer[cls.name] = (...args) => {
+			let [props,    children ] = Puer.arganize(args,
+				['object', 'array'  ],
+				[{},       []       ]
+			)
 			return new PuerConstructor(cls, props, children, true)
 		}
 	}
