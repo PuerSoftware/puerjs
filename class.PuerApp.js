@@ -36,7 +36,7 @@ class PuerApp {
 		if (root.isCustom) {
 			s += this.toString(root.root, indent + '  ')
 		} else {
-			for (let child of root.children) {
+			for (let child of root.childInstances) {
 				s += this.toString(child, indent + '  ')
 			}
 		}

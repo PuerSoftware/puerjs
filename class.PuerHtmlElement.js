@@ -5,6 +5,7 @@ class PuerHtmlElement extends BasePuerComponent {
 	constructor(props) {
 		super(props)
 		this.tagName = this.className.replace('Puer', '').toLowerCase()
+		this.childInstances = null
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -12,10 +13,10 @@ class PuerHtmlElement extends BasePuerComponent {
 	__render() {
 		// console.log('__render', this.id, this.parent)
 		this.element = this.render()
-		if (this.children) {
-			for (const child of this.children) {
-				child.__render()
-				this.element.appendChild(child.element)
+		if (this.childInstances) {
+			for (const childInstance of this.childInstances) {
+				childInstance.__render()
+				this.element.appendChild(childInstance.element)
 			}
 		}
 		this._addEvents()
