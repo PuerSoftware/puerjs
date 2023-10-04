@@ -8,20 +8,28 @@ import String     from './library/class.String.js'
 class BasePuerComponent extends PuerObject {
 	constructor(props) {
 		super()
-		this.id            = null
-		this.element       = null
-		this.rootComponent = this
-		this.parent        = null
-		this.children      = []
-		this.events        = {}
-		this.props         = this._filterProps(props)
-		this.state         = new PuerState(this.invalidate.bind(this))
-		this.cssClass      = String.camelToDashedSnake(this.className)
-		this.shadow        = null
-		this.isCustom      = false
+		this.id              = null
+		this.element         = null
+		this.rootComponent   = this
+		this.parent          = null
+		this.children        = []
+		this.events          = {}
+		this.props           = this._filterProps(props)
+		this.state           = new PuerState(this.invalidate.bind(this))
+		this.state.wrapState = false
+		this.cssClass        = String.camelToDashedSnake(this.className)
+		this.shadow          = null
+		this.isCustom        = false
 
 		this._listenerMap  = new WeakMap()
 
+		let _render = this.render
+		this.render = () => {
+			this.state.wrapState = true
+			let tree = _render.bind(this)()
+			this.state.wrapState = false
+			return tree
+		}
 		// console.log('CONSTRUCTOR', this.props)
 	}
 
@@ -31,7 +39,7 @@ class BasePuerComponent extends PuerObject {
 		const _props = {}
 		for (const name in props) {
 			const value = props[name]
-			console.log('PROP FILTER', typeof props[name], typeof value, value)
+			// console.log('PROP FILTER', typeof props[name], typeof value, value)
 			if (Puer.isFunction(value) && !value.isGetterFunction) {
 				if (!name.startsWith('on')) {
 					throw `Non-event function found in props (${name}): event names must start with "on".`

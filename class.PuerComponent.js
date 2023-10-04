@@ -45,7 +45,7 @@ class PuerComponent extends BasePuerComponent {
 	append(child) {
 		child.parent = this
 		this.children.push(child)
-		console.log(this.children)
+		// console.log(this.children)
 		this.invalidate()
 	}
 

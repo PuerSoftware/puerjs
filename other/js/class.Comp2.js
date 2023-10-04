@@ -9,8 +9,8 @@ class Comp2 extends PuerComponent {
 	}
 
 	onClick() {
-		console.log('click', this)
-		this.append(div('', {onclick: this.changeState}, 'dynamically appended'))
+		// console.log('click', this)
+		this.append(div('', {onclick: this.changeState, text: this.state.liText}))
 	}
 
 	changeState() {
@@ -18,7 +18,6 @@ class Comp2 extends PuerComponent {
 	}
 
 	render() {
-		console.log('RENDER', this.state.liText)
 		return ul('', [
 			div(this.children),
 			li('', {text: this.state.liText}),

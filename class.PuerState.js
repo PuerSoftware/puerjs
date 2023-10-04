@@ -6,19 +6,25 @@ class PuerState extends PuerObject {
 		super()
 		this.state    = {}
 		this.onChange = onChange
-
 		return PuerState._makeObservable(this.state, this.onChange)
 	}
 
 	static _makeObservable(obj, onChange) {
 		return new Proxy(obj, {
 			get(target, prop) {
-				const value = target[prop];
+				const value = target[prop]
 				if (typeof value === 'object' && value !== null) {
 					return PuerState._makeObservable(value, onChange)  // Recursive call for nested object
 				}
-				console.log('STATE GET', value)
-				return value
+				// console.log('STATE GET', value, target.wrapState)
+
+				let getterFunction = () => {
+					// console.log('getterFunction', target[prop])
+					return target[prop]
+				}
+				getterFunction.isGetterFunction = true
+
+				return target.wrapState ? getterFunction : value
 			},
 			set(target, prop, value) {
 				let isChange = prop in target
@@ -34,8 +40,8 @@ class PuerState extends PuerObject {
 	
 				return true
 			}
-			})
-		}
+		})
+	}
 }
 
 export default PuerState

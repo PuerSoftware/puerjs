@@ -31,14 +31,23 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_define() {} // Not defining custom component
 
+	_dereference(prop) {
+		if (prop.isGetterFunction) {
+			return prop()
+		}
+		return prop
+	}
+
 	_renderDom() {
 		const el = document.createElement(this.tagName)
 		if (this.props.hasOwnProperty('text')) {
-			el.appendChild(document.createTextNode(this.props.text))
+			const p = this._dereference(this.props.text)
+			// console.log('_dereference', p, this.props.text.isGetterFunction)
+			el.appendChild(document.createTextNode(p))
 		}
 		for (const prop in this.props) {
 			if (prop != 'text') {
-				el.setAttribute(prop, this.props[prop])
+				el.setAttribute(prop, this._dereference(this.props[prop]))
 			}
 		}
 		return el
