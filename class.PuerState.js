@@ -17,6 +17,7 @@ class PuerState extends PuerObject {
 				if (typeof value === 'object' && value !== null) {
 					return PuerState._makeObservable(value, onChange)  // Recursive call for nested object
 				}
+				console.log('STATE GET', value)
 				return value
 			},
 			set(target, prop, value) {

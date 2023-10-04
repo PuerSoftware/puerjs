@@ -15,10 +15,14 @@ class PuerApp {
 		console.log('MOUNTED:', this.dom)
 	}
 
+	has(component_id) {
+		return this.components.hasOwnProperty(component_id)
+	}
+
 	render() {
 		console.log(this.components)
 		this.rootComponent = this.rootConstructor.__register()
-		console.log(this.components)
+		// console.log(this.components)
 		console.log('REGISTERED:', this.toString())
 		// console.log('PuerApp.render()', this.rootConstructor.instance)
 		// console.log(this.components)
@@ -36,8 +40,8 @@ class PuerApp {
 		if (root.isCustom) {
 			s += this.toString(root.root, indent + '  ')
 		} else {
-			for (let child of root.childInstances) {
-				s += this.toString(child, indent + '  ')
+			for (let child of root.children) {
+				s += this.toString(child.instance, indent + '  ')
 			}
 		}
 		return s

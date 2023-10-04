@@ -13,15 +13,15 @@ class PuerConstructor extends PuerObject {
         this.xPath    = null
     }
 
+    /*********************** PRIVATE ***********************/
+
     _getInstance(id) {
         let instance = null
-        if (id in Puer.App.components) {
-            console.log('found in app.components', id)
-            instance = Puer.App.components[id]
-            // this.children = instance.children
-            console.log('CHILDREN', this.children)
+        if (Puer.App.has(id)) {
+            instance      = Puer.App.components[id]
+            this.children = instance.children
+            // console.log('Found in components', instance.id, instance.props, instance)
         } else {
-            console.log('NOT found in app.components', id)
             instance          = new this.cls(this.props)
             instance.id       = id
             instance.isCustom = this.isCustom
@@ -40,15 +40,13 @@ class PuerConstructor extends PuerObject {
         this.instance.children = this.children
 
         if (this.isCustom) {
-            const rootConstructor     = this.instance.render()
-            this.instance.root        = rootConstructor.__register(this.xPath)
+            this.tree                 = this.tree || this.instance.render()
+            this.instance.root        = this.tree.__register(this.xPath)
             this.instance.root.parent = this.instance
         } else {
             this.instance.root = this.instance
-            this.instance.childInstances = []
             this.children && this.children.forEach((child, index) => {
                 const childInstance = child.__register(this.xPath, index)
-                this.instance.childInstances.push(childInstance)
                 childInstance.parent = this.instance
             })
         }

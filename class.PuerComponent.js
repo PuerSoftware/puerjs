@@ -21,6 +21,15 @@ class PuerComponent extends BasePuerComponent {
 		this.onMount()
 	}
 
+	/*********************** PRIVATE ***********************/
+
+	_renderDom() {
+		if (this.root) {
+			return this.root._renderDom()
+		}
+		return null
+	}
+
 	/********************** PREDICATE **********************/
 
 	checkType() {

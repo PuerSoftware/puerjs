@@ -6,13 +6,13 @@ import String     from './library/class.String.js'
 
 
 class BasePuerComponent extends PuerObject {
-	constructor(props, children) {
+	constructor(props) {
 		super()
 		this.id            = null
 		this.element       = null
 		this.rootComponent = this
 		this.parent        = null
-		this.children      = children || []
+		this.children      = []
 		this.events        = {}
 		this.props         = this._filterProps(props)
 		this.state         = new PuerState(this.invalidate.bind(this))
@@ -21,6 +21,8 @@ class BasePuerComponent extends PuerObject {
 		this.isCustom      = false
 
 		this._listenerMap  = new WeakMap()
+
+		// console.log('CONSTRUCTOR', this.props)
 	}
 
 	/*********************** PRIVATE ***********************/
@@ -29,7 +31,8 @@ class BasePuerComponent extends PuerObject {
 		const _props = {}
 		for (const name in props) {
 			const value = props[name]
-			if (Puer.isFunction(value)) {
+			console.log('PROP FILTER', typeof props[name], typeof value, value)
+			if (Puer.isFunction(value) && !value.isGetterFunction) {
 				if (!name.startsWith('on')) {
 					throw `Non-event function found in props (${name}): event names must start with "on".`
 				}
@@ -49,7 +52,7 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, options) {
-		console.log('_on', name, f)
+		// console.log('_on', name, f)
 		let targetComponent = this
 		let _f = function(event) {
 			event.targetComponent = targetComponent

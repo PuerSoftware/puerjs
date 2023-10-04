@@ -5,18 +5,17 @@ class PuerHtmlElement extends BasePuerComponent {
 	constructor(props) {
 		super(props)
 		this.tagName = this.className.replace('Puer', '').toLowerCase()
-		this.childInstances = null
 	}
 
 	/********************** FRAMEWORK **********************/
 
 	__render() {
 		// console.log('__render', this.id, this.parent)
-		this.element = this.render()
-		if (this.childInstances) {
-			for (const childInstance of this.childInstances) {
-				childInstance.__render()
-				this.element.appendChild(childInstance.element)
+		this.element = this._renderDom()
+		if (this.children) {
+			for (const child of this.children) {
+				child.instance.__render()
+				this.element.appendChild(child.instance.element)
 			}
 		}
 		this._addEvents()
@@ -31,19 +30,24 @@ class PuerHtmlElement extends BasePuerComponent {
 	/*********************** PRIVATE ***********************/
 
 	_define() {} // Not defining custom component
+
+	_renderDom() {
+		const el = document.createElement(this.tagName)
+		if (this.props.hasOwnProperty('text')) {
+			el.appendChild(document.createTextNode(this.props.text))
+		}
+		for (const prop in this.props) {
+			if (prop != 'text') {
+				el.setAttribute(prop, this.props[prop])
+			}
+		}
+		return el
+	}
 	
 	/************************ HOOKS ************************/
 
 	render() {
-		const el = document.createElement(this.tagName)
-		if (this.props.hasOwnProperty('text')) {
-			el.appendChild(document.createTextNode(this.props.text))
-			delete this.props.text
-		}
-		for (const prop in this.props) {
-			el.setAttribute(prop, this.props[prop])
-		}
-		return el
+		return this
 	}
 
 	/********************* DOM METHODS *********************/

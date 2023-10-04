@@ -1,16 +1,19 @@
-1. First Render
-2. Subsequent Render
+--- 1. First Render
+--- 2. Subsequent Render
  Must work EXACTLY as First Render
 3. Register
  MyCustomComp.Ul1.Li1.Comp2.H1.remove()
  MyCustomComp.Ul1.Li1.Comp2.H1.append(Div('', 'haha'))
 4. State Update
 
-5. Dynamic adding children
-6. Events
+5. Dynamic adding children (check events etc)
+--- 6.0 Dom Events
+6.1 Custom Events
 7. User of Component Class interface should not account(know) for(of) changes that happen on re-render
 8. State must not change between renders
     Store a state in PuerApp, hashed by component id.
+9. Prepend should not break id–hash integrity
+10. Component tree is saved on register and updated on Prepend, append and rendered ONLY from this SST
 
 
 class MyComp {
