@@ -19,7 +19,6 @@ class PuerState extends PuerObject {
 				// console.log('STATE GET', value, target.wrapState)
 
 				let getterFunction = () => {
-					// console.log('getterFunction', target[prop])
 					return target[prop]
 				}
 				getterFunction.isGetterFunction = true
@@ -29,14 +28,10 @@ class PuerState extends PuerObject {
 			set(target, prop, value) {
 				let isChange = prop in target
 				target[prop] = value
-	
-				if (Array.isArray(target)) {
-					isChange = true 
-				}
-	
-				if (isChange) {
-					onChange(prop, value)
-				}
+
+				if (prop == 'wrapState')   { return true }
+				if (Array.isArray(target)) { isChange = true }
+				if (isChange)              { onChange(prop, value) }
 	
 				return true
 			}

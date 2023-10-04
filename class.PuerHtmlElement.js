@@ -32,7 +32,7 @@ class PuerHtmlElement extends BasePuerComponent {
 	_define() {} // Not defining custom component
 
 	_dereference(prop) {
-		if (prop.isGetterFunction) {
+		if (prop && prop.isGetterFunction) {
 			return prop()
 		}
 		return prop
