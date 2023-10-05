@@ -22,4 +22,4 @@ class FormInput extends PuerComponent {
 }
 
 Puer.UI.define(FormInput)
-export { FormInput as PuerUiFormInput }
+export default FormInput//{ FormInput as PuerUiFormInput }

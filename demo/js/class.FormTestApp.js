@@ -1,7 +1,7 @@
 import Puer, {PuerComponent} from '../../puer.js'
 import {PuerUiForm}          from '../../ui/class.Form.js'
 import {PuerUiFormField}     from '../../ui/class.FormField.js'
-import {PuerUiFormInput}     from '../../ui/class.FormInput.js'
+import FormInput     from '../../ui/class.FormInput.js'
 
 
 /*
