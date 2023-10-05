@@ -32,16 +32,4 @@ class Form extends PuerComponent {
 
 
 Puer.UI.define(Form)
-export { Form as PuerUiForm }
-
-/*
-<div class="form" autocomplete="off">
-    <h1>{{ form.title }}</h1>
-    <p>{{ form.subtitle }}</p>
-    <form action="{{ form.action }}" method="{{ form.method }}" enctype="{{ form.enctype }}">
-		{% csrf_token %}
-		{{ form }}
-	<p><button type="submit" class="btn btn-primary">{{ form.button_caption }}</button></p>
-    </form>
-</div>
-*/
+export {Form as PuerUiForm}

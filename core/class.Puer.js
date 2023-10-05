@@ -127,7 +127,6 @@ class PuerClass extends PuerNamespace {
 
 const Puer = new PuerClass()
 
-Puer.defineNamespace('UI')
 export default Puer
 
 

@@ -11,7 +11,7 @@ class FormField extends PuerComponent {
     }
 
     onMount() {
-        if (!this.$$.PuerForm) {
+        if (!this.$$.Form) {
             throw new PuerError('Must have PuerForm in a parent chain', 'PuerFormInput', 'render')
         }
     }

@@ -11,8 +11,8 @@ class FormInput extends PuerComponent {
     }
     
     onMount() {
-        if (!this.$$.PuerForm) {
-            throw new PuerError('Must have PuerForm in a parent chain', 'PuerFormInput', 'render')
+        if (!this.$$.Form) {
+            throw new PuerError('Must have Form in a parent chain', this.className, 'render')
         }
     }
 
@@ -22,4 +22,4 @@ class FormInput extends PuerComponent {
 }
 
 Puer.UI.define(FormInput)
-export default FormInput//{ FormInput as PuerUiFormInput }
+export { FormInput as PuerUiFormInput }
