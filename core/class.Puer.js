@@ -2,7 +2,7 @@ import PuerApp         from './class.PuerApp.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
-import String          from './library/class.String.js'
+import String          from '../library/class.String.js'
 
 class Puer {
 
@@ -93,7 +93,7 @@ class Puer {
 			)
 			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
 			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
-			let className = 'Puer' + String.capitalize(name)
+			let className = 'PuerTag' + String.capitalize(name)
 			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
 			return new PuerConstructor(window[className], props, children, false)
 		}

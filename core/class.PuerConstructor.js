@@ -1,5 +1,6 @@
 import PuerObject from './class.PuerObject.js'
 import Puer       from './class.Puer.js'
+import PuerError  from './class.PuerError.js'
 
 
 class PuerConstructor extends PuerObject {
@@ -41,6 +42,9 @@ class PuerConstructor extends PuerObject {
 
         if (this.isCustom) {
             this.tree                 = this.tree || this.instance.render()
+            if (!this.tree) {
+                throw new PuerError('Must return component tree', this.instance.className, 'render')
+            }
             this.instance.root        = this.tree.__register(this.xPath)
             this.instance.root.parent = this.instance
         } else {

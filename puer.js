@@ -1,4 +1,4 @@
-import Puer from './class.Puer.js'
+import Puer from './core/class.Puer.js'
 
 
 (() => {
@@ -17,5 +17,6 @@ import Puer from './class.Puer.js'
 	}
 })()
 
-export { default as PuerComponent} from './class.PuerComponent.js'
+export { default as PuerError     } from './core/class.PuerError.js'
+export { default as PuerComponent } from './core/class.PuerComponent.js'
 export default Puer

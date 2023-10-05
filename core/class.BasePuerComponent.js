@@ -4,7 +4,7 @@ import PuerObject      from './class.PuerObject.js'
 import PuerState       from './class.PuerState.js'
 import PuerChain       from './class.PuerChain.js'
 import PuerParentChain from './class.PuerParentChain.js'
-import String          from './library/class.String.js'
+import String          from '../library/class.String.js'
 
 
 class BasePuerComponent extends PuerObject {
