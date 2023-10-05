@@ -4,7 +4,7 @@ import Puer, {
 } from '../puer.js'
 
 
-class PuerFormField extends PuerComponent {
+class FormField extends PuerComponent {
     constructor(props) {
         Puer.default(props, 'label', 'Field label')
         super(props)
@@ -25,5 +25,5 @@ class PuerFormField extends PuerComponent {
     }
 }
 
-Puer.define(PuerFormField)
-export default PuerFormField
+Puer.UI.define(FormField)
+export { FormField as PuerUiFormField }

@@ -30,8 +30,9 @@ class Form extends PuerComponent {
     }
 }
 
+
 Puer.UI.define(Form)
-// export default PuerForm
+export { Form as PuerUiForm }
 
 /*
 <div class="form" autocomplete="off">

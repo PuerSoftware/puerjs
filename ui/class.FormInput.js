@@ -4,7 +4,7 @@ import Puer, {
 } from '../puer.js'
 
 
-class PuerFormInput extends PuerComponent {
+class FormInput extends PuerComponent {
     constructor(props) {
         super(props)
 
@@ -21,5 +21,5 @@ class PuerFormInput extends PuerComponent {
     }
 }
 
-Puer.define(PuerFormInput)
-export default PuerFormInput
+Puer.UI.define(FormInput)
+export { FormInput as PuerUiFormInput }

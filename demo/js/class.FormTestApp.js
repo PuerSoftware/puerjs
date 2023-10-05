@@ -1,7 +1,7 @@
 import Puer, {PuerComponent} from '../../puer.js'
-import PuerFormField         from '../../ui/class.PuerFormField.js'
-import PuerFormInput         from '../../ui/class.PuerFormInput.js'
-import PuerForm              from '../../ui/class.PuerForm.js'
+import {PuerUiForm}          from '../../ui/class.Form.js'
+import {PuerUiFormField}     from '../../ui/class.FormField.js'
+import {PuerUiFormInput}     from '../../ui/class.FormInput.js'
 
 
 /*
@@ -25,12 +25,12 @@ class FormTestApp extends PuerComponent {
 	}
 
 	render() {
-		return Puer.PuerForm({}, [
-			Puer.PuerFormField({label: 'Username'}, [
-				Puer.PuerFormInput({type: 'text'}),
+		return Puer.UI.Form({}, [
+			Puer.UI.FormField({label: 'Username'}, [
+				Puer.UI.FormInput({type: 'text'}),
 			]),
-			Puer.PuerFormField({label: 'Password'}, [
-				Puer.PuerFormInput({type: 'password'}),
+			Puer.UI.FormField({label: 'Password'}, [
+				Puer.UI.FormInput({type: 'password'}),
 			])
 		])
 	}
