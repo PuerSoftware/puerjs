@@ -9,8 +9,7 @@ class Comp2 extends PuerComponent {
 	}
 
 	onClick() {
-		// console.log('click', this)
-		this.append(div('', {onclick: this.changeState, text: this.state.liText}))
+		this.append(() => div({onclick: this.changeState, text: this.state.liText}))
 	}
 
 	changeState() {
@@ -18,10 +17,10 @@ class Comp2 extends PuerComponent {
 	}
 
 	render() {
-		return ul('', [
+		return ul([
 			div(this.children),
-			li('', {text: this.state.liText}),
-			li('', 'haha2'),
+			li({text: this.state.liText}),
+			li({text: 'haha2'}),
 			button({onClick: this.onClick}, 'Add Item')
 		])
 	}

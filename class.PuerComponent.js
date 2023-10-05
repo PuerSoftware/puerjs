@@ -1,3 +1,4 @@
+import Puer       from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 
 
@@ -43,13 +44,16 @@ class PuerComponent extends BasePuerComponent {
 	/********************* DOM METHODS *********************/
 
 	append(child) {
+		child = Puer.defer(child)
 		child.parent = this
 		this.children.push(child)
 		// console.log(this.children)
+
 		this.invalidate()
 	}
 
 	prepend(child) {
+		child = Puer.defer(child)
 		child.parent = this
 		this.children.unshift(child)
 		this.invalidate()

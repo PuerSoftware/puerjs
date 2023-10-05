@@ -1,3 +1,4 @@
+import Puer       from './class.Puer.js'
 import PuerObject from './class.PuerObject.js'
 
 
@@ -23,7 +24,7 @@ class PuerState extends PuerObject {
 				}
 				getterFunction.isGetterFunction = true
 
-				return target.wrapState ? getterFunction : value
+				return Puer.deferred ? getterFunction : value
 			},
 			set(target, prop, value) {
 				let isChange = prop in target

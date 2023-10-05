@@ -23,6 +23,28 @@ class Puer {
 	}
 
 
+	static defer(f, owner=window, args=undefined) {
+		let alias = f
+		if (typeof f === 'function') {
+			Puer.deferred = true
+			alias = alias.apply(owner, args)
+			Puer.deferred = false
+		}
+		return alias
+	}
+
+
+	static deferrer(f, owner=window, args=undefined) {
+		let alias = f
+		return () => {
+			Puer.deferred = true
+			let result = alias.apply(owner, args)
+			Puer.deferred = false
+			return result
+		}
+	}
+
+
 	static type(o) {
 		if (o == null) { return o + '' }
 		const class2type = {}

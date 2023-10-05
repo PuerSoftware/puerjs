@@ -22,15 +22,7 @@ class BasePuerComponent extends PuerObject {
 		this.isCustom        = false
 
 		this._listenerMap  = new WeakMap()
-
-		let _render = this.render
-		this.render = () => {
-			this.state.wrapState = true
-			let tree = _render.apply(this, arguments)
-			this.state.wrapState = false
-			return tree
-		}
-		// console.log('CONSTRUCTOR', this.props)
+		this.render = Puer.deferrer(this.render, this)
 	}
 
 	/*********************** PRIVATE ***********************/
