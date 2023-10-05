@@ -21,10 +21,10 @@ class BasePuerComponent extends PuerObject {
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
+		this.render          = Puer.deferrer(this.render, this)
 		this.$               = new PuerChain(this)
 
 		this._listenerMap = new WeakMap()
-		this.render       = Puer.deferrer(this.render, this)
 	}
 
 	/*********************** PRIVATE ***********************/

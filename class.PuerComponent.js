@@ -1,4 +1,4 @@
-import Puer       from './class.Puer.js'
+import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 
 

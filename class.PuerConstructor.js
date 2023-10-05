@@ -1,5 +1,5 @@
 import PuerObject from './class.PuerObject.js'
-import Puer from './class.Puer.js'
+import Puer       from './class.Puer.js'
 
 
 class PuerConstructor extends PuerObject {
