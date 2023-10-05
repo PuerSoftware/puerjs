@@ -21,9 +21,9 @@ class Comp1 extends PuerComponent {
 	}
 
 	render() {
-		return div('', {onclick: this._onClick}, [
+		return div('', {onclick: this._onClick, text: 'Some Div'}, [
 			Puer.Comp2([
-				h1('', {myProp: 'test'}, 'H1')
+				h1('', {myProp: 'test', text: 'H1'})
 			])
 		])
 	}

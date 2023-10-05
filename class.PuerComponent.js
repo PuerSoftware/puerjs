@@ -32,16 +32,6 @@ class PuerComponent extends BasePuerComponent {
 		return null
 	}
 
-	/********************** PREDICATE **********************/
-
-	checkType() {
-		return this.className
-	}
-
-	isCustom() {
-		return true
-	}
-
 	/********************* DOM METHODS *********************/
 
 	append(child) {

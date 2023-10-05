@@ -3,6 +3,7 @@ import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerObject      from './class.PuerObject.js'
 import PuerState       from './class.PuerState.js'
 import PuerChain       from './class.PuerChain.js'
+import PuerParentChain from './class.PuerParentChain.js'
 import String          from './library/class.String.js'
 
 
@@ -23,6 +24,7 @@ class BasePuerComponent extends PuerObject {
 		this.isCustom        = false
 		this.render          = Puer.deferrer(this.render, this)
 		this.$               = new PuerChain(this)
+		this.$$              = new PuerParentChain(this)
 
 		this._listenerMap = new WeakMap()
 	}
@@ -33,7 +35,6 @@ class BasePuerComponent extends PuerObject {
 		const _props = {}
 		for (const name in props) {
 			const value = props[name]
-			// console.log('PROP FILTER', typeof props[name], typeof value, value)
 			if (Puer.isFunction(value) && !value.isGetterFunction) {
 				if (!name.startsWith('on')) {
 					throw `Non-event function found in props (${name}): event names must start with "on".`
@@ -90,12 +91,6 @@ class BasePuerComponent extends PuerObject {
 
 	toString() {
 		return `${this.className}(${JSON.stringify(this.props).slice(1, -1)})`
-	}
-
-	/********************** PREDICATE **********************/
-
-	isCustom() {
-		return false
 	}
 
 	/********************** DIRECTIVE **********************/

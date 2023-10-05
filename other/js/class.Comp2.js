@@ -17,10 +17,13 @@ class Comp2 extends PuerComponent {
 	}
 
 	showChain() {
-		console.log(this.$.ul.$.button[0].props.text)
+		console.log(this.$.ul.$.button[0])
+		console.log(this.$$.Comp1)
+		console.log(this.$$.Comp1.$.div.toString())
 	}
 
 	render() {
+		console.log(this.children, div())
 		return ul([
 			div(this.children),
 			li({text: this.state.liText}),
