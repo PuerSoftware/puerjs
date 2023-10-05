@@ -23,6 +23,13 @@ class Puer {
 	}
 
 
+	static default(o, propName, defaultValue) {
+		if (!o.hasOwnProperty(propName)) {
+			o[propName] = defaultValue
+		}
+	}
+
+
 	static defer(f, owner=window, args=undefined) {
 		let alias = f
 		if (typeof f === 'function') {

@@ -9,6 +9,7 @@ class PuerFormInput extends PuerComponent {
         super(props)
 
     }
+    
     onMount() {
         if (!this.$$.PuerForm) {
             throw new PuerError('Must have PuerForm in a parent chain', 'PuerFormInput', 'render')
