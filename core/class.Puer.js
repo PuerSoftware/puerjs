@@ -1,10 +1,11 @@
+import PuerNamespace   from './class.PuerNamespace.js'
 import PuerApp         from './class.PuerApp.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
 import String          from '../library/class.String.js'
 
-class Puer {
+class Puer extends PuerNamespace {
 
 	static init(events=[]) {
 		Puer.Event  = {}
@@ -20,6 +21,11 @@ class Puer {
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
 		return Puer.App
+	}
+
+
+	static namespace(name) {
+		Puer[name] = {}
 	}
 
 
@@ -140,5 +146,5 @@ class Puer {
 	}
 }
 
-
+Puer.defineNamespace('UI')
 export default Puer

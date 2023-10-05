@@ -1,7 +1,7 @@
 import Puer, {PuerComponent} from '../puer.js'
 
 
-class PuerForm extends PuerComponent {
+class Form extends PuerComponent {
     constructor(props) {
         Puer.default(props, 'title',         'Form')
         Puer.default(props, 'subtitle',      'Please fill out this form')
@@ -30,8 +30,8 @@ class PuerForm extends PuerComponent {
     }
 }
 
-Puer.define(PuerForm)
-export default PuerForm
+Puer.UI.define(Form)
+// export default PuerForm
 
 /*
 <div class="form" autocomplete="off">
