@@ -23,7 +23,6 @@ class Comp2 extends PuerComponent {
 	}
 
 	render() {
-		console.log(this.children, div())
 		return ul([
 			div(this.children),
 			li({text: this.state.liText}),

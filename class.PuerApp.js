@@ -1,9 +1,14 @@
-class PuerApp {
+import PuerObject from './class.PuerObject.js'
+
+
+class PuerApp extends PuerObject {
     constructor(selector) {
+    	super()
 		this.components    = {}
 		this.rootComponent = null
 		this.dom           = null
 		this.rootElement   = document.querySelector(selector)
+		this.chainName     = this.className
 		// console.log('App', this.components)
 	}
 
@@ -26,7 +31,7 @@ class PuerApp {
 		// console.log('REGISTERED:', this.toString())
 		// console.log('PuerApp.render()', this.rootConstructor.instance)
 		// console.log(this.components)
-		this.dom = this.rootConstructor.__render('PuerApp')
+		this.dom = this.rootConstructor.__render(this.className)
 		// let tree = this.dom.cloneNode(true)
 		this.rootElement.innerHTML = null
 		this.rootElement.appendChild(this.dom) // TODO: Virutalize dom
