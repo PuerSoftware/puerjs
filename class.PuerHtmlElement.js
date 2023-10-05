@@ -4,7 +4,8 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 class PuerHtmlElement extends BasePuerComponent {
 	constructor(props) {
 		super(props)
-		this.tagName = this.className.replace('Puer', '').toLowerCase()
+		this.tagName   = this.className.replace('Puer', '').toLowerCase()
+		this.chainName = this.tagName
 	}
 
 	/********************** FRAMEWORK **********************/

@@ -1,8 +1,9 @@
-import Puer       from './class.Puer.js'
+import Puer            from './class.Puer.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
-import PuerObject from './class.PuerObject.js'
-import PuerState  from './class.PuerState.js'
-import String     from './library/class.String.js'
+import PuerObject      from './class.PuerObject.js'
+import PuerState       from './class.PuerState.js'
+import PuerChain       from './class.PuerChain.js'
+import String          from './library/class.String.js'
 
 
 class BasePuerComponent extends PuerObject {
@@ -20,9 +21,10 @@ class BasePuerComponent extends PuerObject {
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
+		this.$               = new PuerChain(this)
 
-		this._listenerMap  = new WeakMap()
-		this.render = Puer.deferrer(this.render, this)
+		this._listenerMap = new WeakMap()
+		this.render       = Puer.deferrer(this.render, this)
 	}
 
 	/*********************** PRIVATE ***********************/

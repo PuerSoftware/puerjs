@@ -16,12 +16,17 @@ class Comp2 extends PuerComponent {
 		this.state.liText = this.state.liText + 'HA'
 	}
 
+	showChain() {
+		console.log(this.$.ul.$.button[0].props.text)
+	}
+
 	render() {
 		return ul([
 			div(this.children),
 			li({text: this.state.liText}),
 			li({text: 'haha2'}),
-			button({onClick: this.onClick}, 'Add Item')
+			button({onClick: this.onClick,   text: 'Add Item'}),
+			button({onClick: this.showChain, text: 'Show Chain'})
 		])
 	}
 }

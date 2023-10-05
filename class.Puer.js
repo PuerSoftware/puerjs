@@ -87,13 +87,12 @@ class Puer {
 		}
 		window[name] = (...args) => {
 			// console.log(name, ...args)
-			let [ cssClass,  props,    children, text     ] = Puer.arganize(args,
-				[ 'string',  'object', 'array',  'string' ],
-				[ '',        {},       [],       ''       ]
+			let [ cssClass,  props,    children ] = Puer.arganize(args,
+				[ 'string',  'object', 'array', ],
+				[ '',        {},       [],      ]
 			)
 			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
-			if (text)      { props['text']  = text }
-			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}], "${text}")`)
+			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
 			let className = 'Puer' + String.capitalize(name)
 			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
 			return new PuerConstructor(window[className], props, children, false)

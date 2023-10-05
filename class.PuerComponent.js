@@ -5,6 +5,7 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 class PuerComponent extends BasePuerComponent {
 	constructor(props) {
 		super(props)
+		this.chainName = this.className
 	}
 
 	/********************** FRAMEWORK **********************/
