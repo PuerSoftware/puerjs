@@ -1,5 +1,5 @@
 import Puer, {PuerComponent} from '../../puer.js'
-import                            '../../puerUi.js'
+import * as ui               from '../../ui/index.js'
 
 
 /*
@@ -23,12 +23,12 @@ class FormTestApp extends PuerComponent {
 	}
 
 	render() {
-		return Puer.UI.Form({}, [
-			Puer.UI.FormField({label: 'Username'}, [
-				Puer.UI.FormInput({type: 'text'}),
+		return Puer.ui_Form({}, [
+			Puer.ui_FormField({label: 'Username'}, [
+				Puer.ui_FormInput({type: 'text'}),
 			]),
-			Puer.UI.FormField({label: 'Password'}, [
-				Puer.UI.FormInput({type: 'password'}),
+			Puer.ui_FormField({label: 'Password'}, [
+				Puer.ui_FormInput({type: 'password'}),
 			])
 		])
 	}

@@ -10,6 +10,7 @@ class PuerParentChain extends PuerObject {
 			get(component, prop) {
 				parent = component.parent
 				while (parent) {
+					console.log(parent)
 					if (parent.chainName === prop) {
 						return parent
 					}

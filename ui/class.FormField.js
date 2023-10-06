@@ -11,8 +11,8 @@ class FormField extends PuerComponent {
     }
 
     onMount() {
-        if (!this.$$.Form) {
-            throw new PuerError('Must have PuerForm in a parent chain', 'PuerFormInput', 'render')
+        if (!this.$$.ui_Form) {
+            throw new PuerError('Must have ui_Form in a parent chain', this.className, 'render')
         }
     }
 
@@ -25,5 +25,5 @@ class FormField extends PuerComponent {
     }
 }
 
-Puer.UI.define(FormField)
-export { FormField as PuerUiFormField }
+Puer.define('ui', FormField)
+export default FormField

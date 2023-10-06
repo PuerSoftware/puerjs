@@ -35,5 +35,5 @@ class Form extends PuerComponent {
 }
 
 
-Puer.UI.define(Form)
-export {Form as PuerUiForm}
+Puer.define('ui', Form)
+export default Form

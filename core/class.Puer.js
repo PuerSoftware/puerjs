@@ -1,22 +1,11 @@
-import PuerNamespace   from './class.PuerNamespace.js'
 import PuerApp         from './class.PuerApp.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
 import String          from '../library/class.String.js'
 
-class PuerClass extends PuerNamespace {
-	static instance = null
-
-	constructor() {
-		super('Puer')
-		if (!PuerClass.instance) {
-			PuerClass.instance = this 
-		}
-		return PuerClass.instance
-	}
-
-	init(events=[]) {
+class Puer {
+	static init(events=[]) {
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
 		for (const event of events) {
@@ -26,21 +15,21 @@ class PuerClass extends PuerNamespace {
 		return this
 	}
 
-	app(selector, tree) {
+	static app(selector, tree) {
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
 		return Puer.App
 	}
 
 
-	default(o, propName, defaultValue) {
+	static default(o, propName, defaultValue) {
 		if (!o.hasOwnProperty(propName)) {
 			o[propName] = defaultValue
 		}
 	}
 
 
-	defer(f, owner=window, args=undefined) {
+	static defer(f, owner=window, args=undefined) {
 		let alias = f
 		if (typeof f === 'function') {
 			Puer.deferred = true
@@ -51,7 +40,7 @@ class PuerClass extends PuerNamespace {
 	}
 
 
-	deferrer(f, owner=window, args=undefined) {
+	static deferrer(f, owner=window, args=undefined) {
 		let alias = f
 		return () => {
 			Puer.deferred = true
@@ -61,19 +50,43 @@ class PuerClass extends PuerNamespace {
 		}
 	}
 
+	static arganize(args, types, defaults, norm_args=[]) {
+		if (types.length) {
+			if (Puer.type(args[0]) == types.shift()) {
+				defaults.shift()
+				norm_args.push(args.shift())
+			} else {
+				norm_args.push(defaults.shift())
+			}
+			this.arganize(args, types, defaults, norm_args)
+		}
+		return norm_args
+	}
 
-	isFunction(o) { return this.type(o) === 'function' }
-	isBoolean(o)  { return this.type(o) === 'boolean'  }
-	isObject(o)   { return this.type(o) === 'object'   }
-	isString(o)   { return this.type(o) === 'string'   }
-	isNumber(o)   { return this.type(o) === 'number'   }
-	isRegexp(o)   { return this.type(o) === 'regexp'   }
-	isSymbol(o)   { return this.type(o) === 'symbol'   }
-	isError(o)    { return this.type(o) === 'error'    }
-	isArray(o)    { return this.type(o) === 'array'    }
-	isDate(o)     { return this.type(o) === 'date'     }
+	static type(o) {
+		if (o == null) { return o + '' }
+		const class2type = {}
+		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
+			.forEach(name => {
+				class2type['[object ' + name + ']'] = name.toLowerCase();
+			})
+		const className = Object.prototype.toString.call(o);
+		if (className in class2type) { return class2type[className]	}
+		return typeof o
+	}
 
-	_defineTag(name) {
+	static isFunction(o) { return Puer.type(o) === 'function' }
+	static isBoolean(o)  { return Puer.type(o) === 'boolean'  }
+	static isObject(o)   { return Puer.type(o) === 'object'   }
+	static isString(o)   { return Puer.type(o) === 'string'   }
+	static isNumber(o)   { return Puer.type(o) === 'number'   }
+	static isRegexp(o)   { return Puer.type(o) === 'regexp'   }
+	static isSymbol(o)   { return Puer.type(o) === 'symbol'   }
+	static isError(o)    { return Puer.type(o) === 'error'    }
+	static isArray(o)    { return Puer.type(o) === 'array'    }
+	static isDate(o)     { return Puer.type(o) === 'date'     }
+
+	static _defineTag(name) {
 		if (name in window) {
 			throw `Could not register tag method ${name}: already present in global scope`
 		}
@@ -91,41 +104,42 @@ class PuerClass extends PuerNamespace {
 		}
 	}
 
-	// _defineComponent(cls) {
-	// 	if (Puer[cls.name]) {
-	// 		throw `Could not register component ${cls.name}: already present $$`
-	// 	}
-		
-	// 	Puer[cls.name] = (...args) => {
-	// 		let [props,    children ] = Puer.arganize(args,
-	// 			['object', 'array'  ],
-	// 			[{},       []       ]
-	// 		)
-	// 		return new PuerConstructor(cls, props, children, true)
-	// 	}
-	// }
-
-	define(m) {
-		if (Puer.type(m) === 'string') {
-			return Puer._defineTag(m)
+	static _defineComponent(namespace, cls) {
+		const className = namespace ? `${namespace}_${cls.name}` : cls.name
+		if (Puer[className]) {
+			throw `Could not register component ${className}: already present $$`
 		}
-		return super.define(m) //Puer._defineComponent(m)
+		
+		Puer[className] = (...args) => {
+			let [props,    children ] = Puer.arganize(args,
+				['object', 'array'  ],
+				[{},       []       ]
+			)
+			return new PuerConstructor(cls, props, children, true)
+		}
 	}
 
-	addComponent(component) {
+	static define(... args) {
+		const className = args.pop()
+		const namespace = args.join('_')
+		if (Puer.type(className) === 'string') {
+			return Puer._defineTag(className)
+		}
+		return Puer._defineComponent(namespace, className)
+	}
+
+	static addComponent(component) {
 		Puer.App.components[component.id] = component
 	}
 
-	getComponent(id) {
+	static getComponent(id) {
 		return Puer.App.components[id]
 	}
 
-	removeComponent(id) {
+	static removeComponent(id) {
 		delete Puer.App.components[id]
 	}
 }
-
-const Puer = new PuerClass()
 
 export default Puer
 
