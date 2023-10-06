@@ -2,8 +2,9 @@ import Puer            from './class.Puer.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerObject      from './class.PuerObject.js'
 import PuerState       from './class.PuerState.js'
-import PuerChain       from './class.PuerChain.js'
-import PuerParentChain from './class.PuerParentChain.js'
+import Puer$Chain      from './class.Puer$Chain.js'
+import Puer$$Chain     from './class.Puer$$Chain.js'
+import Puer$$$Chain    from './class.Puer$$$Chain.js'
 import String          from '../library/class.String.js'
 
 
@@ -16,17 +17,19 @@ class BasePuerComponent extends PuerObject {
 		this.parent          = null
 		this.children        = []
 		this.events          = {}
-		this.props           = this._filterProps(props)
+		this.props           = props
 		this.state           = new PuerState(this.invalidate.bind(this))
 		this.state.wrapState = false
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
 		this.render          = Puer.deferrer(this.render, this)
-		this.$               = new PuerChain(this)
-		this.$$              = new PuerParentChain(this)
+		this.$               = new Puer$Chain(this)
+		this.$$              = new Puer$$Chain(this)
+		this.$$$             = new Puer$$$Chain(this)
 
 		this._listenerMap = new WeakMap()
+		console.log(this.className, this.props)
 	}
 
 	/*********************** PRIVATE ***********************/
@@ -34,6 +37,7 @@ class BasePuerComponent extends PuerObject {
 	_filterProps(props) {
 		const _props = {}
 		for (const name in props) {
+			console.log('NAME in _filterProps', name)
 			const value = props[name]
 			if (Puer.isFunction(value) && !value.isGetterFunction) {
 				if (!name.startsWith('on')) {

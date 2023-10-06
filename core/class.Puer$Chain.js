@@ -2,7 +2,7 @@ import Puer       from './class.Puer.js'
 import PuerObject from './class.PuerObject.js'
 
 
-class PuerChain extends PuerObject {
+class Puer$Chain extends PuerObject {
 	constructor(component) {
 		super()
 
@@ -30,4 +30,4 @@ class PuerChain extends PuerObject {
 	}
 }
 
-export default PuerChain
+export default Puer$Chain

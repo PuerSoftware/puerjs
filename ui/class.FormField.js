@@ -6,12 +6,12 @@ import Puer, {
 
 class FormField extends PuerComponent {
     constructor(props) {
-        Puer.default(props, 'label', 'Field label')
+        props.default('label', 'Field label')
         super(props)
     }
 
     onMount() {
-        if (!this.$$.ui_Form) {
+        if (!this.$$$.Form) {
             throw new PuerError('Must have ui_Form in a parent chain', this.className, 'render')
         }
     }
@@ -25,5 +25,5 @@ class FormField extends PuerComponent {
     }
 }
 
-Puer.define('ui', FormField)
+Puer.define(FormField)
 export default FormField

@@ -2,7 +2,7 @@ import Puer       from './class.Puer.js'
 import PuerObject from './class.PuerObject.js'
 
 
-class PuerParentChain extends PuerObject {
+class Puer$$Chain extends PuerObject {
 	constructor(component) {
 		super()
 
@@ -10,7 +10,6 @@ class PuerParentChain extends PuerObject {
 			get(component, prop) {
 				parent = component.parent
 				while (parent) {
-					console.log(parent)
 					if (parent.chainName === prop) {
 						return parent
 					}
@@ -25,4 +24,4 @@ class PuerParentChain extends PuerObject {
 	}
 }
 
-export default PuerParentChain
+export default Puer$$Chain

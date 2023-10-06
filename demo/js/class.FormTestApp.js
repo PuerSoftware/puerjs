@@ -23,12 +23,12 @@ class FormTestApp extends PuerComponent {
 	}
 
 	render() {
-		return Puer.ui_Form({}, [
-			Puer.ui_FormField({label: 'Username'}, [
-				Puer.ui_FormInput({type: 'text'}),
+		return Puer.Form({}, [
+			Puer.FormField({label: 'Username'}, [
+				Puer.FormInput({type: 'text'}),
 			]),
-			Puer.ui_FormField({label: 'Password'}, [
-				Puer.ui_FormInput({type: 'password'}),
+			Puer.FormField({label: 'Password'}, [
+				Puer.FormInput({type: 'password'}),
 			])
 		])
 	}

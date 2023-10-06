@@ -1,6 +1,7 @@
 class PuerError extends Error {
 	constructor(message, className, methodName) {
-		message = `${className}.${methodName}(): ${message}`
+		const where = className && methodName ? `${className}.${methodName}(): '` : ''
+		message = `${where}${message}`
 		super(message)
 		this.name = 'PuerError'
 	}

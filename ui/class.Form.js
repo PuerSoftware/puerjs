@@ -3,12 +3,12 @@ import Puer, {PuerComponent} from '../puer.js'
 
 class Form extends PuerComponent {
 	constructor(props) {
-		Puer.default(props, 'title',         'Form')
-		Puer.default(props, 'subtitle',      'Please fill out this form')
-		Puer.default(props, 'buttonCaption', 'Submit')
-		Puer.default(props, 'action',        '')
-		Puer.default(props, 'method',        'POST')
-		Puer.default(props, 'enctype',       'application/x-www-form-urlencoded')
+		props.default('title',         'Form')
+		props.default('subtitle',      'Please fill out this form')
+		props.default('buttonCaption', 'Submit')
+		props.default('action',        '')
+		props.default('method',        'POST')
+		props.default('enctype',       'application/x-www-form-urlencoded')
 		super(props)
 		this.state.error = ''
 	}
@@ -35,5 +35,5 @@ class Form extends PuerComponent {
 }
 
 
-Puer.define('ui', Form)
+Puer.define(Form)
 export default Form

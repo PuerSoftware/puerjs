@@ -1,4 +1,5 @@
 import PuerApp         from './class.PuerApp.js'
+import PuerProps       from './class.PuerProps.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
@@ -19,13 +20,6 @@ class Puer {
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
 		return Puer.App
-	}
-
-
-	static default(o, propName, defaultValue) {
-		if (!o.hasOwnProperty(propName)) {
-			o[propName] = defaultValue
-		}
 	}
 
 
@@ -100,21 +94,22 @@ class Puer {
 			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
 			let className = 'PuerTag' + String.capitalize(name)
 			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
+			props = new PuerProps(props)
 			return new PuerConstructor(window[className], props, children, false)
 		}
 	}
 
 	static _defineComponent(namespace, cls) {
-		const className = namespace ? `${namespace}_${cls.name}` : cls.name
-		if (Puer[className]) {
-			throw `Could not register component ${className}: already present $$`
+		if (Puer[cls.name]) {
+			throw `Could not register component ${cls.name}: already present $$`
 		}
 		
-		Puer[className] = (...args) => {
+		Puer[cls.name] = (... args) => {
 			let [props,    children ] = Puer.arganize(args,
 				['object', 'array'  ],
 				[{},       []       ]
 			)
+			props = new PuerProps(props)
 			return new PuerConstructor(cls, props, children, true)
 		}
 	}

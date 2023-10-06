@@ -7,11 +7,10 @@ import Puer, {
 class FormInput extends PuerComponent {
     constructor(props) {
         super(props)
-
     }
     
     onMount() {
-        if (!this.$$.ui_Form) {
+        if (!this.$$.Form) {
             throw new PuerError('Must have ui_Form in a parent chain', this.className, 'render')
         }
     }
@@ -21,5 +20,5 @@ class FormInput extends PuerComponent {
     }
 }
 
-Puer.define('ui', FormInput)
+Puer.define(FormInput)
 export default FormInput
