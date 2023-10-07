@@ -1,62 +1,48 @@
 import PuerError from './class.PuerError.js'
 
 
-class PuerProps {
-	constructor(props) {
-		props = props || {}
-		this.props = props
-
-		return new Proxy(this, {
-			get(self, prop) {
-				if (typeof self[prop] === 'function') {
-					return self[prop].bind(self)
-				}
-				if (self.props.hasOwnProperty(prop)) {
-					console.log('RETURN FROM PROPS', prop, self.props, 'RETURN VALUE:', self.props[prop])
-					return self.props[prop]
-				} else {
-					console.log('NOT DEFINED', prop)
-				}
-			},
-			set(self, prop, value) {
-				self.props[prop] = value
-				return true
+class PuerProps extends Object {
+	constructor(props={}) {
+		super()
+		for (const prop in props) {
+			if (this.hasOwnProperty(prop)) {
+				throw PuerError(`Can not re-define prop "${prop}"`, this, 'constructor')
+			} else {
+				this[prop] = props[prop]
 			}
-		})
+		}
 	}
 
 	default(prop, defaultValue) {
-		if (!this.props.hasOwnProperty(prop)) {
-			this.props[prop] = defaultValue;
+		if (!this.hasOwnProperty(prop)) {
+			this[prop] = defaultValue
 		}
-		return this.props[prop];
+		return this[prop]
 	}
 
 	require(prop) {
-		if (!this.props.hasOwnProperty(prop)) {
-			throw new PuerError(`Property ${prop} is required but not set.`);
+		if (!this.hasOwnProperty(prop)) {
+			throw new PuerError(`Property ${prop} is required but not set.`, this, 'require');
 		}
-		return this.props[prop];
+		return this[prop]
 	}
 
-	[Symbol.iterator]() {
-		let properties = Object.keys(this.props)
-		let count      = 0
-		let isDone     = false
-
-		return {
-			next: () => {
-				if (count >= properties.length) {
-					isDone = true
+	extractEvents() {
+		const events = {}
+		for (const prop in this) {
+			const value = this[prop]
+			if (typeof value === 'function' && !value.isGetterFunction) {
+				if (!prop.startsWith('on')) {
+					throw PuerError(
+						`Event names must start with "on". Found: "${prop}".`,this, 'filterEvents'
+					)
 				}
-				const value = this.props[properties[count++]]
-				return { done: isDone, value }
+				events[prop.substring(2).toLowerCase()] = value
+				delete this[prop]
 			}
 		}
+		return events
 	}
 }
-
-const myProps = new PuerProps({ key1: 'value1', key2: 'value2' })
-console.log('TEST----->', myProps.key1)
 
 export default PuerProps

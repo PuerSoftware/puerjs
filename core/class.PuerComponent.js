@@ -35,7 +35,7 @@ class PuerComponent extends BasePuerComponent {
 	/********************* DOM METHODS *********************/
 
 	append(child) {
-		child = Puer.defer(child)
+		// child = Puer.defer(child)
 		child.parent = this
 		this.children.push(child)
 		// console.log(this.children)
@@ -44,7 +44,7 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	prepend(child) {
-		child = Puer.defer(child)
+		// child = Puer.defer(child)
 		child.parent = this
 		this.children.unshift(child)
 		this.invalidate()

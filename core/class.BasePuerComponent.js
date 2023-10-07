@@ -16,41 +16,26 @@ class BasePuerComponent extends PuerObject {
 		this.rootComponent   = this
 		this.parent          = null
 		this.children        = []
-		this.events          = {}
+		this.events          = props.extractEvents()
 		this.props           = props
 		this.state           = new PuerState(this.invalidate.bind(this))
 		this.state.wrapState = false
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
-		this.render          = Puer.deferrer(this.render, this)
 		this.$               = new Puer$Chain(this)
 		this.$$              = new Puer$$Chain(this)
 		this.$$$             = new Puer$$$Chain(this)
+		this._listenerMap    = new WeakMap()
 
-		this._listenerMap = new WeakMap()
-		console.log(this.className, this.props)
+		this.getMethods()
+			.filter(method => method.startsWith('render'))
+			.map(method => {
+				this[method] = Puer.deferrer(this[method], this)
+			})
 	}
 
 	/*********************** PRIVATE ***********************/
-
-	_filterProps(props) {
-		const _props = {}
-		for (const name in props) {
-			console.log('NAME in _filterProps', name)
-			const value = props[name]
-			if (Puer.isFunction(value) && !value.isGetterFunction) {
-				if (!name.startsWith('on')) {
-					throw `Non-event function found in props (${name}): event names must start with "on".`
-				}
-				let eventName = name.substring(2).toLowerCase()
-				this.events[eventName] = value
-			} else {
-				_props[name] = value
-			}
-		}
-		return _props
-	}
 
 	_addEvents() {
 		for (const name in this.events) {
@@ -59,13 +44,12 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, options) {
-		// console.log('_on', name, f)
 		let targetComponent = this
 		let _f = function(event) {
 			event.targetComponent = targetComponent
 			return f.call(this, event)
 		}
-		_f = _f.bind(this.getCustomParent())
+		_f = _f.bind(this.$$$.PuerComponent)
 		this._listenerMap.set(f, _f)
 		this.element.addEventListener(name, _f, options)
 	}
@@ -80,16 +64,16 @@ class BasePuerComponent extends PuerObject {
 
 	/*********************** GETTERS ***********************/
 
-	getCustomParent() {
-		if (this.isCustom) {
-			return this
-		} else {
-			if (this.parent) {
-				return this.parent.getCustomParent()
-			}
-			return null
-		}
-	}
+	// getCustomParent() {
+	// 	if (this.isCustom) {
+	// 		return this
+	// 	} else {
+	// 		if (this.parent) {
+	// 			return this.parent.getCustomParent()
+	// 		}
+	// 		return null
+	// 	}
+	// }
 	
 	/*********************** CASTING ***********************/
 

@@ -8,19 +8,7 @@ class Puer$$$Chain extends PuerObject {
 
 		return new Proxy(component, {
 			get(component, prop) {
-				parent = component.parent
-				let prototype
-				while (parent) {
-					prototype = Object.getPrototypeOf(parent);
-					while (prototype !== null) {
-						if (prototype.constructor.name === prop) {
-							return parent
-						}
-						prototype = Object.getPrototypeOf(prototype);
-					}
-					parent = parent.parent
-				}
-				return null
+				return component.findParentByBaseClassName(prop)
 			},
 			set(component, prop, value) {
 				console.warn('Setter is not defined for PuerParentChain')

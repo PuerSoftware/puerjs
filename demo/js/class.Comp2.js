@@ -8,9 +8,6 @@ class Comp2 extends PuerComponent {
 		this.state.liText = 'HAHA'
 	}
 
-	onClick() {
-		this.append(() => div({onclick: this.changeState, text: this.state.liText}))
-	}
 
 	changeState() {
 		this.state.liText = this.state.liText + 'HA'
@@ -20,6 +17,11 @@ class Comp2 extends PuerComponent {
 		console.log(this.$.ul.$.button[0])
 		console.log(this.$$.Comp1)
 		console.log(this.$$.Comp1.$.div.toString())
+		console.log(this.$$$.BasePuerComponent)
+	}
+
+	renderItem() {
+		this.append(div({onclick: this.changeState, text: this.state.liText}))
 	}
 
 	render() {
@@ -27,8 +29,8 @@ class Comp2 extends PuerComponent {
 			div(this.children),
 			li({text: this.state.liText}),
 			li({text: 'haha2'}),
-			button({onClick: this.onClick,   text: 'Add Item'}),
-			button({onClick: this.showChain, text: 'Show Chain'})
+			button({onClick: this.renderItem, text: 'Add Item'}),
+			button({onClick: this.showChain,  text: 'Show Chain'})
 		])
 	}
 }
