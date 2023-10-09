@@ -30,7 +30,7 @@ class PuerState extends PuerObject {
 				let isChange = prop in target
 				target[prop] = value
 
-				if (prop == 'wrapState')   { return true }
+				// if (prop == 'wrapState')   { return true }
 				if (Array.isArray(target)) { isChange = true }
 				if (isChange)              { onChange(prop, value) }
 	

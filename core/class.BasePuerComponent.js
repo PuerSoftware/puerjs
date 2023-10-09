@@ -1,12 +1,9 @@
 import Puer             from './class.Puer.js'
 import PuerHtmlElement  from './class.PuerHtmlElement.js'
 import PuerObject       from './class.PuerObject.js'
-import PuerState        from './class.PuerState.js'
-import Puer$Chain       from './class.Puer$Chain.js'
-import Puer$$Chain      from './class.Puer$$Chain.js'
-import Puer$$$Chain     from './class.Puer$$$Chain.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
 import String           from '../library/class.String.js'
+import PuerApp          from './class.PuerApp.js'
 
 
 class BasePuerComponent extends PuerObject {
@@ -14,13 +11,13 @@ class BasePuerComponent extends PuerObject {
 		super()
 		this.id              = null
 		this.element         = null
-		this.rootComponent   = this
+		// this.rootComponent   = this
 		this.parent          = null
 		this.children        = []
-		this.events          = props.extractEvents()
+		this.events          = props.extractEvents(this)
 		this.props           = props
-		this.state           = new PuerState(this.invalidate.bind(this))
-		this.state.wrapState = false
+		this.chainName       = this.className
+		// this.state.wrapState = false
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
@@ -37,28 +34,71 @@ class BasePuerComponent extends PuerObject {
 	/******************** CHAIN GETTERS ********************/
 
 
-	getImmediateDescendants(chainName) {
+	getImmediateChainDescendants(chainName) {
 		let items = []
-		if (component.isCustom) {
-			if (prop === component.root.chainName) {
-				items.push(component.root)
+		if (this.isCustom) {
+			if (chainName === this.root.chainName) {
+				items.push(this.root)
 			}
 		} else {
-			const items = []
-			for (const child of component.children) {
-				if (prop === child.instance.chainName) {
+			for (const child of this.children) {
+				if (chainName === child.instance.chainName) {
 					items.push(child.instance)
 				}
 			}
-			return items.length ? items : null
 		}
-		return null
+		return items
 	}
 
-	getDescendants(chainName) {
+	getChainDescendants(chainName, firstCall=true) {
+		let items = []
+		if (!firstCall && this.hasPropInProto('chainName', chainName)) {
+			items.push(this)
+		} else if (this.isCustom) {
+			let rootItems = this.root.getChainDescendants(chainName, false)
+			if (rootItems) {
+				items = items.concat(rootItems)
+			}
+		} else {
+			if (this.children) {
+				for (const child of this.children) {
+					if (child) {
+						const childItems = child.instance.getChainDescendants(chainName, false)
+						if (childItems) {
+							items = items.concat(childItems)
+						}
+					}
+				}
+			} else {
+				items = []
+			}
+		}
+		return items
 	}
 
-	getAncestor(chainName) {
+	getChainAncestor(chainName, fistCall=true) {
+		let item = fistCall ? this.parent : this
+		// console.log('getChainAncestor', this, fistCall)
+		if (item.hasPropInProto('chainName', chainName)) {
+			return [item]
+		} else if (item === Puer.App) {
+			return []
+		}
+
+		return item.parent === Puer.App
+			? []
+			: item.parent.getChainAncestor(chainName, false)
+	}
+
+	getCustomParent() {
+		if (this.isCustom) {
+			return this
+		} else {
+			if (this.parent) {
+				return this.parent.getCustomParent()
+			}
+			return null
+		}
 	}
 
 	get $   () { return new PuerComponentSet([this]).$   }
@@ -79,7 +119,7 @@ class BasePuerComponent extends PuerObject {
 			event.targetComponent = targetComponent
 			return f.call(this, event)
 		}
-		_f = _f.bind(this.$$$.PuerComponent)
+		_f = _f.bind(this.getCustomParent())
 		this._listenerMap.set(f, _f)
 		this.element.addEventListener(name, _f, options)
 	}

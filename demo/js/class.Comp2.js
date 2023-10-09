@@ -6,6 +6,7 @@ class Comp2 extends PuerComponent {
 	constructor(props) {
 		super(props)
 		this.state.liText = 'HAHA'
+		// console.log(this.state.liText)
 	}
 
 
@@ -14,10 +15,11 @@ class Comp2 extends PuerComponent {
 	}
 
 	showChain() {
-		console.log(this.$.ul.$.button[0])
-		console.log(this.$$.Comp1)
-		console.log(this.$$.Comp1.$.div.toString())
-		console.log(this.$$$.PuerHtmlElement)
+		// console.log('showChain', this.$)
+		// console.log(this.$.ul.$.div)
+		console.log('$$', this.$$$.Comp1[0].$.div)
+		// console.log(this.$$.Comp1.$.div.toString())
+		console.log('PuerHtmlElement', this.$$$.PuerHtmlElement)
 	}
 
 	renderItem() {

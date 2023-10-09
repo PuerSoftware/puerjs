@@ -1,11 +1,12 @@
 import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
+import PuerState         from './class.PuerState.js'
 
 
 class PuerComponent extends BasePuerComponent {
 	constructor(props) {
 		super(props)
-		this.chainName = this.className
+		this.state     = new PuerState(this.invalidate.bind(this))
 	}
 
 	/********************** FRAMEWORK **********************/

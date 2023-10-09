@@ -38,6 +38,7 @@ class Puer {
 		let alias = f
 		return () => {
 			Puer.deferred = true
+			Puer.renderOwner = owner // while render is happening all events are bound to renderOwner
 			let result = alias.apply(owner, args)
 			Puer.deferred = false
 			return result

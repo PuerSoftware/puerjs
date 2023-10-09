@@ -21,7 +21,7 @@ class PuerObject {
 		return this.getProperties().filter(item => typeof this[item] === 'function')
 	}
 
-	hasBaseClass(className) {
+	hasProto(className) {
 		let proto = this
 		do {
 			if (proto.constructor.name === className) {

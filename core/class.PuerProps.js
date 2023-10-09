@@ -1,3 +1,4 @@
+import Puer      from './class.Puer.js'
 import PuerError from './class.PuerError.js'
 
 
@@ -27,17 +28,17 @@ class PuerProps extends Object {
 		return this[prop]
 	}
 
-	extractEvents() {
+	extractEvents(owner) {
 		const events = {}
 		for (const prop in this) {
-			const value = this[prop]
+			let value = this[prop]
 			if (typeof value === 'function' && !value.isGetterFunction) {
 				if (!prop.startsWith('on')) {
 					throw PuerError(
 						`Event names must start with "on". Found: "${prop}".`,this, 'filterEvents'
 					)
 				}
-				events[prop.substring(2).toLowerCase()] = value
+				events[prop.substring(2).toLowerCase()] = value.bind(Puer.renderOwner || owner)
 				delete this[prop]
 			}
 		}

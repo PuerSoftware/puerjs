@@ -1,33 +1,26 @@
-import Puer       from './class.Puer.js'
-import PuerObject from './class.PuerObject.js'
-
-
 class PuerComponentSet {
 	constructor(components = []) {
 		this._components = components
+		this._operator   = null
 		return new Proxy(this, {
 			get(target, prop) {
-				const newSet = new PuerComponentSet()
+				let newSet = new PuerComponentSet()
 				switch (prop) {
+					case 'components':
+						return target._components
 					case 'concat':
 						return function(otherSet) {
-							return new PuerComponentSet([...target._components, ...otherSet._components])
+							let otherComponents = otherSet
+							if (otherSet instanceof PuerComponentSet) {
+								otherComponents = otherSet._components
+							}
+							return new PuerComponentSet([...target._components, ...otherComponents])
 						}
-					case '$':
-						for (const component of target._components) {
-							newSet = newSet.concat(component.getImmediateChildren(prop))
-						}
-						return newSet
-					case '$$':
-						for (const component of target._components) {
-							newSet = newSet.concat(component.getDescendants(prop))
-						}
-						return newSet
-					case '$$$':
-						for (const component of target._components) {
-							newSet = newSet.concat(component.getAncestor(prop))
-						}
-						return newSet
+					case '$'   :
+					case '$$'  :
+					case '$$$' :
+						target._operator = prop
+						return new Proxy(target, this)
 					case 'length':
 						return target._components.length
 					case Symbol.iterator:
@@ -40,7 +33,26 @@ class PuerComponentSet {
 						if (!isNaN(Number(prop))) {
 							return target._components[Number(prop)]
 						}
-						return target._components.filter(component => component.name === prop)
+
+						if (target._operator) {
+							switch (target._operator){
+								case '$':
+									for (const component of target._components) {
+										newSet = newSet.concat(component.getImmediateChainDescendants(prop))
+									}
+									return newSet.components
+								case '$$':
+									for (const component of target._components) {
+										newSet = newSet.concat(component.getChainDescendants(prop))
+									}
+									return newSet.components
+								case '$$$':
+									for (const component of target._components) {
+									    newSet = newSet.concat(component.getChainAncestor(prop))
+									}
+									return newSet.components
+							}
+						}
 				}
 			},
 			ownKeys() {
