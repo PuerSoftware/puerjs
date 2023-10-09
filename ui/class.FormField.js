@@ -12,7 +12,7 @@ class FormField extends PuerComponent {
 
     onMount() {
         if (!this.$$$.Form) {
-            throw new PuerError('Must have ui_Form in a parent chain', this.className, 'render')
+            throw new PuerError('Must have instance of "Form" in a parent chain', this.className, 'render')
         }
     }
 

@@ -17,7 +17,7 @@ class Comp2 extends PuerComponent {
 		console.log(this.$.ul.$.button[0])
 		console.log(this.$$.Comp1)
 		console.log(this.$$.Comp1.$.div.toString())
-		console.log(this.$$$.BasePuerComponent)
+		console.log(this.$$$.PuerHtmlElement)
 	}
 
 	renderItem() {

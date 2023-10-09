@@ -1,11 +1,12 @@
-import Puer            from './class.Puer.js'
-import PuerHtmlElement from './class.PuerHtmlElement.js'
-import PuerObject      from './class.PuerObject.js'
-import PuerState       from './class.PuerState.js'
-import Puer$Chain      from './class.Puer$Chain.js'
-import Puer$$Chain     from './class.Puer$$Chain.js'
-import Puer$$$Chain    from './class.Puer$$$Chain.js'
-import String          from '../library/class.String.js'
+import Puer             from './class.Puer.js'
+import PuerHtmlElement  from './class.PuerHtmlElement.js'
+import PuerObject       from './class.PuerObject.js'
+import PuerState        from './class.PuerState.js'
+import Puer$Chain       from './class.Puer$Chain.js'
+import Puer$$Chain      from './class.Puer$$Chain.js'
+import Puer$$$Chain     from './class.Puer$$$Chain.js'
+import PuerComponentSet from './class.PuerComponentSet.js'
+import String           from '../library/class.String.js'
 
 
 class BasePuerComponent extends PuerObject {
@@ -23,17 +24,46 @@ class BasePuerComponent extends PuerObject {
 		this.cssClass        = String.camelToDashedSnake(this.className)
 		this.shadow          = null
 		this.isCustom        = false
-		this.$               = new Puer$Chain(this)
-		this.$$              = new Puer$$Chain(this)
-		this.$$$             = new Puer$$$Chain(this)
 		this._listenerMap    = new WeakMap()
-
+		
 		this.getMethods()
 			.filter(method => method.startsWith('render'))
 			.map(method => {
 				this[method] = Puer.deferrer(this[method], this)
 			})
 	}
+
+
+	/******************** CHAIN GETTERS ********************/
+
+
+	getImmediateDescendants(chainName) {
+		let items = []
+		if (component.isCustom) {
+			if (prop === component.root.chainName) {
+				items.push(component.root)
+			}
+		} else {
+			const items = []
+			for (const child of component.children) {
+				if (prop === child.instance.chainName) {
+					items.push(child.instance)
+				}
+			}
+			return items.length ? items : null
+		}
+		return null
+	}
+
+	getDescendants(chainName) {
+	}
+
+	getAncestor(chainName) {
+	}
+
+	get $   () { return new PuerComponentSet([this]).$   }
+	get $$  () { return new PuerComponentSet([this]).$$  }
+	get $$$ () { return new PuerComponentSet([this]).$$$ }
 
 	/*********************** PRIVATE ***********************/
 
@@ -61,19 +91,6 @@ class BasePuerComponent extends PuerObject {
 			this._listenerMap.delete(f)
 		}
 	}
-
-	/*********************** GETTERS ***********************/
-
-	// getCustomParent() {
-	// 	if (this.isCustom) {
-	// 		return this
-	// 	} else {
-	// 		if (this.parent) {
-	// 			return this.parent.getCustomParent()
-	// 		}
-	// 		return null
-	// 	}
-	// }
 	
 	/*********************** CASTING ***********************/
 

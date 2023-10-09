@@ -31,14 +31,14 @@ class PuerObject {
 		return false
 	}
 
-	findParentByBaseClassName(className) {
-		let parent = this.parent
+	hasPropInProto(propName, propValue) {
+		let proto = this
 		do {
-			if (parent.hasBaseClass(className)) {
-				return parent
+			if (proto[propName] === propValue) {
+				return true
 			}
-		} while (parent && (parent = parent.parent))
-		return null
+		} while (proto && (proto = Object.getPrototypeOf(proto)))
+		return false
 	}
 }
 

@@ -23,12 +23,12 @@ class FormTestApp extends PuerComponent {
 	}
 
 	render() {
-		return Puer.Form({}, [
+		return Puer.Form({validationUrl: '/validate'}, [
 			Puer.FormField({label: 'Username'}, [
-				Puer.FormInput({type: 'text'}),
+				Puer.FormInput({type: 'text', validator: 'username'}),
 			]),
 			Puer.FormField({label: 'Password'}, [
-				Puer.FormInput({type: 'password'}),
+				Puer.FormInput({type: 'password', validator: 'password'}),
 			])
 		])
 	}
