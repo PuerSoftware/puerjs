@@ -16,15 +16,18 @@ class Comp1 extends PuerComponent {
 
 	}
 
-	myFunc() {
-		this.root.onclick = null
+	showChain() {
+		console.log('this.$$.Comp2Base', this.$$.Comp2Base)
+		console.log('this.$$.Comp2',     this.$$.Comp2)
 	}
 
 	render() {
 		return div('', {onclick: this._onClick, text: 'Some Div'}, [
 			Puer.Comp2([
 				h1('', {myProp: 'test', text: 'H1'})
-			])
+			]),
+			// console.log('render in Comp1', Puer.renderOwner),
+			button({onClick: this.showChain,  text: 'Show Chain in Comp1'})
 		])
 	}
 }

@@ -2,12 +2,9 @@ import BasePuerComponent from './class.BasePuerComponent.js'
 
 
 class PuerHtmlElement extends BasePuerComponent {
-	constructor(props) {
-		super(props)
-		if (this.className.startsWith('PuerTag')) {
-			this.tagName   = this.className.replace('PuerTag', '').toLowerCase()
-			this.chainName = this.tagName
-		}
+	constructor(props, owner) {
+		super(props, owner)
+		this.tagName = this.className.replace('PuerTag', '').toLowerCase()
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -76,5 +73,7 @@ class PuerHtmlElement extends BasePuerComponent {
 		this.invalidate()
 	}
 }
+
+PuerHtmlElement.prototype.chainName = 'PuerHtmlElement'
 
 export default PuerHtmlElement

@@ -1,11 +1,14 @@
 import PuerApp         from './class.PuerApp.js'
 import PuerProps       from './class.PuerProps.js'
 import PuerEvents      from './class.PuerEvents.js'
+import PuerError       from './class.PuerError.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
 import String          from '../library/class.String.js'
 
 class Puer {
+	static owner
+
 	static init(events=[]) {
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
@@ -17,6 +20,9 @@ class Puer {
 	}
 
 	static app(selector, tree) {
+		if (!Puer.Events) {
+			throw new PuerError('Initialize Puer application using Puer.init().app(...)')
+		}
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
 		return Puer.App
@@ -38,8 +44,13 @@ class Puer {
 		let alias = f
 		return () => {
 			Puer.deferred = true
-			Puer.renderOwner = owner // while render is happening all events are bound to renderOwner
+			if (owner.isCustom) {
+				Puer.owner = owner
+			}
+
 			let result = alias.apply(owner, args)
+
+			Puer.owner    = null
 			Puer.deferred = false
 			return result
 		}
@@ -85,7 +96,16 @@ class Puer {
 		if (name in window) {
 			throw `Could not register tag method ${name}: already present in global scope`
 		}
-		window[name] = (...args) => {
+		let className = 'PuerTag' + String.capitalize(name)
+		eval(
+			`class ${className} extends PuerHtmlElement {};` +
+			`window.${className} = ${className}`
+		)
+		Object.defineProperty(window[className], 'name', { value: className })
+		window[className].prototype.chainName = name
+		// console.log('setting chain name', name)
+
+		window[name] = (... args) => {
 			// console.log(name, ...args)
 			let [ cssClass,  props,    children ] = Puer.arganize(args,
 				[ 'string',  'object', 'array', ],
@@ -93,8 +113,6 @@ class Puer {
 			)
 			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
 			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
-			let className = 'PuerTag' + String.capitalize(name)
-			eval(`window.${className} = class ${className} extends PuerHtmlElement {}`)
 			props = new PuerProps(props)
 			return new PuerConstructor(window[className], props, children, false)
 		}
@@ -104,6 +122,9 @@ class Puer {
 		if (Puer[cls.name]) {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
+
+		cls.prototype.chainName = cls.name
+		// console.log('setting chain name', cls.name)
 		
 		Puer[cls.name] = (... args) => {
 			let [props,    children ] = Puer.arganize(args,

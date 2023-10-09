@@ -12,6 +12,7 @@ class PuerConstructor extends PuerObject {
         this.isCustom = isCustom
         this.instance = null
         this.xPath    = null
+        this.owner    = Puer.owner
     }
 
     /*********************** PRIVATE ***********************/
@@ -23,7 +24,7 @@ class PuerConstructor extends PuerObject {
             this.children = instance.children
             // console.log('Found in components', instance.id, instance.props, instance)
         } else {
-            instance          = new this.cls(this.props)
+            instance          = new this.cls(this.props, this.owner)
             instance.id       = id
             instance.isCustom = this.isCustom
 
@@ -38,7 +39,7 @@ class PuerConstructor extends PuerObject {
         this.xPath    = xPath + '>' + this.cls.name + `[${index}]`
         this.instance = this._getInstance(this.xPath)
 
-        this.instance.children = this.children
+        this.instance.children = this.children.filter(child => typeof child != 'undefined')
 
         if (this.isCustom) {
             this.tree                 = this.tree || this.instance.render()

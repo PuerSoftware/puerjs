@@ -4,9 +4,15 @@ import PuerState         from './class.PuerState.js'
 
 
 class PuerComponent extends BasePuerComponent {
-	constructor(props) {
-		super(props)
+	constructor(props, owner) {
+		super(props, owner)
 		this.state     = new PuerState(this.invalidate.bind(this))
+
+		this.getMethods()
+			.filter(method => method.startsWith('render') || method.startsWith('_render'))
+			.map(method => {
+				this[method] = Puer.deferrer(this[method], this)
+			})
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -52,5 +58,6 @@ class PuerComponent extends BasePuerComponent {
 	}
 }
 
+PuerComponent.prototype.chainName = 'PuerComponent'
 
 export default PuerComponent

@@ -2,6 +2,7 @@ class PuerObject {
 	constructor() {
 		this.classProperties = Object.getOwnPropertyNames(this.constructor.prototype)
 		this.className       = this.constructor.name
+		this.chainName       = this.className
 	}
 
 	isInstanceProperty(prop) { return Object.prototype.hasOwnProperty.call(this, prop) }
@@ -24,7 +25,7 @@ class PuerObject {
 	hasProto(className) {
 		let proto = this
 		do {
-			if (proto.constructor.name === className) {
+			if (proto.hasOwnProperty(propName) && proto.constructor.name === className) {
 				return true
 			}
 		} while (proto && (proto = Object.getPrototypeOf(proto)))
@@ -34,12 +35,18 @@ class PuerObject {
 	hasPropInProto(propName, propValue) {
 		let proto = this
 		do {
+			console.log(`${propName}=${propValue}`, 'in', proto.constructor.name, '?', proto[propName])
 			if (proto[propName] === propValue) {
+				console.log('yes')
 				return true
 			}
-		} while (proto && (proto = Object.getPrototypeOf(proto)))
+			console.log('no')
+			proto = Object.getPrototypeOf(proto)
+		} while (proto !== null)
 		return false
 	}
 }
+
+PuerObject.prototype.chainName = 'PuerObject'
 
 export default PuerObject

@@ -38,11 +38,15 @@ class PuerProps extends Object {
 						`Event names must start with "on". Found: "${prop}".`,this, 'filterEvents'
 					)
 				}
-				events[prop.substring(2).toLowerCase()] = value.bind(Puer.renderOwner || owner)
+				events[prop.substring(2).toLowerCase()] = value.bind(owner)
 				delete this[prop]
 			}
 		}
 		return events
+	}
+
+	toString() {
+		return JSON.stringify(this)
 	}
 }
 

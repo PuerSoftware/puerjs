@@ -7,27 +7,19 @@ import PuerApp          from './class.PuerApp.js'
 
 
 class BasePuerComponent extends PuerObject {
-	constructor(props) {
+	constructor(props, owner) {
 		super()
-		this.id              = null
-		this.element         = null
-		// this.rootComponent   = this
-		this.parent          = null
-		this.children        = []
-		this.events          = props.extractEvents(this)
-		this.props           = props
-		this.chainName       = this.className
-		// this.state.wrapState = false
-		this.cssClass        = String.camelToDashedSnake(this.className)
-		this.shadow          = null
-		this.isCustom        = false
-		this._listenerMap    = new WeakMap()
-		
-		this.getMethods()
-			.filter(method => method.startsWith('render'))
-			.map(method => {
-				this[method] = Puer.deferrer(this[method], this)
-			})
+		this.id           = null
+		this.element      = null
+		this.parent       = null
+		this.owner        = owner
+		this.children     = []
+		this.events       = props.extractEvents(owner)
+		this.props        = props
+		this.cssClass     = String.camelToDashedSnake(this.className)
+		this.shadow       = null
+		this.isCustom     = false
+		this._listenerMap = new WeakMap()
 	}
 
 
@@ -55,6 +47,9 @@ class BasePuerComponent extends PuerObject {
 		if (!firstCall && this.hasPropInProto('chainName', chainName)) {
 			items.push(this)
 		} else if (this.isCustom) {
+			if (chainName === this.root.chainName) {
+				items.push(this.root)
+			}
 			let rootItems = this.root.getChainDescendants(chainName, false)
 			if (rootItems) {
 				items = items.concat(rootItems)
@@ -176,5 +171,7 @@ class BasePuerComponent extends PuerObject {
 		return this.element.getAttribute(name)
 	}
 }
+
+BasePuerComponent.prototype.chainName = 'BasePuerComponent'
 
 export default BasePuerComponent
