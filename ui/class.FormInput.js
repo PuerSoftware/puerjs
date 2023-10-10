@@ -3,8 +3,8 @@ import Request                           from '../library/class.Request.js'
 
 
 class FormInput extends PuerComponent {
-    constructor(props) {
-        super(props)
+    constructor(props, children) {
+        super(props, children)
         this.form = null
     }
     

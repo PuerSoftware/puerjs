@@ -2,14 +2,14 @@ import Puer, {PuerComponent} from '../puer.js'
 
 
 class Form extends PuerComponent {
-	constructor(props) {
+	constructor(props, children) {
 		props.default('title',         'Form')
 		props.default('subtitle',      'Please fill out this form')
 		props.default('buttonCaption', 'Submit')
 		props.default('action',        '')
 		props.default('method',        'POST')
 		props.default('enctype',       'application/x-www-form-urlencoded')
-		super(props)
+		super(props, children)
 		this.state.error = ''
 	}
 

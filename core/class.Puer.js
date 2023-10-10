@@ -1,5 +1,4 @@
 import PuerApp         from './class.PuerApp.js'
-import PuerProps       from './class.PuerProps.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerError       from './class.PuerError.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
@@ -113,8 +112,8 @@ class Puer {
 			)
 			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
 			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
-			props = new PuerProps(props)
-			return new PuerConstructor(window[className], props, children, false)
+			// return new PuerConstructor(window[className], props, children, false)
+			return new window[className](props, children)
 		}
 	}
 
@@ -131,8 +130,8 @@ class Puer {
 				['object', 'array'  ],
 				[{},       []       ]
 			)
-			props = new PuerProps(props)
-			return new PuerConstructor(cls, props, children, true)
+			// return new PuerConstructor(cls, props, children, true)
+			return new cls(props, children)
 		}
 	}
 

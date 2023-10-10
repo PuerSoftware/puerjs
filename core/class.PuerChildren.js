@@ -1,0 +1,70 @@
+class PuerChildren {
+	constructor(children = [], onChange) {
+		this._children = children
+		this._onChange = onChange
+		
+		return new Proxy(this, {
+			get: (target, prop) => {
+				if (typeof prop === 'symbol') {
+					return Reflect.get(target, prop)
+				} else if (typeof target[prop] === 'function') {
+					return new Proxy(target[prop], {
+						apply: (target, thisArg, args) => {
+							console.log('target', thisArg)
+							console.log('target._children', thisArg._children)
+							const oldLength = thisArg._children.length
+							const result = Reflect.apply(target, thisArg, args)
+							if (oldLength !== thisArg._children.length) {
+								console.log(`Array changed! New length: ${thisArg._children.length}`)
+								thisArg._onChange(null)
+							}
+							return result
+						}
+					})
+				} else if (prop === 'length') {
+					return target._children.length
+				} else if (!isNaN(prop)) {
+					return target._children[prop]
+				} else {
+					return Reflect.get(target, prop)
+				}
+			},
+
+			set: (target, prop, value) => {
+				if (!isNaN(prop)) {
+					const oldLength = target._children.length
+					target._children[prop] = value
+					if (oldLength !== target._children.length) {
+						console.log(`Array changed! New length: ${target._children.length}`)
+						target._onChange(value)
+					}
+					return true
+				} else {
+					return Reflect.set(target, prop, value)
+				}
+			}
+		})
+	}
+
+	[Symbol.iterator]() {
+		return this._children[Symbol.iterator]()
+	}
+
+	push(...args) {
+		return this._children.push(...args)
+	}
+
+	shift() {
+		return this._children.shift()
+	}
+
+	unshift(...args) {
+		return this._children.unshift(...args)
+	}
+
+	forEach(callback) {
+		return this._children.forEach(callback)
+	}
+}
+
+export default PuerChildren

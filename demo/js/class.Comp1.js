@@ -4,8 +4,8 @@ import Comp2         from './class.Comp2.js'
 
 
 class Comp1 extends PuerComponent {
-	constructor(props) {
-		super(props)
+	constructor(props, children) {
+		super(props, children)
 	}
 
 	init() {

@@ -18,8 +18,8 @@ import * as ui               from '../../ui/index.js'
 
 
 class FormTestApp extends PuerComponent {
-	constructor(props) {
-		super(props)
+	constructor(props, children) {
+		super(props, children)
 	}
 
 	render() {

@@ -5,9 +5,9 @@ import Puer, {
 
 
 class FormField extends PuerComponent {
-    constructor(props) {
+    constructor(props, children) {
         props.default('label', 'Field label')
-        super(props)
+        super(props, children)
     }
 
     onMount() {

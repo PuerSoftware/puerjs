@@ -2,16 +2,43 @@ import Puer      from './class.Puer.js'
 import PuerError from './class.PuerError.js'
 
 
-class PuerProps extends Object {
-	constructor(props={}) {
-		super()
+class PuerProps {
+	constructor(props={}, onChange) {
+		this._props    = {}
+		this._onChange = onChange
+
 		for (const prop in props) {
 			if (this.hasOwnProperty(prop)) {
-				throw PuerError(`Can not re-define prop "${prop}"`, this, 'constructor')
+				throw new PuerError(`Can not re-define prop "${prop}"`, this, 'constructor')
 			} else {
-				this[prop] = props[prop]
+				this._props[prop] = props[prop]
 			}
 		}
+
+		return new Proxy(this, {
+			get(target, prop) {
+				switch(prop) {
+					case 'default':
+						return target.default
+					case 'require':
+						return target.require
+					case 'extractEvents':
+						return target.extractEvents
+					case 'toString':
+						return target.toString
+					default:
+						return target._props[prop]
+				}
+			},
+			set(target, prop, value) {
+				const oldValue = target._props[prop]
+				target._props[prop] = value
+				if (oldValue !== value) {
+					target._onChange(prop, value)
+				}
+				return true
+			}
+		})
 	}
 
 	default(prop, defaultValue) {

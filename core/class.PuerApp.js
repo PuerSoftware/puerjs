@@ -4,57 +4,53 @@ import PuerObject from './class.PuerObject.js'
 class PuerApp extends PuerObject {
     constructor(selector) {
     	super()
-		this.components    = {}
-		this.rootComponent = null
-		this.dom           = null
-		this.rootElement   = document.querySelector(selector)
-		this.chainName     = this.className
-		// console.log('App', this.components)
+		this.components  = {}
+		this.root        = null
+		this.dom         = null
+		this.rootElement = document.querySelector(selector)
+		this.chainName   = this.className
 	}
 
-	init(rootConstructor) {
-		this.rootConstructor = rootConstructor
+	init(root) {
+		this.root = root
 		this.render()
-		this.rootConstructor.instance.parent = this
-		this.rootConstructor.__onMount()
-		// console.log('MOUNTED:', this.dom)
+		this.root.parent = this
+		this.root.__onMount()
 	}
 
 	has(component_id) {
 		return this.components.hasOwnProperty(component_id)
 	}
 
+	// Is called only once on application init
 	render() {
-		// console.log(this.components)
-		this.rootComponent = this.rootConstructor.__register()
-		// console.log(this.components)
-		// console.log('REGISTERED:', this.toString())
-		// console.log('PuerApp.render()', this.rootConstructor.instance)
-		// console.log(this.components)
-		this.dom = this.rootConstructor.__render(this.className)
-		// let tree = this.dom.cloneNode(true)
+		this.root.__register()
+		this.dom = this.root.__render(this.className)
 		this.rootElement.innerHTML = null
 		this.rootElement.appendChild(this.dom) // TODO: Virutalize dom
-		// console.log('RENDERED', this.dom)
+	}
+
+	// Is called every time on invalidate
+	update() {
+		this.dom = this.root.__update(this.className)
 	}
 
 	toString(root, indent='') {
 		s = ''
-		root = root || this.rootComponent
+		root = root || this.root
 		s += indent + root.toString() + '\n'
 		if (root.isCustom) {
 			s += this.toString(root.root, indent + '  ')
 		} else {
 			for (let child of root.children) {
-				s += this.toString(child.instance, indent + '  ')
+				s += this.toString(child, indent + '  ')
 			}
 		}
 		return s
 	}
 
 	invalidate() {
-		// console.log('APP INVALIDATE')
-		this.render()
+		this.update()
 	}
 
 	

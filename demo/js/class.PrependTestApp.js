@@ -1,8 +1,8 @@
 import Puer, {PuerComponent} from '../../puer.js'
 
 class PrependTestApp extends PuerComponent {
-	constructor(props) {
-		super(props)
+	constructor(props, children) {
+		super(props, children)
 	}
 
 	_renderLi(e) {

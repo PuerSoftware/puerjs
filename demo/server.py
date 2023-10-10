@@ -2,12 +2,19 @@ import os
 import sys
 import mimetypes
 
-from flask import Flask, Response, send_file, abort
+from flask import Flask, Response, send_file, abort #, jasonify
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.getcwd())
 print('BASE_DIR', BASE_DIR)
 entry_file = 'test.html'
+
+# @app.route('/validate/<validation_key:string>', methods=['GET'])
+# def serve_file(validation_key):
+# 	jasonify({
+# 		error: `Some scary error occured on ${}`
+# 	})
+
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):

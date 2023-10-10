@@ -21,6 +21,10 @@ class PuerObject {
 		return this.getProperties().filter(item => typeof this[item] === 'function')
 	}
 
+	hasOwnMethod(method) {
+		return this.hasOwnProperty(method) && typeof this[method] === 'function'
+	}
+
 	hasProto(className) {
 		let proto = this
 		do {

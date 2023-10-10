@@ -17,21 +17,21 @@ class PuerConstructor extends PuerObject {
 
     /*********************** PRIVATE ***********************/
 
-    _getInstance(id) {
-        let instance = null
-        if (Puer.App.has(id)) {
-            instance      = Puer.App.components[id]
-            this.children = instance.children
-            // console.log('Found in components', instance.id, instance.props, instance)
-        } else {
-            instance          = new this.cls(this.props, this.owner)
-            instance.id       = id
-            instance.isCustom = this.isCustom
+    // _getInstance(id) {
+    //     let instance = null
+    //     if (Puer.App.has(id)) {
+    //         instance      = Puer.App.components[id]
+    //         this.children = instance.children
+    //         // console.log('Found in components', instance.id, instance.props, instance)
+    //     } else {
+    //         instance          = new this.cls(this.props, this.owner)
+    //         instance.id       = id
+    //         instance.isCustom = this.isCustom
 
-            Puer.App.components[id] = instance
-        }
-        return instance
-    }
+    //         Puer.App.components[id] = instance
+    //     }
+    //     return instance
+    // }
 
     /********************** FRAMEWORK **********************/
 
@@ -39,7 +39,7 @@ class PuerConstructor extends PuerObject {
         this.xPath    = xPath + '>' + this.cls.name + `[${index}]`
         this.instance = this._getInstance(this.xPath)
 
-        this.instance.children = this.children.filter(child => typeof child != 'undefined')
+        this.instance.children = this.children
 
         if (this.isCustom) {
             this.tree                 = this.tree || this.instance.render()
@@ -48,6 +48,8 @@ class PuerConstructor extends PuerObject {
             }
             this.instance.root        = this.tree.__register(this.xPath)
             this.instance.root.parent = this.instance
+
+
         } else {
             this.instance.root = this.instance
             this.children && this.children.forEach((child, index) => {
@@ -61,6 +63,10 @@ class PuerConstructor extends PuerObject {
 
         // console.log(this.xPath, this.instance)
         return this.instance
+    }
+
+    __update() {
+        return this.instance.__update()
     }
 
     __render() {

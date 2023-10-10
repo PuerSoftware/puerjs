@@ -3,8 +3,8 @@ import PuerComponent from '../../core/class.PuerComponent.js'
 
 
 class Comp2Base extends PuerComponent {
-	constructor(props) {
-		super(props)
+	constructor(props, children) {
+		super(props, children)
 	}
 }
 

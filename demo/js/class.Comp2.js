@@ -4,8 +4,8 @@ import Comp2Base     from './class.Comp2Base.js'
 
 
 class Comp2 extends Comp2Base {
-	constructor(props) {
-		super(props)
+	constructor(props, children) {
+		super(props, children)
 		this.state.liText = 'HAHA'
 		// console.log(this.state.liText)
 	}
@@ -33,12 +33,12 @@ class Comp2 extends Comp2Base {
 	}
 
 	render() {
-		return ul([
-			div(this.children),
-			li({text: this.state.liText}),
-			li({text: 'haha2'}),
-			button({onClick: this.renderItem, text: 'Add Item'}),
-			button({onClick: this.showChain,  text: 'Show Chain'})
+		return ul ([
+			div    (this.children),
+			li     ({text: this.state.liText}),
+			li     ({text: 'haha2'}),
+			button ({onClick: this.renderItem, text: 'Add Item'}),
+			button ({onClick: this.showChain,  text: 'Show Chain'})
 		])
 	}
 }

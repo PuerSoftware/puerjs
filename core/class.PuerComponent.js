@@ -1,12 +1,14 @@
 import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 import PuerState         from './class.PuerState.js'
+import String            from '../library/class.String.js'
 
 
 class PuerComponent extends BasePuerComponent {
-	constructor(props, owner) {
-		super(props, owner)
+	constructor(props, children) {
+		super(props, children)
 		this.state     = new PuerState(this.invalidate.bind(this))
+		this.isCustom  = true
 
 		this.getMethods()
 			.filter(method => method.startsWith('render') || method.startsWith('_render'))
@@ -16,6 +18,18 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	/********************** FRAMEWORK **********************/
+
+
+	__register(path='PuerApp', index=0) {
+		super.__register(path, index)
+		this.tree = this.render()
+        if (!this.tree) {
+            throw new PuerError('Must return component tree', this.className, 'render')
+        }
+        this.root = this.tree.__register(this.path)
+        this.root.parent = this
+        return this
+	}
 
 	__render() {
 		// console.log('__render', this.id, this.parent)
@@ -39,11 +53,20 @@ class PuerComponent extends BasePuerComponent {
 		return null
 	}
 
+	_onPropChange(prop) {
+		super._onPropChange(prop)
+		const onChangeFuncName = `onChange${String.capitalize(prop)}`
+		if (this.hasOwnMethod(onChangeFuncName)) {
+			this[onChangeFuncName].bind(this)(this.props[prop])
+		}
+	}
+
 	/********************* DOM METHODS *********************/
 
 	append(child) {
 		// child = Puer.defer(child)
 		child.parent = this
+		console.log(this.children)
 		this.children.push(child)
 		// console.log(this.children)
 
