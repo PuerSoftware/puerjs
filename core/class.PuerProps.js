@@ -8,7 +8,7 @@ class PuerProps {
 		this._onChange = onChange
 
 		for (const prop in props) {
-			if (this.hasOwnProperty(prop)) {
+			if (this._props.hasOwnProperty(prop)) {
 				throw new PuerError(`Can not re-define prop "${prop}"`, this, 'constructor')
 			} else {
 				this._props[prop] = props[prop]
@@ -59,12 +59,7 @@ class PuerProps {
 		const events = {}
 		for (const prop in this) {
 			let value = this[prop]
-			if (typeof value === 'function' && !value.isGetterFunction) {
-				if (!prop.startsWith('on')) {
-					throw PuerError(
-						`Event names must start with "on". Found: "${prop}".`,this, 'filterEvents'
-					)
-				}
+			if (typeof value === 'function' && prop.startsWith('on')) {
 				events[prop.substring(2).toLowerCase()] = value.bind(owner)
 				delete this[prop]
 			}
@@ -73,7 +68,7 @@ class PuerProps {
 	}
 
 	toString() {
-		return JSON.stringify(this)
+		// return JSON.stringify(this._props)
 	}
 }
 

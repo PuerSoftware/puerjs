@@ -10,8 +10,11 @@ class PuerChildren {
 				} else if (typeof target[prop] === 'function') {
 					return new Proxy(target[prop], {
 						apply: (target, thisArg, args) => {
-							console.log('target', thisArg)
-							console.log('target._children', thisArg._children)
+							// console.log('target', thisArg)
+							// console.log('target._children', thisArg._children)
+							if (!thisArg) {
+								console.log('thisArg is undefined', target, args)
+							}
 							const oldLength = thisArg._children.length
 							const result = Reflect.apply(target, thisArg, args)
 							if (oldLength !== thisArg._children.length) {
