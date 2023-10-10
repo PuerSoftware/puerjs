@@ -17,8 +17,8 @@ class Comp1 extends PuerComponent {
 	}
 
 	showChain() {
-		console.log('this.$$.Comp2Base', this.$$.Comp2Base)
-		console.log('this.$$.Comp2',     this.$$.Comp2)
+		console.log('this.$$.Comp2Base', this.$$.Comp2Base) // +
+		console.log('this.$$.Comp2',     this.$$.Comp2)     // +
 	}
 
 	render() {

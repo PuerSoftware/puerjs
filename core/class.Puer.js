@@ -103,7 +103,7 @@ class Puer {
 		)
 		Object.defineProperty(window[className], 'name', { value: className })
 		window[className].prototype.chainName = name
-		// console.log('setting chain name', name)
+		// console.log('setting chain name', window[className].prototype.chainName)
 
 		window[name] = (... args) => {
 			// console.log(name, ...args)

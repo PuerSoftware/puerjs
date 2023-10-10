@@ -29,6 +29,7 @@ class BasePuerComponent extends PuerObject {
 	getImmediateChainDescendants(chainName) {
 		let items = []
 		if (this.isCustom) {
+			// console.log('getImmediateChainDescendants', chainName, this.root.chainName)
 			if (chainName === this.root.chainName) {
 				items.push(this.root)
 			}
