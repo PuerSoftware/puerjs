@@ -15,98 +15,102 @@ class PuerProxyPlugin {
 }
 
 
-class ChainPlugin extends PuerProxyPlugin {
-	/*
-		operators = {
-			operator1 : itemMethodName1,
-			operator1 : itemMethodName2,
-			...
-			operatorN : itemMethodNameN
-		}
-	*/
-	constructor(operators) {
-		super()
-		this.operators = operators
-		this.operator  = null
-	}
+const PuerArrayProxyPlugins = {
 
-	get(prop) {
-		if (this.operator) {
-			let   newInastance = new targetClass()
-			const method       = this.operators[this.operator]
-
-			for (const item of this.target) {
-				newInastance = newInastance.concat(item[method](prop))
-				this.operator = null
-				return newInastance
+	ChainPlugin : class ChainPlugin extends PuerProxyPlugin {
+		/*
+			operators = {
+				operator1 : itemMethodName1,
+				operator1 : itemMethodName2,
+				...
+				operatorN : itemMethodNameN
 			}
-		} else {
-			if (prop in this.operators) {
-				target._operator = prop
-				return new Proxy(this.target, this.handler)
-			}
+		*/
+		constructor(operators) {
+			super()
+			this.operators = operators
+			this.operator  = null
 		}
-		return undefined
-	}
 
-}
+		get(prop) {
+			if (this.operator) {
+				let   newInastance = new targetClass()
+				const method       = this.operators[this.operator]
 
-
-class MethodDecoratorPlugin extends PuerProxyPlugin {
-	/*
-		methods = {
-			methodName1 : callback1(),
-			methodName1 : callback2(),
-			any         : callbackAny()
-		}
-	*/
-	constructor(methods) {
-		super()
-		this.methods = methods
-	}
-
-	get(prop) {
-		if (typeof this.target[prop] === 'function') {
-			return new Proxy(this.target[prop], {
-				apply: (target, thisArg, args) => {
-					let f = (... args) => Reflect.apply(target, thisArg, args)
-					if (this.methods.hasOwnProperty(prop)) {
-						return this.methods[prop](f, ... args)
-					} else if (this.methods.any) {
-						return this.methods.any(f, ... args)
-					}
-					return f()
+				for (const item of this.target) {
+					newInastance = newInastance.concat(item[method](prop))
+					this.operator = null
+					return newInastance
 				}
-			})
+			} else {
+				if (prop in this.operators) {
+					target._operator = prop
+					return new Proxy(this.target, this.handler)
+				}
+			}
+			return undefined
+		}
+	},
+
+	MethodDecoratorPlugin: class MethodDecoratorPlugin extends PuerProxyPlugin {
+		/*
+			methods = {
+				methodName1 : callback1(),
+				methodName1 : callback2(),
+				any         : callbackAny()
+			}
+		*/
+		constructor(methods) {
+			super()
+			this.methods = methods
+		}
+
+		get(prop) {
+			if (typeof this.target[prop] === 'function') {
+				return new Proxy(this.target[prop], {
+					apply: (target, thisArg, args) => {
+						let f = (... args) => Reflect.apply(target, thisArg, args)
+						if (this.methods.hasOwnProperty(prop)) {
+							return this.methods[prop](f, ... args)
+						} else if (this.methods.any) {
+							return this.methods.any(f, ... args)
+						}
+						return f()
+					}
+				})
+			}
+			return undefined
+		}
+	},
+
+	IndexAccessroPlugin : class IndexAccessorPluin extends PuerProxyPlugin {
+		constructor(getter, setter) {
+			super()
+			this.getter = getter
+			this.setter = setter
+		}
+
+		get(index) {
+			if (Number.isInteger(Number(index))) {
+				const f = () => this.target[index]
+				return this.getter(f, index)
+			}
+			return undefined
+		}
+
+		set(index, value) {
+			if (Number.isInteger(Number(index))) {
+				const f = (value) => { this.target[index] = value }
+				this.setter(f, index, value)
+				return true
+			}
+			return false
 		}
 	}
 }
 
 
-class IndexAccessorPluin extends PuerProxyPlugin {
-	constructor(getter, setter) {
-		super()
-		this.getter = getter
-		this.setter = setter
-	}
-
-	get(index) {
-		if (Number.isInteger(Number(index))) {
-			const f = () => this.target[index]
-			this.getter(f, index)
-		}
-	}
-
-	set(index, value) {
-		if (Number.isInteger(Number(index))) {
-			const f = (value) => { this.target[index] = value }
-			this.setter(f, index, value)
-		}
-	}
-}
-
-
-class PuerArray extends Array {
+class PuerArrayProxy extends Array {
 	constructor(items, plugins) {
 		super(... items)
 		this.plugins = plugins
