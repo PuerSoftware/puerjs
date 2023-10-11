@@ -17,7 +17,7 @@ class PuerProxyPlugin {
 
 const PuerArrayProxyPlugins = {
 
-	OperatorChain : class OperatorChain extends PuerProxyPlugin {
+	ChainOperator : class OperatorChain extends PuerProxyPlugin {
 		/*
 			operators = {
 				operator1 : itemMethodName1,
