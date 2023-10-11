@@ -17,7 +17,7 @@ class PuerProxyPlugin {
 
 const PuerArrayProxyPlugins = {
 
-	ChainPlugin : class ChainPlugin extends PuerProxyPlugin {
+	OperatorChain : class OperatorChain extends PuerProxyPlugin {
 		/*
 			operators = {
 				operator1 : itemMethodName1,
@@ -52,7 +52,7 @@ const PuerArrayProxyPlugins = {
 		}
 	},
 
-	MethodDecoratorPlugin: class MethodDecoratorPlugin extends PuerProxyPlugin {
+	MethodDecorator: class MethodDecorator extends PuerProxyPlugin {
 		/*
 			methods = {
 				methodName1 : callback1(),
@@ -83,7 +83,7 @@ const PuerArrayProxyPlugins = {
 		}
 	},
 
-	IndexAccessroPlugin : class IndexAccessorPluin extends PuerProxyPlugin {
+	IndexAccessroDecorator : class IndexAccessroDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
 			super()
 			this.getter = getter
