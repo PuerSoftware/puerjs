@@ -1,7 +1,5 @@
 class PuerProxyPlugin {
 	constructor() {
-		targetClass = null
-		proxyClass  = null
 	}
 
 	engage(target, proxy, handler) {
@@ -34,7 +32,7 @@ const PuerArrayProxyPlugins = {
 
 		get(prop) {
 			if (this.operator) {
-				let   newInastance = new targetClass()
+				let   newInastance = new this.target.constructor()
 				const method       = this.operators[this.operator]
 
 				for (const item of this.target) {
@@ -83,6 +81,16 @@ const PuerArrayProxyPlugins = {
 		}
 	},
 
+
+	// methods = {
+	// 	push: function(f, args) {
+	// 		...
+	// 		result = f(args)
+	// 		...
+	//		return result
+	// 	}
+	// }
+
 	IndexAccessroDecorator : class IndexAccessroDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
 			super()
@@ -108,6 +116,15 @@ const PuerArrayProxyPlugins = {
 		}
 	}
 }
+
+// PuerArrayProxy[n]
+
+// getter = function (f , n) {
+	// 		...
+	// 		result = f(n)
+	// 		...
+	//      return n
+	// }
 
 
 class PuerArrayProxy extends Array {
