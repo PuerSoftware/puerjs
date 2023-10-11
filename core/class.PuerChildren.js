@@ -2,15 +2,16 @@ class PuerChildren {
 	constructor(children = [], onChange) {
 		this._children = children
 		this._onChange = onChange
-		
+
 		return new Proxy(this, {
 			get: (target, prop) => {
+				console.log('    PuerChildren PROXY 1', target, prop)
 				if (typeof prop === 'symbol') {
-					return Reflect.get(target, prop)
+					return Reflect.get(target, prop) // Handle Symbol prpsSymbol.iterator, etc
 				} else if (typeof target[prop] === 'function') {
 					return new Proxy(target[prop], {
 						apply: (target, thisArg, args) => {
-							// console.log('target', thisArg)
+							console.log('        PuerChildren PROXY 2', target, thisArg, args)
 							// console.log('target._children', thisArg._children)
 							if (!thisArg) {
 								console.log('thisArg is undefined', target, args)
@@ -26,7 +27,7 @@ class PuerChildren {
 					})
 				} else if (prop === 'length') {
 					return target._children.length
-				} else if (!isNaN(prop)) {
+				} else if (Number.isInteger(Number(prop))) {
 					return target._children[prop]
 				} else {
 					return Reflect.get(target, prop)
@@ -34,7 +35,7 @@ class PuerChildren {
 			},
 
 			set: (target, prop, value) => {
-				if (!isNaN(prop)) {
+				if (Number.isInteger(Number(prop))) {
 					const oldLength = target._children.length
 					target._children[prop] = value
 					if (oldLength !== target._children.length) {
