@@ -3,7 +3,6 @@ import PuerProps        from './class.PuerProps.js'
 import PuerHtmlElement  from './class.PuerHtmlElement.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
-import PuerChildren     from './class.PuerChildren.js'
 import String           from '../library/class.String.js'
 import PuerApp          from './class.PuerApp.js'
 
@@ -16,9 +15,9 @@ class BasePuerComponent extends PuerObject {
 		this.element      = null
 		this.parent       = null
 		
-		console.log('CONSTRUCTOR', this.className, children)
-		this.children     = new PuerChildren (children, this._onChildrenChange .bind(this))
-		this.props        = new PuerProps    (props,    this._onPropChange     .bind(this))
+		// console.log('CONSTRUCTOR', this.className, children)
+		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
+		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
 
 		this.events       = this.props.extractEvents(this.owner)
 		this.cssClass     = String.camelToDashedSnake(this.className)
@@ -115,7 +114,7 @@ class BasePuerComponent extends PuerObject {
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange(prop) {}
+	_onPropChange(prop, value) {}
 
 	_onChildrenChange() {}
 

@@ -1,16 +1,4 @@
-class PuerProxyPlugin {
-	constructor() {
-	}
-
-	engage(target, proxy, handler) {
-		this.target  = target
-		this.proxy   = proxy
-		this.handler = handler
-	}
-
-	get() { return undefined }
-	set() { return false     }
-}
+import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 
 const PuerArrayProxyPlugins = {
@@ -32,17 +20,17 @@ const PuerArrayProxyPlugins = {
 
 		get(prop) {
 			if (this.operator) {
-				let   newInastance = new this.target.constructor()
+				let   newInstance  = new this.target.constructor()
 				const method       = this.operators[this.operator]
 
 				for (const item of this.target) {
-					newInastance = newInastance.concat(item[method](prop))
+					newInstance = newInstance.concat(item[method](prop))
 					this.operator = null
-					return newInastance
+					return newInstance
 				}
 			} else {
 				if (prop in this.operators) {
-					target._operator = prop
+					this.operator = prop
 					return new Proxy(this.target, this.handler)
 				}
 			}
@@ -73,7 +61,7 @@ const PuerArrayProxyPlugins = {
 						} else if (this.methods.any) {
 							return this.methods.any(f, ... args)
 						}
-						return f()
+						return f(...args)
 					}
 				})
 			}
@@ -91,7 +79,7 @@ const PuerArrayProxyPlugins = {
 	// 	}
 	// }
 
-	IndexAccessroDecorator : class IndexAccessroDecorator extends PuerProxyPlugin {
+	IndexAccessorDecorator : class IndexAccessorDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
 			super()
 			this.getter = getter
@@ -99,7 +87,7 @@ const PuerArrayProxyPlugins = {
 		}
 
 		get(index) {
-			if (Number.isInteger(Number(index))) {
+			if (this.getter && Number.isInteger(Number(index))) {
 				const f = () => this.target[index]
 				return this.getter(f, index)
 			}
@@ -107,7 +95,7 @@ const PuerArrayProxyPlugins = {
 		}
 
 		set(index, value) {
-			if (Number.isInteger(Number(index))) {
+			if (this.setter && Number.isInteger(Number(index))) {
 				const f = (value) => { this.target[index] = value }
 				this.setter(f, index, value)
 				return true
@@ -142,7 +130,7 @@ class PuerArrayProxy extends Array {
 				return Reflect.get(target, prop, receiver)
 			},
 
-			set: function(target, prop, value receiver) {
+			set: function(target, prop, value, receiver) {
 				for (const plugin of plugins) {
 					if (plugin.set(prop, value)) {
 						return true
@@ -161,3 +149,6 @@ class PuerArrayProxy extends Array {
 		return this.proxy
 	}
 }
+
+export {PuerArrayProxyPlugins}
+export default PuerArrayProxy
