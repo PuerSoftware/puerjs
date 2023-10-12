@@ -24,9 +24,15 @@
         })
         $(document).ready(() => {
             $('#decorator-proxy-btn').click((btn) => {
-				console.log(testProxyMap.foo1)
-				// testProxyMap.set('foo3', 'bar3')
-                //testProxyMap['foo2'] = 'changedFoo2'
+				console.log('foo1',testProxyMap['foo1'])
+				testProxyMap.set('foo3', 'bar3') //= 'bar3'
+                testProxyMap.foo2 = 'changedFoo2' // not work and [] not work
+                console.log('foo2', testProxyMap.foo2)
+                console.log('foo3', testProxyMap.get('foo3'))
+                //testProxyMap.set('setFoo4', 'bar4')
+                console.log('has foo3', testProxyMap.has('foo3'))
+                console.log('has foo4', testProxyMap.has('foo4'))
+                //console.log('setFoo4', testProxyMap.get('setFoo4'))
             })
         })
 	</script>

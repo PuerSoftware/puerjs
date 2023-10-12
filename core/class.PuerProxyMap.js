@@ -58,8 +58,11 @@ class PuerProxyMap extends Map {
 		const handler = {
 			get: function (target, prop, receiver) {
 				if (prop === '__target') { return target }
-
-				console.log('getter of property', target, prop)
+				if (new Map()[prop]) {
+					// console.log('getter of own property', target, prop)
+					// console.log('target has?', target['has'])
+					return target[prop].bind(target)
+				}
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)
@@ -68,6 +71,9 @@ class PuerProxyMap extends Map {
 				return target.get(prop)
 			},
 			set: function(target, prop, value, receiver) {
+				if (new Map()[prop]) {
+					return Reflect.set(target, prop, value, receiver)
+				}
 				for (const plugin of plugins) {
 					if (plugin.set(prop, value)) {
 						return true
@@ -86,13 +92,13 @@ class PuerProxyMap extends Map {
 		return proxy
 	}
 
-	get(prop) {
-		console.log('get', prop)
-	}
-
-	set(prop, value) {
-		console.log('set', prop, value)
-	} 
+	// get(prop) {
+	// 	return this[prop]
+	// }
+	//
+	// set(prop, value) {
+	// 	this[prop] = value
+	// }
 
 	toMap() {
 		return new Map(this.__target.entries())
