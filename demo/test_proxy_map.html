@@ -24,8 +24,8 @@
         })
         $(document).ready(() => {
             $('#decorator-proxy-btn').click((btn) => {
-				console.log(testProxyMap.__target.get('foo1'))
-				testProxyMap.__target.set('foo3', 'bar3')
+				console.log(testProxyMap.foo1)
+				// testProxyMap.set('foo3', 'bar3')
                 //testProxyMap['foo2'] = 'changedFoo2'
             })
         })

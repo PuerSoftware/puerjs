@@ -26,6 +26,27 @@ const PuerProxyMapPlugins = {
 			}
 			return false
 		}
+	},
+
+	/*****************************************************************/
+
+	KeyAccessorDecorator : class KeyAccessorDecorator extends PuerProxyPlugin {
+		constructor(getter, setter) {
+			super()
+			this.getter = getter
+			this.setter = setter
+		}
+
+		get(key) {
+			const f = () => this.target.get(key)
+			return this.getter(f, key)
+		}
+
+		set(key, value) {
+			const f = (value) => { this.target.set(key, value) }
+			this.setter(f, key, value)
+			return true
+		}
 	}
 }
 
@@ -33,18 +54,18 @@ const PuerProxyMapPlugins = {
 class PuerProxyMap extends Map {
 	constructor(object, plugins) {
 		super(Object.entries(object))
+
 		const handler = {
 			get: function (target, prop, receiver) {
-				console.log('PuerProxyMap.get', target, prop, receiver)
 				if (prop === '__target') { return target }
+
+				console.log('getter of property', target, prop)
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)
 					if (result !== undefined) { return result }
 				}
-				const res = Reflect.get(target, prop, receiver)
-				console.log('GetRes', res)
-				return res
+				return target.get(prop)
 			},
 			set: function(target, prop, value, receiver) {
 				for (const plugin of plugins) {
@@ -52,7 +73,7 @@ class PuerProxyMap extends Map {
 						return true
 					}
 				}
-				return Reflect.set(target, prop, value, receiver)
+				return target.set(prop, value)
 			}
 		}
 
@@ -64,6 +85,14 @@ class PuerProxyMap extends Map {
 
 		return proxy
 	}
+
+	get(prop) {
+		console.log('get', prop)
+	}
+
+	set(prop, value) {
+		console.log('set', prop, value)
+	} 
 
 	toMap() {
 		return new Map(this.__target.entries())
