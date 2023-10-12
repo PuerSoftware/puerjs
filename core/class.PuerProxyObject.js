@@ -1,7 +1,8 @@
 import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 
-const PuerObjectProxyPlugins = {
+const PuerProxyObjectPlugins = {
+
 	PropertyDecorator: class PropertyDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
 			super()
@@ -10,10 +11,8 @@ const PuerObjectProxyPlugins = {
 		}
 
 		get(prop) {
-			console.log('PuerObjectProxy.get()', prop)
 			if (this.getter && typeof prop === 'string') {
 				const f = () => this.target[prop]
-				console.log('PuerObjectProxy.get() const f = ', f)
 				return this.getter(f, prop)
 			}
 			return undefined
@@ -31,21 +30,19 @@ const PuerObjectProxyPlugins = {
 }
 
 
-class PuerObjectProxy extends Object {
+class PuerProxyObject extends Object {
 	constructor(object, plugins) {
 		super(object)
-		this.plugins = plugins
 
-		this.handler = {
+		const handler = {
 			get: function (target, prop, receiver) {
+				if (prop === 'toObject') { return () => target }
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)
 					if (result !== undefined) { return result }
 				}
-				const res = Reflect.get(target, prop, receiver)
-				console.log('PuerProxyObject Reflect.get', res)
-				return res
+				return Reflect.get(target, prop, receiver)
 			},
 			set: function(target, prop, value, receiver) {
 				for (const plugin of plugins) {
@@ -57,16 +54,26 @@ class PuerObjectProxy extends Object {
 			}
 		}
 
-		this.proxy = new Proxy(this, this.handler)
+		let proxy = new Proxy(this, handler)
 
 		for (const plugin of plugins) {
-			plugin.engage(this, this.proxy, this.handler)
+			plugin.engage(this, proxy, handler)
 		}
 
-		return this.proxy
+		return proxy
+	}
+
+
+	toObject() {
+		console.log('ToObject-->', this)
+		return {...this}
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject())
 	}
 
 }
 
-export {PuerObjectProxyPlugins}
-export default PuerObjectProxy
+export {PuerProxyObjectPlugins}
+export default PuerProxyObject

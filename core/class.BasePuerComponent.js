@@ -15,9 +15,10 @@ class BasePuerComponent extends PuerObject {
 		this.element      = null
 		this.parent       = null
 		
-		// console.log('CONSTRUCTOR', this.className, children)
 		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
 		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
+
+		console.log('CONSTRUCTOR', this.className, this.children.toString())
 
 		this.events       = this.props.extractEvents(this.owner)
 		this.cssClass     = String.camelToDashedSnake(this.className)
@@ -146,7 +147,8 @@ class BasePuerComponent extends PuerObject {
 	/*********************** CASTING ***********************/
 
 	toString() {
-		return `${this.className}(${JSON.stringify(this.props).slice(1, -1)})`
+		console.log(this.props.text)
+		return `${this.className}(${this.props.toString()})`
 	}
 
 	/********************** DIRECTIVE **********************/

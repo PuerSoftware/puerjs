@@ -1,11 +1,11 @@
-import PuerArrayProxy, {PuerArrayProxyPlugins} from './class.PuerArrayProxy.js'
+import PuerProxyArray, {PuerProxyArrayPlugins} from './class.PuerProxyArray.js'
 
 
-class PuerComponentSet extends PuerArrayProxy {
+class PuerComponentSet extends PuerProxyArray {
 	constructor(components, onChange) {
 		super(components, [
-			new PuerArrayProxyPlugins.MethodDecorator({}),
-			new PuerArrayProxyPlugins.IndexAccessorDecorator(
+			new PuerProxyArrayPlugins.MethodDecorator({}),
+			new PuerProxyArrayPlugins.IndexAccessorDecorator(
 				null,
 				function (f, n, value) {
 					const oldLength = this.length
@@ -15,7 +15,7 @@ class PuerComponentSet extends PuerArrayProxy {
 					}
 				}
 			),
-			new PuerArrayProxyPlugins.ChainOperator({
+			new PuerProxyArrayPlugins.ChainOperator({
 				$   : 'getImmediateChainDescendants',
 				$$  : 'getChainDescendants',
 				$$$ : 'getChainAncestor'

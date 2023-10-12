@@ -1,20 +1,23 @@
 import os
 import sys
 import mimetypes
+import webbrowser
 
 from flask import Flask, Response, send_file, abort #, jasonify
 
-app = Flask(__name__)
+app      = Flask(__name__)
+DEBUG    = True
+HOST     = '127.0.0.1'
+PORT     = 5000
 BASE_DIR = os.path.dirname(os.getcwd())
-print('BASE_DIR', BASE_DIR)
-entry_file = 'test.html'
+
+print('   BASE_DIR', BASE_DIR)
 
 # @app.route('/validate/<validation_key:string>', methods=['GET'])
 # def serve_file(validation_key):
 # 	jasonify({
 # 		error: `Some scary error occured on ${}`
 # 	})
-
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
@@ -30,7 +33,7 @@ def serve_file(filename):
 @app.route('/')
 def index():
 	demo_dir     = os.path.join(BASE_DIR, 'demo')
-	files        = os.listdir(demo_dir)
+	files        = sorted(os.listdir(demo_dir))
 	html_files   = [f for f in files if f.endswith('.html')]
 
 	html_content = '<h1>Index:</h1><ul>'
@@ -41,4 +44,6 @@ def index():
 	return Response(html_content, mimetype='text/html')
 
 if __name__ == '__main__':
-	app.run(debug=True)
+	webbrowser.open('http://' + HOST + ':' + str(PORT))
+	app.run(host=HOST, port=PORT, debug=DEBUG)
+

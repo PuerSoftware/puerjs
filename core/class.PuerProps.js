@@ -1,10 +1,10 @@
-import PuerObjectProxy, {PuerObjectProxyPlugins} from './class.PuerObjectProxy.js'
+import PuerProxyObject, {PuerProxyObjectPlugins} from './class.PuerProxyObject.js'
 import PuerError                                 from './class.PuerError.js'
 
-class PuerProps extends PuerObjectProxy {
+class PuerProps extends PuerProxyObject {
 	constructor(props={}, onChange) {
 		super(props, [
-			new PuerObjectProxyPlugins.PropertyDecorator(
+			new PuerProxyObjectPlugins.PropertyDecorator(
 				null,
 				function (f, prop, value) {
 					const oldValue = this[prop]
@@ -43,8 +43,8 @@ class PuerProps extends PuerObjectProxy {
 		return events
 	}
 
-	toString() {
-		// return JSON.stringify(this)
+	toObject() {
+		return super.toObject()
 	}
 }
 

@@ -1,4 +1,4 @@
-import PuerArrayProxy, {PuerArrayProxyPlugins} from '../../core/class.PuerArrayProxy.js'
+import PuerProxyArray, {PuerProxyArrayPlugins} from '../../core/class.PuerProxyArray.js'
 
 
 class Item {
@@ -13,7 +13,7 @@ class ItemChain {
 	}
 }
 
-const indexPlugin = new PuerArrayProxyPlugins.IndexAccessorDecorator(
+const indexPlugin = new PuerProxyArrayPlugins.IndexAccessorDecorator(
 	function (f, n) {
 		console.log('indexPlugin GETTER before', f, n)
 		const result = f(n)
@@ -27,7 +27,7 @@ const indexPlugin = new PuerArrayProxyPlugins.IndexAccessorDecorator(
 	}
 )
 
-const decoratorPlugin = new PuerArrayProxyPlugins.MethodDecorator({
+const decoratorPlugin = new PuerProxyArrayPlugins.MethodDecorator({
 	push: function (f, item) {
 		console.log('decoratorPlugin PUSH before', f, item)
 		const newLength = f(item)
@@ -54,7 +54,7 @@ class TestArrayProxy {
 			items.push(new Item(n))
 		}
 
-		this.arrayProxy = new PuerArrayProxy(items, [
+		this.arrayProxy = new PuerProxyArray(items, [
 			indexPlugin,
 			decoratorPlugin
 		])

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous">
+    </script>
+	<title>Puer Demo</title>
+</head>
+<body>
+    <a href="/">&laquo; Home</a>
+	<h1>Puer Demo</h1>
+	<div id="demo">
+        <button id="index-proxy-btn">Test Index Plugin</button>
+        <button id="decorator-proxy-btn">Test Decorator Plugin</button>
+    </div>
+	<script type="module">
+		import TestProxyArray from './js/class.TestArrayProxy.js'
+        const testProxyArray = new TestProxyArray()
+        $(document).ready(() => {
+            $('#index-proxy-btn').click((btn) => {
+				testProxyArray.testIndexPlugin()
+            })
+            $('#decorator-proxy-btn').click((btn) => {
+				testProxyArray.testDecoratorPlugin()
+            })
+        })
+	</script>
+</body>
+</html>

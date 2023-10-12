@@ -1,7 +1,9 @@
 import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 
-const PuerArrayProxyPlugins = {
+const PuerProxyArrayPlugins = {
+
+	/*****************************************************************/
 
 	ChainOperator: class ChainOperator extends PuerProxyPlugin {
 		/*
@@ -38,6 +40,8 @@ const PuerArrayProxyPlugins = {
 		}
 	},
 
+	/*****************************************************************/
+
 	MethodDecorator: class MethodDecorator extends PuerProxyPlugin {
 		/*
 			methods = {
@@ -69,15 +73,7 @@ const PuerArrayProxyPlugins = {
 		}
 	},
 
-
-	// methods = {
-	// 	push: function(f, args) {
-	// 		...
-	// 		result = f(args)
-	// 		...
-	//		return result
-	// 	}
-	// }
+	/*****************************************************************/
 
 	IndexAccessorDecorator : class IndexAccessorDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
@@ -105,22 +101,14 @@ const PuerArrayProxyPlugins = {
 	}
 }
 
-// PuerArrayProxy[n]
+/*****************************************************************/
+/*****************************************************************/
 
-// getter = function (f , n) {
-	// 		...
-	// 		result = f(n)
-	// 		...
-	//      return n
-	// }
-
-
-class PuerArrayProxy extends Array {
+class PuerProxyArray extends Array {
 	constructor(items, plugins) {
 		super(... items)
-		this.plugins = plugins
 
-		this.handler = {
+		const handler = {
 			get: function(target, prop, receiver) {
 				let result = null
 				for (const plugin of plugins) {
@@ -140,15 +128,23 @@ class PuerArrayProxy extends Array {
 			}
 		}
 
-		this.proxy = new Proxy(this, this.handler)
+		const proxy = new Proxy(this, handler)
 
 		for (const plugin of plugins) {
-			plugin.engage(this, this.proxy, this.handler)
+			plugin.engage(this, proxy, handler)
 		}
 
-		return this.proxy
+		return proxy
+	}
+
+	toArray() {
+		return Array.from(this)
+	}
+
+	toString() {
+		return '[' + this.toArray().join(', ') + ']'
 	}
 }
 
-export {PuerArrayProxyPlugins}
-export default PuerArrayProxy
+export {PuerProxyArrayPlugins}
+export default PuerProxyArray

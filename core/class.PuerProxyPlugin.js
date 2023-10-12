@@ -3,8 +3,8 @@ class PuerProxyPlugin {
 	}
 
 	engage(target, proxy, handler) {
-		this.target = target
-		this.proxy = proxy
+		this.target  = target
+		this.proxy   = proxy
 		this.handler = handler
 	}
 
