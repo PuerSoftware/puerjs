@@ -47,7 +47,7 @@ const decoratorPlugin = new PuerProxyArrayPlugins.MethodDecorator({
 	// }
 })
 
-class TestArrayProxy {
+class TestProxyArray {
 	constructor() {
 		let items = []
 		for (let n = 0; n < 10; n++) {
@@ -99,4 +99,4 @@ class TestArrayProxy {
 	}
 }
 
-export default TestArrayProxy
+export default TestProxyArray

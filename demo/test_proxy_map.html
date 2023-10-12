@@ -14,18 +14,19 @@
     <a href="/">&laquo; Home</a>
 	<h1>Puer Demo</h1>
 	<div id="demo">
-        <button id="index-proxy-btn">Test Index Plugin</button>
+        <!-- button id="index-proxy-btn">Test Index Plugin</button -->
         <button id="decorator-proxy-btn">Test Decorator Plugin</button>
     </div>
 	<script type="module">
-		import TestArrayProxy from './js/class.TestArrayProxy.js'
-        const testArrayProxy = new TestArrayProxy()
+		import TestProxyMap from './js/class.TestProxyMap.js'
+        const testProxyMap = new TestProxyMap((prop, value) => {
+			console.log(`New value for prop '${prop}'`, value)
+        })
         $(document).ready(() => {
-            $('#index-proxy-btn').click((btn) => {
-				testArrayProxy.testIndexPlugin()
-            })
             $('#decorator-proxy-btn').click((btn) => {
-				testArrayProxy.testDecoratorPlugin()
+				console.log(testProxyMap.__target.get('foo1'))
+				testProxyMap.__target.set('foo3', 'bar3')
+                //testProxyMap['foo2'] = 'changedFoo2'
             })
         })
 	</script>

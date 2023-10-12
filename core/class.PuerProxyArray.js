@@ -110,6 +110,7 @@ class PuerProxyArray extends Array {
 
 		const handler = {
 			get: function(target, prop, receiver) {
+				if (prop === '__target') { return target }
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)

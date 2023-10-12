@@ -1,10 +1,10 @@
-import PuerProxyObject, {PuerProxyObjectPlugins} from './class.PuerProxyObject.js'
+import PuerProxyMap, {PuerProxyMapPlugins} from './class.PuerProxyMap.js'
 import PuerError                                 from './class.PuerError.js'
 
-class PuerProps extends PuerProxyObject {
+class PuerProps extends PuerProxyMap {
 	constructor(props={}, onChange) {
 		super(props, [
-			new PuerProxyObjectPlugins.PropertyDecorator(
+			new PuerProxyMapPlugins.PropertyDecorator(
 				null,
 				function (f, prop, value) {
 					const oldValue = this[prop]

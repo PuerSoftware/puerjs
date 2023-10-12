@@ -1,7 +1,7 @@
 import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 
-const PuerProxyObjectPlugins = {
+const PuerProxyMapPlugins = {
 
 	PropertyDecorator: class PropertyDecorator extends PuerProxyPlugin {
 		constructor(getter, setter) {
@@ -30,19 +30,21 @@ const PuerProxyObjectPlugins = {
 }
 
 
-class PuerProxyObject extends Object {
+class PuerProxyMap extends Map {
 	constructor(object, plugins) {
-		super(object)
-
+		super(Object.entries(object))
 		const handler = {
 			get: function (target, prop, receiver) {
-				if (prop === 'toObject') { return () => target }
+				console.log('PuerProxyMap.get', target, prop, receiver)
+				if (prop === '__target') { return target }
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)
 					if (result !== undefined) { return result }
 				}
-				return Reflect.get(target, prop, receiver)
+				const res = Reflect.get(target, prop, receiver)
+				console.log('GetRes', res)
+				return res
 			},
 			set: function(target, prop, value, receiver) {
 				for (const plugin of plugins) {
@@ -63,10 +65,12 @@ class PuerProxyObject extends Object {
 		return proxy
 	}
 
+	toMap() {
+		return new Map(this.__target.entries())
+    }
 
 	toObject() {
-		console.log('ToObject-->', this)
-		return {...this}
+		return Object.fromEntries(this.toMap())
 	}
 
 	toString() {
@@ -75,5 +79,5 @@ class PuerProxyObject extends Object {
 
 }
 
-export {PuerProxyObjectPlugins}
-export default PuerProxyObject
+export {PuerProxyMapPlugins}
+export default PuerProxyMap
