@@ -3,7 +3,6 @@ import PuerProps        from './class.PuerProps.js'
 import PuerHtmlElement  from './class.PuerHtmlElement.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
-import String           from '../library/class.String.js'
 import PuerApp          from './class.PuerApp.js'
 
 
@@ -21,7 +20,7 @@ class BasePuerComponent extends PuerObject {
 		console.log('CONSTRUCTOR', this.className, this.children.toString())
 
 		this.events       = this.props.extractEvents(this.owner)
-		this.cssClass     = String.camelToDashedSnake(this.className)
+		this.cssClass     = Puer.String.camelToDashedSnake(this.className)
 		this.isCustom     = false
 		this.path         = null
 		this._listenerMap = new WeakMap()

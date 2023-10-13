@@ -1,7 +1,6 @@
 import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 import PuerState         from './class.PuerState.js'
-import String            from '../library/class.String.js'
 
 
 class PuerComponent extends BasePuerComponent {
@@ -55,7 +54,7 @@ class PuerComponent extends BasePuerComponent {
 
 	_onPropChange(prop) {
 		super._onPropChange(prop)
-		const onChangeFuncName = `onChange${String.capitalize(prop)}`
+		const onChangeFuncName = `onChange${Puer.String.capitalize(prop)}`
 		if (this.hasOwnMethod(onChangeFuncName)) {
 			this[onChangeFuncName].bind(this)(this.props[prop])
 		}

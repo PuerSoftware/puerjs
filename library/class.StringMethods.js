@@ -1,4 +1,4 @@
-class String {
+class StringMethods {
     static random(len) {
         let result = ''
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -18,6 +18,11 @@ class String {
     static camelToDashedSnake(s) {
         return s.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
     }
+
+    static titleDivider(title, n = 20, ch = '=') {
+        let pad = Math.floor((n - title.length - 2) / 2)
+        return ch.repeat(pad) + ' ' + title + ' ' + ch.repeat(n - title.length - 2 - pad)
+    }
 }
 
-export default String
+export default StringMethods

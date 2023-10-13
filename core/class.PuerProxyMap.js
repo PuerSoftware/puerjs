@@ -72,7 +72,7 @@ class PuerProxyMap extends Map {
 					result = plugin.get(prop)
 					if (result !== undefined) { return result }
 				}
-				return Reflect.get(target, prop, receiver)
+				return target.get(prop)
 			},
 
 			set: function(target, prop, value, receiver) {
@@ -81,9 +81,20 @@ class PuerProxyMap extends Map {
 						return true
 					}
 				}
-				return Reflect.set(target, prop, value, receiver)
+				return target.set(prop, value)
 			},
-
+			deleteProperty: function(target, prop) {
+				for (const plugin of plugins) {
+					if (plugin.delete && plugin.delete(prop)) {
+						return true
+					}
+				}
+				if (target.has(prop)) {
+					target.delete(prop)
+					return true
+				}
+				return false
+			}
 			// apply: function(target, thisArg, args) {
 			// 	return target.apply(target, args)
 			// }

@@ -3,7 +3,8 @@ import PuerEvents      from './class.PuerEvents.js'
 import PuerError       from './class.PuerError.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
-import String          from '../library/class.String.js'
+import StringMethods   from '../library/class.StringMethods.js'
+import ObjectMethods   from '../library/class.ObjectMethods.js'
 
 class Puer {
 	static owner
@@ -95,7 +96,7 @@ class Puer {
 		if (name in window) {
 			throw `Could not register tag method ${name}: already present in global scope`
 		}
-		let className = 'PuerTag' + String.capitalize(name)
+		let className = 'PuerTag' + StringMethods.capitalize(name)
 		eval(
 			`class ${className} extends PuerHtmlElement {};` +
 			`window.${className} = ${className}`
@@ -156,7 +157,8 @@ class Puer {
 		delete Puer.App.components[id]
 	}
 }
-
+Puer.String = StringMethods
+Puer.Object = ObjectMethods
 export default Puer
 
 
