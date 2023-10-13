@@ -43,9 +43,10 @@ const PuerProxyMapPlugins = {
 		}
 
 		set(key, value) {
-			const f = (value) => { this.target.set(key, value) }
-			this.setter(f, key, value)
-			return true
+			const f = (key, value) => {
+				return this.target.set(key, value)
+			}
+			return this.setter(f, key, value)
 		}
 	}
 }
@@ -55,35 +56,40 @@ class PuerProxyMap extends Map {
 	constructor(object, plugins) {
 		super(Object.entries(object))
 
+		const _this = this
+
 		const handler = {
-			get: function (target, prop, receiver) {
+			get: function(target, prop, receiver) {
 				if (prop === '__target') { return target }
-				if (new Map()[prop]) {
-					// console.log('getter of own property', target, prop)
-					// console.log('target has?', target['has'])
-					return target[prop].bind(target)
+
+				if (typeof target[prop] === 'function') {
+					return function(...args) {
+						return target[prop].apply(target, args)
+					}
 				}
 				let result = null
 				for (const plugin of plugins) {
 					result = plugin.get(prop)
 					if (result !== undefined) { return result }
 				}
-				return target.get(prop)
+				return Reflect.get(target, prop, receiver)
 			},
+
 			set: function(target, prop, value, receiver) {
-				if (new Map()[prop]) {
-					return Reflect.set(target, prop, value, receiver)
-				}
 				for (const plugin of plugins) {
 					if (plugin.set(prop, value)) {
 						return true
 					}
 				}
-				return target.set(prop, value)
-			}
+				return Reflect.set(target, prop, value, receiver)
+			},
+
+			// apply: function(target, thisArg, args) {
+			// 	return target.apply(target, args)
+			// }
 		}
 
-		let proxy = new Proxy(this, handler)
+		const proxy = new Proxy(this, handler)
 
 		for (const plugin of plugins) {
 			plugin.engage(this, proxy, handler)
@@ -92,17 +98,9 @@ class PuerProxyMap extends Map {
 		return proxy
 	}
 
-	// get(prop) {
-	// 	return this[prop]
-	// }
-	//
-	// set(prop, value) {
-	// 	this[prop] = value
-	// }
-
 	toMap() {
-		return new Map(this.__target.entries())
-    }
+		return new Map(this.entries())
+	}
 
 	toObject() {
 		return Object.fromEntries(this.toMap())
@@ -111,7 +109,6 @@ class PuerProxyMap extends Map {
 	toString() {
 		return JSON.stringify(this.toObject())
 	}
-
 }
 
 export {PuerProxyMapPlugins}

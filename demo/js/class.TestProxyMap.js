@@ -2,8 +2,8 @@ import PuerProxyMap, {PuerProxyMapPlugins} from '../../core/class.PuerProxyMap.j
 
 
 class TestProxyMap extends PuerProxyMap {
-	constructor(onChange) {
-		super({foo1: 'bar1', foo2: 'bar2'}, [
+	constructor(obj, onChange) {
+		super(obj, [
 			new PuerProxyMapPlugins.KeyAccessorDecorator(
 				function(f, prop) {
 					return f(prop)

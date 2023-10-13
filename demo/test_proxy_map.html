@@ -19,20 +19,112 @@
     </div>
 	<script type="module">
 		import TestProxyMap from './js/class.TestProxyMap.js'
-        const testProxyMap = new TestProxyMap((prop, value) => {
-			console.log(`New value for prop '${prop}'`, value)
+
+        const obj = {
+            foo1: 'bar1',
+            foo2: 'bar2'
+        }
+        const map = new TestProxyMap(obj, (prop, value) => {
+			console.log('onChange', prop, value)
         })
+
+
+        class PuerTest {
+            constructor(name) {
+                this.name  = name
+                this.tests = []
+                this.div   = '-----------------------'
+            }
+
+            test(fExpression, sExpected) {
+                this.tests.push({
+                    expression : fExpression,
+                    expected   : sExpected
+                })
+                console.log(this.tests)
+            }
+
+            run() {
+                let successCount = 0
+                console.log(this.div)
+                console.log(`Running test "${this.name}"`)
+                for (const test of this.tests) {
+                    console.log(this.div)
+                    this._run(test)
+                    console.log(this.div)
+                }
+                console.log(this.div)
+                console.info('Successful :', successCount)
+                console.warn('Failed     :', this.tests.length - successCount)
+            }
+
+            _run(test) {
+                console.log('testing', test)
+                const code = test.expression.toString()
+                    .replace(/^[^{]*{/, '')
+                    .replace(/}[^}]*$/, '')
+                    .trim().split(/[\s]*\n[\s]*/)
+
+                const output  = test.expression()
+                console.log(output)
+                const success = (output === test.expected)
+
+                if (success) {
+                    console.info('SUCCESS', code.join('\n'))
+                } else {
+                    console.warn('FAILED', code.join('\n'))
+                }
+            }
+        }
+
+
         $(document).ready(() => {
             $('#decorator-proxy-btn').click((btn) => {
-				console.log('foo1',testProxyMap['foo1'])
-				testProxyMap.set('foo3', 'bar3') //= 'bar3'
-                testProxyMap.foo2 = 'changedFoo2' // not work and [] not work
-                console.log('foo2', testProxyMap.foo2)
-                console.log('foo3', testProxyMap.get('foo3'))
-                //testProxyMap.set('setFoo4', 'bar4')
-                console.log('has foo3', testProxyMap.has('foo3'))
-                console.log('has foo4', testProxyMap.has('foo4'))
-                //console.log('setFoo4', testProxyMap.get('setFoo4'))
+                const MapTest = new PuerTest('Map Test')
+                MapTest.test(() => { return map.toString() }, '{"foo1":"bar1","foo2":"bar2"}')
+                MapTest.run()
+
+                return
+                console.log('Click')
+
+                console.log('1 -------------------------------------')
+
+                console.log('!map.toMap()',    map.toMap())
+                console.log('!map.toObject()', map.toObject())
+                console.log('!map.toString()', map.toString())
+
+                console.log('2 ---------- Normal Map Methods -------')
+
+                console.log('!map.has("foo1")',          map.has('foo1'))
+                console.log('!map.set("foo1", "bar1a")', map.set('foo1', 'bar1a'))
+                console.log('!map.get("foo1")',          map.get('foo1'))
+                console.log('!map.set("foo3", "bar3")',  map.set('foo3', 'bar3'))
+                console.log('!map.delete("foo3")',       map.delete('foo3'))
+                console.log('!map.get("foo3")',          map.get('foo3'))
+
+                console.log('3 ---------  Accessor Methods -------')
+
+                console.log('!map.foo1 = "bar1b"',        map.foo1 = 'bar1b')
+				console.log('!map.foo1',                  map.foo1)
+                console.log('!map["foo1"] = "bar1c"',     map.foo1 = 'bar1c')
+                console.log('!map["foo1"]',               map['foo1'])
+                console.log('!map.foo3 = "bar3"',         map.foo3 = 'bar3')
+                console.log('!map.foo3',                  map.foo3)
+                console.log('delete map.foo3',            delete map.foo3)
+                console.log('!map.foo3',                  map.foo3)
+
+                
+                console.log('4 -----------  Iterations ------------')
+
+                console.log('map.forEach((value, key, map) => { console.log(key, value) }')
+                map.forEach((value, key, map) => { console.log(key, value) })
+                console.log('for (const [key, value] of map) { console.log(key, value) })')
+                for (const [key, value] of map) {
+                    console.log(key, value)
+                }
+
+
+                
             })
         })
 	</script>
