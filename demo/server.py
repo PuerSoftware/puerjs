@@ -1,7 +1,6 @@
 import os
 import sys
 import mimetypes
-import webbrowser
 
 from flask import Flask, Response, send_file, abort #, jasonify
 
@@ -12,6 +11,8 @@ PORT     = 5000
 BASE_DIR = os.path.dirname(os.getcwd())
 
 print('   BASE_DIR', BASE_DIR)
+
+##################################################################
 
 # @app.route('/validate/<validation_key:string>', methods=['GET'])
 # def serve_file(validation_key):
@@ -44,6 +45,5 @@ def index():
 	return Response(html_content, mimetype='text/html')
 
 if __name__ == '__main__':
-	webbrowser.open('http://' + HOST + ':' + str(PORT))
 	app.run(host=HOST, port=PORT, debug=DEBUG)
 

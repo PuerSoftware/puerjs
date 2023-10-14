@@ -13,6 +13,8 @@ const obj = {
     foo2: 'bar2'
 }
 
+/*************************************************************/
+
 function createTestProxyMap_NoPlugins() {
     return new TestProxyMap(obj, [])
 }
@@ -35,75 +37,87 @@ function createTestProxyMap_KeyAccessorDecoratorPlugin() {
 	])
 }
 
-function createTestProxyMap_PropertyDecoratorPlugin() {
+function createTestProxyMap_MethodDecoratorPlugin() {
 	return new TestProxyMap(obj, [
-			new PuerProxyMapPlugins.PropertyDecorator(
-				function (f, prop) {
-					return f(prop)
-				},
-				function (f, prop, value) {
-					return f(prop, value)
-				}
-			)]
-	)
+		new PuerProxyMapPlugins.MethodDecorator({
+			'get': (f, prop) => {
+				const res = f(prop)
+                if (res) {
+                    return 'get_' + res
+                }
+                return res
+			},
+			'set': (f, prop, value) => {
+				value = 'set_' + value
+                return f(prop, value)
+			},
+            'delete': (f, prop) => {
+                f(prop)
+                return 'deleted'
+            }
+        })
+	])
 }
 
+/*************************************************************/
 
 export function testProxyMap_NoPlugins() {
-		let map = createTestProxyMap_NoPlugins()
+	let map = createTestProxyMap_NoPlugins()
 
-        new PuerTest('Methods added to Map', {
-			'map.toMap()': [() => {
-                return  map.toMap()
-            },  new Map(Object.entries(obj))],
-            'map.toObject()': [() => {
-			    return  map.toObject()
-            },  obj],
-            'map.toString()': [() => {
-			    return  map.toString()
-            },  '{"foo1":"bar1","foo2":"bar2"}']
-        }).run()
+    new PuerTest('Methods added to Map', {
+		'map.toMap()': [() => {
+            return  map.toMap()
+        },  new Map(Object.entries(obj))],
+        'map.toObject()': [() => {
+		    return  map.toObject()
+        },  obj],
+        'map.toString()': [() => {
+		    return  map.toString()
+        },  '{"foo1":"bar1","foo2":"bar2"}']
+    }).run()
 
-        map = createTestProxyMap_NoPlugins()
+    map = createTestProxyMap_NoPlugins()
 
-        new PuerTest('Map existing methods', {
-            'map.get() existing key': [() => {
-                return map.get('foo1')
-            },  'bar1'],
-            'map.set() existing key': [() => {
-                map.set('foo1', 'bar1a')
-                return map.get('foo1')
-            },  'bar1a'],
-            'map.set() new key': [() => {
-                map.set('foo3', 'bar3')
-                return map.get('foo3')
-            },  'bar3'],
-            'map.delete() existing key': [() => {
-                map.delete('foo3')
-                return map.get('foo3')
-            }, undefined]
-        }).run()
+    new PuerTest('Map existing methods', {
+        'map.get() existing key': [() => {
+            return map.get('foo1')
+        },  'bar1'],
+        'map.set() existing key': [() => {
+            map.set('foo1', 'bar1a')
+            return map.get('foo1')
+        },  'bar1a'],
+        'map.set() new key': [() => {
+            map.set('foo3', 'bar3')
+            return map.get('foo3')
+        },  'bar3'],
+        'map.delete() existing key': [() => {
+            map.delete('foo3')
+            return map.get('foo3')
+        }, undefined]
+    }).run()
 
-        map = createTestProxyMap_NoPlugins()
+    map = createTestProxyMap_NoPlugins()
 
-        new PuerTest('Map iterators', {
-			'forEach': [() => {
-				let counter = 0
-				map.forEach(() => {
-					counter ++
-                })
-                return counter
-            },  2],
-            'for ... of': [() => {
-				let counter = 0
-                for (const [_, __] of map) {
-					counter ++
-                }
-				return counter
-            },  2]
-        }).run()
+    new PuerTest('Map iterators', {
+		'forEach': [() => {
+			let counter = 0
+			map.forEach(() => {
+				counter ++
+            })
+            return counter
+        },  2],
+        'for ... of': [() => {
+			let counter = 0
+            for (const [_, __] of map) {
+				counter ++
+            }
+			return counter
+        },  2]
+    }).run()
 
 	map = createTestProxyMap_NoPlugins()
+
+    console.log(map)
 
 	new PuerTest('Map [] accessors', {
         '[] accessor get existing key': [() => {
@@ -144,22 +158,24 @@ export function testProxyMap_NoPlugins() {
 	}).run()
 }
 
+/*************************************************************/
+
 export function testProxyMap_KeyAccessorDecoratorPlugin() {
 	let map = createTestProxyMap_KeyAccessorDecoratorPlugin()
 
 	new PuerTest('Map dot accessors', {
-        'dot accessor get existing key': [() => {
+        'decorate dot accessor get existing key': [() => {
             return map.foo1
         },  'get_bar1'],
-        'dot accessor set existing key': [() => {
+        'decorate dot accessor set existing key': [() => {
             map.foo1 = 'bar1b'
             return map.foo1
         },  'get_set_bar1b'],
-        'dot accessor set/get new key': [() => {
+        'decorate dot accessor set/get new key': [() => {
             map.foo3 = 'bar3'
             return map.foo3
         },  'get_set_bar3'],
-        'dot accessor delete': [() => {
+        'decorate dot accessor delete': [() => {
             delete map.foo3
             return map.foo3
         },  undefined],
@@ -168,20 +184,46 @@ export function testProxyMap_KeyAccessorDecoratorPlugin() {
 	map = createTestProxyMap_KeyAccessorDecoratorPlugin()
 
     new PuerTest('Map [] accessors', {
-        '[] accessor get existing key': [() => {
+        'decorate [] accessor get existing key': [() => {
             return map['foo1']
         },  'get_bar1'],
-        '[] accessor set existing key': [() => {
+        'decorate [] accessor set existing key': [() => {
             map['foo1'] = 'bar1b'
             return map['foo1']
         },  'get_set_bar1b'],
-        '[] accessor set/get new key': [() => {
+        'decorate [] accessor set/get new key': [() => {
             map['foo3'] = 'bar3'
             return map['foo3']
         },  'get_set_bar3'],
-        '[] accessor delete': [() => {
+        'decorate [] accessor delete': [() => {
             delete map['foo3']
             return map['foo3']
         },  undefined],
     }).run()
 }
+
+/*************************************************************/
+
+export function testProxyMap_MethodDecoratorPlugin() {
+    let map = createTestProxyMap_MethodDecoratorPlugin()
+
+    new PuerTest('Map get() and set() methods', {
+        'decorate get(existing key)': [() => {
+            return map.get('foo1')
+        },  'get_bar1'],
+        'decorate set(existing key)': [() => {
+            map.set('foo1', 'bar1b')
+            return map.get('foo1')
+        },  'get_set_bar1b'],
+        'decorate set(new key)/get(new key)': [() => {
+            map.set('foo3', 'bar3')
+            return map.get('foo3')
+        },  'get_set_bar3'],
+        'decorate delete(existing key)': [() => {
+            let res = map.delete('foo3')
+            return [res, map.get('foo3')]
+        },  ['deleted', undefined]],
+    }).run()
+}
+
+/*************************************************************/

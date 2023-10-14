@@ -3,28 +3,34 @@ import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 const PuerProxyMapPlugins = {
 
-	PropertyDecorator: class PropertyDecorator extends PuerProxyPlugin {
-		constructor(getter, setter) {
+	MethodDecorator: class MethodDecorator extends PuerProxyPlugin {
+		/*
+			methods = {
+				methodName1 : callback1(),
+				methodName1 : callback2(),
+				any         : callbackAny()
+			}
+		*/
+		constructor(methods) {
 			super()
-			this.getter = getter
-			this.setter = setter
+			this.methods = methods
 		}
 
 		get(prop) {
-			if (this.getter && typeof prop === 'string') {
-				const f = () => this.target[prop]
-				return this.getter(f, prop)
+			if (typeof this.target[prop] === 'function') {
+				return new Proxy(this.target[prop], {
+					apply: (target, thisArg, args) => {
+						let f = (... args) => Reflect.apply(target, this.target, args)
+						if (this.methods.hasOwnProperty(prop)) {
+							return this.methods[prop](f, ... args)
+						} else if (this.methods.any) {
+							return this.methods.any(f, ... args)
+						}
+						return f(...args)
+					}
+				})
 			}
 			return undefined
-		}
-
-		set(prop, value) {
-			if (this.setter && typeof prop === 'string') {
-				const f = (value) => { this.target[prop] = value }
-				this.setter(f, prop, value)
-				return true
-			}
-			return false
 		}
 	},
 
@@ -56,23 +62,23 @@ class PuerProxyMap extends Map {
 	constructor(object, plugins) {
 		super(Object.entries(object))
 
-		const _this = this
-
 		const handler = {
 			get: function(target, prop, receiver) {
 				if (prop === '__target') { return target }
+
+				let result = null
+				for (const plugin of plugins) {
+					result = plugin.get(prop)
+					if (result !== undefined) { return result }
+				}
 
 				if (typeof target[prop] === 'function') {
 					return function(...args) {
 						return target[prop].apply(target, args)
 					}
 				}
-				let result = null
-				for (const plugin of plugins) {
-					result = plugin.get(prop)
-					if (result !== undefined) { return result }
-				}
-				return target.get(prop)
+				console.log('prop', prop, target)
+				return Reflect.get(target, prop, receiver)
 			},
 
 			set: function(target, prop, value, receiver) {
@@ -81,20 +87,9 @@ class PuerProxyMap extends Map {
 						return true
 					}
 				}
-				return target.set(prop, value)
+				return Reflect.set(target, prop, value, receiver)
 			},
-			deleteProperty: function(target, prop) {
-				for (const plugin of plugins) {
-					if (plugin.delete && plugin.delete(prop)) {
-						return true
-					}
-				}
-				if (target.has(prop)) {
-					target.delete(prop)
-					return true
-				}
-				return false
-			}
+
 			// apply: function(target, thisArg, args) {
 			// 	return target.apply(target, args)
 			// }

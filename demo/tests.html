@@ -16,10 +16,31 @@
 	<div id="demo">
         <ul>
             <li>
-                <h2>Test Proxy Map</h2>
+                <h3>Test Proxy Map</h3>
                 <ul>
-                    <li><button id="test-proxy-map-no-pl">     NoPlugins</button></li>
-                    <li><button id="test-proxy-map-key-acc-pl">KeyAccessorDecorator</button></li>
+                    <li>
+                        <a href="#" id="tpm-no-plugins">No Plugins</a>
+                    </li>
+                    <li>
+                        <a href="#" id="tpm-key-accessor-decorator-plugin">Key Accessor Decorator</a>
+                    </li>
+                    <li>
+                        <a href="#" id="tpm-method-decorator-plugin">Method Decorator</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <h3>Test Proxy Array</h3>
+                <ul>
+                    <li>
+                        <a href="#" id="tpa-no-plugins">No Plugins</a>
+                    </li>
+                    <!--li>
+                        <a href="#" id="tpm-key-accessor-decorator-plugin">Key Accessor Decorator</a>
+                    </li>
+                    <li>
+                        <a href="#" id="tpm-method-decorator-plugin">Method Decorator</a>
+                    </li-->
                 </ul>
             </li>
         </ul>
@@ -27,15 +48,22 @@
 	<script type="module">
 		import {
 			testProxyMap_NoPlugins,
-            testProxyMap_KeyAccessorDecoratorPlugin
+            testProxyMap_KeyAccessorDecoratorPlugin,
+            testProxyMap_MethodDecoratorPlugin
 		} from './js/tests/class.TestProxyMap.js'
 
         $(document).ready(() => {
-            $('#test-proxy-map-no-pl').click((btn) => {
+            $('#tpm-no-plugins').click((btn) => {
+                console.clear()
                 testProxyMap_NoPlugins()
             })
-            $('#test-proxy-map-key-acc-pl').click((btn) => {
+            $('#tpm-key-accessor-decorator-plugin').click((btn) => {
+                console.clear()
                 testProxyMap_KeyAccessorDecoratorPlugin()
+            })
+            $('#tpm-method-decorator-plugin').click((btn) => {
+                console.clear()
+                testProxyMap_MethodDecoratorPlugin()
             })
         })
 	</script>
