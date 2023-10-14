@@ -62,14 +62,15 @@ class PuerProxyMap extends Map {
 	constructor(object, plugins) {
 		super(Object.entries(object))
 
+		const _map = this
+
 		const handler = {
 			get: function(target, prop, receiver) {
-				if (prop === '__target') { return target }
-
 				let result = null
 				for (const plugin of plugins) {
-					result = plugin.get(prop)
-					if (result !== undefined) { return result }
+					if (plugin.get) {
+						return plugin.get(prop)
+					}
 				}
 
 				if (typeof target[prop] === 'function') {
@@ -77,22 +78,26 @@ class PuerProxyMap extends Map {
 						return target[prop].apply(target, args)
 					}
 				}
-				console.log('prop', prop, target)
-				return Reflect.get(target, prop, receiver)
+				return _map.get(prop)
 			},
 
 			set: function(target, prop, value, receiver) {
 				for (const plugin of plugins) {
-					if (plugin.set(prop, value)) {
-						return true
+					if (plugin.set) {
+						return plugin.set(prop, value)
 					}
 				}
-				return Reflect.set(target, prop, value, receiver)
+				return _map.set(prop, value)
 			},
 
-			// apply: function(target, thisArg, args) {
-			// 	return target.apply(target, args)
-			// }
+			deleteProperty: function(target, prop, receiver) {
+				for (const plugin of plugins) {
+					if (plugin.delete) {
+						return plugin.delete(prop)
+					}
+				}
+				return _map.delete(prop)
+			}
 		}
 
 		const proxy = new Proxy(this, handler)

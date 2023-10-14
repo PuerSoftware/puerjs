@@ -40,18 +40,18 @@ function createTestProxyMap_KeyAccessorDecoratorPlugin() {
 function createTestProxyMap_MethodDecoratorPlugin() {
 	return new TestProxyMap(obj, [
 		new PuerProxyMapPlugins.MethodDecorator({
-			'get': (f, prop) => {
+			get: (f, prop) => {
 				const res = f(prop)
                 if (res) {
                     return 'get_' + res
                 }
                 return res
 			},
-			'set': (f, prop, value) => {
+			set: (f, prop, value) => {
 				value = 'set_' + value
                 return f(prop, value)
 			},
-            'delete': (f, prop) => {
+            delete: (f, prop) => {
                 f(prop)
                 return 'deleted'
             }
@@ -116,8 +116,6 @@ export function testProxyMap_NoPlugins() {
     }).run()
 
 	map = createTestProxyMap_NoPlugins()
-
-    console.log(map)
 
 	new PuerTest('Map [] accessors', {
         '[] accessor get existing key': [() => {

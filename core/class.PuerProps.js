@@ -4,16 +4,15 @@ import PuerError                                 from './class.PuerError.js'
 class PuerProps extends PuerProxyMap {
 	constructor(props={}, onChange) {
 		super(props, [
-			new PuerProxyMapPlugins.PropertyDecorator(
-				null,
-				function (f, prop, value) {
+			new PuerProxyMapPlugins.MethodDecorator({
+				set: (f, prop, value) => {
 					const oldValue = this[prop]
-					f(value)
+					f(prop, value)
 					if (this[prop] !== oldValue) {
 						onChange(prop, this[prop])
 					}
 				}
-			)
+			})
 		])
 	}
 
