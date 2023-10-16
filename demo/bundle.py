@@ -2,71 +2,99 @@ import os
 import re
 import sys
 
-BASE_URL = os.getcwd()
-
-class Bundler:
-    def __init__(entry_point):
-        self.entry_point = entry_point
+from slimit import minify
 
 
+class JsImports:
     @staticmethod
-    def get_js(file_name):
-        with open(file_path, 'r') as f:
-            content = f.read()
-        if file_path.endswith('.html'):
-            content = '\n'.join(re.findall(r'<script[^>]*>([\s\S]*?)<\/script>', content))
-        return content
-
-    @staticmethod
-    def to_absolute_path(relative_path, current_path):
-        if relative_path.startswith('.'):
-            return os.path.abspath(os.path.join(os.path.dirname(current_path), relative_path))
+    def to_abs_path(rel_path, base_path):
+        if rel_path.startswith('.'):
+            return os.path.abspath(os.path.join(os.path.dirname(base_path), rel_path))
         else:
-            return os.path.join(BASE_URL, relative_path)
+            return os.path.join(os.path.dirname(base_path), rel_path)
+
+    @staticmethod
+    def get_scripts(abs_html_path):
+        with open(abs_html_path, 'r') as f:
+            html_content = f.read()
+        script_tags      = re.findall(r'<script([^>]+)></script>', html_content)
+        abs_script_paths = []
+
+        for tag in script_tags:
+            attrs     = re.findall(r'(\w+)\s*=\s*"([^"]+)"', tag)
+            attr_dict = {name: value for (name, value) in attrs}
+            if 'type' in attr_dict and attr_dict['type'] == 'module':
+                abs_js_path = JsImports.to_abs_path(attr_dict['src'], abs_html_path)
+                abs_script_paths.append(abs_js_path)
+        return abs_script_paths
 
     @staticmethod
     def get_imports(js_content):
-        imports = re.findall(r'import\s+.*?\s+from\s+[\'"](.*?)[\'"]', content)
+        return re.findall(r'import\s+.*?\s+from\s+[\'"](.*?)[\'"]', js_content)
+
+    @staticmethod
+    def demodularize_js(js_content):
+        js_content   = re.sub(r'import .*\n', '', js_content + '\n')
+        def_keywords = r'(const|class|var|let|function|async)'
+        js_content   = re.sub(f'export default {def_keywords}', r'\1', js_content)
+        js_content   = re.sub(f'export {def_keywords}', r'\1', js_content)
+        js_content   = re.sub(r'export .*\n', '', js_content)
+        js_content   = re.sub(r'export default (\(.*\)\s*=>)', r'\1', js_content)
+        js_content   = re.sub(r'export (\(.*\)\s*=>)', r'\1', js_content)
+        return js_content.strip() + '\n;\n'
+
+    @staticmethod
+    def minify(js_content):
+        return minify(js_content, mangle=True)
 
 
+class Bundler:
+    def __init__(self, rel_html_path):
+        self.base_path = os.getcwd() + '/'
+        self.imports   = []
+        self.js_code   = []
+        self.visited   = []
+        abs_html_path  = JsImports.to_abs_path(rel_html_path, self.base_path)
+        abs_js_path    = JsImports.get_scripts(abs_html_path)[0]
+        self.get_imports(abs_js_path)
 
-def get_imports(file_path):
-    import_statements = []
-    with open(file_path, 'r') as f:
-        content = f.read()
+    def get_imports(self, abs_js_path):
+        if abs_js_path in self.visited:
+            return
+        self.visited.append(abs_js_path)
+        with open(abs_js_path, 'r') as f:
+            js_content = f.read()
+        
+        import_paths = JsImports.get_imports(js_content)
+        for rel_import_path in import_paths:
+            abs_import_path = JsImports.to_abs_path(rel_import_path, abs_js_path)
+            self.get_imports(abs_import_path)
 
-    if file_path.endswith('.js'):
-        import_statements = re.findall(r'import\s+.*?\s+from\s+[\'"](.*?)[\'"]', content)
-    elif file_path.endswith('.html'):
-        script_blocks = re.findall(r'<script type="module">([\s\S]*?)<\/script>', content)
-        for block in script_blocks:
-            import_statements += re.findall(r'import\s+.*?\s+from\s+[\'"](.*?)[\'"]', block)
+        if abs_js_path not in self.imports:
+            self.imports.append(abs_js_path)
+            self.js_code.append(
+                JsImports.demodularize_js(
+                    js_content
+                    # JsImports.minify(js_content)
+                )
+            )
 
-    return import_statements
 
-
-
-def traverse_imports(entry_point, visited=None):
-    if visited is None:
-        visited = []
-    full_path = os.path.abspath(os.path.join(BASE_URL, entry_point))
-    if full_path not in visited:
-        visited.append(full_path)
-        imports = get_imports(full_path)
-        for imp in imports:
-            absolute_path = resolve_path(imp, full_path)
-            if absolute_path.endswith('.js'):
-                traverse_imports(absolute_path, visited)
-            else:
-                traverse_imports(absolute_path + '.js', visited)
-    return visited
+    def save(self, rel_bundle_path):
+        abs_bundle_path = JsImports.to_abs_path(rel_bundle_path, self.base_path)
+        js_code = '\n\n'.join(self.js_code)
+        with open(abs_bundle_path, 'w') as f:
+            f.write(js_code)
+        return self
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print('Please provide the relative path to the entry point as an argument.')
+    if len(sys.argv) < 3:
+        print('Usage example: python bundler.py ..rel/path/to/entry.html ../rel/path/to/bundled.js')
         sys.exit(1)
 
-    entry_point_relative = sys.argv[1]
-    unique_imports       = traverse_imports(entry_point_relative)
-    for imp in unique_imports:
+    rel_entry_point = sys.argv[1]
+    rel_bundle_path = sys.argv[2]
+    bundler         = Bundler(rel_entry_point).save(rel_bundle_path)
+
+    for imp in bundler.imports:
         print(imp)

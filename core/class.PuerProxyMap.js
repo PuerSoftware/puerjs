@@ -44,7 +44,8 @@ const PuerProxyMapPlugins = {
 		}
 
 		get(key) {
-			const f = () => this.target.get(key)
+			console.log('in KAD', key)
+			const f = (key) => this.target.get(key)
 			return this.getter(f, key)
 		}
 
@@ -66,6 +67,12 @@ class PuerProxyMap extends Map {
 
 		const handler = {
 			get: function(target, prop, receiver) {
+				if (typeof _map[prop] === 'function') {
+					return function(...args) {
+						return target[prop].apply(target, args)
+					}
+				}
+
 				let result = null
 				for (const plugin of plugins) {
 					if (plugin.get) {
@@ -73,11 +80,6 @@ class PuerProxyMap extends Map {
 					}
 				}
 
-				if (typeof target[prop] === 'function') {
-					return function(...args) {
-						return target[prop].apply(target, args)
-					}
-				}
 				return _map.get(prop)
 			},
 
@@ -119,6 +121,9 @@ class PuerProxyMap extends Map {
 
 	toString() {
 		return JSON.stringify(this.toObject())
+			.split('","').join('", "')
+			.replace(/"([^"]+)":/g, '$1: ')
+			.split('"').join("'")
 	}
 }
 

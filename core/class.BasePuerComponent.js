@@ -17,7 +17,9 @@ class BasePuerComponent extends PuerObject {
 		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
 		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
 
-		console.log('CONSTRUCTOR', this.className, this.children.toString())
+		console.log(this.props.toString(), this.props.text)
+
+		// console.log('CONSTRUCTOR', this.className, this.children.toString())
 
 		this.events       = this.props.extractEvents(this.owner)
 		this.cssClass     = Puer.String.camelToDashedSnake(this.className)

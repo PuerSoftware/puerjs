@@ -7,10 +7,11 @@ class PuerProps extends PuerProxyMap {
 			new PuerProxyMapPlugins.MethodDecorator({
 				set: (f, prop, value) => {
 					const oldValue = this[prop]
-					f(prop, value)
+					let res = f(prop, value)
 					if (this[prop] !== oldValue) {
 						onChange(prop, this[prop])
 					}
+					return res
 				}
 			})
 		])
