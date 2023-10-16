@@ -1,39 +1,39 @@
 import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 
-const PuerProxyMapPlugins = {
+// const PuerProxyMapPlugins = {
 
-	TrapDecorator: class TrapDecorator extends PuerProxyPlugin {
-		/*
-			methods = {
-				methodName1 : callback1(),
-				methodName1 : callback2(),
-				any         : callbackAny()
-			}
-		*/
-		constructor(methods) {
-			super()
-			this.methods = methods
-		}
+// 	TrapDecorator: class TrapDecorator extends PuerProxyPlugin {
+// 		/*
+// 			methods = {
+// 				methodName1 : callback1(),
+// 				methodName1 : callback2(),
+// 				any         : callbackAny()
+// 			}
+// 		*/
+// 		constructor(methods) {
+// 			super()
+// 			this.methods = methods
+// 		}
 
-		get(prop) {
-			console.log('TrapDecorator apply =>', prop)
-			if (typeof this.target[prop] === 'function') {
-				return new Proxy(this.target[prop], {
-					apply: (target, thisArg, args) => {
-						let f = (... args) => Reflect.apply(target, this.target, args)
-						if (this.methods.hasOwnProperty(prop)) {
-							return this.methods[prop](f, ... args)
-						} else if (this.methods.any) {
-							return this.methods.any(f, ... args)
-						}
-						return f(...args)
-					}
-				})
-			}
-			return undefined
-		}
-	},
+// 		get(prop) {
+// 			console.log('TrapDecorator apply =>', prop)
+// 			if (typeof this.target[prop] === 'function') {
+// 				return new Proxy(this.target[prop], {
+// 					apply: (target, thisArg, args) => {
+// 						let f = (... args) => Reflect.apply(target, this.target, args)
+// 						if (this.methods.hasOwnProperty(prop)) {
+// 							return this.methods[prop](f, ... args)
+// 						} else if (this.methods.any) {
+// 							return this.methods.any(f, ... args)
+// 						}
+// 						return f(...args)
+// 					}
+// 				})
+// 			}
+// 			return undefined
+// 		}
+// 	},
 
 	/*****************************************************************/
 
@@ -61,30 +61,32 @@ const PuerProxyMapPlugins = {
 
 
 class PuerProxyMap extends Map {
-	constructor(object, plugins) {
+	/*
+	decorators = {
+		methodName1 : callback1,
+		methodName1 : callback2
+	}
+	*/	
+	constructor(object, decorators) {
 		super(Object.entries(object))
-		const _traps = ['get', 'set', 'deleteProperty']
+
 		const _map = this
 
 		const handler = {
 			get: function(target, prop, receiver) {
-				console.log(_traps)
-				console.log('ProxyMap.get()', target, prop)
-				if (!(prop in _traps)) {
-					if (typeof _map[prop] === 'function') {
-						return function(...args) {
-							return target[prop].apply(target, args)
-						}
+				if (typeof _map[prop] === 'function') {
+					let f = (...args) => {                         // Methods of not proxied object
+						return target[prop].apply(target, args)
 					}
-				} else {
-					let result = null
-					for (const plugin of plugins) {
-						if (plugin.get) {
-							return plugin.get(prop)
+					if (prop in decorators) {                      // Decorating methods     
+						return (... args) => {
+							return decorators[prop](f, ... args)
 						}
+					} else {                                       // Not decorating methods
+						return f
 					}
 				}
-				return _map.get(prop)
+				return _map.get(prop)                              // All other props
 			},
 
 			set: function(target, prop, value, receiver) {
