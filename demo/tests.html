@@ -16,13 +16,10 @@
 	<div id="demo">
         <ul>
             <li>
-                <h3>Test Proxy Map</h3>
+                <h3>Test Puer Props</h3>
                 <ul>
                     <li>
-                        <a href="#" id="tpm-no-plugins">No Plugins</a>
-                    </li>
-                    <li>
-                        <a href="#" id="tpm-trap-decorator-plugin">Trap Decorator</a>
+                        <a href="#" id="tpp">Props Test</a>
                     </li>
                 </ul>
             </li>
@@ -38,18 +35,13 @@
     </div>
 	<script type="module">
 		import {
-			testProxyMap_NoPlugins,
-            testProxyMap_TrapDecorator
-		} from './js/tests/class.TestProxyMap.js'
+			testPuerProps
+		} from './js/tests/testPuerProps.js'
 
-        $(document).ready(() => {
-            $('#tpm-no-plugins').click((btn) => {
+		$(document).ready(() => {
+            $('#tpp').click((btn) => {
                 console.clear()
-                testProxyMap_NoPlugins()
-            })
-            $('#tpm-trap-decorator-plugin').click((btn) => {
-                console.clear()
-                testProxyMap_TrapDecorator()
+                testPuerProps()
             })
         })
 	</script>

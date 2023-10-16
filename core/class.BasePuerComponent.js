@@ -17,7 +17,7 @@ class BasePuerComponent extends PuerObject {
 		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
 		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
 
-		console.log(this.props.toString(), this.props.text)
+		// console.log(this.className, this.props.toString())
 
 		// console.log('CONSTRUCTOR', this.className, this.children.toString())
 

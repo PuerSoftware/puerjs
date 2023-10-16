@@ -38,6 +38,10 @@ class PuerComponent extends BasePuerComponent {
 		return this.element
 	}
 
+	__update() {
+		this.root.__update()
+	}
+
 	__onMount() {
 		this.root.__onMount()
 		this.onMount()
@@ -65,7 +69,6 @@ class PuerComponent extends BasePuerComponent {
 	append(child) {
 		// child = Puer.defer(child)
 		child.parent = this
-		console.log(this.children)
 		this.children.push(child)
 		// console.log(this.children)
 

@@ -48,35 +48,36 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_define() {} // Not defining custom component
 
-	_dereference(propName) {
-		const propValue = this.props[propName]
-		if (propValue && typeof propValue === 'function') {
-			return propValue()
+	_dereference(value) {
+		if (typeof value === 'function') {
+			return value()
 		}
-		return propValue
+		return value
 	}
 
 	_onPropChange(prop) {
 		super._onPropChange(prop)
 		if (prop === 'text') {
-			this.element.innerHTML = this._dereference(prop) // TODO: make separate component
+			this.element.innerHTML = this._dereference(this.props.text) // TODO: make separate component
 		} else {
-			this.element.setAttribute(prop, this._dereference(prop))
+			this.element.setAttribute(prop, this._dereference(this.props[prop]))
 		}
 	}
 
 	_renderDom() {
 		const el = document.createElement(this.tagName)
-		if (this.props.hasOwnProperty('text')) {
-			const p = this._dereference('text')
+		if (this.props.text) {
+			const p = this._dereference(this.props.text)
 			// console.log('_dereference', p, this.props.text.isGetterFunction)
 			el.appendChild(document.createTextNode(p))
 		}
-		for (const prop in this.props) {
-			if (prop != 'text') {
-				el.setAttribute(prop, this._dereference(prop))
+		// console.log('_renderDom', this.props.toString())
+		for (const [prop, value] of this.props) {
+			if (prop !== 'text') {
+				el.setAttribute(prop, this._dereference(value))
 			}
 		}
+		// console.log('_renderDom.for .. of', el)
 		return el
 	}
 	
