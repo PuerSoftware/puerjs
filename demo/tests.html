@@ -22,10 +22,7 @@
                         <a href="#" id="tpm-no-plugins">No Plugins</a>
                     </li>
                     <li>
-                        <a href="#" id="tpm-key-accessor-decorator-plugin">Key Accessor Decorator</a>
-                    </li>
-                    <li>
-                        <a href="#" id="tpm-method-decorator-plugin">Method Decorator</a>
+                        <a href="#" id="tpm-trap-decorator-plugin">Trap Decorator</a>
                     </li>
                 </ul>
             </li>
@@ -35,12 +32,6 @@
                     <li>
                         <a href="#" id="tpa-no-plugins">No Plugins</a>
                     </li>
-                    <!--li>
-                        <a href="#" id="tpm-key-accessor-decorator-plugin">Key Accessor Decorator</a>
-                    </li>
-                    <li>
-                        <a href="#" id="tpm-method-decorator-plugin">Method Decorator</a>
-                    </li-->
                 </ul>
             </li>
         </ul>
@@ -48,8 +39,7 @@
 	<script type="module">
 		import {
 			testProxyMap_NoPlugins,
-            testProxyMap_KeyAccessorDecoratorPlugin,
-            testProxyMap_MethodDecoratorPlugin
+            testProxyMap_TrapDecoratorPlugin
 		} from './js/tests/class.TestProxyMap.js'
 
         $(document).ready(() => {
@@ -57,13 +47,9 @@
                 console.clear()
                 testProxyMap_NoPlugins()
             })
-            $('#tpm-key-accessor-decorator-plugin').click((btn) => {
+            $('#tpm-trap-decorator-plugin').click((btn) => {
                 console.clear()
-                testProxyMap_KeyAccessorDecoratorPlugin()
-            })
-            $('#tpm-method-decorator-plugin').click((btn) => {
-                console.clear()
-                testProxyMap_MethodDecoratorPlugin()
+                testProxyMap_TrapDecoratorPlugin()
             })
         })
 	</script>

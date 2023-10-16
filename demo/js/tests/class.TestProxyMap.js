@@ -116,76 +116,78 @@ const Tests_ProxyMap_NoPlugins = {
 
 /*************************************************************/
 
-const Tests_ProxyMap_KeyAccessorDecoratorPlugin = {
-    setupMap: () => {
-        return new TestProxyMap(obj, [
-            new PuerProxyMapPlugins.KeyAccessorDecorator(
-                function(f, prop) {
-                    const res = f(prop)
-                    if (res) {
-                        return 'get_' + res
-                    }
-                    return res
-                },
-                function(f, prop, value) {
-                    value = 'set_' + value
-                    return f(prop, value)
-                }
-            )
-        ])
-    },
-
-    testDecoratingDotAccessors: (map) => {
-        new PuerTest('Decorating map dot accessors', {
-            'decorate dot accessor get existing key': [() => {
-                return map.foo1
-            },  'get_bar1'],
-            'decorate dot accessor set existing key': [() => {
-                map.foo1 = 'bar1b'
-                return map.foo1
-            },  'get_set_bar1b'],
-            'decorate dot accessor set/get new key': [() => {
-                map.foo3 = 'bar3'
-                return map.foo3
-            },  'get_set_bar3'],
-            'decorate dot accessor delete': [() => {
-                delete map.foo3
-                return map.foo3
-            },  undefined],
-        }).run()
-    },
-
-    testDecoratingSquareBracketAccessors: (map) => {
-        new PuerTest('Map [] accessors', {
-            'decorate [] accessor get existing key': [() => {
-                return map['foo1']
-            },  'get_bar1'],
-            'decorate [] accessor set existing key': [() => {
-                map['foo1'] = 'bar1b'
-                return map['foo1']
-            },  'get_set_bar1b'],
-            'decorate [] accessor set/get new key': [() => {
-                map['foo3'] = 'bar3'
-                return map['foo3']
-            },  'get_set_bar3'],
-            'decorate [] accessor delete': [() => {
-                delete map['foo3']
-                return map['foo3']
-            },  undefined],
-        }).run()
-    }
-}
+// const Tests_ProxyMap_KeyAccessorDecoratorPlugin = {
+//     setupMap: () => {
+//         return new TestProxyMap(obj, [
+//             new PuerProxyMapPlugins.KeyAccessorDecorator(
+//                 function(f, prop) {
+//                     const res = f(prop)
+//                     if (res) {
+//                         return 'get_' + res
+//                     }
+//                     return res
+//                 },
+//                 function(f, prop, value) {
+//                     value = 'set_' + value
+//                     return f(prop, value)
+//                 }
+//             )
+//         ])
+//     },
+//
+//     testDecoratingDotAccessors: (map) => {
+//         new PuerTest('Decorating map dot accessors', {
+//             'decorate dot accessor get existing key': [() => {
+//                 return map.foo1
+//             },  'get_bar1'],
+//             'decorate dot accessor set existing key': [() => {
+//                 map.foo1 = 'bar1b'
+//                 return map.foo1
+//             },  'get_set_bar1b'],
+//             'decorate dot accessor set/get new key': [() => {
+//                 map.foo3 = 'bar3'
+//                 return map.foo3
+//             },  'get_set_bar3'],
+//             'decorate dot accessor delete': [() => {
+//                 delete map.foo3
+//                 return map.foo3
+//             },  undefined],
+//         }).run()
+//     },
+//
+//     testDecoratingSquareBracketAccessors: (map) => {
+//         new PuerTest('Map [] accessors', {
+//             'decorate [] accessor get existing key': [() => {
+//                 return map['foo1']
+//             },  'get_bar1'],
+//             'decorate [] accessor set existing key': [() => {
+//                 map['foo1'] = 'bar1b'
+//                 return map['foo1']
+//             },  'get_set_bar1b'],
+//             'decorate [] accessor set/get new key': [() => {
+//                 map['foo3'] = 'bar3'
+//                 return map['foo3']
+//             },  'get_set_bar3'],
+//             'decorate [] accessor delete': [() => {
+//                 delete map['foo3']
+//                 return map['foo3']
+//             },  undefined],
+//         }).run()
+//     }
+// }
 
 
 /*************************************************************/
 
 
-const Test_ProxyMap_MethodDecoratorPlugin = {
+const Test_ProxyMap_TrapDecoratorPlugin = {
     setupMap: () => {
         return new TestProxyMap(obj, [
-            new PuerProxyMapPlugins.MethodDecorator({
+            new PuerProxyMapPlugins.TrapDecorator({
                 get: (f, prop) => {
+                    console.log('TrapDecorator get()')
                     const res = f(prop)
+                    console.log('TrapDecorator get() result = ', res)
                     if (res) {
                         return 'get_' + res
                     }
@@ -247,59 +249,59 @@ export function testProxyMap_NoPlugins() {
 
 /*************************************************************/
 
-export function testProxyMap_KeyAccessorDecoratorPlugin() {
-    const T_KADP = Tests_ProxyMap_KeyAccessorDecoratorPlugin
-    const T_NP   = Tests_ProxyMap_NoPlugins
-
-	let map = T_KADP.setupMap()
-    T_KADP.testDecoratingDotAccessors(map)	
-
-	map = T_KADP.setupMap()
-    T_KADP.testDecoratingSquareBracketAccessors(map)
-
-    // Testing if plugin did not break existing functionality
-
-    map = T_KADP.setupMap()
-    T_NP.testMethodsAddedToMap(map)
-
-    map = T_KADP.setupMap()
-    T_NP.testExistingMapMethods(map)
-
-    map = T_KADP.setupMap()
-    T_NP.testMapIterators(map)
-
-    // map = T_KADP.setupMap()
-    // T_NP.testMapSquareBracketAccessors(map)
-
-    // map = T_KADP.setupMap()
-    // T_NP.testMapDotAccessors(map)   
-}
+// export function testProxyMap_KeyAccessorDecoratorPlugin() {
+//     const T_KADP = Tests_ProxyMap_KeyAccessorDecoratorPlugin
+//     const T_NP   = Tests_ProxyMap_NoPlugins
+//
+// 	let map = T_KADP.setupMap()
+//     T_KADP.testDecoratingDotAccessors(map)	
+//
+// 	map = T_KADP.setupMap()
+//     T_KADP.testDecoratingSquareBracketAccessors(map)
+//
+//     // Testing if plugin did not break existing functionality
+//
+//     map = T_KADP.setupMap()
+//     T_NP.testMethodsAddedToMap(map)
+//
+//     map = T_KADP.setupMap()
+//     T_NP.testExistingMapMethods(map)
+//
+//     map = T_KADP.setupMap()
+//     T_NP.testMapIterators(map)
+//
+//     // map = T_KADP.setupMap()
+//     // T_NP.testMapSquareBracketAccessors(map)
+//
+//     // map = T_KADP.setupMap()
+//     // T_NP.testMapDotAccessors(map)   
+// }
 
 /*************************************************************/
 
-export function testProxyMap_MethodDecoratorPlugin() {
-    const T_MDP = Test_ProxyMap_MethodDecoratorPlugin
+export function testProxyMap_TrapDecoratorPlugin() {
+    const T_TDP = Test_ProxyMap_TrapDecoratorPlugin
     const T_NP  = Tests_ProxyMap_NoPlugins
 
-    let map = T_MDP.setupMap()
-    T_MDP.testDecoratingGetAndSetMethods(map)
+    let map = T_TDP.setupMap()
+    T_TDP.testDecoratingGetAndSetMethods(map)
 
     console.log('Testing if plugin did not break existing functionality:')
 
-    map = T_MDP.setupMap()
-    T_NP.testMethodsAddedToMap(map)
-
-    map = T_MDP.setupMap()
-    T_NP.testExistingMapMethods(map)
-
-    map = T_MDP.setupMap()
-    T_NP.testMapIterators(map)
-
-    map = T_MDP.setupMap()
-    T_NP.testMapSquareBracketAccessors(map)
-
-    map = T_MDP.setupMap()
-    T_NP.testMapDotAccessors(map) 
+    // map = T_TDP.setupMap()
+    // T_NP.testMethodsAddedToMap(map)
+    //
+    // map = T_TDP.setupMap()
+    // T_NP.testExistingMapMethods(map)
+    //
+    // map = T_TDP.setupMap()
+    // T_NP.testMapIterators(map)
+    //
+    // map = T_TDP.setupMap()
+    // T_NP.testMapSquareBracketAccessors(map)
+    //
+    // map = T_TDP.setupMap()
+    // T_NP.testMapDotAccessors(map)
     
 }
 

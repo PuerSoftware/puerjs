@@ -3,7 +3,7 @@ import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 
 const PuerProxyMapPlugins = {
 
-	MethodDecorator: class MethodDecorator extends PuerProxyPlugin {
+	TrapDecorator: class TrapDecorator extends PuerProxyPlugin {
 		/*
 			methods = {
 				methodName1 : callback1(),
@@ -17,6 +17,7 @@ const PuerProxyMapPlugins = {
 		}
 
 		get(prop) {
+			console.log('TrapDecorator apply =>', prop)
 			if (typeof this.target[prop] === 'function') {
 				return new Proxy(this.target[prop], {
 					apply: (target, thisArg, args) => {
@@ -36,50 +37,53 @@ const PuerProxyMapPlugins = {
 
 	/*****************************************************************/
 
-	KeyAccessorDecorator : class KeyAccessorDecorator extends PuerProxyPlugin {
-		constructor(getter, setter) {
-			super()
-			this.getter = getter
-			this.setter = setter
-		}
-
-		get(key) {
-			console.log('in KAD', key)
-			const f = (key) => this.target.get(key)
-			return this.getter(f, key)
-		}
-
-		set(key, value) {
-			const f = (key, value) => {
-				return this.target.set(key, value)
-			}
-			return this.setter(f, key, value)
-		}
-	}
+	// KeyAccessorDecorator : class KeyAccessorDecorator extends PuerProxyPlugin {
+	// 	constructor(getter, setter) {
+	// 		super()
+	// 		this.getter = getter
+	// 		this.setter = setter
+	// 	}
+	//
+	// 	get(key) {
+	// 		console.log('in KAD', key)
+	// 		const f = (key) => this.target.get(key)
+	// 		return this.getter(f, key)
+	// 	}
+	//
+	// 	set(key, value) {
+	// 		const f = (key, value) => {
+	// 			return this.target.set(key, value)
+	// 		}
+	// 		return this.setter(f, key, value)
+	// 	}
+	// }
 }
 
 
 class PuerProxyMap extends Map {
 	constructor(object, plugins) {
 		super(Object.entries(object))
-
+		const _traps = ['get', 'set', 'deleteProperty']
 		const _map = this
 
 		const handler = {
 			get: function(target, prop, receiver) {
-				if (typeof _map[prop] === 'function') {
-					return function(...args) {
-						return target[prop].apply(target, args)
+				console.log(_traps)
+				console.log('ProxyMap.get()', target, prop)
+				if (!(prop in _traps)) {
+					if (typeof _map[prop] === 'function') {
+						return function(...args) {
+							return target[prop].apply(target, args)
+						}
+					}
+				} else {
+					let result = null
+					for (const plugin of plugins) {
+						if (plugin.get) {
+							return plugin.get(prop)
+						}
 					}
 				}
-
-				let result = null
-				for (const plugin of plugins) {
-					if (plugin.get) {
-						return plugin.get(prop)
-					}
-				}
-
 				return _map.get(prop)
 			},
 
