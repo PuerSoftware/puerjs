@@ -3,21 +3,24 @@ import PuerTest     from '../../../core/class.PuerTest.js'
 
 
 class TestProxyMap extends PuerProxyMap {
-	constructor(obj, plugins) {
-		super(obj, plugins)
+	constructor(obj, decorators) {
+		super(obj, decorators)
 	}
 }
 
 const obj = {
-    foo1: 'bar1',
-    foo2: 'bar,2'
+    foo1   : 'bar1',
+    foo2   : 'bar,2'
 }
 
 /*************************************************************/
 
-const Tests_ProxyMap_NoPlugins = {
+const Tests_ProxyMap_NoDecorator = {
+    result : null,
+
     setupMap: () => {
-        return new TestProxyMap(obj, [])
+        Tests_ProxyMap_NoDecorator.result = null
+        return new TestProxyMap(obj, {})
     },
 
     testMethodsAddedToMap: (map) => {
@@ -117,26 +120,28 @@ const Tests_ProxyMap_NoPlugins = {
 /*************************************************************/
 
 const Test_ProxyMap_TrapDecorator = {
+    result : null,
+
     setupMap: () => {
-        return new TestProxyMap(obj,
-            {
-                get: (f, prop) => {
-                    const res = f(prop)
-                    if (res) {
-                        return 'get_' + res
-                    }
-                    return res
-                },
-                set: (f, prop, value) => {
-                    value = 'set_' + value
-                    return f(prop, value)
-                },
-                delete: (f, prop) => {
-                    f(prop)
-                    return false
+        Test_ProxyMap_TrapDecorator.result = null
+
+        return new TestProxyMap(obj, {
+            get: (f, prop) => {
+                const res = f(prop)
+                if (res) {
+                    return 'get_' + res
                 }
+                return res
+            },
+            set: (f, prop, value) => {
+                value = 'set_' + value
+                return f(prop, value)
+            },
+            delete: (f, prop) => {
+                Test_ProxyMap_TrapDecorator.result = 'deleted'
+                return f(prop)
             }
-        )
+        })
     },
 
     testMethodsAddedToMap: (map) => {
@@ -157,18 +162,18 @@ const Test_ProxyMap_TrapDecorator = {
         new PuerTest('Existing map methods', {
             'map.get() existing key': [() => {
                 return map.get('foo1')
-            },  'bar1'],
+            },  'get_bar1'],
             'map.set() existing key': [() => {
-                map.set('foo1', 'bar1a')
+                map.set('foo1', 'bar1b')
                 return map.get('foo1')
-            },  'bar1a'],
+            },  'get_set_bar1b'],
             'map.set() new key': [() => {
                 map.set('foo3', 'bar3')
                 return map.get('foo3')
-            },  'bar3'],
+            },  'get_set_bar3'],
             'map.delete() existing key': [() => {
-                return map.delete('foo3')
-                // return map.get('foo3')
+                map.delete('foo3')
+                return Test_ProxyMap_TrapDecorator.result
             }, 'deleted']
         }).run()
     },
@@ -192,26 +197,26 @@ const Test_ProxyMap_TrapDecorator = {
         }).run()
     },
 
-    // testMapSquareBracketAccessors: (map) => {
-    //     new PuerTest('Map [] accessors', {
-    //         '[] accessor get existing key': [() => {
-    //             return map['foo1']
-    //         },  'get_bar1'],
-    //         '[] accessor set existing key': [() => {
-    //             map['foo1'] = 'bar1b'
-    //             return map['foo1']
-    //         },  'get_set_bar1b'],
-    //         '[] accessor set/get new key': [() => {
-    //             map['foo3'] = 'bar3'
-    //             return map['foo3']
-    //         },  'get_set_bar3'],
-    //         '[] accessor delete': [() => {
-    //              delete map['foo3']
-    //              return map['foo3']
-    //         },  'deleted'],
-    //     }).run()
-    // },
-    //
+    testMapSquareBracketAccessors: (map) => {
+        new PuerTest('Map [] accessors', {
+            '[] accessor get existing key': [() => {
+                return map['foo1']
+            },  'get_bar1'],
+            '[] accessor set existing key': [() => {
+                map['foo1'] = 'bar1b'
+                return map['foo1']
+            },  'get_set_bar1b'],
+            '[] accessor set/get new key': [() => {
+                map['foo3'] = 'bar3'
+                return map['foo3']
+            },  'get_set_bar3'],
+            '[] accessor delete': [() => {
+                 delete map['foo3']
+                 return Test_ProxyMap_TrapDecorator.result
+            },  'deleted'],
+        }).run()
+    },
+    
     testMapDotAccessors: (map) => {
         new PuerTest('Map dot accessors', {
             'dot accessor get existing key': [() => {
@@ -227,7 +232,7 @@ const Test_ProxyMap_TrapDecorator = {
             },  'get_set_bar3'],
             'dot accessor delete': [() => {
                 delete map.foo3
-                //return map.foo3
+                return Test_ProxyMap_TrapDecorator.result
             },  'deleted'],
         }).run()
     }
@@ -236,7 +241,7 @@ const Test_ProxyMap_TrapDecorator = {
 /*************************************************************/
 
 export function testProxyMap_NoPlugins() {
-    const T_NP = Tests_ProxyMap_NoPlugins
+    const T_NP = Tests_ProxyMap_NoDecorator
 
 	let map = T_NP.setupMap()
     T_NP.testMethodsAddedToMap(map)
@@ -260,23 +265,18 @@ export function testProxyMap_TrapDecorator() {
     const T_TD = Test_ProxyMap_TrapDecorator
 
     let map = T_TD.setupMap()
-    // T_TD.testDecoratingGetAndSetMethods(map)
-    //
-    // console.log('Testing if plugin did not break existing functionality:')
+    T_TD.testMethodsAddedToMap(map)
+    
+    map = T_TD.setupMap()
+    T_TD.testExistingMapMethods(map)
+    
+    map = T_TD.setupMap()
+    T_TD.testMapIterators(map)
 
-    // map = T_TD.setupMap()
-    // T_TD.testMethodsAddedToMap(map)
-    //
-    // map = T_TD.setupMap()
-    // T_TD.testExistingMapMethods(map)
-    //
-    // map = T_TD.setupMap()
-    // T_TD.testMapIterators(map)
-
-    // map = T_TD.setupMap()
-    // T_TD.testMapSquareBracketAccessors(map)
-    //
-    // map = T_TD.setupMap()
+    map = T_TD.setupMap()
+    T_TD.testMapSquareBracketAccessors(map)
+    
+    map = T_TD.setupMap()
     T_TD.testMapDotAccessors(map)
     
 }
