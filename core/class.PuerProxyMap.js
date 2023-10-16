@@ -57,7 +57,7 @@ import PuerProxyPlugin from './class.PuerProxyPlugin.js'
 	// 		return this.setter(f, key, value)
 	// 	}
 	// }
-}
+//}
 
 
 class PuerProxyMap extends Map {
@@ -75,46 +75,44 @@ class PuerProxyMap extends Map {
 		const handler = {
 			get: function(target, prop, receiver) {
 				if (typeof _map[prop] === 'function') {
-					let f = (...args) => {                         // Methods of not proxied object
-						return target[prop].apply(target, args)
+					let f = (...args) => {                        // Methods of not proxied object
+						return _map[prop].apply(target, args)
 					}
-					if (prop in decorators) {                      // Decorating methods     
-						return (... args) => {
-							return decorators[prop](f, ... args)
+					if (decorators.hasOwnProperty(prop)) {
+						// Decorating methods
+						return (...args) => {
+							return decorators[prop](f, ...args)
 						}
 					} else {                                       // Not decorating methods
 						return f
 					}
 				}
+
+				if ('get' in decorators) {
+					const f = (key) => target.get(key)
+					return decorators.get(f, prop)
+				}
 				return _map.get(prop)                              // All other props
 			},
 
 			set: function(target, prop, value, receiver) {
-				for (const plugin of plugins) {
-					if (plugin.set) {
-						return plugin.set(prop, value)
-					}
+				if ('set' in decorators) {
+					const f = (key, value) => target.set(key, value)
+					return decorators.set(f, prop, value)
 				}
 				return _map.set(prop, value)
 			},
 
 			deleteProperty: function(target, prop, receiver) {
-				for (const plugin of plugins) {
-					if (plugin.delete) {
-						return plugin.delete(prop)
-					}
+				if ('delete' in decorators) {
+					const f = (key) => target.delete(key)
+					return decorators.delete(f, prop)
 				}
 				return _map.delete(prop)
 			}
 		}
 
-		const proxy = new Proxy(this, handler)
-
-		for (const plugin of plugins) {
-			plugin.engage(this, proxy, handler)
-		}
-
-		return proxy
+		return new Proxy(this, handler)
 	}
 
 	toMap() {
@@ -133,5 +131,5 @@ class PuerProxyMap extends Map {
 	}
 }
 
-export {PuerProxyMapPlugins}
+// export {PuerProxyMapPlugins}
 export default PuerProxyMap
