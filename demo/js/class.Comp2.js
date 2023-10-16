@@ -29,17 +29,17 @@ class Comp2 extends Comp2Base {
 	}
 
 	renderItem() {
-		this.append(div({onclick: this.changeState, text: this.state.liText}))
+		this.append(div({onclick: this.changeState}, [text(this.state.liText)]))
 	}
 
 	render() {
 		return ul ([
 			text   ('haha'),
 			div    (this.children),
-			li     ({text: this.state.liText}),
-			li     ({text: this.props.myProp}),
-			button ({onClick: this.renderItem, text: 'Add Item'}),
-			button ({onClick: this.showChain,  text: 'Show Chain'})
+			li     ([text(this.state.liText)]),
+			li     ([text(this.props.myProp)]),
+			button ({onClick: this.renderItem}, [text( 'Add Item')]),
+			button ({onClick: this.showChain}, [text('Show Chain')])
 		])
 	}
 }

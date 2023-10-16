@@ -5,6 +5,7 @@ import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerConstructor from './class.PuerConstructor.js'
 import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
+import PuerTextElement from './class.PuerTextElement.js'
 
 class Puer {
 	static owner
@@ -92,6 +93,23 @@ class Puer {
 	static isArray(o)    { return Puer.type(o) === 'array'    }
 	static isDate(o)     { return Puer.type(o) === 'date'     }
 
+	static _defineText() {
+		if ('text' in window) {
+			throw `Could not register tag method 'text': already present in global scope`
+		}
+		let className = 'PuerTagText'
+		// window.PuerTagText = PuerTextElement
+		Object.defineProperty(PuerTextElement, 'name', { value: className })
+		PuerTextElement.prototype.chainName = 'text'
+		// console.log('setting chai name', window[className].prototype.chainName)
+
+		window['text'] = (text) => {
+			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
+			// return new PuerConstructor(window[className], props, children, false)
+			return new PuerTextElement(text)
+		}
+	}
+
 	static _defineTag(name) {
 		if (name in window) {
 			throw `Could not register tag method ${name}: already present in global scope`
@@ -140,6 +158,9 @@ class Puer {
 		const className = args.pop()
 		const namespace = args.join('_')
 		if (Puer.type(className) === 'string') {
+			if (className === 'text') {
+				return Puer._defineText()
+			}
 			return Puer._defineTag(className)
 		}
 		return Puer._defineComponent(namespace, className)

@@ -48,25 +48,15 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_onPropChange(prop) {
 		super._onPropChange(prop)
-		if (prop === 'text') {
-			this.element.innerHTML = this._dereference(this.props.text) // TODO: make separate component
-		} else {
-			this.element.setAttribute(prop, this._dereference(this.props[prop]))
-		}
+		this.element.setAttribute(prop, this._dereference(this.props[prop]))
 	}
 
 	_renderElement() {
-		const el = document.createElement(this.tagName)
-		if (this.props.text) {
-			const p = this._dereference(this.props.text)
-			el.appendChild(document.createTextNode(p))
-		}
+		const element = document.createElement(this.tagName)
 		for (const [prop, value] of this.props) {
-			if (prop !== 'text') {
-				el.setAttribute(prop, this._dereference(value))
-			}
+			element.setAttribute(prop, this._dereference(value))
 		}
-		return el
+		return element
 	}
 	
 	/************************ HOOKS ************************/
