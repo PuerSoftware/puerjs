@@ -10,23 +10,14 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	/********************** FRAMEWORK **********************/
 
-	__register(path='PuerApp', index=0) {
-		super.__register(path, index)
-		this.root = this
-        this.children && this.children.forEach((child, index) => {
-        	child.parent = this
-            child.__register(this.path, index)
-        })
-        return this
-	}
-
 	__render() {
-		// console.log('__render', this.id, this.parent)
-		this.element = this._renderDom()
+		this.root = this
+		this.element = this._renderElement()
 		if (this.children) {
 			for (const child of this.children) {
-				child.__render()
-				this.element.appendChild(child.element)
+				child.parent = this
+				const childElement = child.__render()
+				this.element.appendChild(childElement)
 			}
 		}
 		this._addEvents()
@@ -64,20 +55,17 @@ class PuerHtmlElement extends BasePuerComponent {
 		}
 	}
 
-	_renderDom() {
+	_renderElement() {
 		const el = document.createElement(this.tagName)
 		if (this.props.text) {
 			const p = this._dereference(this.props.text)
-			// console.log('_dereference', p, this.props.text.isGetterFunction)
 			el.appendChild(document.createTextNode(p))
 		}
-		// console.log('_renderDom', this.props.toString())
 		for (const [prop, value] of this.props) {
 			if (prop !== 'text') {
 				el.setAttribute(prop, this._dereference(value))
 			}
 		}
-		// console.log('_renderDom.for .. of', el)
 		return el
 	}
 	

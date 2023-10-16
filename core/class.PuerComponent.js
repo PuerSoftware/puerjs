@@ -18,20 +18,13 @@ class PuerComponent extends BasePuerComponent {
 
 	/********************** FRAMEWORK **********************/
 
-
-	__register(path='PuerApp', index=0) {
-		super.__register(path, index)
-		this.tree = this.render()
-        if (!this.tree) {
+	__render() {
+		this.root = this.render()
+        if (!this.root) {
             throw new PuerError('Must return component tree', this.className, 'render')
         }
-        this.root = this.tree.__register(this.path)
         this.root.parent = this
-        return this
-	}
-
-	__render() {
-		// console.log('__render', this.id, this.parent)
+		console.log('__render root:', this.root)
 		this.element = this.root.__render()
 		this.element.classList.add(this.cssClass)
 		this._addEvents()
@@ -48,13 +41,6 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	/*********************** PRIVATE ***********************/
-
-	_renderDom() {
-		if (this.root) {
-			return this.root._renderDom()
-		}
-		return null
-	}
 
 	_onPropChange(prop) {
 		super._onPropChange(prop)

@@ -24,10 +24,9 @@ class PuerApp extends PuerObject {
 
 	// Is called only once on application init
 	render() {
-		this.root.__register()
 		this.dom = this.root.__render(this.className)
 		this.rootElement.innerHTML = null
-		this.rootElement.appendChild(this.dom) // TODO: Virutalize dom
+		this.rootElement.appendChild(this.dom)
 	}
 
 	// Is called every time on invalidate

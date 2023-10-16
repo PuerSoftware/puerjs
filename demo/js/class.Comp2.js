@@ -34,9 +34,10 @@ class Comp2 extends Comp2Base {
 
 	render() {
 		return ul ([
+			text   ('haha'),
 			div    (this.children),
 			li     ({text: this.state.liText}),
-			li     ({text: 'haha2'}),
+			li     ({text: this.props.myProp}),
 			button ({onClick: this.renderItem, text: 'Add Item'}),
 			button ({onClick: this.showChain,  text: 'Show Chain'})
 		])

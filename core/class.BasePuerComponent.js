@@ -13,13 +13,10 @@ class BasePuerComponent extends PuerObject {
 		this.id           = null
 		this.element      = null
 		this.parent       = null
+		this.root         = null
 		
 		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
 		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
-
-		// console.log(this.className, this.props.toString())
-
-		// console.log('CONSTRUCTOR', this.className, this.children.toString())
 
 		this.events       = this.props.extractEvents(this.owner)
 		this.cssClass     = Puer.String.camelToDashedSnake(this.className)
@@ -28,14 +25,11 @@ class BasePuerComponent extends PuerObject {
 		this._listenerMap = new WeakMap()
 	}
 
-
 	/******************** CHAIN GETTERS ********************/
-
 
 	getImmediateChainDescendants(chainName) {
 		let items = []
 		if (this.isCustom) {
-			// console.log('getImmediateChainDescendants', chainName, this.root.chainName)
 			if (chainName === this.root.chainName) {
 				items.push(this.root)
 			}
@@ -106,12 +100,6 @@ class BasePuerComponent extends PuerObject {
 	get $   () { return new PuerComponentSet([this]).$   }
 	get $$  () { return new PuerComponentSet([this]).$$  }
 	get $$$ () { return new PuerComponentSet([this]).$$$ }
-
-	/********************** FRAMEWORK **********************/
-
-	__register(path='PuerApp', index=0) {
-		this.path = path + '>' + this.className + `[${index}]`
-	}
 
 
 	/*********************** PRIVATE ***********************/
