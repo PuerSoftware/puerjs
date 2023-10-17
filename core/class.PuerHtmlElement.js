@@ -27,7 +27,11 @@ class PuerHtmlElement extends BasePuerComponent {
 	__update() {
 		console.log('__update', this.className)
 		for (const prop in this.props) {
-			this._onPropChange(prop)
+			if (typeof this.props[prop] === 'function') {
+				const oldValue = this._getElementAttribute(prop)
+				const newValue = this._dereference(this.props[prop])
+				oldValue !== newValue && this._onPropChange(prop, newValue)
+			}
 		}
 		for (const child of this.children) {
 			child.__update()
@@ -43,6 +47,10 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_define() {} // Not defining custom component
 
+	_getElementAttribute(name) {
+		return this.element.getAttribute(name)
+	}
+
 	_dereference(value) {
 		if (typeof value === 'function') {
 			return value()
@@ -50,9 +58,8 @@ class PuerHtmlElement extends BasePuerComponent {
 		return value
 	}
 
-	_onPropChange(prop) {
-		super._onPropChange(prop)
-		this.element.setAttribute(prop, this._dereference(this.props[prop]))
+	_onPropChange(prop, value) {
+		this.element.setAttribute(prop, value)
 	}
 
 	_renderElement() {

@@ -33,6 +33,13 @@ class PuerComponent extends BasePuerComponent {
 
 	__update() {
 		console.log('__update', this.className)
+		for (const prop in this.props) {
+			if (typeof this.props[prop] === 'function') {
+				// const oldValue = this._getElementAttribute(prop)
+				// const newValue = this._dereference(this.props[prop])
+				this._onPropChange()
+			}
+		}
 		this.root.__update()
 	}
 
@@ -43,16 +50,14 @@ class PuerComponent extends BasePuerComponent {
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange(prop) {
-		super._onPropChange(prop)
-		const onChangeFuncName = `onChange${Puer.String.capitalize(prop)}`
-		if (this.hasOwnMethod(onChangeFuncName)) {
-			this[onChangeFuncName].bind(this)(this.props[prop])
-		}
+	_onPropChange() {
+		// for (const child of this.children) {
+		// 	child.__update()
+		// }
 	}
 
-	_onStateChange(prop) {
-		// this.__update()
+	_onStateChange() {
+		this.__update()
 	}
 
 	/********************* DOM METHODS *********************/
