@@ -5,7 +5,7 @@ import PuerProps       from './class.PuerProps.js'
 class PuerTextElement extends PuerHtmlElement {
 
 	constructor(text) {
-		super(new PuerProps({'text': text}), [])
+		super({'text': text}, [])
 		this.tagName = 'text'
 	}
 

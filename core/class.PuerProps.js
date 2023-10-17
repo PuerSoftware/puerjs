@@ -2,10 +2,16 @@ import Puer         from './class.Puer.js'
 import PuerError    from './class.PuerError.js'
 
 class PuerProps {
-	constructor(props={}, onSet, onDelete) {
-		this.data     = props
-		this.onSet    = onSet
-		this.onDelete = onDelete
+	constructor(props={}, onChange) {
+		this.data      = props
+		this.ddata     = {}
+		this.onChange  = onChange
+
+		for (const prop in this.data) {
+			this.ddata[prop] = this.dereference(prop)
+		}
+		console.log('DATA', this.data)
+		console.log('DDATA', this.ddata)
 
 	return new Proxy(this, {
 		get: (target, prop) => {
@@ -32,16 +38,18 @@ class PuerProps {
 			}
 		},
 		set: (target, prop, value) => {
-			target.onSet && target.onSet(prop, value)
-			target.data[prop] = value
+			target.onChange(prop, target.data[prop], value)
+			target.data[prop]  = value
+			target.ddata[prop] = this.dereference(value)
 			return true
 		},
 		has: (target, prop) => {
             return prop in target.data
         },
 		deleteProperty: (target, prop) => {
-			target.onDelete && target.onDelete(prop)
+			target.onChange(prop, target.data[prop], undefined)
 			delete target.data[prop]
+			delete target.ddata[prop]
 			return true
 		},
 		ownKeys: (target) => {
@@ -99,6 +107,22 @@ class PuerProps {
 			.split('","').join('", "')
 			.replace(/"([^"]+)":/g, '$1: ')
 			.split('"').join("'")
+	}
+
+	dereference(prop) {
+		// console.log(prop, this.data[prop])
+		return Puer.isFunction(this.data[prop]) && !prop.startsWith('on')
+			? this.data[prop]()
+			: this.data[prop]
+	}
+
+	touch() {
+		for (const prop in this.data) {
+			const newValue = this.dereference(prop)
+			if (newValue !== this.ddata[prop]) {
+				this.onChange(prop, this.ddata[prop], newValue)
+			}
+		}
 	}
 }
 
