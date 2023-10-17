@@ -1,7 +1,7 @@
 import Puer          from '../../core/class.Puer.js'
 import PuerComponent from '../../core/class.PuerComponent.js'
 import Comp2Base     from './class.Comp2Base.js'
-
+import Comp3         from './class.Comp3.js'
 
 class Comp2 extends Comp2Base {
 	constructor(props, children) {
@@ -40,6 +40,8 @@ class Comp2 extends Comp2Base {
 			div    (this.children),
 			li     ([text(this.state.liText)]),
 			li     ([text(this.props.myProp)]),
+			li     ([text(this.props.myProp)]),
+			Puer.Comp3({myProp: this.props.myProp}),
 			button ({onClick: this.changeState}, [text('Change state')]),
 			button ({onClick: this.renderItem},  [text('Add Item')]),
 			button ({onClick: this.showChain},   [text('Show Chain')])

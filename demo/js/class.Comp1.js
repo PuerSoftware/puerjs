@@ -21,14 +21,19 @@ class Comp1 extends PuerComponent {
 		// console.log('this.$$.Comp2',     this.$$.Comp2)     // +
 	}
 
+	changeMyProp() {
+		this.props.myProp = this.props.myProp + 'xd'
+	}
+
 	render() {
 		return div('', {onclick: this._onClick}, [
 			text('Some Div'),
-			Puer.Comp2({myProp: 'test'},[
+			Puer.Comp2({myProp: this.props.myProp},[
 				h1({myProp: 'test'}, [text('H1')])
 			]),
 			// console.log('render in Comp1', Puer.renderOwner),
-			button({onClick: this.showChain}, [text('Show Chain in Comp1')])
+			button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
+			button({onClick: this.changeMyProp}, [text('Change prop')])
 		])
 	}
 }

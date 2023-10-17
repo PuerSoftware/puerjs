@@ -106,6 +106,8 @@ class BasePuerComponent extends PuerObject {
 
 	_onChildrenChange() {}
 
+	_onPropChange(prop, oldValue, newValue) {}
+
 	_addEvents() {
 		for (const name in this.events) {
 			this._on(name, this.events[name])

@@ -10,8 +10,6 @@ class PuerProps {
 		for (const prop in this.data) {
 			this.ddata[prop] = this.dereference(prop)
 		}
-		console.log('DATA', this.data)
-		console.log('DDATA', this.ddata)
 
 	return new Proxy(this, {
 		get: (target, prop) => {
@@ -38,9 +36,10 @@ class PuerProps {
 			}
 		},
 		set: (target, prop, value) => {
-			target.onChange(prop, target.data[prop], value)
+			const oldValue = target.data[prop]
 			target.data[prop]  = value
 			target.ddata[prop] = this.dereference(value)
+			target.onChange(prop, oldValue, value)
 			return true
 		},
 		has: (target, prop) => {
@@ -110,19 +109,28 @@ class PuerProps {
 	}
 
 	dereference(prop) {
-		// console.log(prop, this.data[prop])
-		return Puer.isFunction(this.data[prop]) && !prop.startsWith('on')
-			? this.data[prop]()
-			: this.data[prop]
+		let value = this.data[prop]
+		while (Puer.isFunction(value) && !prop.startsWith('on')) {
+			value = value()
+		}
+		return value
 	}
 
 	touch() {
+		let isChanged = false
+		let counter = 0
 		for (const prop in this.data) {
 			const newValue = this.dereference(prop)
 			if (newValue !== this.ddata[prop]) {
+				isChanged = true
+				counter ++
 				this.onChange(prop, this.ddata[prop], newValue)
 			}
 		}
+		if (counter > 1) {
+			throw new Error('changed more than 1 prop, when triggered __update function')
+		}
+		return isChanged
 	}
 }
 

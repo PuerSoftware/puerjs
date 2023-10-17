@@ -32,15 +32,11 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	__update() {
-		console.log('__update', this.className)
-		for (const prop in this.props) {
-			if (typeof this.props[prop] === 'function') {
-				// const oldValue = this._getElementAttribute(prop)
-				// const newValue = this._dereference(this.props[prop])
-				this._onPropChange()
-			}
-		}
-		this.root.__update()
+		this.props.touch() && this.root.__update()
+		// for (const child in this.children) {
+		// 	this.children[child].__update()
+		// }
+		console.log('PuerComponent.__update()', this.children.length)
 	}
 
 	__onMount() {
@@ -50,13 +46,12 @@ class PuerComponent extends BasePuerComponent {
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange() {
-		// for (const child of this.children) {
-		// 	child.__update()
-		// }
+	_onPropChange(prop, oldValue, newValue) {
+		this.root.__update()
 	}
 
 	_onStateChange() {
+		this.root.__update()
 		this.__update()
 	}
 
