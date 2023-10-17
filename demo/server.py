@@ -1,13 +1,14 @@
 import os
 import sys
 import mimetypes
+import time
 
 from flask import Flask, Response, send_file, abort #, jasonify
 
 app      = Flask(__name__)
 DEBUG    = True
 HOST     = '127.0.0.1'
-PORT     = 5000
+PORT     = 8000
 BASE_DIR = os.path.dirname(os.getcwd())
 
 print('   BASE_DIR', BASE_DIR)
@@ -27,7 +28,9 @@ def serve_file(filename):
 
 	if os.path.exists(file_path):
 		mime_type, _ = mimetypes.guess_type(file_path)
-		return send_file(file_path, mimetype=mime_type)
+		with open(file_path, 'rb') as f:
+			file_content = f.read()
+		return Response(file_content, mimetype=mime_type)
 	else:
 		abort(404, description="Resource not found")
 

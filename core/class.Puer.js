@@ -2,10 +2,9 @@ import PuerApp         from './class.PuerApp.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerError       from './class.PuerError.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
-import PuerConstructor from './class.PuerConstructor.js'
+import PuerTextElement from './class.PuerTextElement.js'
 import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
-import PuerTextElement from './class.PuerTextElement.js'
 
 class Puer {
 	static owner

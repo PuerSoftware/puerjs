@@ -16,10 +16,10 @@
 	<div id="demo">
         <ul>
             <li>
-                <h3>Test Puer Props</h3>
+                <h3>Puer Tests</h3>
                 <ul>
                     <li>
-                        <a href="#" id="tpp">Props Test</a>
+                        <a href="#" id="test-puer-props">Test PuerProps</a>
                     </li>
                 </ul>
             </li>
@@ -27,21 +27,24 @@
                 <h3>Test Proxy Array</h3>
                 <ul>
                     <li>
-                        <a href="#" id="tpa-no-plugins">No Plugins</a>
+                        <a href="#" id="test-puer-component-set">Test PuerComponentSet</a>
                     </li>
                 </ul>
             </li>
         </ul>
     </div>
 	<script type="module">
-		import {
-			testPuerProps
-		} from './js/tests/testPuerProps.js'
+		import testPuerProps        from './js/tests/testPuerProps.js'
+        import testPuerComponentSet from './js/tests/testPuerComponentSet.js'
 
 		$(document).ready(() => {
-            $('#tpp').click((btn) => {
+            $('#test-puer-props').click(() => {
                 console.clear()
                 testPuerProps()
+            })
+            $('#test-puer-component-set').click(() => {
+                console.clear()
+                testPuerComponentSet()
             })
         })
 	</script>

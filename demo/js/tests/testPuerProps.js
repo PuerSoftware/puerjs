@@ -12,18 +12,16 @@ const obj = {
 const Tests_PuerProps = {
 	result: null,
 
-	setupProps: () => {
-		return new PuerProps({foo1: 'bar1', foo2: 'bar,2'},
-			() => {
-				Tests_PuerProps.result = 'onSet'
-			},
-			() => {
-				Tests_PuerProps.result = 'onDelete'
+	setup: () => {
+		return new PuerProps(
+			{foo1: 'bar1', foo2: 'bar,2'},
+			(prop, oldValue, newValue) => {
+				Tests_PuerProps.result = [prop, oldValue, newValue]
 			}
 		)
 	},
 
-	testPropsSquareBracketAccessors: (props) => {
+	testSquareBracketAccessors: (props) => {
 		 new PuerTest('Props [] accessors', {
             '[] accessor get existing key': [() => {
                 return props['foo1']
@@ -43,7 +41,7 @@ const Tests_PuerProps = {
         }).run()
 	},
 
-	testPropsDotAccessors: (props) => {
+	testDotAccessors: (props) => {
 		 new PuerTest('Props dot accessors', {
             'dot accessor get existing key': [() => {
                 return props.foo1
@@ -63,8 +61,8 @@ const Tests_PuerProps = {
         }).run()
 	},
 
-	testPropsIterators: (props) => {
-		new PuerTest('Props iterators', {
+	testIterators: (props) => {
+		new PuerTest('Iterators', {
             'forEach': [() => {
                 let counter = 0
                 props.forEach(() => {
@@ -89,16 +87,16 @@ const Tests_PuerProps = {
         }).run()
 	},
 
-	testExistingPropsMethods: (props) => {
-		new PuerTest('Existing Props methods', {
-			'has': [() => {
-				return [props.has('foo1'), props.has('foo3')]
+	testOperators: (props) => {
+		new PuerTest('Operators', {
+			'in': [() => {
+				return ['foo1' in props, 'foo3' in props]
 			}, [true, false]]
-		})
+		}).run()
 	},
 
-	testMethodsAddedToProps: (props) => {
-		new PuerTest('Methods added to Props', {
+	testAddedMethods: (props) => {
+		new PuerTest('Added methods', {
             'props.toObject()': [() => {
                 return  props.toObject()
             },  obj],
@@ -125,48 +123,38 @@ const Tests_PuerProps = {
         }).run()
 	},
 
-	testPropsOnChangeCallbacks: (props) => {
-		 new PuerTest('Props dot accessors', {
+	testOnChangeCallbacks: (props) => {
+		 new PuerTest('onChange callbacks', {
             'set existing key': [() => {
                 props.foo1 = 'bar1b'
-                return [props.foo1, Tests_PuerProps.result]
-            },  ['bar1b', 'onSet']],
+                return Tests_PuerProps.result
+            },  ['foo1', 'bar1', 'bar1b']],
             'set new key': [() => {
                 props.foo3 = 'bar3'
-                return [props.foo3, Tests_PuerProps.result]
-            },  ['bar3', 'onSet']],
+                return Tests_PuerProps.result
+            },  ['foo3', undefined, 'bar3']],
             'delete existing key': [() => {
                 delete props.foo3
-                return [props.foo3, Tests_PuerProps.result]
-            },  [undefined, 'onDelete']],
+                return Tests_PuerProps.result
+            },  ['foo3', 'bar3', undefined]],
 			 'delete undefined key': [() => {
                 delete props.foo3
-                return [props.foo3, Tests_PuerProps.result]
-            },  [undefined, 'onDelete']]
+                return Tests_PuerProps.result
+            },  ['foo3', undefined, undefined]],
         }).run()
 	},
 }
 
 /*************************************************************/
 
-export function testPuerProps() {
-	const T_PP_NOCM = Tests_PuerProps
-
-	let props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testPropsDotAccessors(props)
-
-	props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testPropsSquareBracketAccessors(props)
-
-	props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testPropsIterators(props)
-
-	props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testExistingPropsMethods(props)
-
-	props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testMethodsAddedToProps(props)
-
-	props = T_PP_NOCM.setupProps()
-	T_PP_NOCM.testPropsOnChangeCallbacks(props)
+export default function testPuerProps() {
+	const T_PP = Tests_PuerProps
+	
+	T_PP.testDotAccessors(T_PP.setup())
+	T_PP.testSquareBracketAccessors(T_PP.setup())
+	T_PP.testIterators(T_PP.setup())
+	T_PP.testOperators(T_PP.setup())
+	T_PP.testAddedMethods(T_PP.setup())
+	T_PP.testOnChangeCallbacks(T_PP.setup())
 }
+
