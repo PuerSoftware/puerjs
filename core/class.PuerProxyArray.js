@@ -22,7 +22,7 @@ const PuerProxyArrayPlugins = {
 
 		get(prop) {
 			if (this.operator) {
-				let   newInstance  = new this.target.constructor()
+				let   newInstance  = this.target
 				const method       = this.operators[this.operator]
 
 				for (const item of this.target) {
@@ -106,6 +106,7 @@ const PuerProxyArrayPlugins = {
 
 class PuerProxyArray extends Array {
 	constructor(items, plugins) {
+		console.log(items)
 		super(... items)
 
 		const handler = {

@@ -31,7 +31,7 @@ class PuerApp extends PuerObject {
 
 	// Is called every time on invalidate
 	update() {
-		console.log('update()', this.root.className, this.root.__update)
+		//console.log('update()', this.root.className, this.root.__update)
 		this.dom = this.root.__update(this.className)
 	}
 

@@ -24,7 +24,7 @@ class PuerComponent extends BasePuerComponent {
             throw new PuerError('Must return component tree', this.className, 'render')
         }
         this.root.parent = this
-		console.log('__render root:', this.root)
+		// console.log('__render root:', this.root)
 		this.element = this.root.__render()
 		this.element.classList.add(this.cssClass)
 		this._addEvents()
@@ -32,11 +32,11 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	__update() {
-		this.props.touch() && this.root.__update()
-		// for (const child in this.children) {
-		// 	this.children[child].__update()
-		// }
-		console.log('PuerComponent.__update()', this.children.length)
+		// console.log(`${this.className}.__update()`, this.children.length)
+		this.props.touch()
+		this.root.__update()
+		// WARN: this.root.__update() will call twice if this.props has changes,
+		// first time is called there, second -- in PuerComponent._onPropChange
 	}
 
 	__onMount() {
@@ -53,24 +53,6 @@ class PuerComponent extends BasePuerComponent {
 	_onStateChange() {
 		this.root.__update()
 		this.__update()
-	}
-
-	/********************* DOM METHODS *********************/
-
-	append(child) {
-		// child = Puer.defer(child)
-		child.parent = this
-		this.children.push(child)
-		// console.log(this.children)
-
-		this.invalidate()
-	}
-
-	prepend(child) {
-		// child = Puer.defer(child)
-		child.parent = this
-		this.children.unshift(child)
-		this.invalidate()
 	}
 }
 

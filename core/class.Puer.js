@@ -49,7 +49,7 @@ class Puer {
 			if (owner.isCustom) {
 				Puer.owner = owner
 			}
-			console.log('deferring', f.name)
+			// console.log('deferring', f.name)
 			let result = alias.apply(owner, args)
 
 			Puer.owner    = null

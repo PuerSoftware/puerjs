@@ -3,6 +3,7 @@ import PuerProxyArray, {PuerProxyArrayPlugins} from './class.PuerProxyArray.js'
 
 class PuerComponentSet extends PuerProxyArray {
 	constructor(components, onChange) {
+		console.log(components)
 		super(components, [
 			new PuerProxyArrayPlugins.MethodDecorator({}),
 			new PuerProxyArrayPlugins.IndexAccessorDecorator(

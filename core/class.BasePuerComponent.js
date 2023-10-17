@@ -35,8 +35,8 @@ class BasePuerComponent extends PuerObject {
 			}
 		} else {
 			for (const child of this.children) {
-				if (chainName === child.instance.chainName) {
-					items.push(child.instance)
+				if (chainName === child.chainName) {
+					items.push(child)
 				}
 			}
 		}
@@ -59,7 +59,7 @@ class BasePuerComponent extends PuerObject {
 			if (this.children) {
 				for (const child of this.children) {
 					if (child) {
-						const childItems = child.instance.getChainDescendants(chainName, false)
+						const childItems = child.getChainDescendants(chainName, false)
 						if (childItems) {
 							items = items.concat(childItems)
 						}
@@ -104,7 +104,10 @@ class BasePuerComponent extends PuerObject {
 
 	/*********************** PRIVATE ***********************/
 
-	_onChildrenChange() {}
+	_onChildrenChange() {
+		console.log(`${this.className}._onChildrenChange`)
+		this.__update()
+	}
 
 	_onPropChange(prop, oldValue, newValue) {}
 
@@ -136,7 +139,6 @@ class BasePuerComponent extends PuerObject {
 	/*********************** CASTING ***********************/
 
 	toString() {
-		console.log(this.props.text)
 		return `${this.className}(${this.props.toString()})`
 	}
 
@@ -176,6 +178,19 @@ class BasePuerComponent extends PuerObject {
 			this.element.addAttribute(name, value)
 		}
 		return this.element.getAttribute(name)
+	}
+
+
+	append(component) {
+		console.log('append')
+		component.parent = this
+		this.element.childNodes.appendChild(component.__render())
+	}
+
+	prepend(child) {
+		child.parent = this
+		this.children.unshift(child)
+		this.invalidate()
 	}
 }
 

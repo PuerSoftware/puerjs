@@ -117,12 +117,10 @@ class PuerProps {
 	}
 
 	touch() {
-		let isChanged = false
 		let counter = 0
 		for (const prop in this.data) {
 			const newValue = this.dereference(prop)
 			if (newValue !== this.ddata[prop]) {
-				isChanged = true
 				counter ++
 				this.onChange(prop, this.ddata[prop], newValue)
 			}
@@ -130,7 +128,6 @@ class PuerProps {
 		if (counter > 1) {
 			throw new Error('changed more than 1 prop, when triggered __update function')
 		}
-		return isChanged
 	}
 }
 

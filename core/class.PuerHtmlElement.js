@@ -25,6 +25,7 @@ class PuerHtmlElement extends BasePuerComponent {
 	}
 
 	__update() {
+		// console.log(`${this.className}.__update()`, this.children.length)
 		this.props.touch()
 		for (const child of this.children) {
 			child.__update()
@@ -39,10 +40,6 @@ class PuerHtmlElement extends BasePuerComponent {
 	/*********************** PRIVATE ***********************/
 
 	_define() {} // Not defining custom component
-
-	_getElementAttribute(name) {
-		return this.element.getAttribute(name)
-	}
 
 	_onPropChange(prop, oldValue, newValue) {
 		this.element.setAttribute(prop, newValue)
@@ -62,19 +59,6 @@ class PuerHtmlElement extends BasePuerComponent {
 		return this
 	}
 
-	/********************* DOM METHODS *********************/
-
-	append(child) {
-		child.parent = this
-		this.children.push(child)
-		this.invalidate()
-	}
-
-	prepend(child) {
-		child.parent = this
-		this.children.unshift(child)
-		this.invalidate()
-	}
 }
 
 PuerHtmlElement.prototype.chainName = 'PuerHtmlElement'
