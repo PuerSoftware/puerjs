@@ -1,11 +1,11 @@
+import Puer         from './class.Puer.js'
 import PuerError    from './class.PuerError.js'
 
 class PuerProps {
 	constructor(props={}, onSet, onDelete) {
-		this.data = props
-		this.onSet = onSet
+		this.data     = props
+		this.onSet    = onSet
 		this.onDelete = onDelete
-
 
 	return new Proxy(this, {
 		get: (target, prop) => {
@@ -20,9 +20,15 @@ class PuerProps {
 				return target[prop]
 			}
 			if (prop in target.data) {
-				return target.data[prop]
+				if (Puer.deferred) {
+					return () => target.data[prop]
+				} else {
+					return target.data[prop]
+				}
 			} else if (prop in target) {
-				return typeof target[prop] === 'function' ? target[prop].bind(target) : target[prop]
+				return typeof target[prop] === 'function'
+					? target[prop].bind(target)
+					: target[prop]
 			}
 		},
 		set: (target, prop, value) => {

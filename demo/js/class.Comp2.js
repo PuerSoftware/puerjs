@@ -12,6 +12,7 @@ class Comp2 extends Comp2Base {
 
 
 	changeState() {
+		console.log('changeState')
 		this.state.liText = this.state.liText + 'HA'
 	}
 
@@ -33,13 +34,15 @@ class Comp2 extends Comp2Base {
 	}
 
 	render() {
+		console.log(this.props.toString())
 		return ul ([
-			text   ('haha'),
+			text   ('hahah'),
 			div    (this.children),
 			li     ([text(this.state.liText)]),
 			li     ([text(this.props.myProp)]),
-			button ({onClick: this.renderItem}, [text( 'Add Item')]),
-			button ({onClick: this.showChain}, [text('Show Chain')])
+			button ({onClick: this.changeState}, [text('Change state')]),
+			button ({onClick: this.renderItem},  [text('Add Item')]),
+			button ({onClick: this.showChain},   [text('Show Chain')])
 		])
 	}
 }

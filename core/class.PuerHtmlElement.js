@@ -25,8 +25,12 @@ class PuerHtmlElement extends BasePuerComponent {
 	}
 
 	__update() {
+		console.log('__update', this.className)
 		for (const prop in this.props) {
 			this._onPropChange(prop)
+		}
+		for (const child of this.children) {
+			child.__update()
 		}
 	}
 

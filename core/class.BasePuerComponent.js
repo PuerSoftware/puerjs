@@ -104,7 +104,10 @@ class BasePuerComponent extends PuerObject {
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange(prop, value) {}
+	_onPropChange(prop, value) {
+		console.log('_onPropChange', prop, value)
+		this.__update()
+	}
 
 	_onChildrenChange() {}
 

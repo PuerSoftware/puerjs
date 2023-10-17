@@ -18,6 +18,7 @@ class PuerTextElement extends PuerHtmlElement {
 	}
 
 	__update() {
+		console.log('__update', this.className)
 		this._onPropChange('text')
 	}
 
@@ -28,7 +29,7 @@ class PuerTextElement extends PuerHtmlElement {
 	}
 
 	_renderElement() {
-		return document.createTextNode(this.props.text)
+		return document.createTextNode(this._dereference(this.props.text))
 	}
 
 }

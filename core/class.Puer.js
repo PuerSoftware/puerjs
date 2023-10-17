@@ -9,6 +9,7 @@ import PuerTextElement from './class.PuerTextElement.js'
 
 class Puer {
 	static owner
+	static deferred
 
 	static init(events=[]) {
 		Puer.Event  = {}
@@ -48,7 +49,7 @@ class Puer {
 			if (owner.isCustom) {
 				Puer.owner = owner
 			}
-
+			console.log('deferring', f.name)
 			let result = alias.apply(owner, args)
 
 			Puer.owner    = null

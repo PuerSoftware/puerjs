@@ -6,7 +6,7 @@ import PuerState         from './class.PuerState.js'
 class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.state     = new PuerState(this.invalidate.bind(this))
+		this.state     = new PuerState(this._onStateChange.bind(this))
 		this.isCustom  = true
 
 		this.getMethods()
@@ -32,6 +32,7 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	__update() {
+		console.log('__update', this.className)
 		this.root.__update()
 	}
 
@@ -48,6 +49,10 @@ class PuerComponent extends BasePuerComponent {
 		if (this.hasOwnMethod(onChangeFuncName)) {
 			this[onChangeFuncName].bind(this)(this.props[prop])
 		}
+	}
+
+	_onStateChange(prop) {
+		// this.__update()
 	}
 
 	/********************* DOM METHODS *********************/
