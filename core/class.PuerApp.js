@@ -1,10 +1,10 @@
 import PuerObject from './class.PuerObject.js'
+// import PuerComponent from './class.PuerComponent.js'
 
 
 class PuerApp extends PuerObject {
     constructor(selector) {
     	super()
-		this.components  = {}
 		this.root        = null
 		this.dom         = null
 		this.rootElement = document.querySelector(selector)
@@ -13,21 +13,12 @@ class PuerApp extends PuerObject {
 
 	init(root) {
 		this.root = root
-		this.render()
+		this.dom  = root.__render(this.className)
+		this.rootElement.innerHTML = null
+		this.rootElement.appendChild(this.dom)
 		this.root.parent = this
 		this.root.__onReady()
 		this.root.__update()
-	}
-
-	has(component_id) {
-		return this.components.hasOwnProperty(component_id)
-	}
-
-	// Is called only once on application init
-	render() {
-		this.dom = this.root.__render(this.className)
-		this.rootElement.innerHTML = null
-		this.rootElement.appendChild(this.dom)
 	}
 
 	toString(root, indent='') {

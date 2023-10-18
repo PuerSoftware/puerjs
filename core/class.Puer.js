@@ -27,7 +27,7 @@ class Puer {
 		}
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
-		Puer.Router = new PuerRouter(Puer.App)
+		Puer.Router = new PuerRouter(Puer.App.root)
 		return Puer.App
 	}
 
@@ -138,7 +138,7 @@ class Puer {
 		}
 	}
 
-	static _defineComponent(namespace, cls) {
+	static _defineComponent(cls) {
 		if (Puer[cls.name]) {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
@@ -156,16 +156,32 @@ class Puer {
 		}
 	}
 
-	static define(... args) {
-		const className = args.pop()
-		const namespace = args.join('_')
+	static define(className) {
 		if (Puer.type(className) === 'string') {
 			if (className === 'text') {
 				return Puer._defineText()
 			}
 			return Puer._defineTag(className)
 		}
-		return Puer._defineComponent(namespace, className)
+		return Puer._defineComponent(className)
+	}
+
+	static application(selector, cls=null) {
+		let rootId = 'puer-application'
+		if (!cls) {
+			cls      = selector
+			selector = '#' + rootId
+		}
+		const rootElement = document.createElement('div')
+		rootElement.id = rootId
+		document.body.appendChild(rootElement)
+		Puer._defineComponent(cls)
+		Puer.init().app(selector, Puer[cls.name]())
+		return Puer
+	}
+
+	static router(getRoutes) {
+		return Puer.Router.define(getRoutes)
 	}
 
 	static addComponent(component) {

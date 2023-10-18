@@ -6,10 +6,12 @@ class Page extends PuerComponent {
 	}
 
 	activate() {
+		console.log('activate', this.className)
 		this.show()
 	}
 
 	deactivate() {
+		console.log('deactivate', this.className)
 		this.hide()
 	}
 }
