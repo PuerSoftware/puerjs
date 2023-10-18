@@ -30,15 +30,18 @@ class Comp2 extends Comp2Base {
 	}
 
 	renderItem() {
-		console.log('renderItem', this.$.ul[0].$.div[0])
-		this.$.ul[0].$.div[0].append(div({onclick: this.changeState}, [text(this.state.liText)]))
+		this.$.ul[0].$.div[0].prepend(div({onclick: this.changeState}, [text(this.state.liText)]))
+		console.log('renderItem', this.children)
 	}
 
 	render() {
+		console.log('render()', this.props.myProp)
 		return ul ([
 			text   ('hahah'),
 			div    (this.children),
 			li     ([text(this.state.liText)]),
+			li     ([text(this.state.liText + 'myText with state')]),
+			li     ([text(`${this.props.myProp} myText with props`)]),
 			li     ([text(this.props.myProp)]),
 			li     ([text(this.props.myProp)]),
 			Puer.Comp3({myProp: this.props.myProp}),

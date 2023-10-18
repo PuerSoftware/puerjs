@@ -25,7 +25,11 @@ class PuerProps {
 			}
 			if (prop in target.data) {
 				if (Puer.deferred) {
-					return () => target.data[prop]
+					let getterFunction =  () => target.data[prop]
+					getterFunction.toString = () => {
+						return this.dereference(prop)
+					}
+					return getterFunction
 				} else {
 					return target.data[prop]
 				}

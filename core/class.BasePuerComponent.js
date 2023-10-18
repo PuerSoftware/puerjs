@@ -173,15 +173,16 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	append(component) {
-		console.log('append')
 		const element = component.__render()
 		component.parent = this
+		!this.isCustom && this.children.push(component)
 		this.element.appendChild(element)
 	}
 
 	prepend(component) {
 		const element = component.__render()
 		component.parent = this
+		!this.isCustom && this.children.unshift(component)
 		if (this.element.firstChild) {
 			this.element.insertBefore(element, this.element.firstChild)
 		} else {

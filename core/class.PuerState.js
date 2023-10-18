@@ -22,8 +22,9 @@ class PuerState extends PuerObject {
 				let getterFunction = () => {
 					return target[prop]
 				}
-				getterFunction.isGetterFunction = true
-
+				getterFunction.toString = () => {
+					return getterFunction()
+				}
 				return Puer.deferred ? getterFunction : value
 			},
 			set(target, prop, value) {
