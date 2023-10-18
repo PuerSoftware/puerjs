@@ -8,6 +8,7 @@ class FormField extends PuerComponent {
     constructor(props, children) {
         super(props, children)
         this.props.default('label', 'Field label')
+        this.state.error = ''
     }
 
     onReady() {
@@ -16,9 +17,13 @@ class FormField extends PuerComponent {
         }
     }
 
+    onValidate(data) {
+        this.state.error = data.error || ''
+    }
+
     render() {
         return div([
-            div('error field-error', {text: 'Unknown and scary error occured'}),
+            div('error field-error', {text: this.state.error}),
             label({text: this.props.label}),
             ... this.children
         ])

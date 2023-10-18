@@ -10,7 +10,9 @@ class FormInput extends PuerComponent {
     }
     
     onReady() {
-        this.form = this.$$$.Form[0]
+        this.form  = this.$$$.Form[0]
+        this.field = this.$$$.FormField[0]
+
         if (!this.form) {
             throw new PuerError('FormInput must be a descendent of Form!', this, 'onReady')
         }

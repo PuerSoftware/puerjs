@@ -13,12 +13,32 @@ class Form extends PuerComponent {
 		this.props.default('action',        '')
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/x-www-form-urlencoded')
+
 		this.state.error = ''
+	}
+
+	onReady() {
+		this.inputs = this.$$.FormInput
+		this.fields = this.$$.FormField
+	}
+
+	onValidate(data) {
+		console.log('Validated data', data)
+		this.state.error = data.error || ''
+		if (data.error) {
+			for (const input of this.inputs) {
+				if (input.props.name in data.fields) {
+					if (input.field) {
+						input.field.onValidate(data.fields[input.props.name])
+					}
+				}
+			}
+		}
 	}
 
 	validate(initiatorInputName) {
 		let formData = {}
-		for (const input of this.$$.FormInput) {
+		for (const input of this.inputs) {
 			formData[input.props.name] = {
 				value          : input.element.value,
 				validationType : input.props.validationType
@@ -30,13 +50,13 @@ class Form extends PuerComponent {
 		Request.post(this.props.validationUrl, formData)
 			.then((response) => {
 				if (!response.ok) {
-					throw new PuerError('Form validation failed', this, 'validate')
+					const error      = 'Form validation failed'
+					this.state.error = error
+					throw new PuerError(error, this, 'validate')
 				}
 				return response.json()
 			})
-			.then(data => {
-				console.log('Validated data', data)
-			})
+			.then(this.onValidate.bind(this))
 			.catch(error => {
 				console.error('Validate error', error)
 			})

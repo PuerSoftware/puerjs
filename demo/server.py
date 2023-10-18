@@ -3,7 +3,7 @@ import sys
 import mimetypes
 import time
 
-from flask import Flask, Response, request, send_file, abort , jsonify
+from flask import Flask, Response, request, send_file, abort, jsonify
 
 app      = Flask(__name__)
 DEBUG    = True
@@ -17,12 +17,21 @@ print('   BASE_DIR', BASE_DIR)
 
 @app.route('/validate', methods=['POST'])
 def validate():
-	form_data = request.form
-	username = form_data.get('username')
-	password = form_data.get('password')
-	return jsonify({
-	    'error': f'Some scary error occurred on {username}'
-	})
+	response = {
+		'error'  : None,
+		'fields' : {}
+	}
+	errorCount = 0
+	for field, data in request.json.items():
+		response['fields'][field] = {
+			'error': f'Filed {field}/{data["validationType"]} may or may not contain an error'
+		}
+		errorCount += 1
+
+	if errorCount > 0:
+		response['error'] = f'This form contains {errorCount} errors'
+
+	return jsonify(response)
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
