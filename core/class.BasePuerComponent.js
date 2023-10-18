@@ -162,6 +162,12 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.add(name)
 	}
 
+	css(styles) {
+		for (const [property, value] of Object.entries(styles)) {
+            this.element.style[property] = value
+        }
+	}
+
 	removeCssClass(name) {
 		this.element.classList.remove(name)
 	}
@@ -199,6 +205,14 @@ class BasePuerComponent extends PuerObject {
 			const index = this.parent.children.indexOf(this)
 			delete this.parent.children[index]
 		}
+	}
+
+	hide() {
+		this.css({display: 'none'})
+	}
+
+	show() {
+		this.css({display: 'block'}) // TODO: restore previous display value
 	}
 }
 

@@ -1,4 +1,5 @@
 import PuerApp         from './class.PuerApp.js'
+import PuerRouter      from './class.PuerRouter.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerError       from './class.PuerError.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
@@ -26,6 +27,7 @@ class Puer {
 		}
 		Puer.App = new PuerApp(selector)
 		Puer.App.init(tree)
+		Puer.Router = new PuerRouter(Puer.App)
 		return Puer.App
 	}
 

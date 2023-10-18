@@ -5,8 +5,6 @@ import Request               from '../library/class.Request.js'
 class Form extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('validationUrl', this)
-
 		this.props.default('title',         'Form')
 		this.props.default('subtitle',      'Please fill out this form')
 		this.props.default('buttonCaption', 'Submit')
@@ -41,25 +39,27 @@ class Form extends PuerComponent {
 		for (const input of this.inputs) {
 			formData[input.props.name] = {
 				value          : input.element.value,
-				validationType : input.props.validationType
+				validationType : input.props.validationType || ''
 			}
 			if (input.props.name === initiatorInputName) {
 				break
 			}
 		}
-		Request.post(this.props.validationUrl, formData)
-			.then((response) => {
-				if (!response.ok) {
-					const error      = 'Form validation failed'
-					this.state.error = error
-					throw new PuerError(error, this, 'validate')
-				}
-				return response.json()
-			})
-			.then(this.onValidate.bind(this))
-			.catch(error => {
-				console.error('Validate error', error)
-			})
+		if (this.props.validationUrl) {
+			Request.post(this.props.validationUrl, formData)
+				.then((response) => {
+					if (!response.ok) {
+						const error      = 'Form validation failed'
+						this.state.error = error
+						throw new PuerError(error, this, 'validate')
+					}
+					return response.json()
+				})
+				.then(this.onValidate.bind(this))
+				.catch(error => {
+					console.error('Validate error', error)
+				})
+		}
 	}
 
 	render() {

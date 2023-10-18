@@ -5,7 +5,6 @@ class FormInput extends PuerComponent {
     constructor(props, children) {
         super(props, children)
         this.props.require('name', this)
-        this.props.require('validationType', this)
         this.form = null
     }
     
