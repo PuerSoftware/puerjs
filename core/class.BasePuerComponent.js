@@ -142,14 +142,6 @@ class BasePuerComponent extends PuerObject {
 		return `${this.className}(${this.props.toString()})`
 	}
 
-	/********************** DIRECTIVE **********************/
-
-	invalidate() {
-		if (this.parent) {
-			this.parent.invalidate()
-		}
-	}
-
 	/************************ HOOKS ************************/
 
 	onMount() {} // To be defined in child classes
@@ -180,17 +172,21 @@ class BasePuerComponent extends PuerObject {
 		return this.element.getAttribute(name)
 	}
 
-
 	append(component) {
 		console.log('append')
+		const element = component.__render()
 		component.parent = this
-		this.element.childNodes.appendChild(component.__render())
+		this.element.appendChild(element)
 	}
 
-	prepend(child) {
-		child.parent = this
-		this.children.unshift(child)
-		this.invalidate()
+	prepend(component) {
+		const element = component.__render()
+		component.parent = this
+		if (this.element.firstChild) {
+			this.element.insertBefore(element, this.element.firstChild)
+		} else {
+			this.element.appendChild(element)
+		}
 	}
 }
 

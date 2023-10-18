@@ -50,7 +50,7 @@ class PuerApp extends PuerObject {
 	}
 
 	invalidate() {
-		this.update()
+		// this.update()
 	}
 
 	
