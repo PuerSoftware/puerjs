@@ -17,7 +17,7 @@ class Form extends PuerComponent {
 		this.state.error = ''
 	}
 
-	onReady() {
+	onUpdate() {
 		this.inputs = this.$$.FormInput
 		this.fields = this.$$.FormField
 	}

@@ -35,6 +35,7 @@ class PuerHtmlElement extends BasePuerComponent {
 		for (const child of this.children) {
 			child.__update()
 		}
+		this.onUpdate()
 	}
 
 	__onReady() {

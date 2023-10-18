@@ -16,6 +16,7 @@ class PuerApp extends PuerObject {
 		this.render()
 		this.root.parent = this
 		this.root.__onReady()
+		this.root.__update()
 	}
 
 	has(component_id) {
@@ -29,14 +30,8 @@ class PuerApp extends PuerObject {
 		this.rootElement.appendChild(this.dom)
 	}
 
-	// Is called every time on invalidate
-	update() {
-		//console.log('update()', this.root.className, this.root.__update)
-		this.dom = this.root.__update(this.className)
-	}
-
 	toString(root, indent='') {
-		s = ''
+		let s = ''
 		root = root || this.root
 		s += indent + root.toString() + '\n'
 		if (root.isCustom) {
@@ -48,12 +43,6 @@ class PuerApp extends PuerObject {
 		}
 		return s
 	}
-
-	invalidate() {
-		// this.update()
-	}
-
-	
 }
 
 export default PuerApp

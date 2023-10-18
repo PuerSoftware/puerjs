@@ -45,6 +45,7 @@ class PuerComponent extends BasePuerComponent {
 		this.root.__update()
 		// WARN: this.root.__update() will call twice if this.props has changes,
 		// first time is called there, second -- in PuerComponent._onPropChange
+		this.onUpdate()
 	}
 
 	__onReady() {

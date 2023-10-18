@@ -11,7 +11,7 @@ class FormField extends PuerComponent {
         this.state.error = ''
     }
 
-    onReady() {
+    onUpdate() {
         if (!this.$$$.Form[0]) {
             throw new PuerError('FormField must be a descendent of Form!', this, 'onReady')
         }

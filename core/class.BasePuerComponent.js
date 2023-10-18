@@ -145,6 +145,7 @@ class BasePuerComponent extends PuerObject {
 	/************************ HOOKS ************************/
 
 	onReady() {} // To be defined in child classes
+	onUpdate() {} // To be defined in child classes
 	render()  {} // To be defined in child classes
 
 	/********************* DOM METHODS *********************/

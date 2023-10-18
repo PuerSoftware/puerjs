@@ -9,7 +9,7 @@ class FormInput extends PuerComponent {
         this.form = null
     }
     
-    onReady() {
+    onUpdate() {
         this.form  = this.$$$.Form[0]
         this.field = this.$$$.FormField[0]
 
