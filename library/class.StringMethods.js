@@ -23,6 +23,12 @@ class StringMethods {
         let pad = Math.floor((n - title.length - 2) / 2)
         return ch.repeat(pad) + ' ' + title + ' ' + ch.repeat(n - title.length - 2 - pad)
     }
+
+    static isNumeric(s) {
+        if (typeof s !== 'string') { return false } // we only process strings!  
+        return !isNaN(s) &&                         // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+            !isNaN(parseFloat(s))                   // ...and ensure strings of whitespace fail
+    }
 }
 
 export default StringMethods

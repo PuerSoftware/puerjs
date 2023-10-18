@@ -67,6 +67,15 @@ const Tests_PuerComponentSet = {
         }).run()
 	},
 
+	testOperators: (cset) => {
+		new PuerTest('Operators', {
+			'delete': [() => {
+				delete cset[0]
+				return cset.length
+			}, 2]
+		}).run()
+	},
+
 	testExistingMethods: (cset) => {
 		new PuerTest('Existing methods', {
 			'push': [() => {
@@ -93,11 +102,7 @@ const Tests_PuerComponentSet = {
             },  ['zero', 'one', 'two']],
             'toString()': [() => {
                 return cset.toString()
-            },  "[zero, one, two]"],
-			'remove': [() => {
-				cset.remove(cset.indexOf('one'))
-				return cset.length
-			}, 2]
+            },  "[zero, one, two]"]
         }).run()
 	}
 }
@@ -188,6 +193,7 @@ export default function testPuerComponentSet() {
 
 	T_PCS.testSquareBracketAccessors(T_PCS.setup())
 	T_PCS.testIterators(T_PCS.setup())
+	T_PCS.testOperators(T_PCS.setup())
 	T_PCS.testExistingMethods(T_PCS.setup())
 	T_PCS.testAddedMethods(T_PCS.setup())
 

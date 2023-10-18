@@ -1,9 +1,9 @@
+import Puer from './class.Puer.js'
 
 class PuerChainableSet extends Array {
 	constructor(items, onChange, operators) {
-		console.log('constructor', items)
-		if (items instanceof PuerChainableSet) {
-			items = items.toArray()
+		if (Puer.isNumber(items)) {
+			items = Array(items)
 		}
 		super(... items)
 
@@ -13,6 +13,15 @@ class PuerChainableSet extends Array {
 		return new Proxy(this, {
 			get: function(target, prop, receiver) {
 				if (typeof _this[prop] == 'function') {
+					if (Array.prototype.hasOwnProperty(prop)) {        // Native Array method
+						// console.log('Native Array method')
+						// return (... args) => {
+						// 	const a = _this.toArray()
+						// 	const result = a.apply(a, args)
+						// }
+					} else {                                           // Added PuerChainableSet method
+						// console.log('Added PuerChainableSet method')
+					}
 					return _this[prop].bind(_this)
 				}
 				if (operators) {
@@ -40,6 +49,14 @@ class PuerChainableSet extends Array {
 					onChange && onChange(prop, oldValue, value)
 				}
 				return result
+			},
+
+			deleteProperty: function(target, prop, receiver) {
+				if (Puer.String.isNumeric(prop)) {
+					_this.splice(parseInt(prop), 1)
+					return true
+				}
+				return false
 			}
 		})
 	}
@@ -56,9 +73,8 @@ class PuerChainableSet extends Array {
 	}
 	
 	remove(index) {
-		const newArr = this.slice(0, index).concat(this.slice(index + 1))
-		const newSet = new PuerChainableSet(newArr, this.onChange, this.operators)
-		Object.assign(this, newSet)
+		console.log('remove', index)
+		delete this[index]
 	}
 
 	toArray() {

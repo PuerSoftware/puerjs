@@ -195,7 +195,8 @@ class BasePuerComponent extends PuerObject {
 		if (this.parent.isCustom) {
 			this.parent.root = null
 		} else {
-			this.parent.children.filter(item => item !== this)
+			const index = this.parent.children.indexOf(this)
+			delete this.parent.children[index]
 		}
 	}
 }
