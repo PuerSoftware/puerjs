@@ -14,12 +14,15 @@ class PuerComponent extends BasePuerComponent {
 			.map(method => {
 				this[method] = Puer.deferrer(this[method], this)
 			})
+
+
 	}
 
 	/********************** FRAMEWORK **********************/
 
 	__render() {
 		this.root = this.render()
+
         if (!this.root) {
             throw new PuerError('Must return component tree', this.className, 'render')
         }
@@ -27,6 +30,11 @@ class PuerComponent extends BasePuerComponent {
 		// console.log('__render root:', this.root)
 		this.element = this.root.__render()
 		this.element.classList.add(this.cssClass)
+		/*********************************************/
+		if ('text' in this.props) {
+			this.prepend(text(this.props.text))
+		}
+		/*********************************************/
 		this._addEvents()
 		return this.element
 	}

@@ -189,6 +189,15 @@ class BasePuerComponent extends PuerObject {
 			this.element.appendChild(element)
 		}
 	}
+
+	remove() {
+		this.element.remove()
+		if (this.parent.isCustom) {
+			this.parent.root = null
+		} else {
+			this.parent.children.filter(item => item !== this)
+		}
+	}
 }
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'

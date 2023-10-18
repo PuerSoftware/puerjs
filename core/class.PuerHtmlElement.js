@@ -20,6 +20,11 @@ class PuerHtmlElement extends BasePuerComponent {
 				this.element.appendChild(childElement)
 			}
 		}
+		/*********************************************/
+		if ('text' in this.props) {
+			this.prepend(text(this.props.text))
+		}
+		/*********************************************/
 		this._addEvents()
 		return this.element
 	}

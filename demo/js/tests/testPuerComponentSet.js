@@ -93,7 +93,11 @@ const Tests_PuerComponentSet = {
             },  ['zero', 'one', 'two']],
             'toString()': [() => {
                 return cset.toString()
-            },  "[zero, one, two]"]
+            },  "[zero, one, two]"],
+			'remove': [() => {
+				cset.remove(cset.indexOf('one'))
+				return cset.length
+			}, 2]
         }).run()
 	}
 }
