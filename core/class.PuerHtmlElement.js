@@ -37,9 +37,9 @@ class PuerHtmlElement extends BasePuerComponent {
 		}
 	}
 
-	__onMount() {
-		this.children && this.children.forEach(child => { child.__onMount() })
-		return this.onMount()
+	__onReady() {
+		this.children && this.children.forEach(child => { child.__onReady() })
+		return this.onReady()
 	}
 
 	/*********************** PRIVATE ***********************/

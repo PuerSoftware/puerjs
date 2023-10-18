@@ -47,9 +47,9 @@ class PuerComponent extends BasePuerComponent {
 		// first time is called there, second -- in PuerComponent._onPropChange
 	}
 
-	__onMount() {
-		this.root.__onMount()
-		this.onMount()
+	__onReady() {
+		this.root.__onReady()
+		this.onReady()
 	}
 
 	/*********************** PRIVATE ***********************/

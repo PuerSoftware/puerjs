@@ -15,7 +15,7 @@ class PuerApp extends PuerObject {
 		this.root = root
 		this.render()
 		this.root.parent = this
-		this.root.__onMount()
+		this.root.__onReady()
 	}
 
 	has(component_id) {

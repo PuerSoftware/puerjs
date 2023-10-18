@@ -35,6 +35,10 @@ class Comp2 extends Comp2Base {
 		this.$.ul[0].$.div[0].prepend(div({onclick: this.changeState}, [text(this.state.liText)]))
 	}
 
+	removeItem() {
+		this.$.ul[0].$.div[0].remove()
+	}
+
 	render() {
 		return ul ({text: this.props.myProp}, [
 			// text   (),
@@ -47,6 +51,7 @@ class Comp2 extends Comp2Base {
 			Puer.Comp3({myProp: this.props.myProp}),
 			button ({onClick: this.changeState}, [text('Change state')]),
 			button ({onClick: this.renderItem},  [text('Add Item')]),
+			button ({onClick: this.removeItem},  [text('Remove Item')]),
 			button ({onClick: this.showChain},   [text('Show Chain')])
 		])
 	}

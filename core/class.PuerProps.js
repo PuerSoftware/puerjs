@@ -82,9 +82,9 @@ class PuerProps {
 		return this[prop]
 	}
 
-	require(prop) {
-		if (!this.hasOwnProperty(prop)) {
-			throw new PuerError(`Property ${prop} is required but not set.`, this, 'require')
+	require(prop, owner) {
+		if (!this.data.hasOwnProperty(prop)) {
+			throw new PuerError(`Property ${prop} is required but not set.`, owner || this, 'require')
 		}
 		return this[prop]
 	}

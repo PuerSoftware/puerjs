@@ -1,5 +1,5 @@
 class Request {
-	request(url, method=null, data=null, headers=null) {
+	static request(url, method=null, data=null, headers=null) {
 		const conf = {
 			method  : method.toUpperCase() || 'GET',
 			headers : headers || {'Content-Type': 'application/json'},
@@ -15,11 +15,11 @@ class Request {
 		return fetch(url, conf)
 	}
 
-	get(url, urlParams=null, headers=null) {
+	static get(url, urlParams=null, headers=null) {
 		return Request.request(url, 'GET', urlParams, headers)
 	}
 
-	post(url, data=null, headers=null) {
+	static post(url, data=null, headers=null) {
 		return Request.request(url, 'POST', data, headers)
 	}
 }

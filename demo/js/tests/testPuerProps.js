@@ -108,13 +108,30 @@ const Tests_PuerProps = {
 				props.default('foo2', 'bar2a')
 				return [props.foo3, props.foo2]
 			}, ['bar3', 'bar,2']],
-			'props.require': [() => {
+			'props.require for not existing prop': [() => {
 				try {
 					props.require('foo4')
 				} catch (e) {
 					return 'error'
 				}
 			}, 'error'],
+			'props.require for existing prop': [() => {
+				try {
+					props.require('foo1')
+				} catch (e) {
+					return 'error'
+				}
+				return 'no error'
+			}, 'no error'],
+			'props.require for existing prop (func)': [() => {
+				try {
+					props.f = () => {}
+					props.require('f')
+				} catch (e) {
+					return 'error'
+				}
+				return 'no error'
+			}, 'no error'],
 			'props.extractEvents': [() => {
 				props.onclick = () => {console.log('onclick')}
 				const events = props.extractEvents(new PuerProps())

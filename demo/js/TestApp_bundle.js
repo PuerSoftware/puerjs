@@ -68,7 +68,7 @@ class PuerApp extends PuerObject {
 		this.root = root
 		this.render()
 		this.root.parent = this
-		this.root.__onMount()
+		this.root.__onReady()
 	}
 
 	has(component_id) {
@@ -804,8 +804,8 @@ class PuerHtmlElement extends BasePuerComponent {
 		}
 	}
 
-	__onMount() {
-		this.children && this.children.forEach(child => { child.__onMount() })
+	__onReady() {
+		this.children && this.children.forEach(child => { child.__onReady() })
 		return this.onMount()
 	}
 
@@ -940,8 +940,8 @@ class PuerConstructor extends PuerObject {
         return this.instance.__render()
     }
 
-    __onMount() {
-		return this.instance.__onMount()
+    __onReady() {
+		return this.instance.__onReady()
 	}    
 }
 ;

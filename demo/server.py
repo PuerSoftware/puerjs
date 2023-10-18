@@ -3,7 +3,7 @@ import sys
 import mimetypes
 import time
 
-from flask import Flask, Response, send_file, abort #, jasonify
+from flask import Flask, Response, request, send_file, abort , jsonify
 
 app      = Flask(__name__)
 DEBUG    = True
@@ -15,11 +15,14 @@ print('   BASE_DIR', BASE_DIR)
 
 ##################################################################
 
-# @app.route('/validate/<validation_key:string>', methods=['GET'])
-# def serve_file(validation_key):
-# 	jasonify({
-# 		error: `Some scary error occured on ${}`
-# 	})
+@app.route('/validate', methods=['POST'])
+def validate():
+	form_data = request.form
+	username = form_data.get('username')
+	password = form_data.get('password')
+	return jsonify({
+	    'error': f'Some scary error occurred on {username}'
+	})
 
 @app.route('/<path:filename>', methods=['GET'])
 def serve_file(filename):
@@ -46,6 +49,7 @@ def index():
 	html_content += '</ul>'
 
 	return Response(html_content, mimetype='text/html')
+
 
 if __name__ == '__main__':
 	app.run(host=HOST, port=PORT, debug=DEBUG)

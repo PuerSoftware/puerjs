@@ -6,13 +6,13 @@ import Puer, {
 
 class FormField extends PuerComponent {
     constructor(props, children) {
-        props.default('label', 'Field label')
         super(props, children)
+        this.props.default('label', 'Field label')
     }
 
-    onMount() {
-        if (!this.$$$.Form) {
-            throw new PuerError('Must have instance of "Form" in a parent chain', this.className, 'render')
+    onReady() {
+        if (!this.$$$.Form[0]) {
+            throw new PuerError('FormField must be a descendent of Form!', this, 'onReady')
         }
     }
 
