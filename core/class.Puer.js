@@ -1,4 +1,3 @@
-import PuerApp         from './class.PuerApp.js'
 import PuerRouter      from './class.PuerRouter.js'
 import PuerEvents      from './class.PuerEvents.js'
 import PuerError       from './class.PuerError.js'
@@ -8,29 +7,26 @@ import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
 
 class Puer {
+	static app
 	static owner
 	static deferred
 
-	static init(events=[]) {
+	static application(cls, events=[]) {
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
 		for (const event of events) {
 			Puer.Event[event] = event
 		}
 		Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
-		return this
+		Puer._defineComponent(cls)
+		Puer.app = Puer[cls.name]()
+		Puer.Router = new PuerRouter(Puer.app)
+		return Puer
 	}
 
-	static app(selector, tree) {
-		if (!Puer.Events) {
-			throw new PuerError('Initialize Puer application using Puer.init().app(...)')
-		}
-		Puer.App = new PuerApp(selector)
-		Puer.App.init(tree)
-		Puer.Router = new PuerRouter(Puer.App.root)
-		return Puer.App
+	static router(getRoutes) {
+		return Puer.Router.define(getRoutes)
 	}
-
 
 	static defer(f, owner=window, args=undefined) {
 		let alias = f
@@ -42,7 +38,6 @@ class Puer {
 		return alias
 	}
 
-
 	static deferrer(f, owner=window, args=undefined) {
 		let alias = f
 		return () => {
@@ -50,7 +45,6 @@ class Puer {
 			if (owner.isCustom) {
 				Puer.owner = owner
 			}
-			// console.log('deferring', f.name)
 			let result = alias.apply(owner, args)
 
 			Puer.owner    = null
@@ -100,14 +94,10 @@ class Puer {
 			throw `Could not register tag method 'text': already present in global scope`
 		}
 		let className = 'PuerTagText'
-		// window.PuerTagText = PuerTextElement
 		Object.defineProperty(PuerTextElement, 'name', { value: className })
 		PuerTextElement.prototype.chainName = 'text'
-		// console.log('setting chai name', window[className].prototype.chainName)
 
 		window['text'] = (text) => {
-			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
-			// return new PuerConstructor(window[className], props, children, false)
 			return new PuerTextElement(text)
 		}
 	}
@@ -123,17 +113,13 @@ class Puer {
 		)
 		Object.defineProperty(window[className], 'name', { value: className })
 		window[className].prototype.chainName = name
-		// console.log('setting chain name', window[className].prototype.chainName)
 
 		window[name] = (... args) => {
-			// console.log(name, ...args)
 			let [ cssClass,  props,    children ] = Puer.arganize(args,
 				[ 'string',  'object', 'array', ],
 				[ '',        {},       [],      ]
 			)
 			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
-			// console.log(`${name}("${css_class}", ${JSON.stringify(props)}, [${children.length}])`)
-			// return new PuerConstructor(window[className], props, children, false)
 			return new window[className](props, children)
 		}
 	}
@@ -142,22 +128,18 @@ class Puer {
 		if (Puer[cls.name]) {
 			throw `Could not register component ${cls.name}: already present $$`
 		}
-
 		cls.prototype.chainName = cls.name
-		// console.log('setting chain name', cls.name)
-		
 		Puer[cls.name] = (... args) => {
 			let [props,    children ] = Puer.arganize(args,
 				['object', 'array'  ],
 				[{},       []       ]
 			)
-			// return new PuerConstructor(cls, props, children, true)
 			return new cls(props, children)
 		}
 	}
 
 	static define(className) {
-		if (Puer.type(className) === 'string') {
+		if (Puer.isString(className)) {
 			if (className === 'text') {
 				return Puer._defineText()
 			}
@@ -165,39 +147,11 @@ class Puer {
 		}
 		return Puer._defineComponent(className)
 	}
-
-	static application(selector, cls=null) {
-		let rootId = 'puer-application'
-		if (!cls) {
-			cls      = selector
-			selector = '#' + rootId
-		}
-		const rootElement = document.createElement('div')
-		rootElement.id = rootId
-		document.body.appendChild(rootElement)
-		Puer._defineComponent(cls)
-		Puer.init().app(selector, Puer[cls.name]())
-		return Puer
-	}
-
-	static router(getRoutes) {
-		return Puer.Router.define(getRoutes)
-	}
-
-	static addComponent(component) {
-		Puer.App.components[component.id] = component
-	}
-
-	static getComponent(id) {
-		return Puer.App.components[id]
-	}
-
-	static removeComponent(id) {
-		delete Puer.App.components[id]
-	}
 }
+
 Puer.String = StringMethods
 Puer.Object = ObjectMethods
+
 export default Puer
 
 

@@ -1,39 +1,39 @@
-import PuerObject from './class.PuerObject.js'
-// import PuerComponent from './class.PuerComponent.js'
+import Puer          from './class.Puer.js'
+import PuerComponent from './class.PuerComponent.js'
 
 
-class PuerApp extends PuerObject {
-    constructor(selector) {
-    	super()
-		this.root        = null
-		this.dom         = null
-		this.rootElement = document.querySelector(selector)
-		this.chainName   = this.className
+class PuerApp extends PuerComponent {
+    constructor(props, children) {
+    	super(props, children)
+    	this.__render()
+		this.__onReady()
+		this.__update()
 	}
 
-	init(root) {
-		this.root = root
-		this.dom  = root.__render(this.className)
-		this.rootElement.innerHTML = null
-		this.rootElement.appendChild(this.dom)
-		this.root.parent = this
-		this.root.__onReady()
-		this.root.__update()
+	__render() {
+		super.__render()
+		document.body.appendChild(this.element)
+		return this.element
 	}
 
-	toString(root, indent='') {
+	toTreeString(root, indent='') {
 		let s = ''
-		root = root || this.root
-		s += indent + root.toString() + '\n'
+		if (root) {
+			s += indent + root.toString() + '\n'
+		} else {
+			root = this.root
+			s += indent + this.toString() + '\n'
+		}
 		if (root.isCustom) {
-			s += this.toString(root.root, indent + '  ')
+			s += this.toTreeString(root.root, indent + '  ')
 		} else {
 			for (let child of root.children) {
-				s += this.toString(child, indent + '  ')
+				s += this.toTreeString(child, indent + '  ')
 			}
 		}
 		return s
 	}
 }
 
+Puer.define(PuerApp)
 export default PuerApp

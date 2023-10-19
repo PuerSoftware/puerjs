@@ -13,15 +13,6 @@ class PuerChainableSet extends Array {
 		return new Proxy(this, {
 			get: function(target, prop, receiver) {
 				if (typeof _this[prop] == 'function') {
-					if (Array.prototype.hasOwnProperty(prop)) {        // Native Array method
-						// console.log('Native Array method')
-						// return (... args) => {
-						// 	const a = _this.toArray()
-						// 	const result = a.apply(a, args)
-						// }
-					} else {                                           // Added PuerChainableSet method
-						// console.log('Added PuerChainableSet method')
-					}
 					return _this[prop].bind(_this)
 				}
 				if (operators) {
@@ -60,7 +51,6 @@ class PuerChainableSet extends Array {
 			}
 		})
 	}
-
 
 	filter(callback) {
 		const filteredArray = Array.prototype.filter.call(this, callback)

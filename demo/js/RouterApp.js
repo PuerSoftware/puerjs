@@ -1,9 +1,9 @@
-import Puer, {PuerComponent} from '../../puer.js'
-import Page1                 from '../class.Page1.js'
-import Page2                 from '../class.Page2.js'
+import Puer, {PuerApp} from '../../puer.js'
+import Page1           from '../class.Page1.js'
+import Page2           from '../class.Page2.js'
 
 Puer.application(
-	class RouterApp extends PuerComponent {
+	class RouterApp extends PuerApp {
 		render() {
 			return div([
 				Puer.Page1(),

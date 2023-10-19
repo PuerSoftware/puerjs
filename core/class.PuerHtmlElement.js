@@ -58,13 +58,18 @@ class PuerHtmlElement extends BasePuerComponent {
 		}
 		return element
 	}
+
+	/*********************** CASTING ***********************/
+
+	toString() {
+		return `${this.tagName}(${this.props.toString()})`
+	}
 	
 	/************************ HOOKS ************************/
 
 	render() {
 		return this
 	}
-
 }
 
 PuerHtmlElement.prototype.chainName = 'PuerHtmlElement'

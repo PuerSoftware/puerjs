@@ -12,7 +12,6 @@ class Comp2 extends Comp2Base {
 
 
 	changeState() {
-		console.log('changeState')
 		this.state.liText = this.state.liText + 'HA'
 	}
 

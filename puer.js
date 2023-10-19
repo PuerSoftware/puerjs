@@ -20,5 +20,6 @@ import Puer from './core/class.Puer.js'
 export { default as PuerError     } from './core/class.PuerError.js'
 export { default as PuerComponent } from './core/class.PuerComponent.js'
 export { default as PuerRouter    } from './core/class.PuerRouter.js'
+export { default as PuerApp       } from './core/class.PuerApp.js'
 
 export default Puer

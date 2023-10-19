@@ -3,7 +3,6 @@ import PuerProps        from './class.PuerProps.js'
 import PuerHtmlElement  from './class.PuerHtmlElement.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
-import PuerApp          from './class.PuerApp.js'
 
 
 class BasePuerComponent extends PuerObject {
@@ -75,13 +74,13 @@ class BasePuerComponent extends PuerObject {
 	getChainAncestor(chainName, fistCall=true) {
 		let item = fistCall ? this.parent : this
 		// console.log('getChainAncestor', this, fistCall)
-		if (item.hasPropInProto('chainName', chainName)) {
-			return [item]
-		} else if (item === Puer.App) {
+		if (!item) {
 			return []
+		} else if (item.hasPropInProto('chainName', chainName)) {
+			return [item]
 		}
 
-		return item.parent === Puer.App
+		return !item.parent
 			? []
 			: item.parent.getChainAncestor(chainName, false)
 	}
