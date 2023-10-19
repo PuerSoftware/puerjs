@@ -80,6 +80,12 @@ class PuerEvents extends EventTarget {
 			this.socket.send(JSON.stringify({ 'name' : name, 'data' : data }))
 		}
 	}
+	register(events) {
+		for (const event of events) {
+			Puer.Event[event] = event
+		}
+		Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
+	}
 }
 
 export default PuerEvents

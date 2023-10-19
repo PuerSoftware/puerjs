@@ -11,16 +11,14 @@ class Puer {
 	static owner
 	static deferred
 
-	static application(cls, events=[]) {
+	static application(cls) {
+		Puer._defineComponent(cls)
+		
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
-		for (const event of events) {
-			Puer.Event[event] = event
-		}
-		Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
-		Puer._defineComponent(cls)
-		Puer.app = Puer[cls.name]()
+		Puer.app    = Puer[cls.name]()
 		Puer.Router = new PuerRouter(Puer.app)
+
 		return Puer
 	}
 
