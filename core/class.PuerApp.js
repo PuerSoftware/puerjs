@@ -13,6 +13,14 @@ class PuerApp extends PuerComponent {
 	__render() {
 		super.__render()
 		document.body.appendChild(this.element)
+		Puer.customComponents.forEach(componentName => {
+			const url = `css/class.${componentName}.css`
+			let styleElement = document.createElement('link')
+			styleElement.setAttribute('type', 'text/css')
+			styleElement.setAttribute('rel', 'stylesheet')
+			styleElement.setAttribute('href', url)
+			document.head.appendChild(styleElement)
+		})
 		return this.element
 	}
 

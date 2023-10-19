@@ -10,6 +10,7 @@ class Puer {
 	static app
 	static owner
 	static deferred
+	static customComponents = new Set()
 
 	static application(cls) {
 		Puer._defineComponent(cls)
@@ -52,7 +53,9 @@ class Puer {
 	}
 
 	static requestCss(componentNames) {
-		
+		componentNames.forEach(name => {
+			Puer.customComponents.add(name)
+		})
 	}
 
 	static arganize(args, types, defaults, norm_args=[]) {

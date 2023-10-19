@@ -116,6 +116,12 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
+	_createTextElement() {
+		if ('text' in this.props) {
+			this.prepend(text(this.props.text))
+		}
+	}
+
 	_on(name, f, options) {
 		let targetComponent = this
 		let _f = function(event) {

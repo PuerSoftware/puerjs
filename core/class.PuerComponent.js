@@ -26,14 +26,9 @@ class PuerComponent extends BasePuerComponent {
             throw new PuerError('Must return component tree', this.className, 'render')
         }
         this.root.parent = this
-		// console.log('__render root:', this.root)
 		this.element = this.root.__render()
 		this.element.setAttribute('class', this.cssClass)
-		/*********************************************/
-		if ('text' in this.props) {
-			this.prepend(text(this.props.text))
-		}
-		/*********************************************/
+		this._createTextElement()
 		this._addEvents()
 		return this.element
 	}
@@ -64,9 +59,9 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_computeCssClass() {
-		return this.getPropsInProto('chainName', 'PuerComponent')
-			.map(s => Puer.String.camelToDashedSnake(s))
-			.join(' ')
+		const chainNames = this.getPropsInProto('chainName', 'PuerComponent')
+		Puer.requestCss(chainNames)
+		return chainNames.map(s => Puer.String.camelToDashedSnake(s)).join(' ')
 	}
 }
 

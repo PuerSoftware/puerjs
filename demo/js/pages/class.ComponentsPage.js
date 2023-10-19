@@ -1,7 +1,7 @@
 import Puer   from '../../../puer.js'
 import {Page} from '../../../ui/index.js'
 
-import Comp1           from '../components/class.Comp1.js'
+import Comp1  from '../components/class.Comp1.js'
 
 
 class ComponentPage extends Page {
