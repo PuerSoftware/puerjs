@@ -10,7 +10,7 @@ class Puer {
 	static app
 	static owner
 	static deferred
-	static customComponents = new Set()
+	static cssUrls = new Set()
 
 	static application(cls) {
 		Puer._defineComponent(cls)
@@ -52,10 +52,15 @@ class Puer {
 		}
 	}
 
-	static requestCss(componentNames) {
-		componentNames.forEach(name => {
-			Puer.customComponents.add(name)
-		})
+	static requestCss(cssUrl) {
+		if (!Puer.cssUrls.has(cssUrl)) {
+			let styleElement = document.createElement('link')
+			styleElement.setAttribute('type', 'text/css')
+			styleElement.setAttribute('rel', 'stylesheet')
+			styleElement.setAttribute('href', cssUrl)
+			document.head.appendChild(styleElement)
+			Puer.cssUrls.add(cssUrl)
+		}
 	}
 
 	static arganize(args, types, defaults, norm_args=[]) {

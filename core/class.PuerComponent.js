@@ -4,7 +4,7 @@ import PuerState         from './class.PuerState.js'
 
 
 class PuerComponent extends BasePuerComponent {
-	constructor(props, children) {
+	constructor(props, children, importUrl) {
 		super(props, children)
 		this.state     = new PuerState(this._onStateChange.bind(this))
 		this.isCustom  = true
@@ -15,6 +15,12 @@ class PuerComponent extends BasePuerComponent {
 			.map(method => {
 				this[method] = Puer.defer(this[method], this)
 			})
+
+		if (importUrl) {
+			importUrl = importUrl.split('js').join('css')
+			console.log(this.className, importUrl)
+			Puer.requestCss(importUrl)
+		}
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -59,9 +65,9 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_computeCssClass() {
-		const chainNames = this.getPropsInProto('chainName', 'PuerComponent')
-		Puer.requestCss(chainNames)
-		return chainNames.map(s => Puer.String.camelToDashedSnake(s)).join(' ')
+		this.getPropsInProto('chainName', 'PuerComponent')
+			.map(s => Puer.String.camelToDashedSnake(s))
+			.join(' ')
 	}
 }
 

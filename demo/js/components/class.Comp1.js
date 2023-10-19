@@ -5,7 +5,7 @@ import Comp2         from './class.Comp2.js'
 
 class Comp1 extends PuerComponent {
 	constructor(props, children) {
-		super(props, children)
+		super(props, children, import.meta.url)
 	}
 
 	init() {
