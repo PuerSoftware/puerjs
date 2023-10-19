@@ -16,5 +16,5 @@ class FormPage extends Page {
 	}
 }
 
-Puer.define(FormPage)
+Puer.define(FormPage, import.meta.url)
 export default FormPage

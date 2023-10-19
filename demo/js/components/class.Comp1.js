@@ -5,7 +5,7 @@ import Comp2         from './class.Comp2.js'
 
 class Comp1 extends PuerComponent {
 	constructor(props, children) {
-		super(props, children, import.meta.url)
+		super(props, children)
 	}
 
 	init() {
@@ -37,5 +37,5 @@ class Comp1 extends PuerComponent {
 	}
 }
 
-Puer.define(Comp1)
+Puer.define(Comp1, import.meta.url)
 export default Comp1

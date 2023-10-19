@@ -8,5 +8,5 @@ class Comp3 extends PuerComponent {
 	}
 }
 
-Puer.define(Comp3)
+Puer.define(Comp3, import.meta.url)
 export default Comp3

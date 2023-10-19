@@ -16,7 +16,7 @@ Puer.application(
 				Puer.ComponentPage(),
 			])
 		}
-	}
+	}, import.meta.url
 ).router((app) => {
 	return {
 		index     : {path: 'index',     component: app.$$.IndexPage[0]     },

@@ -56,5 +56,5 @@ class Comp2 extends Comp2Base {
 	}
 }
 
-Puer.define(Comp2)
+Puer.define(Comp2, import.meta.url)
 export default Comp2

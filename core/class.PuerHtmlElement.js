@@ -26,12 +26,14 @@ class PuerHtmlElement extends BasePuerComponent {
 	}
 
 	__update() {
-		// console.log(`${this.className}.__update()`, this.children.length)
-		this.props.touch()
-		for (const child of this.children) {
-			child.__update()
+		if (this.isActive) {
+			this.props.touch()
+			for (const child of this.children) {
+				child.__update()
+			}
+			this.onUpdate()
 		}
-		this.onUpdate()
+		// console.log(`${this.className}.__update()`, this.children.length)
 	}
 
 	__onReady() {

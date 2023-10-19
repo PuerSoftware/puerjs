@@ -11,9 +11,10 @@ class BasePuerComponent extends PuerObject {
 		this.owner        = Puer.owner
 		this.id           = null
 		this.element      = null
+		this.elementCopy  = null
 		this.parent       = null
 		this.root         = null
-		
+
 		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
 		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
 
@@ -149,9 +150,30 @@ class BasePuerComponent extends PuerObject {
 
 	/************************ HOOKS ************************/
 
-	onReady() {} // To be defined in child classes
-	onUpdate() {} // To be defined in child classes
-	render()  {} // To be defined in child classes
+	onReady  () {} // To be defined in child classes
+	onUpdate () {} // To be defined in child classes
+	render   () {} // To be defined in child classes
+
+	/********************* DIRECTIVES *********************/
+
+	activate() {
+		console.log('activate', this.className)
+		if (this.elementCopy) {
+			this.isActive    = true
+			this.element     = this.elementCopy
+			console.log('activate ParentNode', this.elementCopy.parentNode)
+			this.elementCopy.parentNode.appendChild(this.elementCopy)
+			this.elementCopy = null
+		}
+	}
+
+	deactivate() {
+		console.log('deactivate', this.className, this.element)
+		this.isActive    = false
+		this.elementCopy = this.element
+		this.element.innerHTML = null
+		this.element     = null
+	}
 
 	/********************* DOM METHODS *********************/
 

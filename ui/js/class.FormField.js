@@ -1,7 +1,7 @@
 import Puer, {
     PuerComponent,
     PuerError
-} from '../puer.js'
+} from '../../puer.js'
 
 
 class FormField extends PuerComponent {
@@ -30,5 +30,5 @@ class FormField extends PuerComponent {
     }
 }
 
-Puer.define(FormField)
+Puer.define(FormField, import.meta.url)
 export default FormField

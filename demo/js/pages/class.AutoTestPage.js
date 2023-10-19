@@ -47,5 +47,5 @@ class AutoTestPage extends Page {
 	}
 }
 
-Puer.define(AutoTestPage)
+Puer.define(AutoTestPage, import.meta.url)
 export default AutoTestPage

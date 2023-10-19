@@ -1,4 +1,4 @@
-import Puer, { PuerComponent, PuerError} from '../puer.js'
+import Puer, { PuerComponent, PuerError} from '../../puer.js'
 
 
 class FormInput extends PuerComponent {
@@ -29,5 +29,5 @@ class FormInput extends PuerComponent {
     }
 }
 
-Puer.define(FormInput)
+Puer.define(FormInput, import.meta.url)
 export default FormInput

@@ -11,7 +11,8 @@ class IndexPage extends Page {
 	}
 
 	render() {
-		return h2({text: 'Index page'}, [
+		return div([
+			h2({text: 'Index page'}),
 			ul([
 				li([a({text: 'Auto test page', href: '', routeName: 'autotest',  onclick: this.navigateOnClick})]),
 				li([a({text: 'Form page',      href: '', routeName: 'form',      onclick: this.navigateOnClick})]),
@@ -21,5 +22,5 @@ class IndexPage extends Page {
 	}
 }
 
-Puer.define(IndexPage)
+Puer.define(IndexPage, import.meta.url)
 export default IndexPage

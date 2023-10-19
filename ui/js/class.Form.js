@@ -1,5 +1,5 @@
-import Puer, {PuerComponent} from '../puer.js'
-import Request               from '../library/class.Request.js'
+import Puer, {PuerComponent} from '../../puer.js'
+import Request               from '../../library/class.Request.js'
 
 
 class Form extends PuerComponent {
@@ -84,5 +84,5 @@ class Form extends PuerComponent {
 }
 
 
-Puer.define(Form)
+Puer.define(Form, import.meta.url)
 export default Form

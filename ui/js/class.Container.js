@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../puer.js'
+import Puer, {PuerComponent} from '../../puer.js'
 
 
 class Container extends PuerComponent {
@@ -7,5 +7,5 @@ class Container extends PuerComponent {
 	}
 }
 
-Puer.define(Container)
+Puer.define(Container, import.meta.url)
 export default Container

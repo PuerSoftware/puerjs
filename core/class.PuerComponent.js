@@ -4,7 +4,7 @@ import PuerState         from './class.PuerState.js'
 
 
 class PuerComponent extends BasePuerComponent {
-	constructor(props, children, importUrl) {
+	constructor(props, children) {
 		super(props, children)
 		this.state     = new PuerState(this._onStateChange.bind(this))
 		this.isCustom  = true
@@ -15,12 +15,6 @@ class PuerComponent extends BasePuerComponent {
 			.map(method => {
 				this[method] = Puer.defer(this[method], this)
 			})
-
-		if (importUrl) {
-			importUrl = importUrl.split('js').join('css')
-			console.log(this.className, importUrl)
-			Puer.requestCss(importUrl)
-		}
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -40,12 +34,14 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	__update() {
-		// console.log(`${this.className}.__update()`, this.children.length)
-		this.props.touch()
-		this.root.__update()
-		// WARN: this.root.__update() will call twice if this.props has changes,
-		// first time is called there, second -- in PuerComponent._onPropChange
-		this.onUpdate()
+		if (this.isActive) {
+			// console.log(`${this.className}.__update()`, this.children.length)
+			this.props.touch()
+			this.root.__update()
+			// WARN: this.root.__update() will call twice if this.props has changes,
+			// first time is called there, second -- in PuerComponent._onPropChange
+			this.onUpdate()
+		}
 	}
 
 	__onReady() {
@@ -65,7 +61,7 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_computeCssClass() {
-		this.getPropsInProto('chainName', 'PuerComponent')
+		return this.getPropsInProto('chainName', 'PuerComponent')
 			.map(s => Puer.String.camelToDashedSnake(s))
 			.join(' ')
 	}

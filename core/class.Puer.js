@@ -12,9 +12,8 @@ class Puer {
 	static deferred
 	static cssUrls = new Set()
 
-	static application(cls) {
-		Puer._defineComponent(cls)
-
+	static application(cls, importUrl) {
+		Puer._defineComponent(cls, importUrl)
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
 		Puer.app    = Puer[cls.name]()
@@ -23,14 +22,14 @@ class Puer {
 		return Puer
 	}
 
-	static define(className) {
+	static define(className, importUrl) {
 		if (Puer.isString(className)) {
 			if (className === 'text') {
 				return Puer._defineText()
 			}
 			return Puer._defineTag(className)
 		}
-		return Puer._defineComponent(className)
+		return Puer._defineComponent(className, importUrl)
 	}
 
 	static router(getRoutes) {
@@ -134,7 +133,11 @@ class Puer {
 		}
 	}
 
-	static _defineComponent(cls) {
+	static _defineComponent(cls, importUrl) {
+		if (importUrl) {
+			importUrl = importUrl.split('js').join('css')
+			Puer.requestCss(importUrl)
+		}
 		if (Puer[cls.name]) {
 			throw `Could not register component ${cls.name}: already present $$`
 		}

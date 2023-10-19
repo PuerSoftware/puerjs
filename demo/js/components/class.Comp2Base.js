@@ -8,5 +8,5 @@ class Comp2Base extends PuerComponent {
 	}
 }
 
-Puer.define(Comp2Base)
+Puer.define(Comp2Base, import.meta.url)
 export default Comp2Base

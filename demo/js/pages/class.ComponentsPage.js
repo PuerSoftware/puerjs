@@ -10,5 +10,5 @@ class ComponentPage extends Page {
 	}
 }
 
-Puer.define(ComponentPage)
+Puer.define(ComponentPage, import.meta.url)
 export default ComponentPage
