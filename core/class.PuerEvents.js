@@ -7,11 +7,12 @@ class PuerEvents extends EventTarget {
 	constructor() {
 		if (!PuerEvents.instance) {
 			super()
-			this.socket       = null
-			this.cache        = []
-			this.is_connected = false
-			this._listenerMap = new WeakMap()
-			PuerEvents.instance   = this
+			this.socket            = null
+			this.cache             = []
+			this.is_connected      = false
+			this._listenerMap      = new WeakMap()
+			PuerEvents.instance    = this
+			Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
 		}
 		return PuerEvents.instance
 	}
@@ -80,11 +81,10 @@ class PuerEvents extends EventTarget {
 			this.socket.send(JSON.stringify({ 'name' : name, 'data' : data }))
 		}
 	}
-	register(events) {
+	define(events) {
 		for (const event of events) {
 			Puer.Event[event] = event
 		}
-		Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
 	}
 }
 
