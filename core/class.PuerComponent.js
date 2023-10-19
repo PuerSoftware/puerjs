@@ -12,7 +12,7 @@ class PuerComponent extends BasePuerComponent {
 		this.getMethods()
 			.filter(method => method.startsWith('render') || method.startsWith('_render'))
 			.map(method => {
-				this[method] = Puer.deferrer(this[method], this)
+				this[method] = Puer.defer(this[method], this)
 			})
 
 

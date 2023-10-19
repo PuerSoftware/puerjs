@@ -24,21 +24,21 @@ class Puer {
 		return Puer
 	}
 
+	static define(className) {
+		if (Puer.isString(className)) {
+			if (className === 'text') {
+				return Puer._defineText()
+			}
+			return Puer._defineTag(className)
+		}
+		return Puer._defineComponent(className)
+	}
+
 	static router(getRoutes) {
 		return Puer.Router.define(getRoutes)
 	}
 
 	static defer(f, owner=window, args=undefined) {
-		let alias = f
-		if (typeof f === 'function') {
-			Puer.deferred = true
-			alias = alias.apply(owner, args)
-			Puer.deferred = false
-		}
-		return alias
-	}
-
-	static deferrer(f, owner=window, args=undefined) {
 		let alias = f
 		return () => {
 			Puer.deferred = true
@@ -78,16 +78,16 @@ class Puer {
 		return typeof o
 	}
 
-	static isFunction(o) { return Puer.type(o) === 'function' }
-	static isBoolean(o)  { return Puer.type(o) === 'boolean'  }
-	static isObject(o)   { return Puer.type(o) === 'object'   }
-	static isString(o)   { return Puer.type(o) === 'string'   }
-	static isNumber(o)   { return Puer.type(o) === 'number'   }
-	static isRegexp(o)   { return Puer.type(o) === 'regexp'   }
-	static isSymbol(o)   { return Puer.type(o) === 'symbol'   }
-	static isError(o)    { return Puer.type(o) === 'error'    }
-	static isArray(o)    { return Puer.type(o) === 'array'    }
-	static isDate(o)     { return Puer.type(o) === 'date'     }
+	static isFunction (o) { return Puer.type(o) === 'function' }
+	static isBoolean  (o) { return Puer.type(o) === 'boolean'  }
+	static isObject   (o) { return Puer.type(o) === 'object'   }
+	static isString   (o) { return Puer.type(o) === 'string'   }
+	static isNumber   (o) { return Puer.type(o) === 'number'   }
+	static isRegexp   (o) { return Puer.type(o) === 'regexp'   }
+	static isSymbol   (o) { return Puer.type(o) === 'symbol'   }
+	static isError    (o) { return Puer.type(o) === 'error'    }
+	static isArray    (o) { return Puer.type(o) === 'array'    }
+	static isDate     (o) { return Puer.type(o) === 'date'     }
 
 	static _defineText() {
 		if ('text' in window) {
@@ -136,16 +136,6 @@ class Puer {
 			)
 			return new cls(props, children)
 		}
-	}
-
-	static define(className) {
-		if (Puer.isString(className)) {
-			if (className === 'text') {
-				return Puer._defineText()
-			}
-			return Puer._defineTag(className)
-		}
-		return Puer._defineComponent(className)
 	}
 }
 
