@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import Puer, {PuerApp} from '../../puer.js'
 import * as ui               from '../../ui/index.js'
 
 
@@ -17,25 +17,21 @@ import * as ui               from '../../ui/index.js'
 */
 
 
-class FormTestApp extends PuerComponent {
-	constructor(props, children) {
-		super(props, children)
-	}
+Puer.application(
+	class FormApp extends PuerApp {
 
-	render() {
-		return Puer.Form({validationUrl: '/validate'}, [
-			Puer.FormField({label: 'Username'}, [
-				Puer.FormInput({type: 'text', name: 'username', validationType: 'username'}),
-			]),
-			Puer.FormField({label: 'Password'}, [
-				Puer.FormInput({type: 'password', name: 'password', validationType: 'password'}),
+		render() {
+			return Puer.Form({validationUrl: '/validate'}, [
+				Puer.FormField({label: 'Username'}, [
+					Puer.FormInput({type: 'text', name: 'username', validationType: 'username'}),
+				]),
+				Puer.FormField({label: 'Password'}, [
+					Puer.FormInput({type: 'password', name: 'password', validationType: 'password'}),
+				])
 			])
-		])
+		}
 	}
-}
-
-Puer.define(FormTestApp)
-export default FormTestApp
+)
 
 /*
 

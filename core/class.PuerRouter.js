@@ -2,9 +2,15 @@ import PuerError from './class.PuerError.js'
 
 
 class PuerRouter {
+	static instance = null
+
 	constructor(app) {
-		this.app    = app
-		this.routes = null
+		if (!PuerRouter.instance) {
+			this.app           = app
+			this.routes        = null
+			this.isInitialized = false
+		}
+		return PuerRouter.instance
 	}
 
 	onNavigate(path) {
@@ -33,7 +39,12 @@ class PuerRouter {
 		const path = this.routes[routeName].path
 		history.replaceState (null, null, path)
 		history.pushState    (null, null, path)
+		if (!this.isInitialized) {
+			this.isInitialized = true
+			this.onNavigate(path)
+		}
 	}
+
 
 	define(getRoutes) {
 		this.routes = getRoutes(this.app)
