@@ -13,7 +13,7 @@ Puer.application(
 	}
 ).router((app) => {
 	return {
-		page1: {path: '#page1', component: app.$$.Page1[0]},
-		page2: {path: '#page2', component: app.$$.Page2[0]}
+		page1: {path: 'page1', component: app.$$.Page1[0]},
+		page2: {path: 'page2', component: app.$$.Page2[0]}
 	}
 }).navigate('page1')
