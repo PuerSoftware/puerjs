@@ -13,7 +13,7 @@ class Puer {
 
 	static application(cls) {
 		Puer._defineComponent(cls)
-		
+
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
 		Puer.app    = Puer[cls.name]()
@@ -49,6 +49,10 @@ class Puer {
 			Puer.deferred = false
 			return result
 		}
+	}
+
+	static requestCss(componentNames) {
+		
 	}
 
 	static arganize(args, types, defaults, norm_args=[]) {

@@ -8,14 +8,13 @@ class PuerComponent extends BasePuerComponent {
 		super(props, children)
 		this.state     = new PuerState(this._onStateChange.bind(this))
 		this.isCustom  = true
+		this.cssClass  = this._computeCssClass()
 
 		this.getMethods()
 			.filter(method => method.startsWith('render') || method.startsWith('_render'))
 			.map(method => {
 				this[method] = Puer.defer(this[method], this)
 			})
-
-
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -29,7 +28,7 @@ class PuerComponent extends BasePuerComponent {
         this.root.parent = this
 		// console.log('__render root:', this.root)
 		this.element = this.root.__render()
-		this.element.classList.add(this.cssClass)
+		this.element.setAttribute('class', this.cssClass)
 		/*********************************************/
 		if ('text' in this.props) {
 			this.prepend(text(this.props.text))
@@ -62,6 +61,12 @@ class PuerComponent extends BasePuerComponent {
 	_onStateChange() {
 		this.root.__update()
 		this.__update()
+	}
+
+	_computeCssClass() {
+		return this.getPropsInProto('chainName', 'PuerComponent')
+			.map(s => Puer.String.camelToDashedSnake(s))
+			.join(' ')
 	}
 }
 

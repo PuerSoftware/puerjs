@@ -38,15 +38,28 @@ class PuerObject {
 	hasPropInProto(propName, propValue) {
 		let proto = this
 		do {
-			// console.log(`${propName}=${propValue}`, 'in', proto.constructor.name, '?', proto[propName])
 			if (proto[propName] === propValue) {
-				// console.log('yes')
 				return true
 			}
-			// console.log('no')
 			proto = Object.getPrototypeOf(proto)
 		} while (proto !== null)
 		return false
+	}
+
+	getPropsInProto(propName, untilValue=null) {
+		let props = []
+		let proto = this
+		do {
+			if (proto.hasOwnProperty(propName) && proto[propName]) {
+				props.unshift(proto[propName])
+			}
+			proto = Object.getPrototypeOf(proto)
+			if (proto.hasOwnProperty(propName) && proto[propName] && proto[propName] == untilValue) {
+				props.unshift(proto[propName])
+				break
+			}
+		} while (proto !== null)
+		return props
 	}
 }
 
