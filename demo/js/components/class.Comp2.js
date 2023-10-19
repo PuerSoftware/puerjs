@@ -1,5 +1,5 @@
-import Puer          from '../../core/class.Puer.js'
-import PuerComponent from '../../core/class.PuerComponent.js'
+import Puer          from '../../../core/class.Puer.js'
+import PuerComponent from '../../../core/class.PuerComponent.js'
 import Comp2Base     from './class.Comp2Base.js'
 import Comp3         from './class.Comp3.js'
 

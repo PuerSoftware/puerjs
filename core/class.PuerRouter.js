@@ -15,12 +15,12 @@ class PuerRouter {
 	}
 
 	onNavigate(path) {
-		console.log('Router.onNavigate()', path, this.routes)
+		// console.log('Router.onNavigate()', path, this.routes)
 		let activeRouteName = null
 		for (const routeName in this.routes) {
 			const route = this.routes[routeName]
 			if (route.path === path) {
-				console.log('Router.onNavigate() - found path in routes:', path)
+				// console.log('Router.onNavigate() - found path in routes:', path)
 				activeRouteName = routeName
 				route.component.activate()
 			} else {
@@ -33,14 +33,14 @@ class PuerRouter {
 	}
 
 	navigate(routeName) {
-		console.log('Router.navigate()', routeName)
+		//console.log('Router.navigate()', routeName)
 		if (!this.routes) {
 			throw new PuerError('Route definition is not provided', this, 'navigate')
 		}
 		const oldPath = window.location.hash
 		const newPath = this.routes[routeName].path
 
-		console.log('Router.navigate() oldPath:', oldPath, 'newPath:', newPath)
+		//console.log('Router.navigate() oldPath:', oldPath, 'newPath:', newPath)
 
 		if (oldPath !== newPath) {
 			window.location.hash = newPath
@@ -48,7 +48,7 @@ class PuerRouter {
 		}
 		if (!this.isInitialized) {
 			this.isInitialized = true
-			console.log('Router.navigate() - Initialized!')
+			//console.log('Router.navigate() - Initialized!')
 			this.onNavigate(newPath)
 		}
 	}
@@ -59,10 +59,14 @@ class PuerRouter {
 		window.addEventListener('hashchange', (event) => {
 			const oldHash = event.oldURL.split('#')[1] || ''
 			const newHash = event.newURL.split('#')[1] || ''
-			console.log(`Router.define() - Hash change detected: ${oldHash} => ${newHash}`)
+			//console.log(`Router.define() - Hash change detected: ${oldHash} => ${newHash}`)
 			this.onNavigate(newHash)
 		})
-		console.log('Router.define() – Hash Listener attached')
+		//console.log('Router.define() – Hash Listener attached')
+		const currentHash = window.location.hash.split('#')[1] || ''
+		if (currentHash) {
+			this.navigate(currentHash)
+		}
 		return this
 	}
 }
