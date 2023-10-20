@@ -6,8 +6,14 @@ class PuerApp extends PuerComponent {
     constructor(props, children) {
     	super(props, children)
     	this.__render()
-		this.__onReady()
-		this.__update()
+    	this.hide()
+		// this.__onReady()
+		// this.__update()
+	}
+
+	__onReady() {
+		super.__onReady()
+		this.show()
 	}
 
 	__render() {

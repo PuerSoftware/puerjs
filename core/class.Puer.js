@@ -11,6 +11,7 @@ class Puer {
 	static owner
 	static deferred
 	static cssUrls = new Set()
+	static cssCount = 0
 
 	static application(cls, importUrl) {
 		Puer._defineComponent(cls, importUrl)
@@ -57,8 +58,18 @@ class Puer {
 			styleElement.setAttribute('type', 'text/css')
 			styleElement.setAttribute('rel', 'stylesheet')
 			styleElement.setAttribute('href', cssUrl)
+			styleElement.onload = () => {
+				Puer.cssCount --
+				console.log('END', Puer.cssCount, cssUrl)
+				if (Puer.cssCount == 0) {
+					Puer.app.__onReady()
+					Puer.app.__update()
+				}
+			}
 			document.head.appendChild(styleElement)
 			Puer.cssUrls.add(cssUrl)
+			Puer.cssCount ++
+			console.log('BEGIN', Puer.cssCount, cssUrl)
 		}
 	}
 
