@@ -6,7 +6,10 @@ import Comp1  from '../components/class.Comp1.js'
 
 class ComponentPage extends Page {
 	render() {
-		return Puer.Comp1({myProp: 'xd'})
+		return div([
+			h3({text: this.props.title}),
+			Puer.Comp1({myProp: 'xd'})
+		])
 	}
 }
 

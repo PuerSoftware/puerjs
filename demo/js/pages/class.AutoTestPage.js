@@ -5,32 +5,32 @@ import testPuerProps        from '../tests/testPuerProps.js'
 import testPuerComponentSet from '../tests/testPuerComponentSet.js'
 
 class AutoTestPage extends Page {
-
-	testOnClick(e) {
-		e.preventDefault()
-		const componentId = e.target.id
-		console.clear()
-		switch (componentId) {
-			case 'test-puer-props':
-				testPuerProps()
-				return
-			case 'test-puer-component-set':
-				testPuerComponentSet()
-				return
-			default:
-				throw new PuerError('Unknown testing case id!')
+	constructor(props, children) {
+		super(props, children)
+		this.tests = {
+			testPuerProps        : testPuerProps,
+			testPuerComponentSet : testPuerComponentSet
 		}
+	}
+
+	test(e) {
+		this.tests[e.targetComponent.props.testName]()
 	}
 
 	render() {
 		return div([
-			h1({text: 'Puer Auto Tests'}),
+			h3({text: this.props.title}),
 			ul([
 				li([
 					h3({text: 'Puer Props'}),
 					ul([
 						li([
-							a({text: 'Test Puer Props', href: '', id: 'test-puer-props', onclick: this.testOnClick})
+							a({
+								text     : 'Test Puer Props',
+								href     : 'javascript:void(0)',
+								testName : 'testPuerProps',
+								onclick  : this.test
+							})
 						])
 					])
 				]),
@@ -38,7 +38,12 @@ class AutoTestPage extends Page {
 					h3({text: 'Puer Component Set'}),
 					ul([
 						li([
-							a({text: 'Test Puer Component Set', href: '',  id: 'test-puer-component-set', onclick: this.testOnClick})
+							a({
+								text     : 'Test Puer Component Set',
+								href     : 'javascript:void(0)',
+								testName : 'testPuerComponentSet',
+								onclick  : this.test
+							})
 						])
 					])
 				])

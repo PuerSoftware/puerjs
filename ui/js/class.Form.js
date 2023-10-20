@@ -11,6 +11,7 @@ class Form extends PuerComponent {
 		this.props.default('action',        '')
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/x-www-form-urlencoded')
+		this.props.default('autocomplete',  'off')
 
 		this.state.error = ''
 	}
@@ -64,14 +65,15 @@ class Form extends PuerComponent {
 
 	render() {
 		return (
-			div({autocomplete: 'off'}, [
+			div([
 				h1 ({text: this.props.title}),
 				p  ({text: this.props.subtitle}),
 				p  ({text: this.state.error, class: 'error form-error'}),
 				form ({
-					action  : this.props.action,
-					method  : this.props.method,
-					enctype : this.props.enctype
+					autocomplete : this.props.autocomplete,
+					action       : this.props.action,
+					method       : this.props.method,
+					enctype      : this.props.enctype
 				}, [
 					... this.children,
 					p ([

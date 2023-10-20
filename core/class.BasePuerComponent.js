@@ -8,20 +8,24 @@ import PuerComponentSet from './class.PuerComponentSet.js'
 class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.owner        = Puer.owner
-		this.id           = null
-		this.element      = null
-		this.elementCopy  = null
-		this.parent       = null
-		this.root         = null
+		this.owner    = Puer.owner
+		this.id       = null
+		this.element  = null
+		this.parent   = null
+		this.root     = null
 
-		this.children     = new PuerComponentSet (children, this._onChildrenChange .bind(this))
-		this.props        = new PuerProps        (props,    this._onPropChange     .bind(this))
+		this.children = new PuerComponentSet (children, this._onChildrenChange .bind(this))
+		this.props    = new PuerProps        (props,    this._onPropChange     .bind(this))
 
-		this.events       = this.props.extractEvents(this.owner)
-		this.cssClass     = Puer.String.camelToDashedSnake(this.className)
-		this.isCustom     = false
-		this.path         = null
+		this.events   = this.props.extractEvents(this.owner)
+		this.cssClass = Puer.String.camelToDashedSnake(this.className)
+
+		this.isCustom = false
+		this.isActive = true
+
+		this.elementCopy       = null
+		this.parentElementCopy = null
+
 		this._listenerMap = new WeakMap()
 	}
 
@@ -157,22 +161,30 @@ class BasePuerComponent extends PuerObject {
 	/********************* DIRECTIVES *********************/
 
 	activate() {
-		console.log('activate', this.className)
-		if (this.elementCopy) {
-			this.isActive    = true
-			this.element     = this.elementCopy
-			console.log('activate ParentNode', this.elementCopy.parentNode)
-			this.elementCopy.parentNode.appendChild(this.elementCopy)
+		if (!this.isActive && this.elementCopy) {
+			this.element = this.elementCopy
+			this.parentElementCopy.appendChild(this.element)
 			this.elementCopy = null
+			this.isActive    = true
+			console.log(this.className, 'activated')
+		} else {
+			console.log(this.className, 'already active')
 		}
 	}
 
 	deactivate() {
-		console.log('deactivate', this.className, this.element)
-		this.isActive    = false
-		this.elementCopy = this.element
-		this.element.innerHTML = null
-		this.element     = null
+		if (this.isActive) {
+			this.elementCopy       = this.element
+			this.parentElementCopy = this.element.parentNode
+
+			this.element.remove()
+
+			this.element  = null
+			this.isActive = false
+			console.log(this.className, 'deactivated')
+		} else {
+			console.log(this.className, 'already inactive')
+		}
 	}
 
 	/********************* DOM METHODS *********************/
@@ -189,14 +201,14 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.add(name)
 	}
 
+	removeCssClass(name) {
+		this.element.classList.remove(name)
+	}
+
 	css(styles) {
 		for (const [property, value] of Object.entries(styles)) {
             this.element.style[property] = value
         }
-	}
-
-	removeCssClass(name) {
-		this.element.classList.remove(name)
 	}
 
 	attr(name, value=null) {

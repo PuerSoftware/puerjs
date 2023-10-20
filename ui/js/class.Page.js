@@ -6,5 +6,5 @@ class Page extends PuerComponent {
 	}
 }
 
-Puer.define(Page)
+Puer.define(Page, import.meta.url)
 export default Page

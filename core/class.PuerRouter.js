@@ -14,6 +14,25 @@ class PuerRouter {
 		return PuerRouter.instance
 	}
 
+	getHash(hash=null) {
+		hash = hash || window.location.hash
+		return hash.split('#')[1] || ''
+	}
+
+	setHash(hash) {
+		window.location.hash = hash
+	}
+
+	getRoutePath(routeName) {
+		if (!this.routes) {
+			throw new PuerError('Route definition is not provided.', this, 'navigate')
+		}
+		if (!this.routes[routeName]) {
+			throw new PuerError(`Route "${routeName}" is not defined.`, this, 'navigate')
+		}
+		return this.routes[routeName].path
+	}
+
 	onNavigate(path) {
 		// console.log('Router.onNavigate()', path, this.routes)
 		let activeRouteName = null
@@ -34,22 +53,27 @@ class PuerRouter {
 
 	navigate(routeName) {
 		//console.log('Router.navigate()', routeName)
-		if (!this.routes) {
-			throw new PuerError('Route definition is not provided', this, 'navigate')
-		}
-		const oldPath = window.location.hash
-		const newPath = this.routes[routeName].path
+		const oldHash = this.getHash()
+		const newHash = this.getRoutePath(routeName)
 
-		//console.log('Router.navigate() oldPath:', oldPath, 'newPath:', newPath)
+		console.log('Router.navigate() oldHash:', oldHash, 'newHash:', newHash)
 
-		if (oldPath !== newPath) {
-			window.location.hash = newPath
-			// history.pushState    (null, null, newPath)
+		if (oldHash !== newHash) {
+			this.setHash(newHash)
+			// history.pushState    (null, null, newHash)
 		}
 		if (!this.isInitialized) {
 			this.isInitialized = true
 			//console.log('Router.navigate() - Initialized!')
-			this.onNavigate(newPath)
+			this.onNavigate(newHash)
+		}
+	}
+
+
+	default(routeName) {
+		const currentHash = this.getHash()
+		if (currentHash === '') {
+			this.navigate(routeName)
 		}
 	}
 
@@ -57,13 +81,13 @@ class PuerRouter {
 	define(getRoutes) {
 		this.routes = getRoutes(this.app)
 		window.addEventListener('hashchange', (event) => {
-			const oldHash = event.oldURL.split('#')[1] || ''
-			const newHash = event.newURL.split('#')[1] || ''
-			//console.log(`Router.define() - Hash change detected: ${oldHash} => ${newHash}`)
+			const oldHash = this.getHash(event.oldURL)
+			const newHash = this.getHash(event.newURL)
+			console.log('-------------', newHash, '-------------')
 			this.onNavigate(newHash)
 		})
 		//console.log('Router.define() – Hash Listener attached')
-		const currentHash = window.location.hash.split('#')[1] || ''
+		const currentHash = this.getHash()
 		if (currentHash) {
 			this.navigate(currentHash)
 		}

@@ -3,21 +3,15 @@ import {Page} from '../../../ui/index.js'
 
 class IndexPage extends Page {
 
-	navigateOnClick(e) {
-		e.preventDefault()
-		const routeName = e.targetComponent.props.routeName
-		console.log(e)
-		Puer.Router.navigate(routeName)
+	onClick(e) {
+		Puer.Router.navigate(e.targetComponent.props.routeName)
 	}
 
 	render() {
 		return div([
-			h2({text: 'Index page'}),
-			ul([
-				li([a({text: 'Auto test page', href: '', routeName: 'autotest',  onclick: this.navigateOnClick})]),
-				li([a({text: 'Form page',      href: '', routeName: 'form',      onclick: this.navigateOnClick})]),
-				li([a({text: 'Component page', href: '', routeName: 'component', onclick: this.navigateOnClick})]),
-			])
+			h3({text: this.props.title}),
+			div({text: 'Because we\'ve loved React so much, we\'ve decided to brew some Puer...'}),
+			img({src: 'img/puer.jpg', width: '200'})
 		])
 	}
 }
