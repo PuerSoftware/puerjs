@@ -5,7 +5,6 @@ import Request               from '../../library/class.Request.js'
 class Form extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		console.log('FORM !!! Props before setting default autocomplete off', this.props.toObject())
 		this.props.default('title',         'Form')
 		this.props.default('subtitle',      'Please fill out this form')
 		this.props.default('buttonCaption', 'Submit')
@@ -13,7 +12,6 @@ class Form extends PuerComponent {
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/x-www-form-urlencoded')
 		this.props.default('autocomplete',  'off')
-		console.log('FORM !!! Props, after setting default autocomplete to off', this.props.toObject())
 		this.state.error = ''
 	}
 

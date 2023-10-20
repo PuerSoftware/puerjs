@@ -15,7 +15,7 @@ class StringMethods {
         return s.charAt(0).toUpperCase() + s.slice(1)
     }
 
-    static camelToDashedSnake(s) {
+    static camelToKebab(s) {
         return s.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
     }
 
@@ -28,6 +28,15 @@ class StringMethods {
         if (typeof s !== 'string') { return false } // we only process strings!  
         return !isNaN(s) &&                         // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
             !isNaN(parseFloat(s))                   // ...and ensure strings of whitespace fail
+    }
+
+    static randomHex(len) {
+        const digits = '0123456789ABCDEF'
+        let hex = ''
+        for (let i=0; i<len; i++) {
+            hex += `${digits[Math.floor(Math.random() * 16)]}`
+        }
+        return hex
     }
 }
 

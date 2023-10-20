@@ -7,12 +7,12 @@ class Comp2 extends Comp2Base {
 	constructor(props, children) {
 		super(props, children)
 		this.state.liText = 'HAHA'
-		// console.log(this.state.liText)
 	}
 
 
 	changeState() {
 		this.state.liText = this.state.liText + 'HA'
+		this.$$$.Comp1[0].setRandomColor()
 	}
 
 	showChain() {

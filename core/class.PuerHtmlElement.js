@@ -6,6 +6,13 @@ class PuerHtmlElement extends BasePuerComponent {
 		super(props, children)
 		this.tagName  = this.className.replace('PuerTag', '').toLowerCase()
 		this.isCustom = false
+
+		/************************* Govnokod start **************************/
+		// TODO: refactor this
+		if (this.tagName === 'a') {
+			this.props.default('href', 'javascript:void(0);')
+		}
+		/**************************  Govnokod end ***************o**********/
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -31,6 +38,7 @@ class PuerHtmlElement extends BasePuerComponent {
 			for (const child of this.children) {
 				child.__update()
 			}
+			this._applyCssProps()
 			this.onUpdate()
 		}
 		// console.log(`${this.className}.__update()`, this.children.length)

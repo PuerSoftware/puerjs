@@ -17,7 +17,6 @@ class PuerState extends PuerObject {
 				if (typeof value === 'object' && value !== null) {
 					return PuerState._makeObservable(value, onChange)  // Recursive call for nested object
 				}
-				// console.log('STATE GET', value, target.wrapState)
 
 				let getterFunction = () => {
 					return target[prop]
@@ -28,16 +27,20 @@ class PuerState extends PuerObject {
 				return Puer.deferred ? getterFunction : value
 			},
 			set(target, prop, value) {
-				let isChange = prop in target
+				let isChange   = prop in target
+				const oldValue = target[prop]
 				target[prop] = value
 
-				// if (prop == 'wrapState')   { return true }
 				if (Array.isArray(target)) { isChange = true }
-				if (isChange)              { onChange(prop, value) }
+				if (isChange)              { onChange(prop, oldValue, value) }
 	
 				return true
 			}
 		})
+	}
+
+	test() {
+		return 'test'
 	}
 }
 

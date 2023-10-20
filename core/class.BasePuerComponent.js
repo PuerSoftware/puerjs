@@ -18,7 +18,7 @@ class BasePuerComponent extends PuerObject {
 		this.props    = new PuerProps        (props,    this._onPropChange     .bind(this))
 
 		this.events   = this.props.extractEvents(this.owner)
-		this.cssClass = Puer.String.camelToDashedSnake(this.className)
+		this.cssClass = Puer.String.camelToKebab(this.className)
 
 		this.isCustom = false
 		this.isActive = true
@@ -28,6 +28,18 @@ class BasePuerComponent extends PuerObject {
 
 		this._listenerMap = new WeakMap()
 	}
+
+	/************************* Govnokod start **************************/
+	// TODO: refactor these
+	_applyCssProps() {
+		this.props.forEach((value, prop) => {
+			if (prop.startsWith('css')) {
+				const cssProp = prop.replace(/^css/, '')
+				this.css(cssProp, value)
+			}
+		})
+	}
+	/**************************  Govnokod end ***************o**********/
 
 	/******************** CHAIN GETTERS ********************/
 
@@ -152,12 +164,12 @@ class BasePuerComponent extends PuerObject {
 		return `${this.className}(${this.props.toString()})`
 	}
 
-	/************************ HOOKS ************************/
-
-	onReady  () {} // To be defined in child classes
-	onUpdate () {} // To be defined in child classes
-	render   () {} // To be defined in child classes
-
+	/************************ HOOKS ************************
+	Defined in child components:
+	*/
+	onReady  () {/*Do not add code here*/}
+	onUpdate () {/*Do not add code here*/}
+	render   () {/*Do not add code here*/}
 	/********************* DIRECTIVES *********************/
 
 	activate() {
@@ -205,8 +217,16 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.remove(name)
 	}
 
-	css(styles) {
-		for (const [property, value] of Object.entries(styles)) {
+	css(prop, value) {
+		let styles = {}
+		if (value) {
+			styles[prop] = value
+		} else {
+			styles = prop
+		}
+		for (let [property, value] of Object.entries(styles)) {
+			property = Puer.String.camelToKebab(property)
+			console.log('css', property, value)
             this.element.style[property] = value
         }
 	}

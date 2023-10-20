@@ -26,7 +26,6 @@ class AutoTestPage extends PuerComponent {
 						li([
 							a({
 								text     : 'Test Puer Props',
-								href     : 'javascript:void(0)',
 								testName : 'testPuerProps',
 								onclick  : this.test
 							})
@@ -39,7 +38,6 @@ class AutoTestPage extends PuerComponent {
 						li([
 							a({
 								text     : 'Test Puer Component Set',
-								href     : 'javascript:void(0)',
 								testName : 'testPuerComponentSet',
 								onclick  : this.test
 							})

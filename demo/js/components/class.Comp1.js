@@ -6,6 +6,7 @@ import Comp2         from './class.Comp2.js'
 class Comp1 extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
+		this.state.randomColor = '#000'
 	}
 
 	init() {
@@ -25,14 +26,18 @@ class Comp1 extends PuerComponent {
 		this.props.myProp = this.props.myProp + 'xd'
 	}
 
+	setRandomColor() {
+		this.state.randomColor = '#' + Puer.String.randomHex(6)
+	}
+
 	render() {
 		return div('', {text: 'Some Div', onclick: this._onClick}, [
 			Puer.Comp2({myProp: this.props.myProp},[
-				h1({myProp: 'test'}, [text('H1')])
+				h1({myProp: 'test', cssBackgroundColor: this.state.randomColor}, [text('H1')])
 			]),
-			// console.log('render in Comp1', Puer.renderOwner),
 			button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
-			button({onClick: this.changeMyProp}, [text('Change prop')])
+			button({onClick: this.changeMyProp}, [text('Change prop')]),
+			button({onClick: this.setRandomColor}, [text('Change color')]),
 		])
 	}
 }

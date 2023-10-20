@@ -40,6 +40,7 @@ class PuerComponent extends BasePuerComponent {
 			this.root.__update()
 			// WARN: this.root.__update() will call twice if this.props has changes,
 			// first time is called there, second -- in PuerComponent._onPropChange
+			this._applyCssProps()
 			this.onUpdate()
 		}
 	}
@@ -55,14 +56,14 @@ class PuerComponent extends BasePuerComponent {
 		this.root.__update()
 	}
 
-	_onStateChange() {
+	_onStateChange(prop, oldValue, newValue) {
 		this.root.__update()
 		this.__update()
 	}
 
 	_computeCssClass() {
 		return this.getPropsInProto('chainName', 'PuerComponent')
-			.map(s => Puer.String.camelToDashedSnake(s))
+			.map(s => Puer.String.camelToKebab(s))
 			.join(' ')
 	}
 }

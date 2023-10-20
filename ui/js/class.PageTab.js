@@ -15,8 +15,7 @@ class PageTab extends PuerComponent {
 		return div([
 			a ({
 				onclick : this.navigateToPage,
-				text    : this.props.label,
-				href    : 'javascript:void(0)'
+				text    : this.props.label
 			})
 		])
 	}

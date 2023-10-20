@@ -5,9 +5,7 @@ class FormInput extends PuerComponent {
     constructor(props, children) {
         super(props, children)
         this.props.require('name', this)
-        // console.log('BUG !!! Props before setting default autocomplete off', this.props.toObject())
         this.props.default('autocomplete', 'off')
-        console.log('BUG!!! Props, after setting default autocomplete to off', this.props.toObject())
         this.form = null
     }
     
@@ -20,7 +18,7 @@ class FormInput extends PuerComponent {
     }
 
     validate() {
-        this.form.validate(this.props.name)
+        this.form && this.form.validate(this.props.name)
     }
 
     render() {
