@@ -60,7 +60,7 @@ class Puer {
 			styleElement.setAttribute('href', cssUrl)
 			styleElement.onload = () => {
 				Puer.cssCount --
-				console.log('END', Puer.cssCount, cssUrl)
+				// console.log('END', Puer.cssCount, cssUrl)
 				if (Puer.cssCount == 0) {
 					Puer.app.__onReady()
 					Puer.app.__update()
@@ -69,7 +69,7 @@ class Puer {
 			document.head.appendChild(styleElement)
 			Puer.cssUrls.add(cssUrl)
 			Puer.cssCount ++
-			console.log('BEGIN', Puer.cssCount, cssUrl)
+			// console.log('BEGIN', Puer.cssCount, cssUrl)
 		}
 	}
 

@@ -2,10 +2,10 @@ import Puer, {PuerApp} from '../../puer.js'
 
 import {PageTab} from '../../ui/index.js'
 
-import IndexPage     from './pages/class.IndexPage.js'
-import AutoTestPage  from './pages/class.AutoTestPage.js'
-import ComponentPage from './pages/class.ComponentsPage.js'
-import FormPage      from './pages/class.FormPage.js'
+import IndexPage     from './components/class.IndexPage.js'
+import AutoTestPage  from './components/class.AutoTestPage.js'
+import ComponentPage from './components/class.ComponentsPage.js'
+import FormPage      from './components/class.FormPage.js'
 
 Puer.application(
 	class App extends PuerApp {

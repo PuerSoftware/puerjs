@@ -76,17 +76,17 @@ class PuerProps {
 	}
 
 	default(prop, defaultValue) {
-		if (!this.hasOwnProperty(prop)) {
-			this[prop] = defaultValue
+		if (!this.data.hasOwnProperty(prop)) {
+			this.data[prop] = defaultValue
 		}
-		return this[prop]
+		return this.data[prop]
 	}
 
 	require(prop, owner) {
 		if (!this.data.hasOwnProperty(prop)) {
 			throw new PuerError(`Property ${prop} is required but not set.`, owner || this, 'require')
 		}
-		return this[prop]
+		return this.data[prop]
 	}
 
 	extractEvents(owner) {
@@ -129,9 +129,9 @@ class PuerProps {
 				this.onChange(prop, this.ddata[prop], newValue)
 			}
 		}
-		if (counter > 1) {
-			throw new Error('changed more than 1 prop, when triggered __update function')
-		}
+		// if (counter > 1) {
+		// 	throw new Error('changed more than 1 prop, when triggered __update function')
+		// }
 	}
 }
 

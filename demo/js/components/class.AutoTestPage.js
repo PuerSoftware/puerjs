@@ -1,10 +1,9 @@
-import Puer, {PuerError} from '../../../puer.js'
-import {Page}            from '../../../ui/index.js'
+import Puer, {PuerError, PuerComponent} from '../../../puer.js'
 
 import testPuerProps        from '../tests/testPuerProps.js'
 import testPuerComponentSet from '../tests/testPuerComponentSet.js'
 
-class AutoTestPage extends Page {
+class AutoTestPage extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
 		this.tests = {

@@ -4,6 +4,7 @@ import Puer, {PuerComponent} from '../../puer.js'
 class PageTab extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
+		this.props.require('route', this)
 	}
 
 	navigateToPage() {

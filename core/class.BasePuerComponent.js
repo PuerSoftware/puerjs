@@ -166,9 +166,9 @@ class BasePuerComponent extends PuerObject {
 			this.parentElementCopy.appendChild(this.element)
 			this.elementCopy = null
 			this.isActive    = true
-			console.log(this.className, 'activated')
+			// console.log(this.className, 'activated')
 		} else {
-			console.log(this.className, 'already active')
+			// console.log(this.className, 'already active')
 		}
 	}
 
@@ -181,9 +181,9 @@ class BasePuerComponent extends PuerObject {
 
 			this.element  = null
 			this.isActive = false
-			console.log(this.className, 'deactivated')
+			// console.log(this.className, 'deactivated')
 		} else {
-			console.log(this.className, 'already inactive')
+			// console.log(this.className, 'already inactive')
 		}
 	}
 

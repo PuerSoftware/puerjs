@@ -5,6 +5,7 @@ class FormInput extends PuerComponent {
     constructor(props, children) {
         super(props, children)
         this.props.require('name', this)
+        // console.log('BUG !!! Props before setting default autocomplete off', this.props.toObject())
         this.props.default('autocomplete', 'off')
         console.log('BUG!!! Props, after setting default autocomplete to off', this.props.toObject())
         this.form = null
@@ -13,7 +14,6 @@ class FormInput extends PuerComponent {
     onUpdate() {
         this.form  = this.$$$.Form[0]
         this.field = this.$$$.FormField[0]
-
         if (!this.form) {
             throw new PuerError('FormInput must be a descendent of Form!', this, 'onReady')
         }
@@ -25,7 +25,7 @@ class FormInput extends PuerComponent {
 
     render() {
         return input({
-            ... this.props.toObject(),
+            ... this.props,
             onchange: this.validate,
         })
     }

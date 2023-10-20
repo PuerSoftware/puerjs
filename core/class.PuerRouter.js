@@ -56,7 +56,7 @@ class PuerRouter {
 		const oldHash = this.getHash()
 		const newHash = this.getRoutePath(routeName)
 
-		console.log('Router.navigate() oldHash:', oldHash, 'newHash:', newHash)
+		// console.log('Router.navigate() oldHash:', oldHash, 'newHash:', newHash)
 
 		if (oldHash !== newHash) {
 			this.setHash(newHash)

@@ -1,7 +1,7 @@
-import Puer   from '../../../puer.js'
-import {Page} from '../../../ui/index.js'
+import Puer, {PuerComponent}   from '../../../puer.js'
 
-class IndexPage extends Page {
+
+class IndexPage extends PuerComponent{
 
 	onClick(e) {
 		Puer.Router.navigate(e.targetComponent.props.routeName)

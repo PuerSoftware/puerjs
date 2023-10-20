@@ -1,10 +1,9 @@
-import Puer   from '../../../puer.js'
-import {Page} from '../../../ui/index.js'
+import Puer, {PuerComponent}  from '../../../puer.js'
 
-import Comp1  from '../components/class.Comp1.js'
+import Comp1  from './class.Comp1.js'
 
 
-class ComponentPage extends Page {
+class ComponentPage extends PuerComponent {
 	render() {
 		return div([
 			h3({text: this.props.title}),
