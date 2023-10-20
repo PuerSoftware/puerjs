@@ -10,7 +10,7 @@ class IndexPage extends Page {
 	render() {
 		return div([
 			h3({text: this.props.title}),
-			div({text: 'Because we\'ve loved React so much, we\'ve decided to brew some Puer...'}),
+			div({text: 'Because we\'ve "loved" React so much, that decided to brew some Puer...'}),
 			img({src: 'img/puer.jpg', width: '200'})
 		])
 	}

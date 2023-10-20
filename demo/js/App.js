@@ -12,7 +12,7 @@ Puer.application(
 		render() {
 			return div([
 				div('header', [
-					h2({text: 'PuerJs'}),
+					h2({text: 'PuerJS'}),
 					div([
 						Puer.PageTab({ label: 'Home',           route: 'index'     }),
 						Puer.PageTab({ label: 'Unit Tests',     route: 'auto'      }),
