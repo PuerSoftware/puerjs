@@ -28,8 +28,8 @@ class PuerRouter {
 		return levels
 	}
 
-	_route(path) {
-		// let path = this._getPath(hash)
+	_route(hash) {
+		let path = this._getPath(hash)
 		console.log(Puer.String.titleDivider(path.join('/'), 50, '-'))
 		this.app.__route(path)
 	}
@@ -51,7 +51,7 @@ class PuerRouter {
 			const hash = this._getHash(event.newURL)
 			this._route(hash)
 		})
-		this._route(this._getPath())
+		this._route(this.initialHash)
 	}
 }
 
