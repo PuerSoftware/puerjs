@@ -1,6 +1,5 @@
 import Puer, {
     PuerComponent,
-    PuerError
 } from '../../puer.js'
 
 
@@ -13,7 +12,7 @@ class FormField extends PuerComponent {
 
     onUpdate() {
         if (!this.$$$.Form[0]) {
-            throw new PuerError('FormField must be a descendent of Form!', this, 'onReady')
+            throw new Puer.Error('FormField must be a descendent of Form!', this, 'onReady')
         }
     }
 

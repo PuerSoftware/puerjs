@@ -1,4 +1,4 @@
-import Puer, { PuerComponent, PuerError} from '../../puer.js'
+import Puer, { PuerComponent } from '../../puer.js'
 
 
 class FormInput extends PuerComponent {
@@ -13,7 +13,7 @@ class FormInput extends PuerComponent {
         this.form  = this.$$$.Form[0]
         this.field = this.$$$.FormField[0]
         if (!this.form) {
-            throw new PuerError('FormInput must be a descendent of Form!', this, 'onReady')
+            throw new Puer.Error('FormInput must be a descendent of Form!', this, 'onReady')
         }
     }
 
@@ -23,7 +23,7 @@ class FormInput extends PuerComponent {
 
     render() {
         return input({
-            ... this.props,
+            ... this.props.toObject(),
             onchange: this.validate,
         })
     }

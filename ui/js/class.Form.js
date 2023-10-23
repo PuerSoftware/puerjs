@@ -27,6 +27,7 @@ class Form extends PuerComponent {
 			for (const input of this.inputs) {
 				if (input.props.name in data.fields) {
 					if (input.field) {
+						console.log(input.field.element, input.props.name, data.fields[input.props.name])
 						input.field.onValidate(data.fields[input.props.name])
 					}
 				}
@@ -51,7 +52,7 @@ class Form extends PuerComponent {
 					if (!response.ok) {
 						const error      = 'Form validation failed'
 						this.state.error = error
-						throw new PuerError(error, this, 'validate')
+						throw new Puer.Error(error, this, 'validate')
 					}
 					return response.json()
 				})

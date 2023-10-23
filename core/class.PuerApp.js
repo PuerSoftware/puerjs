@@ -7,19 +7,22 @@ class PuerApp extends PuerComponent {
     	super(props, children)
     	this.__render()
     	this.hide()
-		// this.__onReady()
-		// this.__update()
 	}
 
-	__onReady() {
-		super.__onReady()
-		this.show()
+	__ready() {
+		super.__ready()
+		super.__update()
+		this.show() // Display after css has loaded
 	}
 
 	__render() {
 		super.__render()
 		document.body.appendChild(this.element)
 		return this.element
+	}
+
+	route(path) {
+		Puer.Router.navigate(path)
 	}
 
 	toTreeString(root, indent='') {

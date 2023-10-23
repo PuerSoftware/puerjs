@@ -10,27 +10,112 @@ class Puer {
 	static app
 	static owner
 	static deferred
-	static cssUrls = new Set()
-	static cssCount = 0
+	
+	static _cssUrls  = new Set()
+	static _cssCount = 0
 
-	static application(cls, importUrl) {
-		Puer._defineComponent(cls, importUrl)
+	/********************** PRIVATE **********************/
+
+	static _init() {
+		Puer._classToType = {}
+		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
+			.forEach(name => {
+				const typeName = name.toLowerCase()
+				Puer._classToType['[object ' + name + ']'] = typeName
+				Puer[`is${name}`] = (o) => { return Puer.type(o) === typeName }
+			})
+		Puer.Error  = PuerError
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
+	}
+
+	static _loadComponentCss(componentUrl) {
+		if (componentUrl) {
+			const cssUrl = componentUrl.split('js').join('css')
+			if (!Puer._cssUrls.has(cssUrl)) {
+				let styleElement = document.createElement('link')
+				styleElement.setAttribute('type', 'text/css')
+				styleElement.setAttribute('rel', 'stylesheet')
+				styleElement.setAttribute('href', cssUrl)
+				styleElement.onload = () => {
+					Puer._cssCount --
+					if (Puer._cssCount == 0) {
+						Puer.app.__ready()
+					}
+				}
+				document.head.appendChild(styleElement)
+				Puer._cssUrls.add(cssUrl)
+				Puer._cssCount ++
+			}
+		}
+	}
+
+	static _defineText() {
+		let className = 'PuerTagText'
+		Object.defineProperty(PuerTextElement, 'name', { value: className })
+		PuerTextElement.prototype.chainName = 'text'
+
+		window['text'] = (text) => {
+			return new PuerTextElement(text)
+		}
+	}
+
+	static _defineTag(name) {
+		let className = 'PuerTag' + StringMethods.capitalize(name)
+		eval(
+			`class ${className} extends PuerHtmlElement {};` +
+			`window.${className} = ${className}`
+		)
+		Object.defineProperty(window[className], 'name', { value: className })
+		window[className].prototype.chainName = name
+
+		window[name] = (... args) => {
+			let [ cssClass,  props,    children ] = Puer.arganize(args,
+				[ 'string',  'object', 'array', ],
+				[ '',        {},       [],      ]
+			)
+			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
+			return new window[className](props, children)
+		}
+	}
+
+	static _defineComponent(cls, importUrl) {
+		Puer._loadComponentCss(importUrl)
+		cls.prototype.chainName = cls.name
+		Puer[cls.name] = (... args) => {
+			let [props,    children ] = Puer.arganize(args,
+				['object', 'array'  ],
+				[{},       []       ]
+			)
+			return new cls(props, children)
+		}
+	}
+
+	/*********************** PUBLIC ***********************/
+
+	static application(cls, importUrl) {
+		Puer._init()
+		Puer._defineComponent(cls, importUrl)
 		Puer.app    = Puer[cls.name]()
 		Puer.Router = new PuerRouter(Puer.app)
-
 		return Puer
 	}
 
-	static define(className, importUrl) {
-		if (Puer.isString(className)) {
-			if (className === 'text') {
-				return Puer._defineText()
+	static define(cls, importUrl) {
+		if (typeof cls === 'string') {
+			if (window[cls]) {
+				throw new PuerError(`Could not define tag "${cls}": name occupied`, Puer, 'define')
+			} else {
+				if (cls === 'text') {
+					return Puer._defineText()
+				}
+				return Puer._defineTag(cls)
 			}
-			return Puer._defineTag(className)
 		}
-		return Puer._defineComponent(className, importUrl)
+		if (Puer[cls.name]) {
+			throw new PuerError(`Could not define component "Puer.${cls.name}": name occupied`, Puer, 'define')
+		}
+		return Puer._defineComponent(cls, importUrl)
 	}
 
 	static router(getRoutes) {
@@ -52,27 +137,6 @@ class Puer {
 		}
 	}
 
-	static requestCss(cssUrl) {
-		if (!Puer.cssUrls.has(cssUrl)) {
-			let styleElement = document.createElement('link')
-			styleElement.setAttribute('type', 'text/css')
-			styleElement.setAttribute('rel', 'stylesheet')
-			styleElement.setAttribute('href', cssUrl)
-			styleElement.onload = () => {
-				Puer.cssCount --
-				// console.log('END', Puer.cssCount, cssUrl)
-				if (Puer.cssCount == 0) {
-					Puer.app.__onReady()
-					Puer.app.__update()
-				}
-			}
-			document.head.appendChild(styleElement)
-			Puer.cssUrls.add(cssUrl)
-			Puer.cssCount ++
-			// console.log('BEGIN', Puer.cssCount, cssUrl)
-		}
-	}
-
 	static arganize(args, types, defaults, norm_args=[]) {
 		if (types.length) {
 			if (Puer.type(args[0]) == types.shift()) {
@@ -88,84 +152,16 @@ class Puer {
 
 	static type(o) {
 		if (o == null) { return o + '' }
-		const class2type = {}
-		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
-			.forEach(name => {
-				class2type['[object ' + name + ']'] = name.toLowerCase();
-			})
-		const className = Object.prototype.toString.call(o);
-		if (className in class2type) { return class2type[className]	}
-		return typeof o
+		const className = Object.prototype.toString.call(o)
+		return Puer._classToType[className] || typeof o
 	}
 
-	static isFunction (o) { return Puer.type(o) === 'function' }
-	static isBoolean  (o) { return Puer.type(o) === 'boolean'  }
-	static isObject   (o) { return Puer.type(o) === 'object'   }
-	static isString   (o) { return Puer.type(o) === 'string'   }
-	static isNumber   (o) { return Puer.type(o) === 'number'   }
-	static isRegexp   (o) { return Puer.type(o) === 'regexp'   }
-	static isSymbol   (o) { return Puer.type(o) === 'symbol'   }
-	static isError    (o) { return Puer.type(o) === 'error'    }
-	static isArray    (o) { return Puer.type(o) === 'array'    }
-	static isDate     (o) { return Puer.type(o) === 'date'     }
-
-	static _defineText() {
-		if ('text' in window) {
-			throw `Could not register tag method 'text': already present in global scope`
-		}
-		let className = 'PuerTagText'
-		Object.defineProperty(PuerTextElement, 'name', { value: className })
-		PuerTextElement.prototype.chainName = 'text'
-
-		window['text'] = (text) => {
-			return new PuerTextElement(text)
-		}
-	}
-
-	static _defineTag(name) {
-		if (name in window) {
-			throw `Could not register tag method ${name}: already present in global scope`
-		}
-		let className = 'PuerTag' + StringMethods.capitalize(name)
-		eval(
-			`class ${className} extends PuerHtmlElement {};` +
-			`window.${className} = ${className}`
-		)
-		Object.defineProperty(window[className], 'name', { value: className })
-		window[className].prototype.chainName = name
-
-		window[name] = (... args) => {
-			let [ cssClass,  props,    children ] = Puer.arganize(args,
-				[ 'string',  'object', 'array', ],
-				[ '',        {},       [],      ]
-			)
-			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
-			return new window[className](props, children)
-		}
-	}
-
-	static _defineComponent(cls, importUrl) {
-		if (importUrl) {
-			importUrl = importUrl.split('js').join('css')
-			Puer.requestCss(importUrl)
-		}
-		if (Puer[cls.name]) {
-			throw `Could not register component ${cls.name}: already present $$`
-		}
-		cls.prototype.chainName = cls.name
-		Puer[cls.name] = (... args) => {
-			let [props,    children ] = Puer.arganize(args,
-				['object', 'array'  ],
-				[{},       []       ]
-			)
-			return new cls(props, children)
-		}
-	}
 }
 
 Puer.String = StringMethods
 Puer.Object = ObjectMethods
 
+window.Puer = Puer
 export default Puer
 
 

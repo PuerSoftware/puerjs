@@ -27,6 +27,8 @@ class BasePuerComponent extends PuerObject {
 		this.parentElementCopy = null
 
 		this._listenerMap = new WeakMap()
+
+		// this._setupEventHandlers()
 	}
 
 	/************************* Govnokod start **************************/
@@ -40,6 +42,52 @@ class BasePuerComponent extends PuerObject {
 		})
 	}
 	/**************************  Govnokod end ***************o**********/
+
+
+	/********************** FRAMEWORK **********************/
+
+
+	__render() {
+		this._setupRoot()
+		this._cascade('__render')
+		this._setupElement()
+		this._createTextElement()
+		this._addEvents()
+		this.onRender && this.onRender()
+	}
+
+	__route(path, level=0) {
+		const route = this.props.route
+		if (route) {
+			// console.log('route', route)
+			if (route == path[level]) {
+				// console.log('match', this.className)
+				this.activate()
+				this._cascade('__route', [path, level])
+			} else {
+				this.deactivate()
+			}
+		} else {
+			this._cascade('__route', [path, level])
+		}
+		this.onRoute && this.onRoute()
+	}
+
+	__update() {
+		if (this.isActive) {
+			this.props.touch()
+			this._cascade('__update')
+			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
+			// First time it is called here, second -- in PuerComponent._onPropChange
+			this._applyCssProps()
+			this.onUpdate && this.onUpdate()
+		}
+	}
+
+	__ready() {
+		this._cascade('__ready')
+		this.onReady && this.onReady()
+	}
 
 	/******************** CHAIN GETTERS ********************/
 
@@ -157,6 +205,29 @@ class BasePuerComponent extends PuerObject {
 			this._listenerMap.delete(f)
 		}
 	}
+
+	_cascade(methodName, args=[]) {
+		if (this.isCustom) {
+			this.root[methodName](... args)
+		} else {
+			this.children.forEach(child => child[methodName](... args))
+		}
+	}
+
+	_setupEventHandlers() {
+		for (const prop of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
+			if (typeof this[prop] === 'function' && prop.startsWith('on')) {
+				const originalMethod = this[prop].bind(this)
+
+				this[prop] = () => {
+					if (Object.getPrototypeOf(this)[prop]) {
+						Object.getPrototypeOf(this)[prop].call(this)
+					}
+					originalMethod()
+				}
+			}
+		}
+	}
 	
 	/*********************** CASTING ***********************/
 
@@ -164,12 +235,6 @@ class BasePuerComponent extends PuerObject {
 		return `${this.className}(${this.props.toString()})`
 	}
 
-	/************************ HOOKS ************************
-	Defined in child components:
-	*/
-	onReady  () {/*Do not add code here*/}
-	onUpdate () {/*Do not add code here*/}
-	render   () {/*Do not add code here*/}
 	/********************* DIRECTIVES *********************/
 
 	activate() {
@@ -199,6 +264,28 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
+	route(path, relative=false) {
+		const route = this.props.route
+		if (route) {
+			if (relative) {
+				path = route + '/' + path
+			}
+		}
+		this.parent.route(path)
+	}
+
+	as(mixinClass) {
+		const handler = {
+			get: (target, prop, receiver) => {
+				if (prop in mixinClass.prototype) {
+					return mixinClass.prototype[prop].bind(target)
+				}
+				return Reflect.get(target, prop, receiver)
+			}
+		}
+		return new Proxy(this, handler)
+	}
+
 	/********************* DOM METHODS *********************/
 
 	findAll(selector) {
@@ -226,7 +313,6 @@ class BasePuerComponent extends PuerObject {
 		}
 		for (let [property, value] of Object.entries(styles)) {
 			property = Puer.String.camelToKebab(property)
-			console.log('css', property, value)
             this.element.style[property] = value
         }
 	}
@@ -239,20 +325,20 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	append(component) {
-		const element = component.__render()
+		component.__render()
 		component.parent = this
 		!this.isCustom && this.children.push(component)
-		this.element.appendChild(element)
+		this.element.appendChild(component.element)
 	}
 
 	prepend(component) {
-		const element = component.__render()
+		component.__render()
 		component.parent = this
 		!this.isCustom && this.children.unshift(component)
 		if (this.element.firstChild) {
-			this.element.insertBefore(element, this.element.firstChild)
+			this.element.insertBefore(component.element, this.element.firstChild)
 		} else {
-			this.element.appendChild(element)
+			this.element.appendChild(component.element)
 		}
 	}
 

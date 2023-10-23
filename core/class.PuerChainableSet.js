@@ -1,5 +1,6 @@
 import Puer from './class.Puer.js'
 
+
 class PuerChainableSet extends Array {
 	constructor(items, onChange, operators) {
 		if (Puer.isNumber(items)) {

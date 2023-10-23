@@ -1,4 +1,4 @@
-import PuerError from './class.PuerError.js'
+import Puer from './class.Puer.js'
 
 
 class PuerRouter {
@@ -7,91 +7,51 @@ class PuerRouter {
 	constructor(app) {
 		if (!PuerRouter.instance) {
 			this.app            = app
-			this.routes         = null
-			this.isInitialized  = false
+			this._init()
 			PuerRouter.instance = this
 		}
 		return PuerRouter.instance
 	}
 
-	getHash(hash=null) {
-		hash = hash || window.location.hash
-		return hash.split('#')[1] || ''
-	}
+	/********************** PRIVATE ***********************/
 
-	setHash(hash) {
-		window.location.hash = hash
-	}
-
-	getRoutePath(routeName) {
-		if (!this.routes) {
-			throw new PuerError('Route definition is not provided.', this, 'navigate')
-		}
-		if (!this.routes[routeName]) {
-			throw new PuerError(`Route "${routeName}" is not defined.`, this, 'navigate')
-		}
-		return this.routes[routeName].path
-	}
-
-	onNavigate(path) {
-		// console.log('Router.onNavigate()', path, this.routes)
-		let activeRouteName = null
-		for (const routeName in this.routes) {
-			const route = this.routes[routeName]
-			if (route.path === path) {
-				// console.log('Router.onNavigate() - found path in routes:', path)
-				activeRouteName = routeName
-				route.component.activate()
-			} else {
-				route.component.deactivate()
-			}
-		}
-		if (!activeRouteName) {
-			throw new PuerError(`No route found matching path "${path}"`, this, 'onNavigate')
-		}
-	}
-
-	navigate(routeName) {
-		//console.log('Router.navigate()', routeName)
-		const oldHash = this.getHash()
-		const newHash = this.getRoutePath(routeName)
-
-		// console.log('Router.navigate() oldHash:', oldHash, 'newHash:', newHash)
-
-		if (oldHash !== newHash) {
-			this.setHash(newHash)
-			// history.pushState    (null, null, newHash)
-		}
-		if (!this.isInitialized) {
-			this.isInitialized = true
-			//console.log('Router.navigate() - Initialized!')
-			this.onNavigate(newHash)
-		}
-	}
-
-
-	default(routeName) {
-		const currentHash = this.getHash()
-		if (currentHash === '') {
-			this.navigate(routeName)
-		}
-	}
-
-
-	define(getRoutes) {
-		this.routes = getRoutes(this.app)
+	_init() {
 		window.addEventListener('hashchange', (event) => {
-			const oldHash = this.getHash(event.oldURL)
-			const newHash = this.getHash(event.newURL)
-			console.log('-------------', newHash, '-------------')
-			this.onNavigate(newHash)
+			const hash = this._getHash(event.newURL)
+			this._route(hash)
 		})
-		//console.log('Router.define() – Hash Listener attached')
-		const currentHash = this.getHash()
-		if (currentHash) {
-			this.navigate(currentHash)
+		this._route()
+	}
+
+	_getHash() {
+		return window.location.hash.split('#')[1]
+	}
+
+	_getPath(hash) {
+		hash = hash || this._getHash()
+		let levels = []
+		if (hash) {
+			levels = hash.split('/')
 		}
-		return this
+		return levels
+	}
+
+	_route(hash) {
+		let path = this._getPath(hash)
+		console.log(Puer.String.titleDivider(path.join('/'), 50, '-'))
+		this.app.__route(path)
+	}
+
+	/*********************** PUBLIC ***********************/
+
+	navigate(path) {
+		window.location.hash = '#' + path
+	}
+
+	default(path) {
+		if (!this._getPath()) {
+			this.navigate(path)
+		}
 	}
 }
 

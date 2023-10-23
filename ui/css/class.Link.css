@@ -1,7 +1,7 @@
-.page-tab {
+.link {
 	display : inline-block;
 	margin  : 3px 20px 3px 0;
 }
-	.page-tab a {
+	.link a {
 		text-decoration : none;
 	}

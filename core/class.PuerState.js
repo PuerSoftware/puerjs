@@ -5,42 +5,37 @@ import PuerObject from './class.PuerObject.js'
 class PuerState extends PuerObject {
 	constructor(onChange) {
 		super()
+		this.history  = {}
 		this.state    = {}
 		this.onChange = onChange
-		return PuerState._makeObservable(this.state, this.onChange)
-	}
 
-	static _makeObservable(obj, onChange) {
-		return new Proxy(obj, {
+		return new Proxy(this, {
 			get(target, prop) {
-				const value = target[prop]
-				if (typeof value === 'object' && value !== null) {
-					return PuerState._makeObservable(value, onChange)  // Recursive call for nested object
-				}
+				const value = target.state[prop]
 
-				let getterFunction = () => {
-					return target[prop]
+				if (Puer.isFunction(target[prop])) {
+					return target[prop].bind(target)  // If method exists on the original class, call it
 				}
-				getterFunction.toString = () => {
-					return getterFunction()
-				}
+				let getterFunction      = () => { return target.state[prop] }
+				getterFunction.toString = () => { return getterFunction()   }
+
 				return Puer.deferred ? getterFunction : value
 			},
-			set(target, prop, value) {
-				let isChange   = prop in target
-				const oldValue = target[prop]
-				target[prop] = value
-
-				if (Array.isArray(target)) { isChange = true }
-				if (isChange)              { onChange(prop, oldValue, value) }
-	
+			set(target, prop, newValue) {
+				const oldValue = target.state[prop]
+				target.state[prop] = newValue
+				if (oldValue && oldValue !== newValue) { onChange(prop, oldValue, newValue) }
 				return true
 			}
 		})
 	}
 
-	test() {
-		return 'test'
+	navigate(hash) {
+		if (this.history[hash]) {
+			this.state = this.history[hash]
+		} else {
+			this.history[hash] = Object.assign({}, this.state)  // save shallow copy
+		}
 	}
 }
 

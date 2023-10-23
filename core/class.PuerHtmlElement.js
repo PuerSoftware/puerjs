@@ -15,46 +15,22 @@ class PuerHtmlElement extends BasePuerComponent {
 		/**************************  Govnokod end ***************o**********/
 	}
 
-	/********************** FRAMEWORK **********************/
-
-	__render() {
-		this.root = this
-		this.element = this._renderElement()
-		if (this.children) {
-			for (const child of this.children) {
-				child.parent = this
-				const childElement = child.__render()
-				this.element.appendChild(childElement)
-			}
-		}
-		this._createTextElement()
-		this._addEvents()
-		return this.element
-	}
-
-	__update() {
-		if (this.isActive) {
-			this.props.touch()
-			for (const child of this.children) {
-				child.__update()
-			}
-			this._applyCssProps()
-			this.onUpdate()
-		}
-		// console.log(`${this.className}.__update()`, this.children.length)
-	}
-
-	__onReady() {
-		this.children && this.children.forEach(child => { child.__onReady() })
-		return this.onReady()
-	}
-
 	/*********************** PRIVATE ***********************/
-
-	_define() {} // Not defining custom component
 
 	_onPropChange(prop, oldValue, newValue) {
 		this.element.setAttribute(prop, newValue)
+	}
+
+	_setupRoot() {
+		this.root = this
+	}
+
+	_setupElement() {
+		this.element = this._renderElement()
+		for (const child of this.children) {
+			child.parent = this
+			this.element.appendChild(child.element)
+		}
 	}
 
 	_renderElement() {
@@ -65,14 +41,12 @@ class PuerHtmlElement extends BasePuerComponent {
 		return element
 	}
 
-	/*********************** CASTING ***********************/
+	/*********************** PUBLIC ***********************/
 
 	toString() {
 		return `${this.tagName}(${this.props.toString()})`
 	}
 	
-	/************************ HOOKS ************************/
-
 	render() {
 		return this
 	}
