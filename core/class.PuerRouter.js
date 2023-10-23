@@ -46,10 +46,11 @@ class PuerRouter {
 
 	navigate(path) {
 		window.location.hash = '#' + path
+		this.app.__update()
 	}
 
 	default(path) {
-		if (!this._getPath()) {
+		if (!this._getHash()) {
 			this.navigate(path)
 		}
 	}

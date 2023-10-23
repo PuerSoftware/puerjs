@@ -8,7 +8,7 @@ class PuerState extends PuerObject {
 		this.history  = {}
 		this.state    = {}
 		this.onChange = onChange
-		return PuerState._makeObservable(this.state, this.onChange, this)
+		return PuerState._makeObservable(this.data, this.onChange, this)
 	}
 
 	static _makeObservable(obj, onChange, context) {
@@ -46,9 +46,9 @@ class PuerState extends PuerObject {
 
 	navigate(hash) {
 		if (this.history[hash]) {
-			this.state = this.history[hash]
+			this.data = this.history[hash]
 		} else {
-			this.history[hash] = Object.assign({}, this.state)  // save shallow copy
+			this.history[hash] = Object.assign({}, this.data)  // save shallow copy
 		}
 	}
 }

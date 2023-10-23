@@ -1,41 +1,43 @@
-import Puer       from './class.Puer.js'
-import PuerObject from './class.PuerObject.js'
+import Puer             from './class.Puer.js'
+import puerProxyHandler from './puerProxyHandler.js'
 
 
-class PuerState extends PuerObject {
+class PuerState {
 	constructor(onChange) {
-		super()
-		this.history  = {}
-		this.state    = {}
+		this.data     = {}
+		this.ddata    = {}
 		this.onChange = onChange
 
-		return new Proxy(this, {
-			get(target, prop) {
-				const value = target.state[prop]
+		for (const prop in this.data) {
+			this.ddata[prop] = this.dereference(prop)
+		}
 
-				if (Puer.isFunction(target[prop])) {
-					return target[prop].bind(target)  // If method exists on the original class, call it
-				}
-				let getterFunction      = () => { return target.state[prop] }
-				getterFunction.toString = () => { return getterFunction()   }
-
-				return Puer.deferred ? getterFunction : value
-			},
-			set(target, prop, newValue) {
-				const oldValue = target.state[prop]
-				target.state[prop] = newValue
-				if (oldValue && oldValue !== newValue) { onChange(prop, oldValue, newValue) }
-				return true
-			}
-		})
+		return new Proxy(this, puerProxyHandler)
 	}
 
-	navigate(hash) {
-		if (this.history[hash]) {
-			this.state = this.history[hash]
-		} else {
-			this.history[hash] = Object.assign({}, this.state)  // save shallow copy
+	forEach(callback) {
+		for (let key in this.data) {
+			callback(this.data[key], key, this.data)
 		}
+	}
+
+	toObject() {
+		return this.data
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject())
+			.split('","').join('", "')
+			.replace(/"([^"]+)":/g, '$1: ')
+			.split('"').join("'")
+	}
+
+	dereference(prop) {
+		let value = this.data[prop]
+		while (Puer.isFunction(value)) {
+			value = value()
+		}
+		return value
 	}
 }
 

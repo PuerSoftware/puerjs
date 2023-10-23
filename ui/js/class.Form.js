@@ -15,20 +15,21 @@ class Form extends PuerComponent {
 		this.state.error = ''
 	}
 
-	onUpdate() {
-		this.inputs = this.$$.FormInput
-		this.fields = this.$$.FormField
-	}
+	// onUpdate() {
+	// 	this.inputs = this.$$.FormInput
+	// 	this.fields = this.$$.FormField
+	// }
 
 	onValidate(data) {
-		console.log('Validated data', data)
+		// console.log('Validated data', data)
 		this.state.error = data.error || ''
 		if (data.error) {
-			for (const input of this.inputs) {
+			for (const input of this.$$.FormInput) {
 				if (input.props.name in data.fields) {
-					if (input.field) {
-						console.log(input.field.element, input.props.name, data.fields[input.props.name])
-						input.field.onValidate(data.fields[input.props.name])
+					const inputField = input.$$$.FormField[0]
+					if (inputField) {
+						// console.log(inputField.element, input.props.name, data.fields[input.props.name])
+						inputField.onValidate(data.fields[input.props.name])
 					}
 				}
 			}
@@ -37,7 +38,7 @@ class Form extends PuerComponent {
 
 	validate(initiatorInputName) {
 		let formData = {}
-		for (const input of this.inputs) {
+		for (const input of this.$$.FormInput) {
 			formData[input.props.name] = {
 				value          : input.element.value,
 				validationType : input.props.validationType || ''

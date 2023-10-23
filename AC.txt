@@ -11,7 +11,7 @@
 6.1 Custom Events
 7. User of Component Class interface should not account(know) for(of) changes that happen on re-render
 8. State must not change between renders
-    Store a state in PuerApp, hashed by component id.
+    Store a data in PuerApp, hashed by component id.
 9. Prepend should not break id–hash integrity
 10. Component tree is saved on register and updated on Prepend, append and rendered ONLY from this SST
 
@@ -24,11 +24,11 @@ class MyComp {
  _onMyEvent() {}
 
  render() {
-  return div({text: this.state.myText}, [
+  return div({text: this.data.myText}, [
    Comp2()
   ])
  }
 }
 
 
-MyComp.state.MyText = 'haha1'
+MyComp.data.MyText = 'haha1'
