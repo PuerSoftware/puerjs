@@ -1,23 +1,9 @@
-import Puer             from './class.Puer.js'
-import puerProxyHandler from './puerProxyHandler.js'
+import Puer      from './class.Puer.js'
+import PuerProxy from './class.PuerProxy.js'
 
-class PuerProps {
+class PuerProps extends PuerProxy {
 	constructor(props={}, onChange) {
-		this.data      = props
-		this.ddata     = {}
-		this.onChange  = onChange
-
-		for (const prop in this.data) {
-			this.ddata[prop] = this.dereference(prop)
-		}
-
-		return new Proxy(this, puerProxyHandler)
-	}
-
-	forEach(callback) {
-		for (let key in this.data) {
-			callback(this.data[key], key, this.data)
-		}
+		return super(props, onChange)
 	}
 
 	default(prop, defaultValue) {
@@ -46,17 +32,6 @@ class PuerProps {
 		return events
 	}
 
-	toObject() {
-		return this.data
-	}
-
-	toString() {
-		return JSON.stringify(this.toObject())
-			.split('","').join('", "')
-			.replace(/"([^"]+)":/g, '$1: ')
-			.split('"').join("'")
-	}
-
 	dereference(prop) {
 		let value = this.data[prop]
 		while (Puer.isFunction(value) && !prop.startsWith('on')) {
@@ -74,9 +49,6 @@ class PuerProps {
 				this.onChange(prop, this.ddata[prop], newValue)
 			}
 		}
-		// if (counter > 1) {
-		// 	throw new Error('changed more than 1 prop, when triggered __update function')
-		// }
 	}
 }
 

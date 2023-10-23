@@ -6,7 +6,7 @@ import PuerState         from './class.PuerState.js'
 class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.state    = new PuerState(this._onStateChange.bind(this))
+		this.state    = new PuerState({}, this._onStateChange.bind(this))
 		this.cssClass = this._computeCssClass()
 		this.isCustom = true
 
