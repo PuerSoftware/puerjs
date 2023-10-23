@@ -63,7 +63,7 @@ class BasePuerComponent extends PuerObject {
 			if (route == path[level]) {
 				// console.log('match', this.className)
 				this.activate()
-				this._cascade('__route', [path, level])
+				this._cascade('__route', [path, level + 1])
 			} else {
 				this.deactivate()
 			}
@@ -264,14 +264,14 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	route(path, relative=false) {
+	route(path, relative=true) {
 		const route = this.props.route
 		if (route) {
 			if (relative) {
 				path = route + '/' + path
 			}
 		}
-		this.parent.route(path)
+		this.parent.route(path, relative)
 	}
 
 	as(mixinClass) {

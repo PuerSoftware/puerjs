@@ -26,9 +26,6 @@ class PuerComponent extends BasePuerComponent {
 
 	_setupRoot() {
 		this.root = this.render()
-        if (!this.root) {
-            throw new Puer.Error('Must return component tree', this.className, 'render')
-        }
         this.root.parent = this
 	}
 
@@ -49,6 +46,12 @@ class PuerComponent extends BasePuerComponent {
 		return this.getPropsInProto('chainName', 'PuerComponent')
 			.map(s => Puer.String.camelToKebab(s))
 			.join(' ')
+	}
+
+	/*********************** PUBLIC ***********************/
+
+	render() {
+		return div()
 	}
 }
 

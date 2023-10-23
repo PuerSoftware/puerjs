@@ -131,13 +131,13 @@ const Tests_PuerState = {
 /*************************************************************/
 
 export default function testPuerState() {
-	const T_PP = Tests_PuerState
+	const T_PS = Tests_PuerState
 
-	T_PP.testDotAccessors(T_PP.setup())
-	T_PP.testSquareBracketAccessors(T_PP.setup())
-	T_PP.testIterators(T_PP.setup())
-	T_PP.testOperators(T_PP.setup())
-	T_PP.testAddedMethods(T_PP.setup())
-	T_PP.testOnChangeCallbacks(T_PP.setup())
+	T_PS.testDotAccessors(T_PS.setup())
+	T_PS.testSquareBracketAccessors(T_PS.setup())
+	T_PS.testIterators(T_PS.setup())
+	T_PS.testOperators(T_PS.setup())
+	T_PS.testAddedMethods(T_PS.setup())
+	T_PS.testOnChangeCallbacks(T_PS.setup())
 }
 
