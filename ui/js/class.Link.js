@@ -4,7 +4,7 @@ import Puer, {PuerComponent} from '../../puer.js'
 class Link extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('path', this)
+		// this.props.require('path', this)
 	}
 
 	navigate() {

@@ -18,7 +18,7 @@ class BasePuerComponent extends PuerObject {
 		this.props    = new PuerProps        (props,    this._onPropChange     .bind(this))
 
 		this.events   = this.props.extractEvents(this.owner)
-		this.cssClass = Puer.String.camelToKebab(this.className)
+		this.cssClass = this.props['class']
 
 		this.isCustom = false
 		this.isActive = true
@@ -37,6 +37,7 @@ class BasePuerComponent extends PuerObject {
 		this._setupRoot()
 		this._cascade('__render')
 		this._setupElement()
+		this.attr('class', this.cssClass)
 		this._addEvents()
 		this.onRender && this.onRender()
 	}
@@ -173,6 +174,8 @@ class BasePuerComponent extends PuerObject {
 				} else {
 					this.prepend(text(value))
 				}
+			} else if (prop === 'class') {
+				// do nothing, class is handled by this.cssClass
 			} else {
 				this.attr(prop, value)
 			}
@@ -314,7 +317,6 @@ class BasePuerComponent extends PuerObject {
 			styles = prop
 		}
 		for (let [property, value] of Object.entries(styles)) {
-			console.log('        CSS:', property, value)
             this.element.style[property] = value
         }
 	}

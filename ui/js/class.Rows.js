@@ -4,6 +4,7 @@ import Box  from './class.Box.js'
 class Rows extends Box {
 	constructor(props, children) {
 		super(props, children)
+		console.log(this.children.toArray())
 		this.props.default('text', '')
 	}
 

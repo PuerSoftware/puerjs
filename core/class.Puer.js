@@ -91,10 +91,11 @@ class Puer {
 		Puer._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
 		Puer[cls.name] = (... args) => {
-			let [props,    children ] = Puer.arganize(args,
-				['object', 'array'  ],
-				[{},       []       ]
+			let [ cssClass,  props,    children ] = Puer.arganize(args,
+				[ 'string',  'object', 'array', ],
+				[ '',        {},       [],      ]
 			)
+			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
 			return new cls(props, children)
 		}
 	}

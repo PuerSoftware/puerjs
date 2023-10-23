@@ -31,7 +31,6 @@ class PuerComponent extends BasePuerComponent {
 
 	_setupElement() {
 		this.element = this.root.element
-		this.element.setAttribute('class', this.cssClass)
 	}
 
 	_deferRenderers() {
@@ -43,9 +42,10 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_computeCssClass() {
-		return this.getPropsInProto('chainName', 'PuerComponent')
+		const classes = this.getPropsInProto('chainName', 'PuerComponent')
 			.map(s => Puer.String.camelToKebab(s))
-			.join(' ')
+		classes.push(this.props['class'])
+		return classes.join(' ')
 	}
 
 	/*********************** PUBLIC ***********************/
