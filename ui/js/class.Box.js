@@ -4,6 +4,8 @@ import Puer, {PuerComponent} from '../../puer.js'
 class Box extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
+		this.props.default('text',    'Box')
+		this.props.default('cssFlex', '1')
 	}
 
 	render() {

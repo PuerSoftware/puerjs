@@ -4,10 +4,14 @@ import Box  from './class.Box.js'
 class Rows extends Box {
 	constructor(props, children) {
 		super(props, children)
+		this.props.default('text', '')
 	}
 
 	render() {
-		return div({cssFlex: true, cssDirection: 'columns'}, this.children)
+		return div({
+			cssDisplay       : 'flex',
+			cssFlexDirection : 'column'
+		}, this.children)
 	}
 }
 

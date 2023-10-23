@@ -31,7 +31,14 @@ class Puer {
 		Puer.Events = new PuerEvents()
 	}
 
-	static _loadComponentCss(componentUrl) {
+	static _onCssLoad() {
+		Puer._cssCount --
+		if (Puer._cssCount == 0) {
+			Puer.app.__ready()
+		}
+	}
+
+	static _loadCss(componentUrl) {
 		if (componentUrl) {
 			let cssUrl = componentUrl.includes('puerjs') 
 				? Puer.path + componentUrl.split(Puer.path)[1].replace(/\bjs\b/g, 'css')
@@ -42,13 +49,8 @@ class Puer {
 				styleElement.setAttribute('type', 'text/css')
 				styleElement.setAttribute('rel', 'stylesheet')
 				styleElement.setAttribute('href', cssUrl)
-				styleElement.onload = () => {
-					Puer._cssCount --
-					if (Puer._cssCount == 0) {
-						Puer.app.__ready()
-						console.log('APP READY')
-					}
-				}
+				styleElement.addEventListener('load',  Puer._onCssLoad, false)
+				styleElement.addEventListener('error', Puer._onCssLoad, false)
 				document.head.appendChild(styleElement)
 				Puer._cssUrls.add(cssUrl)
 				Puer._cssCount ++
@@ -86,7 +88,7 @@ class Puer {
 	}
 
 	static _defineComponent(cls, importUrl) {
-		Puer._loadComponentCss(importUrl)
+		Puer._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
 		Puer[cls.name] = (... args) => {
 			let [props,    children ] = Puer.arganize(args,

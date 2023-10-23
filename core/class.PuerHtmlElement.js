@@ -7,12 +7,12 @@ class PuerHtmlElement extends BasePuerComponent {
 		this.tagName  = this.className.replace('PuerTag', '').toLowerCase()
 		this.isCustom = false
 
-		/************************* Govnokod start **************************/
-		// TODO: refactor this
-		if (this.tagName === 'a') {
-			this.props.default('href', 'javascript:void(0);')
+		// Setup tag defaults
+		switch (this.tagName) {
+			case 'a':
+				this.props.default('href', 'javascript:void(0)')
+				break
 		}
-		/**************************  Govnokod end ***************o**********/
 	}
 
 	/*********************** PRIVATE ***********************/
@@ -34,11 +34,7 @@ class PuerHtmlElement extends BasePuerComponent {
 	}
 
 	_renderElement() {
-		const element = document.createElement(this.tagName)
-		for (const [prop, value] of this.props) {
-			element.setAttribute(prop, this.props.dereference(prop))
-		}
-		return element
+		return document.createElement(this.tagName)
 	}
 
 	/*********************** PUBLIC ***********************/

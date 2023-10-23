@@ -19,6 +19,14 @@ class StringMethods {
         return s.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase()
     }
 
+    static camelToLower(s) {
+        return s.charAt(0).toLowerCase() + s.slice(1)
+    }
+
+    static camelToUpper(s) {
+        return s.charAt(0).toUpperCase() + s.slice(1)
+    }
+
     static titleDivider(title, n = 20, ch = '=') {
         let pad = Math.floor((n - title.length - 2) / 2)
         return ch.repeat(pad) + ' ' + title + ' ' + ch.repeat(n - title.length - 2 - pad)

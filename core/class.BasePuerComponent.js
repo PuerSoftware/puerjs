@@ -31,27 +31,12 @@ class BasePuerComponent extends PuerObject {
 		// this._setupEventHandlers()
 	}
 
-	/************************* Govnokod start **************************/
-	// TODO: refactor these
-	_applyCssProps() {
-		this.props.forEach((value, prop) => {
-			if (prop.startsWith('css')) {
-				const cssProp = prop.replace(/^css/, '')
-				this.css(cssProp, value)
-			}
-		})
-	}
-	/**************************  Govnokod end ***************o**********/
-
-
 	/********************** FRAMEWORK **********************/
-
 
 	__render() {
 		this._setupRoot()
 		this._cascade('__render')
 		this._setupElement()
-		this._createTextElement()
 		this._addEvents()
 		this.onRender && this.onRender()
 	}
@@ -79,7 +64,7 @@ class BasePuerComponent extends PuerObject {
 			this._cascade('__update')
 			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
 			// First time it is called here, second -- in PuerComponent._onPropChange
-			this._applyCssProps()
+			this._applyProps()
 			this.onUpdate && this.onUpdate()
 		}
 	}
@@ -175,15 +160,28 @@ class BasePuerComponent extends PuerObject {
 
 	_onPropChange(prop, oldValue, newValue) {}
 
-	_addEvents() {
-		for (const name in this.events) {
-			this._on(name, this.events[name])
+	_applyProps() {
+		for (let [prop, value] of this.props) {
+			value = this.props.dereference(prop)
+			if (prop.startsWith('css')) {
+				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
+				this.css(cssProp, value)
+			} else if (prop === 'text') {
+				const textElement = this.getTextElement()
+				if (textElement) {
+					textElement.nodeValue = value
+				} else {
+					this.prepend(text(value))
+				}
+			} else {
+				this.attr(prop, value)
+			}
 		}
 	}
 
-	_createTextElement() {
-		if ('text' in this.props) {
-			this.prepend(text(this.props.text))
+	_addEvents() {
+		for (const name in this.events) {
+			this._on(name, this.events[name])
 		}
 	}
 
@@ -296,6 +294,10 @@ class BasePuerComponent extends PuerObject {
 		return this.element.querySelector(selector)
 	}
 
+	getTextElement(element) {
+		return Array.from(this.element.childNodes).find(child => child.nodeType === 3)
+	}
+
 	addCssClass(name) {
 		this.element.classList.add(name)
 	}
@@ -312,14 +314,14 @@ class BasePuerComponent extends PuerObject {
 			styles = prop
 		}
 		for (let [property, value] of Object.entries(styles)) {
-			property = Puer.String.camelToKebab(property)
+			console.log('        CSS:', property, value)
             this.element.style[property] = value
         }
 	}
 
 	attr(name, value=null) {
 		if (value) {
-			this.element.addAttribute(name, value)
+			this.element.setAttribute(name, value)
 		}
 		return this.element.getAttribute(name)
 	}
