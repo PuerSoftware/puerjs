@@ -33,9 +33,10 @@ class Puer {
 
 	static _loadComponentCss(componentUrl) {
 		if (componentUrl) {
-			const relativeCssPath = componentUrl.split(Puer.path)[1].replace(/\bjs\b/g, 'css')
-			const cssUrl = Puer.path + relativeCssPath
-			console.log(cssUrl)
+			let cssUrl = componentUrl.includes('puerjs') 
+				? Puer.path + componentUrl.split(Puer.path)[1].replace(/\bjs\b/g, 'css')
+				: componentUrl.replace(/\bjs\b/g, 'css')
+
 			if (!Puer._cssUrls.has(cssUrl)) {
 				let styleElement = document.createElement('link')
 				styleElement.setAttribute('type', 'text/css')
@@ -45,6 +46,7 @@ class Puer {
 					Puer._cssCount --
 					if (Puer._cssCount == 0) {
 						Puer.app.__ready()
+						console.log('APP READY')
 					}
 				}
 				document.head.appendChild(styleElement)

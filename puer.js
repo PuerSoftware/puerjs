@@ -15,13 +15,12 @@ import Puer from './core/class.Puer.js'
 	for (const tag of tags) {
 		Puer.define(tag)
 	}
+	
 	function dirName(filePath) {
 		filePath = new URL(filePath).pathname
 		return filePath.slice(0, filePath.lastIndexOf('/'))
 	}
-
-	Puer.appPath = dirName(document.querySelector(`script[library="puerjs"]`).src) + '/'
-	Puer.path    = dirName(import.meta.url) + '/'
+	Puer.path = dirName(import.meta.url) + '/'
 })()
 
 export { default as PuerComponent } from './core/class.PuerComponent.js'
