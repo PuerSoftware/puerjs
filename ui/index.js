@@ -3,6 +3,8 @@ import FormField from './js/class.FormField.js'
 import FormInput from './js/class.FormInput.js'
 import Link      from './js/class.Link.js'
 import Box       from './js/class.Box.js'
+import Columns   from './js/class.Columns.js'
+import Rows      from './js/class.Rows.js'
 
 
 export {
@@ -10,5 +12,7 @@ export {
 	FormField,
 	FormInput,
 	Link,
-	Box
+	Box,
+	Columns,
+	Rows
 }

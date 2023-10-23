@@ -10,6 +10,8 @@ class Puer {
 	static app
 	static owner
 	static deferred
+	static path
+	static appPath
 	
 	static _cssUrls  = new Set()
 	static _cssCount = 0
@@ -31,7 +33,9 @@ class Puer {
 
 	static _loadComponentCss(componentUrl) {
 		if (componentUrl) {
-			const cssUrl = componentUrl.split('js').join('css')
+			const relativeCssPath = componentUrl.split(Puer.path)[1].replace(/\bjs\b/g, 'css')
+			const cssUrl = Puer.path + relativeCssPath
+			console.log(cssUrl)
 			if (!Puer._cssUrls.has(cssUrl)) {
 				let styleElement = document.createElement('link')
 				styleElement.setAttribute('type', 'text/css')
@@ -91,16 +95,6 @@ class Puer {
 		}
 	}
 
-	/*********************** PUBLIC ***********************/
-
-	static application(cls, importUrl) {
-		Puer._init()
-		Puer._defineComponent(cls, importUrl)
-		Puer.app    = Puer[cls.name]()
-		Puer.Router = new PuerRouter(Puer.app)
-		return Puer
-	}
-
 	static define(cls, importUrl) {
 		if (typeof cls === 'string') {
 			if (window[cls]) {
@@ -116,6 +110,16 @@ class Puer {
 			throw new PuerError(`Could not define component "Puer.${cls.name}": name occupied`, Puer, 'define')
 		}
 		return Puer._defineComponent(cls, importUrl)
+	}
+
+	/*********************** PUBLIC ***********************/
+
+	static application(cls, importUrl) {
+		Puer._init()
+		Puer._defineComponent(cls, importUrl)
+		Puer.app    = Puer[cls.name]()
+		Puer.Router = new PuerRouter(Puer.app)
+		return Puer
 	}
 
 	static router(getRoutes) {
