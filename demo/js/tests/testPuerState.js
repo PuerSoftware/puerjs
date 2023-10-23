@@ -1,29 +1,39 @@
 import PuerState from '../../../core/class.PuerState.js'
 import PuerTest  from '../../../core/class.PuerTest.js'
 
+
+const obj = {
+	 foo1   : 'bar1',
+	 foo2   : 'bar,2'
+}
+
 /*************************************************************/
+
 const Tests_PuerState = {
 	result: null,
 
 	setup: () => {
-		Tests_PuerState.result = null
-		return new PuerState((prop, oldValue, newValue) => {
-			if (oldValue !== newValue) {
-				Tests_PuerState.result = prop + '_' + newValue
+		return new PuerState(
+			{foo1: 'bar1', foo2: 'bar,2'},
+			(prop, oldValue, newValue) => {
+				Tests_PuerState.result = [prop, oldValue, newValue]
 			}
-		})
+		)
 	},
 
 	testSquareBracketAccessors: (state) => {
 		 new PuerTest('State [] accessors', {
-			 '[] accessor set/get new key': [() => {
-                state['foo1'] = 'bar1'
-                return [state['foo1'], Tests_PuerState.result]
-            },  ['bar1', 'foo1_bar1']],
-            '[] accessor set/get existing key': [() => {
-                state['foo1'] = 'bar1a'
-                return [state['foo1'], Tests_PuerState.result]
-            },  ['bar1a', 'foo1_bar1a']],
+            '[] accessor get existing key': [() => {
+                return state['foo1']
+            },  'bar1'],
+            '[] accessor set existing key': [() => {
+                state['foo1'] = 'bar1b'
+                return state['foo1']
+            },  'bar1b'],
+            '[] accessor set/get new key': [() => {
+                state['foo3'] = 'bar3'
+                return state['foo3']
+            },  'bar3'],
             '[] accessor delete': [() => {
                 delete state['foo3']
                 return state['foo3']
@@ -31,20 +41,103 @@ const Tests_PuerState = {
         }).run()
 	},
 
-	testDotAccessors: (state) => {
-		 new PuerTest('State dot accessors', {
+	testDotAccessors: (props) => {
+		 new PuerTest('Props dot accessors', {
+            'dot accessor get existing key': [() => {
+                return props.foo1
+            },  'bar1'],
+            'dot accessor set existing key': [() => {
+                props.foo1 = 'bar1b'
+                return props.foo1
+            },  'bar1b'],
             'dot accessor set/get new key': [() => {
-                state.foo1 = 'bar1'
-                return [state.foo1, Tests_PuerState.result]
-            },  ['bar1', 'foo1_bar1']],
-			'dot accessor set/get existing key': [() => {
-                state.foo1 = 'bar1a'
-                return [state.foo1, Tests_PuerState.result]
-            },  ['bar1a', 'foo1_bar1a']],
+                props.foo3 = 'bar3'
+                return props.foo3
+            },  'bar3'],
             'dot accessor delete': [() => {
-                delete state.foo1
-                return state.foo1
+                delete props.foo3
+                return props.foo3
             },  undefined],
         }).run()
-	}
+	},
+
+	testIterators: (props) => {
+		new PuerTest('Iterators', {
+            'forEach': [() => {
+                let counter = 0
+                props.forEach(() => {
+                    counter ++
+                })
+                return counter
+            },  2],
+            'for ... of': [() => {
+                let counter = 0
+                for (const [_, __] of props) {
+                    counter ++
+                }
+                return counter
+            },  2],
+			 'for ... in': [() => {
+                let counter = 0
+                for (const _ in props) {
+                    counter ++
+                }
+                return counter
+            },  2]
+        }).run()
+	},
+
+	testOperators: (props) => {
+		new PuerTest('Operators', {
+			'in': [() => {
+				return ['foo1' in props, 'foo3' in props]
+			}, [true, false]]
+		}).run()
+	},
+
+	testAddedMethods: (props) => {
+		new PuerTest('Added methods', {
+            'props.toObject()': [() => {
+                return  props.toObject()
+            },  obj],
+            'props.toString()': [() => {
+                return  props.toString()
+            },  "{foo1: 'bar1', foo2: 'bar,2'}"]
+        }).run()
+	},
+
+	testOnChangeCallbacks: (state) => {
+		 new PuerTest('onChange callbacks', {
+            'set existing key': [() => {
+                state.foo1 = 'bar1b'
+                return Tests_PuerState.result
+            },  ['foo1', 'bar1', 'bar1b']],
+            'set new key': [() => {
+                state.foo3 = 'bar3'
+                return [state.foo3, Tests_PuerState.result]
+            },  ['bar3', ['foo1', 'bar1', 'bar1b']]],
+            'delete existing key': [() => {
+                delete state.foo3
+                return Tests_PuerState.result
+            },  ['foo3', 'bar3', undefined]],
+			 'delete undefined key': [() => {
+                delete state.foo3
+                return Tests_PuerState.result
+            },  ['foo3', undefined, undefined]],
+        }).run()
+	},
 }
+
+/*************************************************************/
+
+export default function testPuerState() {
+	const T_PP = Tests_PuerState
+
+	T_PP.testDotAccessors(T_PP.setup())
+	T_PP.testSquareBracketAccessors(T_PP.setup())
+	T_PP.testIterators(T_PP.setup())
+	T_PP.testOperators(T_PP.setup())
+	T_PP.testAddedMethods(T_PP.setup())
+	T_PP.testOnChangeCallbacks(T_PP.setup())
+}
+

@@ -36,7 +36,7 @@ class PuerState extends PuerObject {
 				const oldValue = target[prop]
 				target[prop]   = value
 
-				if (Array.isArray(target)) { isChange = true }
+				// if (Array.isArray(target)) { isChange = true }
 				if (isChange)              { onChange(prop, oldValue, value) }
 	
 				return true
