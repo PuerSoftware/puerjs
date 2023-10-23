@@ -12,6 +12,7 @@ class PuerApp extends PuerComponent {
 	__ready() {
 		super.__ready()
 		super.__update()
+		Puer.Router.start()
 		this.show() // Display after css has loaded
 	}
 
