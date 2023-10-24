@@ -58,16 +58,6 @@ class Puer {
 		}
 	}
 
-	static _defineText() {
-		let className = 'PuerTagText'
-		Object.defineProperty(PuerTextElement, 'name', { value: className })
-		PuerTextElement.prototype.chainName = 'text'
-
-		window['text'] = (text) => {
-			return new PuerTextElement(text)
-		}
-	}
-
 	static _toClassesArray(value) {
 		if (value) {
 			if (typeof value == 'function') {
@@ -90,6 +80,16 @@ class Puer {
 		cssClass      = Puer._toClassesArray(cssClass)
 		props.classes = props.classes.concat(cssClass)
 		return [props, children]
+	}
+
+	static _defineText() {
+		let className = 'PuerTagText'
+		Object.defineProperty(PuerTextElement, 'name', { value: className })
+		PuerTextElement.prototype.chainName = 'text'
+
+		window['text'] = (text) => {
+			return new PuerTextElement(text)
+		}
 	}
 
 	static _defineTag(name) {
