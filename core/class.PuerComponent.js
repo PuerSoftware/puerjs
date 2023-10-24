@@ -52,6 +52,18 @@ class PuerComponent extends BasePuerComponent {
 	render() {
 		return div()
 	}
+
+	on(name, f, options) {
+		Puer.Events.on(name, f.bind(this), options)
+	}
+
+	once(name, f, options) {
+		Puer.Events.once(name, f.bind(this), options)
+	}
+
+	off(name, f, options) {
+		Puer.Events.off(name, f.bind(this), options)
+	}
 }
 
 PuerComponent.prototype.chainName = 'PuerComponent'

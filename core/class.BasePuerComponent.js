@@ -328,6 +328,7 @@ class BasePuerComponent extends PuerObject {
 
 	append(component) {
 		component.__render()
+		component.__update()
 		component.parent = this
 		!this.isCustom && this.children.push(component)
 		this.element.appendChild(component.element)
@@ -335,6 +336,7 @@ class BasePuerComponent extends PuerObject {
 
 	prepend(component) {
 		component.__render()
+		component.__update()
 		component.parent = this
 		!this.isCustom && this.children.unshift(component)
 		if (this.element.firstChild) {

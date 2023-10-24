@@ -1,7 +1,7 @@
 import Puer      from './class.Puer.js'
 import PuerProxy from './class.PuerProxy.js'
 
-class PuerProps extends PuerProxy {
+class PuerProps extends PuerProxy {
 	constructor(props={}, onChange) {
 		return super(props, onChange)
 	}

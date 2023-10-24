@@ -24,7 +24,7 @@ class Puer {
 			.forEach(name => {
 				const typeName = name.toLowerCase()
 				Puer._classToType['[object ' + name + ']'] = typeName
-				Puer[`is${name}`] = (o) => { return Puer.type(o) === typeName }
+				// Puer[`is${name}`] = (o) => { return Puer.type(o) === typeName }
 			})
 		Puer.Error  = PuerError
 		Puer.Event  = {}
@@ -133,6 +133,21 @@ class Puer {
 
 	/*********************** PUBLIC ***********************/
 
+	static isFunction(o) { return Puer.type(o) === 'function' }
+	static isBoolean(o)  { return Puer.type(o) === 'boolean'  }
+	static isObject(o)   { return Puer.type(o) === 'object'   }
+	static isString(o)   { return Puer.type(o) === 'string'   }
+	static isNumber(o)   { return Puer.type(o) === 'number'   }
+	static isRegexp(o)   { return Puer.type(o) === 'regexp'   }
+	static isSymbol(o)   { return Puer.type(o) === 'symbol'   }
+	static isError(o)    { return Puer.type(o) === 'error'    }
+	static isArray(o)    { return Puer.type(o) === 'array'    }
+	static isDate(o)     { return Puer.type(o) === 'date'     }
+
+	static isPrimitive(o) {
+		return Puer.type(o) in ['string', 'number', 'boolean']
+	}
+
 	static application(cls, importUrl) {
 		Puer._init()
 		Puer._defineComponent(cls, importUrl)
@@ -145,9 +160,9 @@ class Puer {
 		return Puer.Router.define(getRoutes)
 	}
 
-	static defer(f, owner=window, args=undefined) {
+	static defer(f, owner=window) {
 		let alias = f
-		return () => {
+		return (...args) => {
 			Puer.deferred = true
 			if (owner.isCustom) {
 				Puer.owner = owner
