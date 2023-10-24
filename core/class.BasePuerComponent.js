@@ -295,7 +295,7 @@ class BasePuerComponent extends PuerObject {
 		return this.element.querySelector(selector)
 	}
 
-	getTextElement(element) {
+	getTextElement() {
 		return Array.from(this.element.childNodes).find(child => child.nodeType === 3)
 	}
 

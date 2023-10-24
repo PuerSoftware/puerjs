@@ -8,10 +8,7 @@ class Rows extends Box {
 	}
 
 	render() {
-		return div({
-			cssDisplay       : 'flex',
-			cssFlexDirection : 'column'
-		}, this.children)
+		return div(this.children)
 	}
 }
 

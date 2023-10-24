@@ -7,7 +7,7 @@ class Box extends PuerComponent {
 	}
 
 	render() {
-		return div({...this.props})
+		return div({...this.props}, this.children)
 	}
 }
 
