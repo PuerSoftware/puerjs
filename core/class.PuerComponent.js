@@ -7,7 +7,7 @@ class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
 		this.state    = new PuerState({}, this._onStateChange.bind(this))
-		this.cssClass = this._computeCssClass()
+		this.classes  = this._computeClasses()
 		this.isCustom = true
 
 		this._deferRenderers()
@@ -41,11 +41,10 @@ class PuerComponent extends BasePuerComponent {
 			})
 	}
 
-	_computeCssClass() {
-		const classes = this.getPropsInProto('chainName', 'PuerComponent')
+	_computeClasses() {
+		return this.getPropsInProto('chainName', 'PuerComponent')
 			.map(s => Puer.String.camelToKebab(s))
-		classes.push(this.props['class'])
-		return classes.join(' ')
+			.concat(this.classes)
 	}
 
 	/*********************** PUBLIC ***********************/

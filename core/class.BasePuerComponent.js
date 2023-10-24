@@ -18,7 +18,7 @@ class BasePuerComponent extends PuerObject {
 		this.props    = new PuerProps        (props,    this._onPropChange     .bind(this))
 
 		this.events   = this.props.extractEvents(this.owner)
-		this.cssClass = this.props['class']
+		this.classes  = this.props.pop('classes')
 
 		this.isCustom = false
 		this.isActive = true
@@ -37,7 +37,7 @@ class BasePuerComponent extends PuerObject {
 		this._setupRoot()
 		this._cascade('__render')
 		this._setupElement()
-		this.attr('class', this.cssClass)
+		this.addCssClass(... this.classes.map(c => Puer.dereference(c)))
 		this._addEvents()
 		this.onRender && this.onRender()
 	}
@@ -174,8 +174,6 @@ class BasePuerComponent extends PuerObject {
 				} else {
 					this.prepend(text(value))
 				}
-			} else if (prop === 'class') {
-				// do nothing, class is handled by this.cssClass
 			} else {
 				this.attr(prop, value)
 			}
@@ -301,12 +299,12 @@ class BasePuerComponent extends PuerObject {
 		return Array.from(this.element.childNodes).find(child => child.nodeType === 3)
 	}
 
-	addCssClass(name) {
-		this.element.classList.add(name)
+	addCssClass() {
+		this.element.classList.add(... arguments)
 	}
 
-	removeCssClass(name) {
-		this.element.classList.remove(name)
+	removeCssClass() {
+		this.element.classList.remove(... arguments)
 	}
 
 	css(prop, value) {

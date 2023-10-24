@@ -68,6 +68,30 @@ class Puer {
 		}
 	}
 
+	static _toClassesArray(value) {
+		if (value) {
+			if (typeof value == 'function') {
+				value = [value]
+			} else {
+				value = value.split(' ')
+			}
+		} else {
+			value = []
+		}
+		return value
+	}
+
+	static _getConstructorArgs(args) {
+		let [ cssClass,  props,    children ] = Puer.arganize(args,
+			[ 'string',  'object', 'array', ],
+			[ '',        {},       [],      ]
+		)
+		props.classes = Puer._toClassesArray(props.classes)
+		cssClass      = Puer._toClassesArray(cssClass)
+		props.classes = props.classes.concat(cssClass)
+		return [props, children]
+	}
+
 	static _defineTag(name) {
 		let className = 'PuerTag' + StringMethods.capitalize(name)
 		eval(
@@ -78,12 +102,7 @@ class Puer {
 		window[className].prototype.chainName = name
 
 		window[name] = (... args) => {
-			let [ cssClass,  props,    children ] = Puer.arganize(args,
-				[ 'string',  'object', 'array', ],
-				[ '',        {},       [],      ]
-			)
-			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
-			return new window[className](props, children)
+			return new window[className](... Puer._getConstructorArgs(args))
 		}
 	}
 
@@ -91,12 +110,7 @@ class Puer {
 		Puer._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
 		Puer[cls.name] = (... args) => {
-			let [ cssClass,  props,    children ] = Puer.arganize(args,
-				[ 'string',  'object', 'array', ],
-				[ '',        {},       [],      ]
-			)
-			if (cssClass)  { props['class'] = cssClass + (props['cssClass'] ? ' ' + props['cssClass'] : '')}
-			return new cls(props, children)
+			return new cls(... Puer._getConstructorArgs(args))
 		}
 	}
 
@@ -144,6 +158,13 @@ class Puer {
 			Puer.deferred = false
 			return result
 		}
+	}
+
+	static dereference(value) {
+		while (typeof value == 'function') {
+			value = value()
+		}
+		return value
 	}
 
 	static arganize(args, types, defaults, norm_args=[]) {

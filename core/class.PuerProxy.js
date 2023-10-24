@@ -88,11 +88,7 @@ class PuerProxy {
 	}
 
 	dereference(prop) {
-		let value = this.data[prop]
-		while (Puer.isFunction(value)) {
-			value = value()
-		}
-		return value
+		return Puer.dereference(this.data[prop])
 	}
 }
 

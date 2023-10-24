@@ -27,6 +27,7 @@ class PuerProps extends PuerProxy {
 			if (typeof value === 'function' && prop.startsWith('on')) {
 				events[prop.substring(2).toLowerCase()] = value.bind(owner)
 				delete this.data[prop]
+				delete this.ddata[prop]
 			}
 		}
 		return events
@@ -49,6 +50,13 @@ class PuerProps extends PuerProxy {
 				this.onChange(prop, this.ddata[prop], newValue)
 			}
 		}
+	}
+
+	pop(prop) {
+		const value = this.data[prop]
+		delete this.data[prop]
+		delete this.ddata[prop]
+		return value
 	}
 }
 
