@@ -4,10 +4,11 @@ import Puer, {PuerComponent} from '../../puer.js'
 class Box extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
+		this.props.default('tagName', 'div')
 	}
 
 	render() {
-		return div({...this.props}, this.children)
+		return window[this.props.tagName]({...this.props}, this.children)
 	}
 }
 

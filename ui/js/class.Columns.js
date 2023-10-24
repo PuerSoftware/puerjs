@@ -8,7 +8,7 @@ class Columns extends Box {
 	}
 
 	render() {
-		return div(this.children)
+		return super.render()
 	}
 }
 
