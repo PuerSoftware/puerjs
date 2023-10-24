@@ -5,6 +5,7 @@ import Link      from './js/class.Link.js'
 import Box       from './js/class.Box.js'
 import Columns   from './js/class.Columns.js'
 import Rows      from './js/class.Rows.js'
+import Align     from './js/class.Align.js'
 
 
 export {
@@ -14,5 +15,6 @@ export {
 	Link,
 	Box,
 	Columns,
-	Rows
+	Rows,
+	Align
 }
