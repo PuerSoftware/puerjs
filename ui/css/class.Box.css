@@ -1,5 +1,12 @@
 .box {
-    border   : 1px solid #000;
-    display  : flex;
-    overflow : hidden;
+    border       : 1px dashed #999;
+    border-width : 1px 1px 0 0;
+    display      : flex;
+    overflow     : hidden;
+    margin       : -1px -1px 0 0;
+    padding      : 0;
+    color        : #999;
+}
+.box.align {
+    border-width: 1px;
 }
