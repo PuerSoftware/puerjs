@@ -64,6 +64,10 @@ class PuerComponent extends BasePuerComponent {
 	off(name, f, options) {
 		Puer.Events.off(name, f.bind(this), options)
 	}
+
+	trigger(name, data) {
+		Puer.Events.trigger(name, data)
+	}
 }
 
 PuerComponent.prototype.chainName = 'PuerComponent'
