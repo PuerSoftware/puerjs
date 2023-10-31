@@ -8,7 +8,7 @@ from flask import Flask, Response, request, send_file, abort, jsonify
 app      = Flask(__name__)
 DEBUG    = True
 HOST     = '127.0.0.1'
-PORT     = 8000
+PORT     = 8001
 BASE_DIR = os.path.dirname(os.getcwd())
 
 print('   BASE_DIR', BASE_DIR)

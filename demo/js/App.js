@@ -7,7 +7,6 @@ import ComponentPage   from './components/class.ComponentsPage.js'
 import FormPage        from './components/class.FormPage.js'
 import RoutingPage     from './components/class.RoutingPage.js'
 
-
 Puer.application(
 	class App extends PuerApp {
 		render() {
