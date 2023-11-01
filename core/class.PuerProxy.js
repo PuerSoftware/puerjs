@@ -18,8 +18,9 @@ class PuerProxy {
 				if (prop === 'toString') {
 					return target[prop]
 				}
+
 				if (prop in target.data) {
-					if (Puer.deferred && Puer.isPrimitive(target.data[prop])) {
+					if (Puer.deferred && Puer.isPrimitive(target.data[prop])) { //
 						let getterFunction = () => target.data[prop]
 						getterFunction.toString = () => {
 							return target.dereference(prop)

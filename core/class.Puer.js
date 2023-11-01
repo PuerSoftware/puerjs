@@ -145,7 +145,7 @@ class Puer {
 	static isDate(o)     { return Puer.type(o) === 'date'     }
 
 	static isPrimitive(o) {
-		return Puer.type(o) in ['string', 'number', 'boolean']
+		return ['string', 'number', 'boolean'].includes(Puer.type(o))
 	}
 
 	static application(cls, importUrl) {
