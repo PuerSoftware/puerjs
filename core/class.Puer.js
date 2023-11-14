@@ -19,6 +19,7 @@ class Puer {
 	/********************** PRIVATE **********************/
 
 	static _init() {
+		Puer._setTimezoneCookie()
 		Puer._classToType = {}
 		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
 			.forEach(name => {
@@ -29,6 +30,11 @@ class Puer {
 		Puer.Error  = PuerError
 		Puer.Event  = {}
 		Puer.Events = new PuerEvents()
+	}
+
+	static _setTimezoneCookie() {
+		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		document.cookie = 'timezone=' + timezone + ';path=/;max-age=31536000'; // one year
 	}
 
 	static _onCssLoad() {
