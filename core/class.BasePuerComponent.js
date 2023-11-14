@@ -32,6 +32,9 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	/********************** FRAMEWORK **********************/
+	
+	
+	
 
 	__render() {
 		this._setupRoot()
@@ -42,20 +45,19 @@ class BasePuerComponent extends PuerObject {
 		this.onRender && this.onRender()
 	}
 
-	__route(path, level=0) {
+	__route(path) {
 		const route = this.props.route
 		if (route) {
-			// console.log('route', route)
-			if (route == path[level]) {
-				// console.log('match', this.className)
+			if (path[route]) {
+				console.log(this.className, 'activate')
 				this.activate()
-				this._cascade('__route', [path, level + 1])
+				this._cascade('__route', [path[route]])
 			} else {
+				console.log(this.className, 'disable')
 				this.deactivate()
 			}
-		} else {
-			this._cascade('__route', [path, level])
 		}
+		this._cascade('__route', [path])
 		this.onRoute && this.onRoute()
 	}
 
@@ -153,6 +155,19 @@ class BasePuerComponent extends PuerObject {
 
 
 	/*********************** PRIVATE ***********************/
+
+	_getSubRoute() {
+		let route = ''
+		if (this.props.route && this.isActive) {
+			route += this._cascade('_getSubRoute', [])
+			route = this.props.route + route
+		}
+		return route
+	}
+
+	_getRoute() {
+
+	}
 
 	_onChildrenChange() {
 		console.log(`${this.className}._onChildrenChange`)
