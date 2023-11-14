@@ -65,11 +65,25 @@ class PuerComponent extends BasePuerComponent {
 		Puer.Events.off(name, f.bind(this), options)
 	}
 
-	trigger(name, data) {
-		Puer.Events.trigger(name, data)
+	trigger(name, data, direction=Puer.Events.DIRECTION_NONE) {
+		switch (direction) {
+			case Puer.Events.DIRECTION_UP:
+				break;
+			case Puer.Events.DIRECTION_DOWN:
+				break;
+			default:
+				Puer.Events.trigger(name, data)
 	}
 }
 
 PuerComponent.prototype.chainName = 'PuerComponent'
 
 export default PuerComponent
+
+
+
+
+
+
+
+

@@ -1,8 +1,29 @@
 import Puer from './class.Puer.js'
 
 
+class PuerCustomEvent extends CustomEvent {
+    constructor(type, eventInitDict) {
+        super(type, eventInitDict)
+        this._propagationStopped = false
+    }
+
+    stopPropagation() {
+        super.stopPropagation()
+        this._propagationStopped = true
+    }
+
+    isPropagationStopped() {
+        return this._propagationStopped
+    }
+}
+
+
 class PuerEvents extends EventTarget {
 	static instance = null
+
+	static DIRECTION_UP   = 'bubble'
+	static DIRECTION_DOWN = 'cascade'
+	static DIRECTION_NONE = 'none'
 
 	constructor() {
 		if (!PuerEvents.instance) {
@@ -15,6 +36,9 @@ class PuerEvents extends EventTarget {
 			PuerEvents.instance    = this
 			Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
 		}
+		this.DIRECTION_UP   = PuerEvents.DIRECTION_UP
+		this.DIRECTION_DOWN = PuerEvents.DIRECTION_DOWN
+		this.DIRECTION_NONE = PuerEvents.DIRECTION_NONE
 		return PuerEvents.instance
 	}
 
@@ -70,7 +94,7 @@ class PuerEvents extends EventTarget {
 	}
 
 	on(name, f, once=false) {
-		let _f = (e) => { return f(e.type, e.detail) }
+		let _f = (e) => { return f(e.type, e.detail, e) }
 		this._listenerMap.set(f, _f)
 		this.addEventListener(name, _f, {once: once})
 	}
@@ -81,7 +105,7 @@ class PuerEvents extends EventTarget {
 	}
 
 	trigger(name, data) {
-		this.dispatchEvent(new CustomEvent(name, { detail: data }))
+		this.dispatchEvent(new PuerCustomEvent(name, { detail: data }))
 	}
 
 	send(name, data) {
