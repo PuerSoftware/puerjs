@@ -19,7 +19,7 @@ class Puer {
 	/********************** PRIVATE **********************/
 
 	static _init() {
-		Puer._setTimezoneCookie() // haha
+		Puer._setTimezoneCookie()
 		Puer._classToType = {}
 		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
 			.forEach(name => {
