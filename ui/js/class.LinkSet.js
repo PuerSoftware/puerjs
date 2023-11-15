@@ -1,14 +1,10 @@
 import Puer, {PuerComponent} from '../../puer.js'
 
 
-class Tabs extends PuerComponent {
+class LinkSet extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
 		// this.props.require('path', this)
-	}
-
-	navigate() {
-		this.route(this.props.path, this.props.relative)
 	}
 
 	render() {
@@ -21,5 +17,5 @@ class Tabs extends PuerComponent {
 	}
 }
 
-Puer.define(Tabs, import.meta.url)
-export default Tabs
+Puer.define(LinkSet, import.meta.url)
+export default LinkSet

@@ -8,7 +8,11 @@ class Link extends PuerComponent {
 	}
 
 	navigate() {
+		console.log('NAVIGATE')
 		this.route(this.props.path)
+		if (this.props.f) {
+			this.props.callback(this)
+		}
 	}
 
 	render() {
