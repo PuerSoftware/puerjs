@@ -33,18 +33,10 @@ class PuerProps extends PuerProxy {
 		return events
 	}
 
-	dereference(prop) {
-		let value = this.data[prop]
-		while (Puer.isFunction(value) && !prop.startsWith('on')) {
-			value = value()
-		}
-		return value
-	}
-
 	touch() {
 		let counter = 0
 		for (const prop in this.data) {
-			const newValue = this.dereference(prop)
+			const newValue = Puer.dereference(this.data[prop])
 			if (newValue !== this.ddata[prop]) {
 				counter ++
 				this.onChange(prop, this.ddata[prop], newValue)

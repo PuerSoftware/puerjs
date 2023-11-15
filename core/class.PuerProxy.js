@@ -1,3 +1,4 @@
+import Puer from './class.Puer.js'
 
 
 class PuerProxy {
@@ -20,14 +21,9 @@ class PuerProxy {
 				}
 
 				if (prop in target.data) {
-					if (Puer.deferred && Puer.isPrimitive(target.data[prop])) { //
-						let getterFunction = () => target.data[prop]
-						getterFunction.toString = () => {
-							return target.dereference(prop)
-						}
-						return getterFunction
+					if (Puer.deferred && Puer.isPrimitive(target.data[prop])) {
+						return Puer.reference(target.data, prop)
 					} else {
-
 						return target.data[prop]
 					}
 				} else if (prop in target) {
@@ -39,7 +35,7 @@ class PuerProxy {
 			set: (target, prop, value) => {
 				const oldValue = target.data[prop]
 				target.data[prop]  = value
-				target.ddata[prop] = target.dereference(value)
+				target.ddata[prop] = Puer.dereference(value)
 				target.onChange(prop, oldValue, value)
 				return true
 			},
@@ -66,7 +62,7 @@ class PuerProxy {
 		}, handlerExtension)
 
 		for (const prop in this.data) {
-			this.ddata[prop] = this.dereference(prop)
+			this.ddata[prop] = Puer.dereference(this.data[prop])
 		}
 
 		return new Proxy(this, handler)
@@ -87,10 +83,6 @@ class PuerProxy {
 			.split('","').join('", "')
 			.replace(/"([^"]+)":/g, '$1: ')
 			.split('"').join("'")
-	}
-
-	dereference(prop) {
-		return Puer.dereference(this.data[prop])
 	}
 }
 

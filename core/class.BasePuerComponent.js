@@ -185,7 +185,7 @@ class BasePuerComponent extends PuerObject {
 
 	_applyProps() {
 		for (let [prop, value] of this.props) {
-			value = this.props.dereference(prop)
+			value = Puer.dereference(value)
 			if (prop.startsWith('css')) {
 				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
 				this.css(cssProp, value)

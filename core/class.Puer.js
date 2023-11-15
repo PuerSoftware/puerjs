@@ -180,9 +180,18 @@ class Puer {
 			return result
 		}
 	}
+	
+	static reference(o, s) {
+		let f = () => o[s]
+		f.toString = () => {
+			return Puer.dereference(o[s])
+		}
+		f.isReference = true
+		return f
+	}
 
 	static dereference(value) {
-		while (typeof value == 'function') {
+		while (Puer.isFunction(value) && value.isReference) {
 			value = value()
 		}
 		return value
