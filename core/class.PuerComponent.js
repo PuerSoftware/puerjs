@@ -66,6 +66,7 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	trigger(name, data) {
+		data.targetComponent = this
 		Puer.Events.trigger(name, data)
 	}
 }
