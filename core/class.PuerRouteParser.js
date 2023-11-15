@@ -38,11 +38,15 @@ class PuerRouteParser {
 		}
 		this.s = s
 		this.n = 0
-		this.o = {}
+		this.a = []
 
-		this.stack     = []
-		this.component = this.o
-		this.indent    = 0
+		this.components = this.a
+		this.component  = null
+		this.indent     = 0
+	}
+
+	_error(s) {
+		throw Error(s)
 	}
 
 	/********************** GETTER ***********************/
@@ -66,25 +70,20 @@ class PuerRouteParser {
 		return false
 	}
 
-	_parseSbOpen() {
-		return this._parseChar('[')
+	_parseSpace() {
+		while (this.c == ' ') {
+			this._next()
+		}
+		return true
 	}
 
-	_parseSbClose() {
-		return this._parseChar(']')
-	}
-
-	_parseCbOpen() {
-		return this._parseChar('{')
-	}
-
-	_parseCbClose() {
-		return this._parseChar('}')
-	}
-
-	_parseDot() {
-		return this._parseChar('.')
-	}
+	_parseSbOpen  () { return this._parseChar('[') }
+	_parseSbClose () { return this._parseChar(']') }
+	_parseCbOpen  () { return this._parseChar('{') }
+	_parseCbClose () { return this._parseChar('}') }
+	_parseComma   () { return this._parseChar(',') }
+	_parseColon   () { return this._parseChar(':') }
+	_parseStar    () { return this._parseChar('*') }
 
 	_parseProps() {
 		if (this._parseCbOpen()) {
@@ -98,31 +97,68 @@ class PuerRouteParser {
 		const component     = this.component
 
 		if (componentName) {
-			this.component[componentName] = {}
-			this.component = this.component[componentName]
-			this._parseProps()
-			this._parseComponents()
+			if (this._parseColon()) {
+				const componentValue = this._getAlpha()
+				if (componentValue) {
+					this.component = {
+						name       : componentName,
+						value      : componentValue,
+						components : []
+					}
+					let existingIndex = this.components.findIndex(o => o.name === componentName)
+					if (existingIndex != -1) {
+						this.components[existingIndex] = this.component
+					} else {
+						this.components.push(this.component)
+					}
+					if (this._parseSbOpen()) {
+						if (this._parseComponents()) {
+							if (!this._parseSbClose()) {
+								this._error('Missing "]" at the end of components clause')
+							}
+						}
+					}
+					this._parseProps()
+				}
+			}
 			this.component = component
 			return true
 		}
 		return false
 	}
 
-	_parseComponents() {
-		if (this._parseSbOpen()) {
-			while (this._parseComponent() && this._parseDot()) {
-				continue
-			}
-			if (this._parseSbClose()) {
-				return true
-			} else {
-				throw Error('Missing "]" at the end of components clause')
-			}
-		} else if (this._parseComponent()) {
-
+	_expectNextComponent() {
+		this._parseSpace()
+		if (this._parseComma()) {
+			this._parseSpace()
 			return true
 		}
+		this._parseSpace()
 		return false
+	}
+
+	_parseComponents() {
+		let   result     = false
+		const components = this.components
+		this.components  = this.component ? this.component.components : this.a
+		this._parseSpace()
+		while (true) {
+			if (this._parseComponent()) {
+				result = true
+				if (!this._expectNextComponent()) {
+					break
+				}
+			} else if (this._parseStar()) {
+				result = true
+				this.components.push('*')
+				if (!this._expectNextComponent()) {
+					break
+				}
+			}
+		}
+		this._parseSpace()
+		this.components = components
+		return result
 	}
 
 	/********************** PUBLIC ***********************/
@@ -130,7 +166,8 @@ class PuerRouteParser {
 	parse(path) {
 		this._reset(path.toLowerCase())
 		this._parseComponents()
-		return this.o
+		console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
+		return this.a
 	}
 }
 

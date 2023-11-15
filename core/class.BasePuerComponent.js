@@ -32,9 +32,6 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	/********************** FRAMEWORK **********************/
-	
-	
-	
 
 	__render() {
 		this._setupRoot()
@@ -45,20 +42,30 @@ class BasePuerComponent extends PuerObject {
 		this.onRender && this.onRender()
 	}
 
-	__route(path) {
-		const route = this.props.route
-		if (route) {
-			if (path[route]) {
-				console.log(this.className, 'activate')
-				this.activate()
-				this._cascade('__route', [path[route]])
-			} else {
-				console.log(this.className, 'disable')
-				this.deactivate()
+	__route(paths) {
+		let hasMatch = false
+		if (this.props.route) {
+			const [routeName, routeValue] = this.props.route.split(':')
+
+			// console.log('__route', this.className, routeName, routeValue)
+			for (const path of paths) {
+				if (routeName == path.name) {
+					hasMatch = true
+					if (routeValue === path.value) {
+						console.log(this.className, routeName, routeValue, 'activate')
+						this.activate()
+						this._cascade('__route', [path.components])
+					} else {
+						console.log(this.className, 'deactivate')
+						this.deactivate()
+					}
+				}
 			}
 		}
-		this._cascade('__route', [path])
-		this.onRoute && this.onRoute()
+		if (!hasMatch) {
+			this._cascade('__route', [paths])
+			this.onRoute && this.onRoute()
+		}
 	}
 
 	__update() {
@@ -278,11 +285,15 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	route(path, relative=true) {
-		const route = this.props.route
-		if (route) {
+	route(path, relative=false) {
+		if (path.startsWith('*')) {
+			relative = true
+			path     = path.substring(1)
+		}
+		if (this.props.route) {
+			const [routeName, routeValue] = this.props.route.split(':')
 			if (relative) {
-				path = route + '/' + path
+				path = `${routeName}:${routeValue}[${path}]`
 			}
 		}
 		this.parent.route(path, relative)
