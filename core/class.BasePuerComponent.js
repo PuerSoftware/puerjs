@@ -52,11 +52,11 @@ class BasePuerComponent extends PuerObject {
 				if (routeName == path.name) {
 					hasMatch = true
 					if (routeValue === path.value) {
-						console.log(this.className, routeName, routeValue, 'activate')
+						// console.log(this.className, routeName, routeValue, 'activate')
 						this.activate()
 						this._cascade('__route', [path.components])
 					} else {
-						console.log(this.className, 'deactivate')
+						// console.log(this.className, 'deactivate')
 						this.deactivate()
 					}
 				}
@@ -354,6 +354,7 @@ class BasePuerComponent extends PuerObject {
 
 	append(component) {
 		component.__render()
+		component.__ready()
 		component.__update()
 		component.parent = this
 		!this.isCustom && this.children.push(component)
@@ -362,6 +363,7 @@ class BasePuerComponent extends PuerObject {
 
 	prepend(component) {
 		component.__render()
+		component.__ready()
 		component.__update()
 		component.parent = this
 		!this.isCustom && this.children.unshift(component)

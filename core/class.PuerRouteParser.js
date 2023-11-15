@@ -166,7 +166,7 @@ class PuerRouteParser {
 	parse(path) {
 		this._reset(path.toLowerCase())
 		this._parseComponents()
-		console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
+		// console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
 		return this.a
 	}
 }
