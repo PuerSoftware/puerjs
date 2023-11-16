@@ -14,11 +14,11 @@ Puer.application(
 				div('header', [
 					h2({text: 'PuerJS'}),
 					div([
-						Puer.Link({ label: 'Home',       path: 'index'     }),
-						Puer.Link({ label: 'Unit Tests', path: 'unit'      }),
-						Puer.Link({ label: 'Form',       path: 'form'      }),
-						Puer.Link({ label: 'Component',  path: 'component' }),
-						Puer.Link({ label: 'Routing',    path: 'routing'   }),
+						Puer.Link({ label: 'Home',       hash: 'index'     }),
+						Puer.Link({ label: 'Unit Tests', hash: 'unit'      }),
+						Puer.Link({ label: 'Form',       hash: 'form'      }),
+						Puer.Link({ label: 'Component',  hash: 'component' }),
+						Puer.Link({ label: 'Routing',    hash: 'routing'   }),
 					])
 				]),
 				Puer.IndexPage     ({ title: 'Home',           route: 'index'     }),

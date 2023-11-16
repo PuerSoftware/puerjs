@@ -11,7 +11,7 @@ class Request {
 				conf.body = JSON.stringify(data)
 			}
 		}
-		console.log('fetch', url, conf)
+		// console.log('fetch', url, conf)
 		return fetch(url, conf)
 	}
 

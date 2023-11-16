@@ -13,8 +13,8 @@ class RoutingPage extends PuerComponent{
 			div({cssDisplay: 'flex', cssFlexDirection: 'row'}, [
 				div({text: 'Green', route: 'green', cssBackgroundColor: 'green', cssFlex: 1}),
 				div({text: 'Blue',  route: 'blue',  cssBackgroundColor: 'blue',  cssFlex: 1}),
-				Puer.Link({label: 'Green', path: 'green'}),
-				Puer.Link({label: 'Blue',  path: 'blue'})
+				Puer.Link({label: 'Green', hash: 'green'}),
+				Puer.Link({label: 'Blue',  hash: 'blue'})
 			]),
 		])
 	}

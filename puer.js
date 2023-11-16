@@ -1,6 +1,5 @@
 import Puer from './core/class.Puer.js'
 
-
 (() => {
 	const tags = (
 		'text,a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,'    +

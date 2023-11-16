@@ -76,11 +76,11 @@ class PuerRouter {
 	/*********************** PUBLIC ***********************/
 
 	navigate(hash) {
-		console.log('Navigate:', hash)
+		// console.log('Navigate:', hash)
 		let path = this._decode(hash)
 		if (hash != this.initialHash) {
 			path = this._apply(path)
-			console.log('RESULT:', JSON.stringify(path, null, 4).split('"').join(''))
+			// console.log('RESULT:', JSON.stringify(path, null, 4).split('"').join(''))
 		}
 		hash = this._encode(path)
 		window.location.hash = '#' + hash
