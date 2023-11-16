@@ -14,19 +14,23 @@ Puer.application(
 				div('header', [
 					h2({text: 'PuerJS'}),
 					div([
-						Puer.Link({ label: 'Home',       hash: 'index'     }),
-						Puer.Link({ label: 'Unit Tests', hash: 'unit'      }),
-						Puer.Link({ label: 'Form',       hash: 'form'      }),
-						Puer.Link({ label: 'Component',  hash: 'component' }),
-						Puer.Link({ label: 'Routing',    hash: 'routing'   }),
+						Puer.Link({ label: 'Home',       hash: 'page:index'     }),
+						span({text: ' | '}),
+						Puer.Link({ label: 'Unit Tests', hash: 'page:unit'      }),
+						span({text: ' | '}),
+						Puer.Link({ label: 'Form',       hash: 'page:form'      }),
+						span({text: ' | '}),
+						Puer.Link({ label: 'Component',  hash: 'page:component' }),
+						span({text: ' | '}),
+						Puer.Link({ label: 'Routing',    hash: 'page:routing'   }),
 					])
 				]),
-				Puer.IndexPage     ({ title: 'Home',           route: 'index'     }),
-				Puer.UnitTestPage  ({ title: 'Unit Tests',     route: 'unit'      }),
-				Puer.FormPage      ({ title: 'Form Demo',      route: 'form'      }),
-				Puer.ComponentPage ({ title: 'Component Demo', route: 'component' }),
-				Puer.RoutingPage   ({ title: 'Routing Demo',   route: 'routing'   }),
+				Puer.IndexPage     ({ title: 'Home',           route: 'page:index'     }),
+				Puer.UnitTestPage  ({ title: 'Unit Tests',     route: 'page:unit'      }),
+				Puer.FormPage      ({ title: 'Form Demo',      route: 'page:form'      }),
+				Puer.ComponentPage ({ title: 'Component Demo', route: 'page:component' }),
+				Puer.RoutingPage   ({ title: 'Routing Demo',   route: 'page:routing'   }),
 			])
 		}
 	}, import.meta.url
-).Router.default('index')
+).Router.default('page:index')

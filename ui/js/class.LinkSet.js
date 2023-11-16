@@ -9,7 +9,7 @@ class LinkSet extends PuerComponent {
 	}
 
 	select(selected) {
-		console.log('links:', this.$.Link)
+		console.log('links:', this.$$.Link)
 		for (const link of this.$.Link) {
 			console.log('link', link)
 			link.removeCssClass('selected')
