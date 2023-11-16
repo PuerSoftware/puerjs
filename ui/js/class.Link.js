@@ -8,7 +8,6 @@ class Link extends PuerComponent {
 	}
 
 	navigate() {
-		console.log('NAVIGATE')
 		const linkSet = this.$$$.LinkSet[0]
 		if (linkSet) {
 			linkSet.select(this)
