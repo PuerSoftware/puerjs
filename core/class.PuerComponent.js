@@ -6,9 +6,10 @@ import PuerState         from './class.PuerState.js'
 class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.state    = new PuerState({}, this._onStateChange.bind(this))
-		this.classes  = this._computeClasses()
-		this.isCustom = true
+		this.state     = new PuerState({}, this._onStateChange.bind(this))
+		this.classes   = this._computeClasses()
+		this.isCustom  = true
+		this.listeners = {}
 
 		this._deferRenderers()
 	}
@@ -54,15 +55,20 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	on(name, f, options) {
-		Puer.Events.on(name, f.bind(this), options)
+		this.listeners[name] = (...args) => {
+			if (this.isActive()) {
+				f.bind(this)(...args)
+			}
+		}
+		Puer.Events.on(name, this.listeners[name], options)
 	}
 
 	once(name, f, options) {
 		Puer.Events.once(name, f.bind(this), options)
 	}
 
-	off(name, f, options) {
-		Puer.Events.off(name, f.bind(this), options)
+	off(name) {
+		this.listeners[name] && Puer.Events.off(name, this.listeners[name])
 	}
 
 	trigger(name, data) {

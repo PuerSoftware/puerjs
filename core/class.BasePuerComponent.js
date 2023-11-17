@@ -21,7 +21,7 @@ class BasePuerComponent extends PuerObject {
 		this.classes  = this.props.pop('classes')
 
 		this.isCustom = false
-		this.isActive = true
+		this._isActive = true
 
 		this.elementCopy       = null
 		this.parentElementCopy = null
@@ -46,18 +46,24 @@ class BasePuerComponent extends PuerObject {
 		let hasMatch = false
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
-
-			// console.log('__route', this.className, routeName, routeValue)
 			for (const path of paths) {
+
 				if (routeName == path.name) {
+
 					hasMatch = true
 					if (routeValue === path.value) {
-						// console.log(this.className, routeName, routeValue, 'activate')
-						this.activate()
+						if (this.onActivate) {
+							this.onActivate()
+						} else {
+							this.activate()
+						}
 						this._cascade('__route', [path.components])
 					} else {
-						// console.log(this.className, 'deactivate')
-						this.deactivate()
+						if (this.onDeactivate) {
+							this.onDeactivate()
+						} else {
+							this.deactivate()
+						}
 					}
 				}
 			}
@@ -65,28 +71,27 @@ class BasePuerComponent extends PuerObject {
 		if (!hasMatch) {
 			this.activate()
 			this._cascade('__route', [paths])
-			this.onRoute && this.onRoute()
 		}
 		this.onRoute && this.onRoute(Puer.Router.path)
 	}
 
 	// Activate non-route components
-	__activate() {
-		if (!this.props.route) {
-			this.isActive = true
-			this.onActivate && this.onActivate()
-			this._cascade('__activate', [])
-		}
-	}
+	// __activate() {
+	// 	if (!this.props.route) {
+	// 		this._isActive = true
+	// 		this.onActivate && this.onActivate()
+	// 		this._cascade('__activate', [])
+	// 	}
+	// }
 
-	__deactivate() {
-		this.isActive = false
-		this.onDeactivate && this.onDeactivate()
-		this._cascade('__deactivate', [])
-	}
+	// __deactivate() {
+	// 	this._isActive = false
+	// 	this.onDeactivate && this.onDeactivate()
+	// 	this._cascade('__deactivate', [])
+	// }
 
 	__update() {
-		if (this.isActive) {
+		if (this._isActive) {
 			this.props.touch()
 			this._cascade('__update')
 			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
@@ -182,7 +187,7 @@ class BasePuerComponent extends PuerObject {
 
 	_getSubRoute() {
 		let route = ''
-		if (this.props.route && this.isActive) {
+		if (this.props.route && this._isActive) {
 			route += this._cascade('_getSubRoute', [])
 			route = this.props.route + route
 		}
@@ -273,37 +278,33 @@ class BasePuerComponent extends PuerObject {
 		return `${this.className}(${this.props.toString()})`
 	}
 
+	/********************* PREDICATES *********************/
+
+	isActive() {
+		if (!this._isActive) {
+			return false
+		}
+		return this.parent ? this.parent.isActive() : true
+	}
+
 	/********************* DIRECTIVES *********************/
 
 	activate() {
-		if (!this.isActive && this.elementCopy) {
+		if (!this._isActive && this.elementCopy) {
 			this.element = this.elementCopy
 			this.parentElementCopy.appendChild(this.element)
 			this.elementCopy = null
-			this.isActive    = true
-			this.onActivate && this.onActivate()
-			this.__activate()
-			// console.log(this.className, 'activated')
-		} else {
-			// console.log(this.className, 'already active')
+			this._isActive    = true
 		}
-
 	}
 
 	deactivate() {
-		if (this.isActive) {
+		if (this._isActive) {
 			this.elementCopy       = this.element
 			this.parentElementCopy = this.element.parentNode
-
 			this.element.remove()
-
 			this.element  = null
-			this.isActive = false
-			this.onDeactivate && this.onDeactivate()
-			this.__deactivate()
-			// console.log(this.className, 'deactivated')
-		} else {
-			// console.log(this.className, 'already inactive')
+			this._isActive = false
 		}
 	}
 
