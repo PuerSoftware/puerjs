@@ -13,7 +13,6 @@ class LinkSet extends PuerComponent {
 		}
 		this.selected = selected
 		this.selected.addCssClass('selected')
-		console.log('SELECTED', this.selected)
 	}
 
 	render() {

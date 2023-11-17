@@ -20,7 +20,7 @@ class BasePuerComponent extends PuerObject {
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes')
 
-		this.isCustom = false
+		this.isCustom  = false
 		this._isActive = true
 
 		this.elementCopy       = null
@@ -72,23 +72,12 @@ class BasePuerComponent extends PuerObject {
 			this.activate()
 			this._cascade('__route', [paths])
 		}
-		this.onRoute && this.onRoute(Puer.Router.path)
 	}
 
-	// Activate non-route components
-	// __activate() {
-	// 	if (!this.props.route) {
-	// 		this._isActive = true
-	// 		this.onActivate && this.onActivate()
-	// 		this._cascade('__activate', [])
-	// 	}
-	// }
-
-	// __deactivate() {
-	// 	this._isActive = false
-	// 	this.onDeactivate && this.onDeactivate()
-	// 	this._cascade('__deactivate', [])
-	// }
+	__routeChange() {
+		this.onRoute && this.onRoute(Puer.Router.path)
+		this._cascade('__routeChange', [])
+	}
 
 	__update() {
 		if (this._isActive) {
@@ -281,6 +270,7 @@ class BasePuerComponent extends PuerObject {
 	/********************* PREDICATES *********************/
 
 	isActive() {
+		// this.props.route && console.log(this.className, this._isActive, this.props.route)
 		if (!this._isActive) {
 			return false
 		}

@@ -72,6 +72,7 @@ class PuerRouter {
 		this.path = path
 		// console.log(Puer.String.titleDivider(path.join('/'), 50, '-'))
 		this.app.__route(path)
+		this.app.__routeChange()
 	}
 	/*********************** PUBLIC ***********************/
 

@@ -5,6 +5,7 @@ import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerTextElement from './class.PuerTextElement.js'
 import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
+import DateMethods     from '../library/class.DateMethods.js'
 
 class Puer {
 	static app
@@ -220,6 +221,7 @@ class Puer {
 
 Puer.String = StringMethods
 Puer.Object = ObjectMethods
+Puer.Date   = DateMethods 
 
 window.Puer = Puer
 export default Puer
