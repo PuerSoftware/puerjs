@@ -23,7 +23,7 @@ class PuerApp extends PuerComponent {
 	}
 
 	route(path) {
-		console.log('App.route', path)
+		// console.log('App.route', path)
 		Puer.Router.navigate(path)
 	}
 

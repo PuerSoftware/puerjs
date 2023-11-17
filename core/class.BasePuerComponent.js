@@ -63,9 +63,26 @@ class BasePuerComponent extends PuerObject {
 			}
 		}
 		if (!hasMatch) {
+			this.activate()
 			this._cascade('__route', [paths])
 			this.onRoute && this.onRoute()
 		}
+		this.onRoute && this.onRoute(Puer.Router.path)
+	}
+
+	// Activate non-route components
+	__activate() {
+		if (!this.props.route) {
+			this.isActive = true
+			this.onActivate && this.onActivate()
+			this._cascade('__activate', [])
+		}
+	}
+
+	__deactivate() {
+		this.isActive = false
+		this.onDeactivate && this.onDeactivate()
+		this._cascade('__deactivate', [])
 	}
 
 	__update() {
@@ -265,10 +282,12 @@ class BasePuerComponent extends PuerObject {
 			this.elementCopy = null
 			this.isActive    = true
 			this.onActivate && this.onActivate()
+			this.__activate()
 			// console.log(this.className, 'activated')
 		} else {
 			// console.log(this.className, 'already active')
 		}
+
 	}
 
 	deactivate() {
@@ -281,6 +300,7 @@ class BasePuerComponent extends PuerObject {
 			this.element  = null
 			this.isActive = false
 			this.onDeactivate && this.onDeactivate()
+			this.__deactivate()
 			// console.log(this.className, 'deactivated')
 		} else {
 			// console.log(this.className, 'already inactive')
