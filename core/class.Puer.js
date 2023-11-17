@@ -155,6 +155,10 @@ class Puer {
 		return ['string', 'number', 'boolean'].includes(Puer.type(o))
 	}
 
+	static isDeferrable(o) {
+		return ['string', 'number', 'boolean', 'object', 'array'].includes(Puer.type(o))
+	}
+
 	static application(cls, importUrl) {
 		Puer._init()
 		Puer._defineComponent(cls, importUrl)
