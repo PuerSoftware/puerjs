@@ -46,6 +46,12 @@ class StringMethods {
         }
         return hex
     }
+
+    static decodeHtmlEntities(s) {
+        const el = document.createElement('div')
+        el.innerHTML = s
+        return el.textContent
+    }
 }
 
 export default StringMethods

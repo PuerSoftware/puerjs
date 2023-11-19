@@ -95,6 +95,9 @@ class Puer {
 		PuerTextElement.prototype.chainName = 'text'
 
 		window['text'] = (text) => {
+			console.log('BEFORE', text)
+			text = Puer.String.decodeHtmlEntities(text)
+			console.log('After', text)
 			return new PuerTextElement(text)
 		}
 	}
