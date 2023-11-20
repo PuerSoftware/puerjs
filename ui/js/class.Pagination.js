@@ -8,22 +8,20 @@ class Pagination extends PuerComponent {
 		// this.props.require('hash', this)
 	}
 
-	navigate(page) {
+	setPage(page) {
 		this.state.page = page
 		this.trigger(Puer.Event.PAGINATE, {page: this.state.page})
 	}
 
 	prev(event) {
 		if (this.state.page > 1) {
-			this.state.page -= 1
-			this.trigger(Puer.Event.PAGINATE, {page: this.state.page})
+			this.setPage(this.state.page - 1)
 		}
 	}
 
 	next(event) {
 		if (this.state.page < this.props.pages) {
-			this.state.page += 1
-			this.trigger(Puer.Event.PAGINATE, {page: this.state.page})
+			this.setPage(this.state.page + 1)
 		}
 	}
 
