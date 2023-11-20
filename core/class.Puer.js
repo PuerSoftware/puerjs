@@ -30,7 +30,7 @@ class Puer {
 			})
 		Puer.Error  = PuerError
 		Puer.Event  = {}
-		Puer.Events = new PuerEvents()
+		Puer.Events = new PuerEvents(Puer)
 	}
 
 	static _setTimezoneCookie() {
@@ -83,6 +83,9 @@ class Puer {
 			[ 'string',  'object', 'array', ],
 			[ '',        {},       [],      ]
 		)
+		if (props.text && Puer.isString(props.text)) {
+			props.text = Puer.String.decodeHtmlEntities(props.text)
+		}
 		props.classes = Puer._toClassesArray(props.classes)
 		cssClass      = Puer._toClassesArray(cssClass)
 		props.classes = props.classes.concat(cssClass)
@@ -95,9 +98,6 @@ class Puer {
 		PuerTextElement.prototype.chainName = 'text'
 
 		window['text'] = (text) => {
-			console.log('BEFORE', text)
-			text = Puer.String.decodeHtmlEntities(text)
-			console.log('After', text)
 			return new PuerTextElement(text)
 		}
 	}
@@ -163,7 +163,6 @@ class Puer {
 	}
 
 	static application(cls, importUrl) {
-		Puer._init()
 		Puer._defineComponent(cls, importUrl)
 		Puer.app    = Puer[cls.name]()
 		Puer.Router = new PuerRouter(Puer.app)
@@ -229,6 +228,7 @@ class Puer {
 Puer.String = StringMethods
 Puer.Object = ObjectMethods
 Puer.Date   = DateMethods 
+Puer._init()
 
 window.Puer = Puer
 export default Puer

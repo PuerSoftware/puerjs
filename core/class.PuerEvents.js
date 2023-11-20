@@ -4,7 +4,7 @@ import Puer from './class.Puer.js'
 class PuerEvents extends EventTarget {
 	static instance = null
 
-	constructor() {
+	constructor(puer) {
 		if (!PuerEvents.instance) {
 			super()
 			this.socket            = null
@@ -13,7 +13,8 @@ class PuerEvents extends EventTarget {
 			this.is_connected      = false
 			this._listenerMap      = new WeakMap()
 			PuerEvents.instance    = this
-			Puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
+			puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
+
 		}
 		return PuerEvents.instance
 	}
@@ -70,7 +71,7 @@ class PuerEvents extends EventTarget {
 	}
 
 	on(name, f, once=false) {
-		let _f = (e) => { return f(e.type, e.detail) }
+		let _f = (e) => { return f(e) }
 		this._listenerMap.set(f, _f)
 		this.addEventListener(name, _f, {once: once})
 	}

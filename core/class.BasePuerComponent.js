@@ -27,7 +27,7 @@ class BasePuerComponent extends PuerObject {
 		this.parentElementCopy = null
 
 		this._listenerMap = new WeakMap()
-
+		
 		// this._setupEventHandlers()
 	}
 
