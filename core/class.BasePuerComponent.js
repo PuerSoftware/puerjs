@@ -401,8 +401,8 @@ class BasePuerComponent extends PuerObject {
 		this.css({display: 'none'})
 	}
 
-	show() {
-		this.css({display: 'block'}) // TODO: restore previous display value
+	show(display='block') {
+		this.css({display: display}) // TODO: restore previous display value
 	}
 }
 

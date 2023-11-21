@@ -8,6 +8,7 @@ import Columns    from './js/class.Columns.js'
 import Rows       from './js/class.Rows.js'
 import Align      from './js/class.Align.js'
 import Pagination from './js/class.Pagination.js'
+import Modal      from './js/class.Modal.js'
 
 export {
 	Form,
@@ -19,5 +20,6 @@ export {
 	Columns,
 	Rows,
 	Align,
-	Pagination
+	Pagination,
+	Modal
 }
