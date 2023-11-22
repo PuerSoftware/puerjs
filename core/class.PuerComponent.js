@@ -28,7 +28,7 @@ class PuerComponent extends BasePuerComponent {
 
 	_onPropChange(prop, oldValue, newValue) {
 		this.root && this.root.__update()
-		
+
 		const propCamelized = Puer.String.camelToUpper(prop)
 		const methodName    = `on${propCamelized}Change`
 

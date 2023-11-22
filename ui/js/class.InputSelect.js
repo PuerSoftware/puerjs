@@ -10,22 +10,19 @@ class InputSelect extends FormInput {
 		this.dataSet = new Puer.DataSet(Puer.DataSet.CACHE_NAME)
 	}
 
-	_onChange() {
-		super._onChange()
-		this.props.onChange && this.props.onChange()
+	onUrlChange(value) {
+		value && this.dataSet.load(value, this.onData.bind(this))
 	}
 
-	onUrlChange(value) {
-		console.log('onUrlChange', this.className)
-		this.dataSet.load(value, this.onData.bind(this))
-		console.log('onDataSourceChange', value)
+	onSelectedChange(value) {
+		this.select()
 	}
 
 	onData(data) {
 		if (this.props.filter) {
 			data = this.dataSet.filter(this.props.filter)
 		}
-		console.log(data)
+		this.removeChildren()
 		data.forEach((item) => {
 			this.addOption(item.value, item.text, this.props.selected && this.props.selected == item.value)
 		})
@@ -35,11 +32,15 @@ class InputSelect extends FormInput {
 		this.append(option({value: value, text: text, selected: selected}))
 	}
 
+	select() {
+		this.$$.select[0].element.dispatchEvent(new Event('change'))
+	}
+
 	render() {
 		return select({
             ... this.props,
-            onchange: this._onChange,
-        })
+            onChange: this._onChange
+		})
 	}
 }
 

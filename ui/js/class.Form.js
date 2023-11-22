@@ -14,6 +14,15 @@ class Form extends PuerComponent {
 		this.state.error = ''
 	}
 
+	getInput(name) {
+		let input = null
+		this.$$.FormInput.forEach(ipt => {
+			if (ipt.props.name === name) {
+				input = ipt
+			} 
+		})
+		return input
+	}
 	// onUpdate() {
 	// 	this.inputs = this.$$.FormInput
 	// 	this.fields = this.$$.FormField

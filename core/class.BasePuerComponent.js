@@ -386,7 +386,7 @@ class BasePuerComponent extends PuerObject {
 			this.element.appendChild(component.element)
 		}
 	}
-
+	
 	remove() {
 		this.element.remove()
 		if (this.parent.isCustom) {
@@ -394,6 +394,18 @@ class BasePuerComponent extends PuerObject {
 		} else {
 			const index = this.parent.children.indexOf(this)
 			delete this.parent.children[index]
+		}
+	}
+
+	removeChildren() {
+		if (!this.isCustom) {
+			if (this.children) {
+				this.children.forEach(child => {
+					child.remove()
+				})
+			}				
+		} else {
+			this.element.innerHTML = ''
 		}
 	}
 

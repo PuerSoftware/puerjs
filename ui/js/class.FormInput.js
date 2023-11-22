@@ -12,12 +12,14 @@ class FormInput extends PuerComponent {
 
     _onChange(event) {
         this.validate()
-        this.value = this.element.value
-        console.log(this.value)
+		const newValue = this.element.value 
+        if (this.value === newValue ) {
+			this.value = ''
+		}
+		this.value = newValue
     }
     
     validate() {
-        console.log('FormInput.onChange()', this.props.name)
         this.$$$.Form[0].validate(this.props.name)
     }
 
