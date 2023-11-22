@@ -2,50 +2,46 @@ import Request from './class.Request.js'
 
 
 class DataSet {
-	constructor(cacheName=null) {
-		this.cacheName = cacheName
-		this.data      = {}
+	constructor() {
+		this.data = {}
 	}
 
-	_setData(data) {
+	_setData(data, callback) {
 		if (Array.isArray(data)) {
 			this.data = data
-		} else if (myValue !== null && typeof myValue === 'object') {
+		} else if (data !== null && typeof data === 'object') {
 			this.data = [data]
 		} else {
 			throw 'DataSet: incompatible data type'
 		}
+		callback && callback(this.data)
 	}
 
 	_load(url, callback, useCache) {
 		const _this = this
 		if (useCache) {
-			if (window.caches) {
-				caches.open(this.cacheName).then((cache) => {
-					cache.match(url).then((data) => {
-						if (data) {
-							_this.data = data
-						} else {
-							Request.get(url, (data) => {
-								cache.put(url, Object.assign({}, data))
-								_this._setData(data)
-								callback && callback(_this)
-							})
-						}
-					})
+			let data = localStorage.getItem(url)
+			if (data) {
+				console.log('Loading from cache', url)
+				_this._setData(JSON.parse(data), callback)
+			} else {
+				console.log('Loading from url 1', url)
+				Request.get(url, (data) => {
+					localStorage.setItem(url, JSON.stringify(data))
+					_this._setData(data, callback)
 				})
 			}
 		} else {
+			console.log('Loading from url 2', url)
 			Request.get(url, (data) => {
-				_this._setData(data)
-				callback && callback(_this)
+				_this._setData(data, callback)
 			})
 		}
 	}
 
 	load(url, callback=null, useCache=true) {
 		if (typeof url === 'string') {
-			this._load(url, useCache, callback)
+			this._load(url, callback, useCache)
 		} else {
 			this.data = url
 		}

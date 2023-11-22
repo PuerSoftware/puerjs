@@ -165,11 +165,10 @@ class Puer {
 		return ['string', 'number', 'boolean', 'object', 'array'].includes(Puer.type(o))
 	}
 
-	static application(applicationName, cls, importUrl) {
+	static application(cls, importUrl) {
 		Puer._defineComponent(cls, importUrl)
-		Puer.app                = Puer[cls.name]()
-		Puer.DataSet.CACHE_NAME = applicationName
-		Puer.Router             = new PuerRouter(Puer.app)
+		Puer.app    = Puer[cls.name]()
+		Puer.Router = new PuerRouter(Puer.app)
 		return Puer
 	}
 

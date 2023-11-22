@@ -14,6 +14,9 @@ class PuerComponent extends BasePuerComponent {
 		this._deferRenderers()
 
 	}
+
+	/********************** FRAMEWORK **********************/
+	
 	__ready() {
 		super.__ready()
 		for (const prop in this.props) {

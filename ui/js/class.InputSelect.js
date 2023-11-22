@@ -8,8 +8,6 @@ class InputSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
 		this.dataSet = new Puer.DataSet(Puer.DataSet.CACHE_NAME)
-
-		console.log('constructor', this.dataSet)
 	}
 
 	_onChange() {
@@ -18,17 +16,23 @@ class InputSelect extends FormInput {
 	}
 
 	onUrlChange(value) {
-		// Puer.Request.get(value, this.onDataSourceChanged.bind(this))
 		console.log('onUrlChange', this.className)
-		this.dataSet.load(value, this.onDataSourceChanged.bind(this), true)
+		this.dataSet.load(value, this.onData.bind(this))
 		console.log('onDataSourceChange', value)
 	}
 
-	onDataSourceChanged(data) {
+	onData(data) {
 		if (this.props.filter) {
-			data = this.props.filter(data)
+			data = this.dataSet.filter(this.props.filter)
 		}
-		console.log('onDataSourceChanged', data)
+		console.log(data)
+		data.forEach((item) => {
+			this.addOption(item.value, item.text, this.props.selected && this.props.selected == item.value)
+		})
+	}
+
+	addOption(value, text, selected=false) {
+		this.append(option({value: value, text: text, selected: selected}))
 	}
 
 	render() {
