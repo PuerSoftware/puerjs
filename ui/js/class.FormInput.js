@@ -8,6 +8,10 @@ class FormInput extends PuerComponent {
         this.props.default('autocomplete', 'off')
         this.form = null
     }
+
+    _onChange() {
+        this.validate()
+    }
     
     validate() {
         console.log('FormInput.onChange()', this.props.name)
@@ -17,7 +21,7 @@ class FormInput extends PuerComponent {
     render() {
         return input({
             ... this.props,
-            onchange: this.validate,
+            onchange: this._onChange,
         })
     }
 }

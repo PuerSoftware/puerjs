@@ -15,7 +15,7 @@ class PuerProps extends PuerProxy {
 
 	require(prop, owner) {
 		if (!this.data.hasOwnProperty(prop)) {
-			throw new Puer.Error(`Property ${prop} is required but not set.`, owner || this, 'require')
+			throw new Puer.Error(`Property "${prop}" is required but not set.`, owner || this, 'require')
 		}
 		return this.data[prop]
 	}

@@ -1,5 +1,4 @@
 import Puer, {PuerComponent} from '../../puer.js'
-import Request               from '../../library/class.Request.js'
 
 
 class Form extends PuerComponent {
@@ -48,7 +47,7 @@ class Form extends PuerComponent {
 			}
 		}
 		if (this.props.validationUrl) {
-			Request.post(this.props.validationUrl, formData)
+			Puer.Request.apost(this.props.validationUrl, formData)
 				.then((response) => {
 					if (!response.ok) {
 						const error      = 'Form validation failed'

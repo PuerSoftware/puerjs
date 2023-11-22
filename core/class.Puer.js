@@ -6,6 +6,9 @@ import PuerTextElement from './class.PuerTextElement.js'
 import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
 import DateMethods     from '../library/class.DateMethods.js'
+import Request         from '../library/class.Request.js'
+import DataSet         from '../library/class.DataSet.js'
+
 
 class Puer {
 	static app
@@ -19,7 +22,7 @@ class Puer {
 
 	/********************** PRIVATE **********************/
 
-	static _init() {
+	static init() {
 		Puer._setTimezoneCookie()
 		Puer._classToType = {}
 		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
@@ -225,10 +228,13 @@ class Puer {
 
 }
 
-Puer.String = StringMethods
-Puer.Object = ObjectMethods
-Puer.Date   = DateMethods 
-Puer._init()
+Puer.String  = StringMethods
+Puer.Object  = ObjectMethods
+Puer.Date    = DateMethods
+Puer.Request = Request
+Puer.DataSet = DataSet
+ 
+Puer.init()
 
 window.Puer = Puer
 export default Puer

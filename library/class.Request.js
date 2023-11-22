@@ -15,12 +15,23 @@ class Request {
 		return fetch(url, conf)
 	}
 
-	static get(url, urlParams=null, headers=null) {
+	static aget(url, urlParams=null, headers=null) {
 		return Request.request(url, 'GET', urlParams, headers)
 	}
 
-	static post(url, data=null, headers=null) {
+	static apost(url, data=null, headers=null) {
 		return Request.request(url, 'POST', data, headers)
+	}
+
+	static get(url, callback, urlParams=null, headers=null) {
+		Request.request(url, 'GET', urlParams, headers)
+			.then(request => {
+				if (!request.ok) {
+					throw new Puer.Error(`Request failed`)
+				}
+				return request.json()
+			})
+			.then(callback)
 	}
 }
 

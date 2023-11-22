@@ -1,8 +1,33 @@
 import Puer, {PuerComponent} from '../../puer.js'
 
+import FormInput from './class.FormInput.js'
 
-class InputSelect extends PuerComponent {
-    
+
+class InputSelect extends FormInput {
+
+	_onChange() {
+		super._onChange()
+		this.props.onChange && this.props.onChange()
+	}
+
+	onDataSourceChange(value) {
+		Puer.Request.get(value, this.onDataSourceChanged.bind(this))
+		console.log('onDataSourceChange', value)
+	}
+
+	onDataSourceChanged(data) {
+		if (this.props.filter) {
+			data = this.props.filter(data)
+		}
+		console.log('onDataSourceChanged', data)
+	}
+
+	render() {
+		return select({
+            ... this.props,
+            onchange: this._onChange,
+        })
+	}
 }
 
 Puer.define(InputSelect, import.meta.url)

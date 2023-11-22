@@ -12,12 +12,21 @@ class PuerComponent extends BasePuerComponent {
 		this.listeners = {}
 
 		this._deferRenderers()
+
+		for (const prop in this.props) {
+			this._onPropChange(prop, null, this.props[prop])
+		}
 	}
 
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop, oldValue, newValue) {
-		this.root.__update()
+		this.root && this.root.__update()
+		
+		const propCamelized = Puer.String.camelToUpper(prop)
+		const methodName    = `on${propCamelized}Change`
+
+		return this[methodName] && this[methodName](Puer.dereference(newValue), Puer.dereference(oldValue))
 	}
 
 	_onStateChange(prop, oldValue, newValue) {
