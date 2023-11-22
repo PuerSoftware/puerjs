@@ -27,7 +27,7 @@ class DataSet {
 							_this.data = data
 						} else {
 							Request.get(url, (data) => {
-								cache.put(url, Object.assign({}, userDetails))
+								cache.put(url, Object.assign({}, data))
 								_this._setData(data)
 								callback && callback(_this)
 							})

@@ -5,7 +5,7 @@ import PuerState         from './class.PuerState.js'
 
 class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
-		super(props, children)
+		super(props, children)	
 		this.state     = new PuerState({}, this._onStateChange.bind(this))
 		this.classes   = this._computeClasses()
 		this.isCustom  = true
@@ -13,6 +13,9 @@ class PuerComponent extends BasePuerComponent {
 
 		this._deferRenderers()
 
+	}
+	__ready() {
+		super.__ready()
 		for (const prop in this.props) {
 			this._onPropChange(prop, null, this.props[prop])
 		}

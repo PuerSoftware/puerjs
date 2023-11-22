@@ -5,13 +5,22 @@ import FormInput from './class.FormInput.js'
 
 class InputSelect extends FormInput {
 
+	constructor(props, children) {
+		super(props, children)
+		this.dataSet = new Puer.DataSet(Puer.DataSet.CACHE_NAME)
+
+		console.log('constructor', this.dataSet)
+	}
+
 	_onChange() {
 		super._onChange()
 		this.props.onChange && this.props.onChange()
 	}
 
-	onDataSourceChange(value) {
-		Puer.Request.get(value, this.onDataSourceChanged.bind(this))
+	onUrlChange(value) {
+		// Puer.Request.get(value, this.onDataSourceChanged.bind(this))
+		console.log('onUrlChange', this.className)
+		this.dataSet.load(value, this.onDataSourceChanged.bind(this), true)
 		console.log('onDataSourceChange', value)
 	}
 
