@@ -1,57 +1,36 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import Puer from '../../puer.js'
 
 import FormInput from './class.FormInput.js'
-
-window.perf = {
-	ms: 0,
-	count: 0
-}
-
 
 
 class InputSelect extends FormInput {
 
 	constructor(props, children) {
 		super(props, children)
-		this.dataSet = new Puer.DataSet(Puer.DataSet.CACHE_NAME)
 		this.hasData = false
 	}
 
 	onUrlChange(value) {
-		console.log(this.props.name, 'onUrlChange !!!', value)
-		const t = Date.now()
-		value && this.dataSet.load(value, this.onData.bind(this))
-		window.perf.ms += Date.now() - t
-		window.perf.count ++
+		value && Puer.DataSet.load(value, this.onData.bind(this))
 	}
 
 	onSelectedChange(value) {
-		console.log(this.props.name, 'onSelectedChange !!! NO DATA')
 		if (this.hasData) {
-			console.log(this.props.name, 'onSelectedChange !!! With DATA')
-			this.select(value)
+			this.value = value
 		}
 	}
 
-	onData(data) {
+	onData(dataSet) {
+		let data = dataSet.data
 		if (this.props.filter) {
-			data = this.dataSet.filter(this.props.filter)
+			data = dataSet.filter(this.props.filter)
 		}
-		console.log('onData', data)
 		this.removeChildren()
 		for (let item of data) {
 			this.addOption(item.value, item.text, this.props.selected && this.props.selected == item.value)
 		}
 		this.hasData = true
-		this.select()
-	}
-
-	select(value) {
-		console.log(this.props.name, 'select()', value)
-		if (value) {
-			this.element.value = value
-		}
-		this._onChange()
+		this.events.change && this.events.change(event)
 	}
 
 	addOption(value, text, selected=false) {

@@ -1,12 +1,10 @@
-import Puer, {
-    PuerComponent,
-} from '../../puer.js'
+import Puer, {PuerComponent} from '../../puer.js'
 
 
 class FormField extends PuerComponent {
     constructor(props, children) {
         super(props, children)
-        this.props.default('label', 'Field label')
+        this.props.default('label', '')
         this.state.error = ''
     }
 

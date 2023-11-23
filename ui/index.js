@@ -10,6 +10,10 @@ import Align       from './js/class.Align.js'
 import Pagination  from './js/class.Pagination.js'
 import Modal       from './js/class.Modal.js'
 import InputSelect from './js/class.InputSelect.js'
+import InputText   from './js/class.InputText.js'
+import InputNumber from './js/class.InputNumber.js'
+
+
 
 export {
 	Form,
@@ -23,5 +27,7 @@ export {
 	Align,
 	Pagination,
 	Modal,
-	InputSelect
+	InputSelect,
+	InputText,
+	InputNumber
 }

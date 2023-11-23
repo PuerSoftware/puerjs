@@ -23,10 +23,24 @@ class Form extends PuerComponent {
 		})
 		return input
 	}
-	// onUpdate() {
-	// 	this.inputs = this.$$.FormInput
-	// 	this.fields = this.$$.FormField
-	// }
+
+	
+	setData(data) {
+		for (const name in data) {
+			const input = this.getInput(name)
+			if (input) {
+				input.value = data[name]
+			}
+		}
+	}
+
+	getData() {
+		let data = {}
+		this.$$.FormInput.forEach(ipt => {
+			data[ipt.props.name] = ipt.value
+		})
+		return data
+	}
 
 	onValidate(data) {
 		// console.log('Validated data', data)
