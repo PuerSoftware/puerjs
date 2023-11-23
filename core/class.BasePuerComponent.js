@@ -369,8 +369,14 @@ class BasePuerComponent extends PuerObject {
 		component.__render()
 		component.__ready()
 		component.__update()
-		component.parent = this
-		!this.isCustom && this.children.push(component)
+
+		const root = this.isCustom
+			? this.root
+			: this
+
+		component.parent = root
+		root.children.push(component)
+
 		this.element.appendChild(component.element)
 	}
 
@@ -378,8 +384,14 @@ class BasePuerComponent extends PuerObject {
 		component.__render()
 		component.__ready()
 		component.__update()
-		component.parent = this
-		!this.isCustom && this.children.unshift(component)
+
+		const root = this.isCustom
+			? this.root
+			: this
+
+		component.parent = root
+		root.children.unshift(component)
+
 		if (this.element.firstChild) {
 			this.element.insertBefore(component.element, this.element.firstChild)
 		} else {
@@ -398,15 +410,13 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	removeChildren() {
-		if (!this.isCustom) {
-			if (this.children) {
-				this.children.forEach(child => {
-					child.remove()
-				})
-			}				
-		} else {
-			this.element.innerHTML = ''
-		}
+		const root = this.isCustom
+			? this.root
+			: this
+
+		while (root.children.length) {
+			root.children[0].remove()
+		}				
 	}
 
 	hide() {

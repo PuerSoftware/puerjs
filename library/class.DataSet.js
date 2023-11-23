@@ -4,42 +4,50 @@ import Request from './class.Request.js'
 class DataSet {
 	constructor() {
 		this.data = {}
+		this.cacheName = 'dataSetCache'
 	}
 
-	_setData(data, callback) {
+	async _setData(data, callback) {
 		if (Array.isArray(data)) {
 			this.data = data
 		} else if (data !== null && typeof data === 'object') {
 			this.data = [data]
 		} else {
-			throw 'DataSet: incompatible data type'
+			throw new Error('DataSet: incompatible data type')
 		}
-		callback && callback(this.data)
+		if (callback) callback(this.data)
 	}
 
-	_load(url, callback, useCache) {
+	async _load(url, callback, useCache) {
 		const _this = this
 		if (useCache) {
-			let data = localStorage.getItem(url)
-			if (data) {
+			const cache = await caches.open(this.cacheName)
+			const cachedResponse = await cache.match(url)
+
+			if (cachedResponse) {
 				console.log('Loading from cache', url)
-				_this._setData(JSON.parse(data), callback)
+				const data = await cachedResponse.json()
+				_this._setData(data, callback)
 			} else {
-				console.log('Loading from url 1', url)
-				Request.get(url, (data) => {
-					localStorage.setItem(url, JSON.stringify(data))
+				console.log('Loading from URL', url)
+				const response = await fetch(url)
+				if (response.ok) {
+					cache.put(url, response.clone())
+					const data = await response.json()
 					_this._setData(data, callback)
-				})
+				}
 			}
 		} else {
-			console.log('Loading from url 2', url)
-			Request.get(url, (data) => {
+			console.log('Loading from URL', url)
+			const response = await fetch(url)
+			if (response.ok) {
+				const data = await response.json()
 				_this._setData(data, callback)
-			})
+			}
 		}
 	}
 
-	load(url, callback=null, useCache=true) {
+	load(url, callback = null, useCache = true) {
 		if (typeof url === 'string') {
 			this._load(url, callback, useCache)
 		} else {
@@ -55,6 +63,5 @@ class DataSet {
 		return this.data.filter(f)
 	}
 }
-
 
 export default DataSet
