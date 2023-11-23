@@ -6,7 +6,7 @@ class Modal extends PuerComponent {
     render() {
         return div({cssDisplay: 'none'}, [
             div('content', this.children),
-            button({text: 'x', onclick: this.hide})
+			button('close-btn', {text: 'x', onclick: this.hide})
         ])
     }
 }

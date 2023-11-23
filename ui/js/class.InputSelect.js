@@ -32,7 +32,7 @@ class InputSelect extends FormInput {
 		this.append(option({value: value, text: text, selected: selected}))
 	}
 
-	select() {
+	select(value) {
 		this.$$.select[0].element.dispatchEvent(new Event('change'))
 	}
 
