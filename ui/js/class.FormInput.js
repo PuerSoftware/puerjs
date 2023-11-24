@@ -6,21 +6,23 @@ class FormInput extends PuerComponent {
 		super(props, children)
 		this.props.require('name', this)
 		this.props.default('autocomplete', 'off')
-		// this.props.default('tagName',      'input')
-		// this.props.default('type',         'text')
+
 		this.form  = null
+		this.input = null
 	}
 	
 	set value(value) {
 		if (value) {
-			this.element.value = value
+			console.log('set', this.input.element)
+			this.input.element.value = value
+			console.log('setted', this.input.element.value)
 		}
 		this.events.change && this.events.change(event)
 	}
 
 	get value() {
-		return this.element
-			? this.element.value
+		return this.input && this.input.element
+			? this.input.element.value
 			: null
 	}
 
@@ -29,13 +31,13 @@ class FormInput extends PuerComponent {
 	}
 
 	onReady() {
-		this.element.addEventListener('change', this.validate.bind(this))
+		this.input.element.addEventListener('change', this.validate.bind(this))
 	}
 
 	render() {
-		console.log('render', Puer.dereference(this.props.tagName))
+		this.input = window[this.props.tagName]({ ... this.props })
 		return div([
-			window[this.props.tagName]({ ... this.props })
+			this.input	
 		])
 	}
 }

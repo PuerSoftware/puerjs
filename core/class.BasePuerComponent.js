@@ -207,7 +207,7 @@ class BasePuerComponent extends PuerObject {
 				} else {
 					this.prepend(text(value))
 				}
-			} else if (typeof value === 'string') {
+			} else if (typeof value !== 'function' && typeof value !== 'object') {
 				this.attr(prop, value)
 			}
 		}

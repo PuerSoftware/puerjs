@@ -15,8 +15,10 @@ class InputSelect extends FormInput {
 	}
 
 	onSelectedChange(value) {
+		console.log('onSelectedChange')
 		if (this.hasData) {
 			this.value = value
+			console.log('onSelectedChange this.value =', this.value)
 		}
 	}
 
@@ -25,17 +27,17 @@ class InputSelect extends FormInput {
 		if (this.props.filter) {
 			data = dataSet.filter(this.props.filter)
 		}
-		this.removeChildren()
+		this.input.removeChildren()
 		for (let item of data) {
 			this.addOption(item.value, item.text, this.props.selected && this.props.selected == item.value)
 		}
 		this.hasData = true
+		this.onSelectedChange(this.props.selected)
 		this.events.change && this.events.change(event)
 	}
 
 	addOption(value, text, selected=false) {
-		console.log(this.$.select)
-		this.$.select[0].append(option({value: value, text: text, selected: selected}))
+		this.input.append(option({value: value, text: text, selected: selected}))
 	}
 }
 
