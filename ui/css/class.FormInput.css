@@ -1,10 +1,10 @@
 .form-input {
+	border-bottom : 1px solid #2F4155;
 }
 	.form-input>input,
 	.form-input>select,
 	.form-input>textarea {
 		border-width     : 0;
-		border-bottom    : 1px solid #2F4155;
 		padding          : 5px 0;
 		background-color : transparent;
 		backdrop-filter  : blur(10px);
@@ -25,9 +25,9 @@
 		.form-input>textarea::placeholder {
 			font-family    : Inter, sans-serif;
 			font-size      : 14px;
-			font-weight    : 400;
+			font-weight    : 200;
 			line-height    : 20px;
 			letter-spacing : 0em;
 			text-align     : left;
-		    color          : #E7E7E7;
+		    color          : #33393A;
 		}

@@ -4,8 +4,8 @@ import Puer, {PuerComponent} from '../../puer.js'
 class Form extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
-		this.props.default('title',         'Form')
-		this.props.default('subtitle',      'Please fill out this form')
+		this.props.default('title',         '')
+		this.props.default('subtitle',      '')
 		this.props.default('buttonCaption', 'Submit')
 		this.props.default('action',        '')
 		this.props.default('method',        'POST')
@@ -100,7 +100,7 @@ class Form extends PuerComponent {
 				}, [
 					... this.children,
 					p ([
-						button ({type: 'submit', text: this.props.buttonCaption})
+						Puer.InputButton ({type: 'submit', text: this.props.buttonCaption})
 					])
 				])
 			])

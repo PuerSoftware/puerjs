@@ -12,6 +12,7 @@ import Modal       from './js/class.Modal.js'
 import InputSelect from './js/class.InputSelect.js'
 import InputText   from './js/class.InputText.js'
 import InputNumber from './js/class.InputNumber.js'
+import InputButton from './js/class.InputButton.js'
 
 
 
@@ -29,5 +30,6 @@ export {
 	Modal,
 	InputSelect,
 	InputText,
-	InputNumber
+	InputNumber,
+	InputButton
 }
