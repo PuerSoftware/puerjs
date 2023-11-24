@@ -32,6 +32,17 @@ class Request {
 			})
 			.then(callback)
 	}
+
+	static post(url, callback, data=null, headers=null) {
+		Request.request(url, 'POST', data, headers)
+			.then(request => {
+				if (!request.ok) {
+					throw new Puer.Error(`Request failed`)
+				}
+				return request.json()
+			})
+			.then(callback)
+	}
 }
 
 

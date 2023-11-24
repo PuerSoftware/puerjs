@@ -15,10 +15,8 @@ class InputSelect extends FormInput {
 	}
 
 	onSelectedChange(value) {
-		console.log('onSelectedChange')
 		if (this.hasData) {
 			this.value = value
-			console.log('onSelectedChange this.value =', this.value)
 		}
 	}
 

@@ -9,7 +9,7 @@ class Form extends PuerComponent {
 		this.props.default('buttonCaption', 'Submit')
 		this.props.default('action',        '')
 		this.props.default('method',        'POST')
-		this.props.default('enctype',       'application/x-www-form-urlencoded')
+		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
 		this.state.error = ''
 	}
@@ -86,6 +86,14 @@ class Form extends PuerComponent {
 		}
 	}
 
+	submit() {
+		Puer.Request.post(
+			this.props.action,
+			this.onValidate,
+			this.getData(),
+		)
+	}
+
 	render() {
 		return (
 			div([
@@ -100,7 +108,11 @@ class Form extends PuerComponent {
 				}, [
 					... this.children,
 					p ([
-						Puer.InputButton ({type: 'submit', text: this.props.buttonCaption})
+						Puer.InputButton ({
+							type    : 'button',
+							onclick : this.submit,
+							text    : this.props.buttonCaption
+						})
 					])
 				])
 			])

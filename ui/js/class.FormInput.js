@@ -13,9 +13,7 @@ class FormInput extends PuerComponent {
 	
 	set value(value) {
 		if (value) {
-			console.log('set', this.input.element)
 			this.input.element.value = value
-			console.log('setted', this.input.element.value)
 		}
 		this.events.change && this.events.change(event)
 	}
