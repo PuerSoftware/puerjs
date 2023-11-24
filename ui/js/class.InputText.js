@@ -4,11 +4,10 @@ import FormInput from './class.FormInput.js'
 
 
 class InputText extends FormInput {
-	render() {
-		return input({
-			... this.props,
-			type     : 'text'
-		})
+	constructor( ... args ) {
+		super( ... args )
+		this.props.default('tagName', 'input')
+		this.props.default('type',    'text')
 	}
 }
 

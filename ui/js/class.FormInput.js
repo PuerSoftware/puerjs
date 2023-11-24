@@ -6,6 +6,8 @@ class FormInput extends PuerComponent {
 		super(props, children)
 		this.props.require('name', this)
 		this.props.default('autocomplete', 'off')
+		// this.props.default('tagName',      'input')
+		// this.props.default('type',         'text')
 		this.form  = null
 	}
 	
@@ -31,9 +33,10 @@ class FormInput extends PuerComponent {
 	}
 
 	render() {
-		return input({
-			... this.props,
-		})
+		console.log('render', Puer.dereference(this.props.tagName))
+		return div([
+			window[this.props.tagName]({ ... this.props })
+		])
 	}
 }
 

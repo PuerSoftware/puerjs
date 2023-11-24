@@ -4,9 +4,9 @@ import FormInput from './class.FormInput.js'
 
 
 class InputSelect extends FormInput {
-
 	constructor(props, children) {
 		super(props, children)
+		this.props.default('tagName', 'select')
 		this.hasData = false
 	}
 
@@ -34,14 +34,8 @@ class InputSelect extends FormInput {
 	}
 
 	addOption(value, text, selected=false) {
-		this.append(option({value: value, text: text, selected: selected}))
-	}
-
-	render() {
-		return select({
-            ... this.props,
-            onChange: this._onChange
-		})
+		console.log(this.$.select)
+		this.$.select[0].append(option({value: value, text: text, selected: selected}))
 	}
 }
 

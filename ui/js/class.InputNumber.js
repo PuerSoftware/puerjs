@@ -4,11 +4,10 @@ import InputText from './class.FormInput.js'
 
 
 class InputNumber extends InputText {
-	render() {
-		return input({
-			... this.props,
-			type     : 'number'
-		})
+	constructor( ... args ) {
+		super( ... args )
+		this.props.default('tagName', 'input')
+		this.props.default('type',    'number')
 	}
 }
 

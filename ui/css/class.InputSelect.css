@@ -1,0 +1,17 @@
+.input-select {
+	-moz-appearance    : none;
+	-webkit-appearance : none;
+	appearance         : none;
+	padding-left       : 0 !important;
+}
+	.input-select:after {
+		position      : absolute;
+		content       : "";
+		top           : 14px;
+		right         : 10px;
+		width         : 10px;
+		height        : 10px;
+		border        : none;
+		border-bottom : 1px solid #E7E7E7;
+		border-right  : 1px solid #E7E7E7;
+	}

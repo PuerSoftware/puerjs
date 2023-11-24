@@ -1,0 +1,15 @@
+.form-field {
+	width      : 100%;
+	box-sizing : border-box;
+}
+	.form-field>.error {
+		height: 13px;
+	}
+	.form-field>label {
+		display        : block;
+		font-family    : Inter, sans-serif;
+		font-size      : 12px;
+		font-weight    : 300;
+		line-height    : 15px;
+		letter-spacing : 0em;
+	}

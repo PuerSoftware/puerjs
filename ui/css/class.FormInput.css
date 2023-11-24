@@ -1,0 +1,33 @@
+.form-input {
+}
+	.form-input>input,
+	.form-input>select,
+	.form-input>textarea {
+		border-width     : 0;
+		border-bottom    : 1px solid #2F4155;
+		padding          : 5px 0;
+		background-color : transparent;
+		backdrop-filter  : blur(10px);
+		width            : 100%;
+		box-sizing       : border-box;
+		font-family      : Inter, sans-serif;
+		font-size        : 14px;
+		font-weight      : 400;
+		color            : #E7E7E7;
+	}
+		.form-input>input:focus,
+		.form-input>select:focus,
+		.form-input>textareas:focus {
+			outline : none;
+		}
+		.form-input>input::placeholder,
+		.form-input>select::placeholder,
+		.form-input>textarea::placeholder {
+			font-family    : Inter, sans-serif;
+			font-size      : 14px;
+			font-weight    : 400;
+			line-height    : 20px;
+			letter-spacing : 0em;
+			text-align     : left;
+		    color          : #E7E7E7;
+		}
