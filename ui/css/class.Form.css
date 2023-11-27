@@ -1,0 +1,7 @@
+.form {}
+	.form .button-panel {
+		padding    : 20px 0 0 0;
+		display    : block;
+		width      : 100%;
+		text-align : right;
+	}

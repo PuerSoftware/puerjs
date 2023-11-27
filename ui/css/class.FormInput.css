@@ -1,13 +1,19 @@
 .form-input {
 	border-bottom : 1px solid #2F4155;
+	display       : flex;
 }
+	.form-input:focus-within {
+		border-color: #6EA7E0;
+	}
+	.form-input>* {
+		display : inline-block;
+	}
 	.form-input>input,
 	.form-input>select,
 	.form-input>textarea {
 		border-width     : 0;
 		padding          : 5px 0;
 		background-color : transparent;
-		backdrop-filter  : blur(10px);
 		width            : 100%;
 		box-sizing       : border-box;
 		font-family      : Inter, sans-serif;
@@ -29,5 +35,19 @@
 			line-height    : 20px;
 			letter-spacing : 0em;
 			text-align     : left;
-		    color          : #33393A;
+		    color          : #263546;
 		}
+
+.form-input.confined {
+	margin-top : 7px;
+	border     : 1px solid #2F4155;
+}
+	.form-input.confined:focus-within {
+		border-color: #6EA7E0;
+	}
+	.form-input.confined>input,
+	.form-input.confined>select,
+	.form-input.confined>textarea {
+		padding          : 7px;
+		background-color : rgba(0, 0, 0, 0.3);
+	}

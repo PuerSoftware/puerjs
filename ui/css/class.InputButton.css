@@ -11,3 +11,6 @@
 	border-radius    : 2px;
 	padding          : 8px 20px;
 }
+	.input-button:focus {
+		outline: none;
+	}

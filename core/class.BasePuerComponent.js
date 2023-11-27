@@ -196,6 +196,7 @@ class BasePuerComponent extends PuerObject {
 
 	_applyProps() {
 		for (let [prop, value] of this.props) {
+			if (prop == 'class') console.log(prop, value)
 			value = Puer.dereference(value)
 			if (prop.startsWith('css')) {
 				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
@@ -208,7 +209,9 @@ class BasePuerComponent extends PuerObject {
 					this.prepend(text(value))
 				}
 			} else if (typeof value !== 'function' && typeof value !== 'object') {
-				this.attr(prop, value)
+				if (Puer.isAttr(prop)) {
+					this.attr(prop, value)
+				}
 			}
 		}
 	}
@@ -344,6 +347,16 @@ class BasePuerComponent extends PuerObject {
 
 	removeCssClass() {
 		this.element.classList.remove(... arguments)
+	}
+
+	toggleCssClass() {
+		for (const c of arguments) {
+			this.element.classList.toggle(c)
+		}
+	}
+
+	hasCssClass(c) {
+		return this.element.classList.contains(c)
 	}
 
 	css(prop, value) {

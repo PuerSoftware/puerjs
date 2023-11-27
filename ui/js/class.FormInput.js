@@ -34,8 +34,13 @@ class FormInput extends PuerComponent {
 
 	render() {
 		this.input = window[this.props.tagName]({ ... this.props })
+		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
+		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
+
 		return div([
-			this.input	
+			div('before', beforeProps),
+			this.input,
+			div('after', afterProps)
 		])
 	}
 }

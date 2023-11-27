@@ -107,11 +107,12 @@ class Form extends PuerComponent {
 					enctype      : this.props.enctype
 				}, [
 					... this.children,
-					p ([
+					div ('button-panel', [
 						Puer.InputButton ({
 							type    : 'button',
 							onclick : this.submit,
-							text    : this.props.buttonCaption
+							text    : this.props.buttonCaption,
+							value   : this.props.buttonCaption
 						})
 					])
 				])
