@@ -21,7 +21,7 @@ class PuerProxy {
 				}
 
 				if (prop in target.data) {
-					if (Puer.deferred && Puer.isPrimitive(target.data[prop])) {
+					if (Puer.isReferenced && Puer.isPrimitive(target.data[prop])) {
 						return Puer.reference(target.data, prop)
 					} else {
 						return target.data[prop]

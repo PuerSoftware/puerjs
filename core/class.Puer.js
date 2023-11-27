@@ -176,17 +176,17 @@ class Puer {
 		return Puer.Router.define(getRoutes)
 	}
 
-	static defer(f, owner=window) {
+	static referencer(f, owner=window) {
 		let alias = f
 		return (...args) => {
-			Puer.deferred = true
+			Puer.isReferenced = true
 			if (owner.isCustom) {
 				Puer.owner = owner
 			}
 			let result = alias.apply(owner, args)
 
 			Puer.owner    = null
-			Puer.deferred = false
+			Puer.isReferenced = false
 			return result
 		}
 	}
@@ -205,6 +205,24 @@ class Puer {
 			value = value()
 		}
 		return value
+	}
+
+	static defer(f, timeout=1) {
+		setTimeout(f, timeout)
+	}
+
+	static sync(asyncFunc) {
+		return function(...args) {
+			let callback = null
+			if (Puer.isFunction(args.at(-1))) {
+				callback = args.pop()
+			}
+ 			asyncFunc(...args).then(result => {
+				callback && callback(result, null)
+			}).catch(error => {
+				callback && callback(null, error)
+			})
+		}
 	}
 
 	static arganize(args, types, defaults, norm_args=[]) {

@@ -36,62 +36,51 @@ class Form extends PuerComponent {
 
 	getData() {
 		let data = {}
-		this.$$.FormInput.forEach(ipt => {
-			data[ipt.props.name] = ipt.value
+		this.$$.FormInput.forEach(input => {
+			if (!input.props.isHeader) {
+				data[input.props.name] = input.value
+			}
 		})
 		return data
 	}
 
+	getHeaders() {
+		let headers = {}
+		this.$$.FormInput.forEach(input => {
+			if (input.props.isHeader) {
+				headers[input.props.name] = input.value
+			}
+		})
+		return headers
+	}
+
 	onValidate(data) {
-		// console.log('Validated data', data)
 		this.state.error = data.error || ''
-		if (data.error) {
-			for (const input of this.$$.FormInput) {
-				if (input.props.name in data.fields) {
-					const inputField = input.$$$.FormField[0]
+		for (const input of this.$$.FormInput) {
+			const inputField = input.$$$.FormField[0]
+			if (inputField) {
+				if (data.error && (input.props.name in data.fields)) {
 					if (inputField) {
-						// console.log(inputField.element, input.props.name, data.fields[input.props.name])
-						inputField.onValidate(data.fields[input.props.name])
+						inputField.setError(data.fields[input.props.name])
 					}
+				} else {
+					inputField.setError('')
 				}
 			}
 		}
 	}
 
-	validate(initiatorInputName) {
-		let formData = {}
-		for (const input of this.$$.FormInput) {
-			formData[input.props.name] = {
-				value          : input.element.value,
-				validationType : input.props.validationType || ''
-			}
-			if (input.props.name === initiatorInputName) {
-				break
-			}
-		}
-		if (this.props.validationUrl) {
-			Puer.Request.apost(this.props.validationUrl, formData)
-				.then((response) => {
-					if (!response.ok) {
-						const error      = 'Form validation failed'
-						this.state.error = error
-						throw new Puer.Error(error, this, 'validate')
-					}
-					return response.json()
-				})
-				.then(this.onValidate.bind(this))
-				.catch(error => {
-					console.error('Validate error', error)
-				})
+	validate(url) {
+		url = url || this.props.action
+		const formData = this.getData()
+		const headers  = this.getHeaders()
+		if (this.props.action) {
+			Puer.Request.post(url, this.onValidate.bind(this), formData, headers)
 		}
 	}
 
-	submit() {
-		Puer.Request.post(
-			this.props.action,
-			this.onValidate,
-			this.getData(),
-		)
+	submit() {	
+		this.validate(this.props.action + '1')
 	}
 
 	render() {

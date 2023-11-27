@@ -1,9 +1,16 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import Puer from '../../puer.js'
 
+import FormInput from './class.FormInput.js'
 
-class InputHidden extends PuerComponent {
+class InputHidden extends FormInput {
+
+	validate() {}
+
+	onReady() {}
+
 	render() {
-		return input({ ... this.props, type: 'hidden' })
+		this.input = input({ ... this.props, type: 'hidden' })
+		return this.input
 	}
 }
 

@@ -51,3 +51,8 @@
 		padding          : 7px;
 		background-color : rgba(0, 0, 0, 0.3);
 	}
+
+.error .form-input,
+.error .form-input * {
+	border-color: #EA7A7A !important;
+}

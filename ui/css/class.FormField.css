@@ -3,7 +3,13 @@
 	box-sizing : border-box;
 }
 	.form-field>.error {
-		height : 13px;
+		height        : 13px;
+		white-space   : nowrap;     /* Prevents the text from wrapping to the next line */
+    	overflow      : hidden;     /* Hides text that overflows the container's bounds */
+    	text-overflow : ellipsis;   /* Replaces the end of the overflowed text with ellipsis */
+		font-size     : 12px;
+		font-family   : inter, sans-serif;
+		color         : #EA7A7A;
 	}
 	.form-field>label {
 		display        : block;
