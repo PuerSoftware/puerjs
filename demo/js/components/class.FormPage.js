@@ -7,14 +7,14 @@ class FormPage extends PuerComponent {
 			h3({text: this.props.title}),
 			Puer.Form({validationUrl: '/validate'}, [
 				Puer.FormField({label: 'Username'}, [
-					Puer.FormInput({
+					Puer.InputText({
 						type           : 'text',
 						name           : 'username',
 						validationType : 'username'
 					}),
 				]),
 				Puer.FormField({label: 'Password'}, [
-					Puer.FormInput({
+					Puer.InputText({
 						type           : 'password',
 						name           : 'password',
 						validationType : 'password'

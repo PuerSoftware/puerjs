@@ -9,7 +9,7 @@ class PuerState extends PuerProxy {
 				const oldValue = target.data[prop]
 				target.data[prop] = newValue
 				if (isChange && oldValue !== newValue) {
-					onChange(prop, oldValue, newValue)
+					onChange(prop, oldValue, newValue)	
 				}
 				
 				return true

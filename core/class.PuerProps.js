@@ -34,12 +34,15 @@ class PuerProps extends PuerProxy {
 	}
 
 	touch() {
+		let hasChanges = false
 		for (const prop in this.data) {
 			const newValue = Puer.dereference(this.data[prop])
 			if (newValue !== this.ddata[prop]) {
 				this.onChange(prop, this.ddata[prop], newValue)
+				hasChanges = true
 			}
 		}
+		return hasChanges
 	}
 
 	pop(prop) {

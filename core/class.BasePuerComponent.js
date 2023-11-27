@@ -83,8 +83,8 @@ class BasePuerComponent extends PuerObject {
 		if (this._isActive) {
 			Puer._updateCounter = Puer._updateCounter || 0
 			Puer._updateCounter ++
-			this.props.touch()
-			if (doCascade) {
+			const hasChanges = this.props.touch()
+			if (hasChanges || doCascade) {
 				this._cascade('__update')
 			}
 			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
@@ -205,14 +205,14 @@ class BasePuerComponent extends PuerObject {
 			if (prop.startsWith('css')) {
 				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
 				this.css(cssProp, value)
-			} else if (prop === 'text') {
+			} else if (value && prop === 'text') {
 				const textElement = this.getTextElement()
 				if (textElement) {
 					textElement.nodeValue = value
 				} else {
 					this.prepend(text(value))
 				}
-			} else if (typeof value !== 'function' && typeof value !== 'object') {
+			} else if (typeof value !== 'function' || typeof value !== 'object') {
 				if (Puer.isAttr(prop)) {
 					this.attr(prop, value)
 				}
