@@ -27,7 +27,7 @@ class PuerComponent extends BasePuerComponent {
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop, oldValue, newValue) {
-		this.root && this.root.__update()
+		this.root && this.root.__update(false)
 
 		const propCamelized = Puer.String.camelToUpper(prop)
 		const methodName    = `on${propCamelized}Change`
@@ -36,8 +36,10 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_onStateChange(prop, oldValue, newValue) {
+		// Puer._updateCounter = 0
 		this.root.__update()
 		this.__update()
+		// console.log(`__update is called ${Puer._updateCounter} times`)
 	}
 
 	_setupRoot() {

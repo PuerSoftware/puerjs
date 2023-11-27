@@ -79,10 +79,14 @@ class BasePuerComponent extends PuerObject {
 		this._cascade('__routeChange', [])
 	}
 
-	__update() {
+	__update(doCascade=true) {
 		if (this._isActive) {
+			Puer._updateCounter = Puer._updateCounter || 0
+			Puer._updateCounter ++
 			this.props.touch()
-			this._cascade('__update')
+			if (doCascade) {
+				this._cascade('__update')
+			}
 			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
 			// First time it is called here, second -- in PuerComponent._onPropChange
 			this._applyProps()

@@ -244,6 +244,21 @@ class Puer {
 		return Puer._classToType[className] || typeof o
 	}
 
+	static timer(name) {
+		const time = Date.now()
+		if (Puer._time) {
+			console.log('Timer end:', Puer._time_name, `${time - Puer._time} ms`)
+		}
+		if (name) {
+			console.log('Timer start:', name)
+			Puer._time      = time
+			Puer._time_name = name
+		} else {
+			Puer._time      = undefined
+			Puer._time_name = undefined
+		}
+	}
+
 }
 
 Puer.String  = StringMethods

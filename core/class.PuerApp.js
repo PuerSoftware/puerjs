@@ -11,7 +11,9 @@ class PuerApp extends PuerComponent {
 
 	__ready() {
 		super.__ready()
+		// Puer._updateCounter = 0
 		super.__update()
+		// console.log(`__update is called ${Puer._updateCounter} times`)
 		Puer.Router.start()
 		this.show() // Display after css has loaded
 	}
