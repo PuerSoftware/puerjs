@@ -17,9 +17,9 @@ class ComponentPage extends PuerComponent {
 
 	render() {
 		return div([
-			// h3({text: this.props.title}),
+			h3({text: this.props.title}),
 			div([
-				// p({text: 'State value'}),
+				p({text: 'State value'}),
 				p({text: this.state.stateValue}),
 			]),
 			Puer.SimpleComponent({value: this.state.stateValue}),

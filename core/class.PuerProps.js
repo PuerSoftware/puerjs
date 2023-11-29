@@ -7,7 +7,7 @@ class PuerProps extends PuerProxy {
 	}
 
 	default(prop, defaultValue) {
-		if (!this.data.hasOwnProperty(prop)) {
+		if (!this.references.hasOwnProperty(prop)) {
 			this.setProp(prop, defaultValue)
 		}
 	}

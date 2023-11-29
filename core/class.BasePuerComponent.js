@@ -182,7 +182,9 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
-	// _onPropChange(prop) {}
+	_onPropChange(prop) {
+		this._applyProp(prop)
+	}
 
 	_createText() {
 		const value = this.props.text 

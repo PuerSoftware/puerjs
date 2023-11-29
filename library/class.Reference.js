@@ -38,7 +38,7 @@ class Reference {
 		}
 		//////
 		this.owners.forEach(owner => {
-			owner.update(this.prop)
+			owner.update()
 		})
 	}
 }

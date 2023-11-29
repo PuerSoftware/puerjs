@@ -21,7 +21,7 @@ class PuerTextElement extends PuerHtmlElement {
 
 	_onPropChange(prop) {
 		// console.log('onPropChange', this.className, prop)
-		this.element.nodeValue = document.createTextNode(Puer.dereference(this.props['text']))
+		this.element.nodeValue = Puer.dereference(this.props['text'])
 	}
 
 	_renderElement() {
