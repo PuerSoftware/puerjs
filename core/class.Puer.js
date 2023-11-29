@@ -8,15 +8,15 @@ import ObjectMethods   from '../library/class.ObjectMethods.js'
 import DateMethods     from '../library/class.DateMethods.js'
 import Request         from '../library/class.Request.js'
 import DataSet         from '../library/class.DataSet.js'
+import Reference       from '../library/class.Reference.js'
 
 
 class Puer {
 	static app
 	static owner
-	static deferred
 	static path
 	static appPath
-	
+	static isReferencing
 	static _cssUrls  = new Set()
 	static _cssCount = 0
 
@@ -29,7 +29,6 @@ class Puer {
 			.forEach(name => {
 				const typeName = name.toLowerCase()
 				Puer._classToType['[object ' + name + ']'] = typeName
-				// Puer[`is${name}`] = (o) => { return Puer.type(o) === typeName }
 			})
 		Puer.Error  = PuerError
 		Puer.Event  = {}
@@ -161,10 +160,6 @@ class Puer {
 		return ['string', 'number', 'boolean'].includes(Puer.type(o))
 	}
 
-	static isDeferrable(o) {
-		return ['string', 'number', 'boolean', 'object', 'array'].includes(Puer.type(o))
-	}
-
 	static application(cls, importUrl) {
 		Puer._defineComponent(cls, importUrl)
 		Puer.app    = Puer[cls.name]()
@@ -179,32 +174,29 @@ class Puer {
 	static referencer(f, owner=window) {
 		let alias = f
 		return (...args) => {
-			Puer.isReferenced = true
+			Puer.isReferencing = true
 			if (owner.isCustom) {
 				Puer.owner = owner
 			}
 			let result = alias.apply(owner, args)
 
 			Puer.owner    = null
-			Puer.isReferenced = false
+			Puer.isReferencing = false
 			return result
 		}
 	}
 	
-	static reference(o, s) {
-		let f = () => o[s]
-		f.toString = () => {
-			return Puer.dereference(o[s])
+	static reference(prop, value) {
+		if (value.isReference) {
+			return value
 		}
-		f.isReference = true
-		return f
+		return new Puer.Reference(prop, value)
 	}
 
 	static dereference(value) {
-		while (Puer.isFunction(value) && value.isReference) {
-			value = value()
-		}
-		return value
+		return value.isReference 
+			? value.dereference()
+			: value
 	}
 
 	static defer(f, timeout=1) {
@@ -261,11 +253,12 @@ class Puer {
 
 }
 
-Puer.String  = StringMethods
-Puer.Object  = ObjectMethods
-Puer.Date    = DateMethods
-Puer.Request = Request
-Puer.DataSet = DataSet
+Puer.String    = StringMethods
+Puer.Object    = ObjectMethods
+Puer.Date      = DateMethods
+Puer.Request   = Request
+Puer.DataSet   = DataSet
+Puer.Reference = Reference 
 
 Puer.init()
 

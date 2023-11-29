@@ -12,12 +12,15 @@ const obj = {
 const Tests_PuerProps = {
 	result: null,
 
+	onPropChange: (prop) => {
+		Tests_PuerProps.result = prop
+	},
+
 	setup: () => {
 		return new PuerProps(
 			{foo1: 'bar1', foo2: 'bar,2'},
-			(prop, oldValue, newValue) => {
-				Tests_PuerProps.result = [prop, oldValue, newValue]
-			}
+			'onPropChange',
+			Tests_PuerProps
 		)
 	},
 

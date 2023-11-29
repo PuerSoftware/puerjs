@@ -1,18 +1,18 @@
 import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 import PuerState         from './class.PuerState.js'
+import PuerProxy         from './class.PuerProxy.js'
 
 
 class PuerComponent extends BasePuerComponent {
 	constructor(props, children) {
 		super(props, children)	
-		this.state     = new PuerState({}, this._onStateChange.bind(this))
+		this.state     = new PuerProxy({}, '_onStateChange', this)
 		this.classes   = this._computeClasses()
 		this.isCustom  = true
 		this.listeners = {}
 
 		this._deferRenderers()
-
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -20,29 +20,24 @@ class PuerComponent extends BasePuerComponent {
 	__ready() {
 		super.__ready()
 		for (const prop in this.props) {
-			this._onPropChange(prop, null, this.props[prop])
+			this._onPropChange(prop)
 		}
 	}
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange(prop, oldValue, newValue) {
-		if (prop === 'myProp') {
-			debugger
-		}
-		this.root && this.root.__update(false)
+	_onPropChange(prop) {
+		// console.log('onPropChange', this.className, prop)
+		this._applyProp(prop)
 		
-		const propCamelized = Puer.String.camelToUpper(prop)
-		const methodName    = `on${propCamelized}Change`
-
-		return this[methodName] && this[methodName](Puer.dereference(newValue), Puer.dereference(oldValue))
+		// const propCamelized = Puer.String.camelToUpper(prop)
+		// const methodName    = `on${propCamelized}Change`
+		// return this[methodName] && this[methodName](Puer.dereference(newValue))
 	}
 
-	_onStateChange(prop, oldValue, newValue) {
-		// Puer._updateCounter = 0
-		this.root.__update(false)
-		this.__update()
-		// console.log(`__update is called ${Puer._updateCounter} times`)
+	_onStateChange(prop) {
+		// console.log('onStateChange', this.className, prop, this.state.references[prop].owners)
+		this._applyProps()
 	}
 
 	_setupRoot() {
@@ -77,7 +72,6 @@ class PuerComponent extends BasePuerComponent {
 	on(name, f, options) {
 		this.listeners[name] = (...args) => {
 			if (this.isActive()) {
-				// console.log(name, this.className)
 				f.bind(this)(...args)
 			}
 		}

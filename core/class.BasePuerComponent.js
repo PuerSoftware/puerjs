@@ -1,6 +1,5 @@
 import Puer             from './class.Puer.js'
 import PuerProps        from './class.PuerProps.js'
-import PuerHtmlElement  from './class.PuerHtmlElement.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
 
@@ -9,16 +8,15 @@ class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
 		this.owner    = Puer.owner
-		this.id       = null
+		this.id       = Puer.String.randomHex(4)
 		this.element  = null
 		this.parent   = null
 		this.root     = null
-
-		this.children = new PuerComponentSet (children, this._onChildrenChange .bind(this))
-		this.props    = new PuerProps        (props,    this._onPropChange     .bind(this))
+		this.children = new PuerComponentSet (children, this._onChildrenChange, this)
+		this.props    = new PuerProps        (props,    '_onPropChange',              this)
 
 		this.events   = this.props.extractEvents(this.owner)
-		this.classes  = this.props.pop('classes')
+		this.classes  = this.props.pop('classes') || []
 
 		this.isCustom  = false
 		this._isActive = true
@@ -37,9 +35,15 @@ class BasePuerComponent extends PuerObject {
 		this._setupRoot()
 		this._cascade('__render')
 		this._setupElement()
+		this._createText()
 		this.addCssClass(... this.classes.map(c => Puer.dereference(c)))
 		this._addEvents()
 		this.onRender && this.onRender()
+	}
+
+	__rendered() {
+		this._cascade('__rendered')
+		this._applyProps()
 	}
 
 	__route(paths) {
@@ -77,21 +81,6 @@ class BasePuerComponent extends PuerObject {
 	__routeChange() {
 		this.onRoute && this.onRoute(Puer.Router.path)
 		this._cascade('__routeChange', [])
-	}
-
-	__update(doCascade=true) {
-		if (this._isActive) {
-			Puer._updateCounter = Puer._updateCounter || 0
-			Puer._updateCounter ++
-			const hasChanges = this.props.touch()
-			if (hasChanges || doCascade) {
-				this._cascade('__update')
-			}
-			// WARN: for custom components, this.root.__update() will be called twice if this.props has changed,
-			// First time it is called here, second -- in PuerComponent._onPropChange
-			this._applyProps()
-			this.onUpdate && this.onUpdate()
-		}
 	}
 
 	__ready() {
@@ -148,7 +137,6 @@ class BasePuerComponent extends PuerObject {
 
 	getChainAncestor(chainName, fistCall=true) {
 		let item = fistCall ? this.parent : this
-		// console.log('getChainAncestor', this, fistCall)
 		if (!item) {
 			return []
 		} else if (item.hasPropInProto('chainName', chainName)) {
@@ -187,30 +175,56 @@ class BasePuerComponent extends PuerObject {
 		return route
 	}
 
-	_getRoute() {
-
-	}
+	_getRoute() {}
 
 	_onChildrenChange() {
 		console.log(`${this.className}._onChildrenChange`)
-		this.__update()
+		this._applyProps()
 	}
 
-	_onPropChange(prop, oldValue, newValue) {}
+	// _onPropChange(prop) {}
+
+	_createText() {
+		const value = this.props.text 
+		if (value) {
+			const component = text(value)
+
+			const root = this.isCustom
+				? this.root
+				: this
+
+			component.parent = root
+			root.children.unshift(component)
+
+			component.__render()
+
+			if (this.element.firstChild) {
+				this.element.insertBefore(component.element, this.element.firstChild)
+			} else {
+				this.element.appendChild(component.element)
+			}
+
+		}
+	}
 
 	_applyProps() {
-		for (let [prop, value] of this.props) {
-			// if (prop == 'class') console.log(prop, value)
-			value = Puer.dereference(value)
+		// console.log('_applyProps', this.className)
+		for (const prop in this.props) {
+			this._applyProp(prop)
+		}
+	}
+
+	_applyProp(prop) {
+		// console.log('_applyProp', prop, this.className)
+		if (this.element) {
+			const value = Puer.dereference(this.props[prop])
 			if (prop.startsWith('css')) {
 				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
 				this.css(cssProp, value)
-			} else if (value && prop === 'text') {
+			} else if (prop === 'text') {
 				const textElement = this.getTextElement()
 				if (textElement) {
 					textElement.nodeValue = value
-				} else {
-					this.prepend(text(value))
 				}
 			} else if (typeof value !== 'function' || typeof value !== 'object') {
 				if (Puer.isAttr(prop)) {
@@ -385,7 +399,8 @@ class BasePuerComponent extends PuerObject {
 	append(component) {
 		component.__render()
 		component.__ready()
-		component.__update()
+		component._applyProps()
+
 
 		const root = this.isCustom
 			? this.root
@@ -400,7 +415,8 @@ class BasePuerComponent extends PuerObject {
 	prepend(component) {
 		component.__render()
 		component.__ready()
-		component.__update()
+		component._applyProps()
+
 
 		const root = this.isCustom
 			? this.root

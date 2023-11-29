@@ -1,9 +1,8 @@
 import Puer          from '../../../core/class.Puer.js'
 import PuerComponent from '../../../core/class.PuerComponent.js'
-import Comp2Base     from './class.Comp2Base.js'
 import Comp3         from './class.Comp3.js'
 
-class Comp2 extends Comp2Base {
+class Comp2 extends PuerComponent {
 	constructor(props, children) {
 		super(props, children)
 		this.state.liText = 'HAHA'

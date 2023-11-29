@@ -17,8 +17,9 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	/*********************** PRIVATE ***********************/
 
-	_onPropChange(prop, oldValue, newValue) {
-		this.element.setAttribute(prop, newValue)
+	_onPropChange(prop) {
+		// console.log('onPropChange', this.className, prop)
+		this.element && this.element.setAttribute(prop, this.props[prop])
 	}
 
 	_setupRoot() {

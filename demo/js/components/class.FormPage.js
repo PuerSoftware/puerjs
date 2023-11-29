@@ -2,6 +2,10 @@ import Puer, {PuerComponent}   from '../../../puer.js'
 
 
 class FormPage extends PuerComponent {
+	constructor(props, children) {
+		super(props, children)
+	}
+
 	render() {
 		return div([
 			h3({text: this.props.title}),

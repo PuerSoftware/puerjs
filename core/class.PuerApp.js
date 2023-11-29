@@ -11,9 +11,6 @@ class PuerApp extends PuerComponent {
 
 	__ready() {
 		super.__ready()
-		// Puer._updateCounter = 0
-		super.__update()
-		// console.log(`__update is called ${Puer._updateCounter} times`)
 		Puer.Router.start()
 		this.show() // Display after css has loaded
 	}
@@ -21,11 +18,11 @@ class PuerApp extends PuerComponent {
 	__render() {
 		super.__render()
 		document.body.appendChild(this.element)
+		this.__rendered()
 		return this.element
 	}
 
 	route(path) {
-		// console.log('App.route', path)
 		Puer.Router.navigate(path)
 	}
 
