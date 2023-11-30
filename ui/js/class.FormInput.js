@@ -7,11 +7,29 @@ class FormInput extends PuerComponent {
 		this.props.require('name', this)
 		this.props.default('isHeader', false)
 		this.props.default('autocomplete', 'off')
+		this.props.default('disabled', false)
 
 		this.form  = null
 		this.input = null
+		this.field = null
+
 	}
 	
+	set disabled(value) {
+		this.field && this.field.toggleCssClass('disabled', value)
+		if (value) {
+			this.input.setAttribute('disabled', true)
+		} else {
+			console.log('disable input')
+			this.input.removeAttribute('disabled')
+		}
+		this.props.disabled = value
+	}
+
+	get disabled() {
+		return this.props.disabled
+	}
+
 	set value(value) {
 		if (value) {
 			this.input.element.value = value
@@ -25,12 +43,16 @@ class FormInput extends PuerComponent {
 			: null
 	}
 
-	validate() {
-		this.$$$.Form[0].validate()
-	}
-
 	onReady() {
 		this.input.element.addEventListener('change', this.validate.bind(this))
+		this.form  = this.$$$.Form[0]
+		this.field = this.$$$.FormField[0]
+		
+		this.disabled = this.props.disabled
+	}
+
+	validate() {
+		this.form && this.form.validate()
 	}
 
 	render() {

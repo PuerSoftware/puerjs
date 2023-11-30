@@ -7,6 +7,7 @@ class InputSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('tagName', 'select')
+		this.props.default('allowEmpty', true)
 		this.hasData = false
 	}
 
@@ -26,12 +27,26 @@ class InputSelect extends FormInput {
 			data = dataSet.filter(this.props.filter)
 		}
 		this.input.removeChildren()
-		for (let item of data) {
-			this.addOption(item.value, item.text, this.props.selected && this.props.selected == item.value)
-		}
+		this.addOptions(data)
 		this.hasData = true
 		this.onSelectedChange(this.props.selected)
 		this.events.change && this.events.change(event)
+	}
+
+	addOptions(data) {
+		if (this.props.allowEmpty) {
+			data.unshift({
+				value : '0',
+				text  : ' - '
+			})
+		}
+		for (let item of data) {
+			this.addOption(
+				item.value,
+				item.text,
+				this.props.selected && this.props.selected == item.value
+			)
+		}
 	}
 
 	addOption(value, text, selected=false) {

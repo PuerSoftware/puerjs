@@ -183,9 +183,6 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_onPropChange(prop) {
-		if (this.className === 'PuerTagDiv' && prop === 'text') {
-			// console.log('props', this.props)
-		}
 		this._applyProp(prop)
 	}
 
@@ -202,7 +199,6 @@ class BasePuerComponent extends PuerObject {
 			root.children.push(component)
 
 			component.__render()
-			console.log(this.element)
 			this.element.appendChild(component.element)
 		}
 	}
@@ -233,7 +229,7 @@ class BasePuerComponent extends PuerObject {
 				}
 			} else if (typeof value !== 'function' || typeof value !== 'object') {
 				if (Puer.isAttr(prop)) {
-					this.attr(prop, value)
+					this.setAttribute(prop, value)
 				}
 			}
 		}
@@ -372,9 +368,15 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.remove(... arguments)
 	}
 
-	toggleCssClass() {
+	toggleCssClass(...args) {
+		let methodName = 'toggle'
+		if (Puer.isBoolean(args.at(-1))) {
+			methodName = args.pop()
+				? 'add'
+				: 'remove'
+		}
 		for (const c of arguments) {
-			this.element.classList.toggle(c)
+			this.element.classList[methodName](c)
 		}
 	}
 
@@ -394,12 +396,9 @@ class BasePuerComponent extends PuerObject {
         }
 	}
 
-	attr(name, value=null) {
-		if (value) {
-			this.element.setAttribute(name, value)
-		}
-		return this.element.getAttribute(name)
-	}
+	setAttribute    (name, value) { return this.element.setAttribute(name, value) }
+	getAttribute    (name)        { return this.element.getAttribute(name)        }
+	removeAttribute (name)        { return this.element.removeAttribute(name)     }
 
 	append(component) {
 		component.__render()

@@ -26,15 +26,13 @@ class PuerComponent extends BasePuerComponent {
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop) {
-		// console.log('onPropChange', this.className, prop)
 		this._applyProp(prop)
-		// const propCamelized = Puer.String.camelToUpper(prop)
-		// const methodName    = `on${propCamelized}Change`
-		// return this[methodName] && this[methodName](Puer.dereference(newValue))
+		const propCamelized = Puer.String.camelToUpper(prop)
+		const methodName    = `on${propCamelized}Change`
+		return this[methodName] && this[methodName](this.props[prop])
 	}
-
+	
 	_onStateChange(prop) {
-		// console.log('onStateChange', this.className, prop, this.state.references[prop].owners)
 		this._applyProps()
 	}
 
