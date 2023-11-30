@@ -17,6 +17,8 @@ class PuerTextElement extends PuerHtmlElement {
 		return this.element
 	}
 
+	_applyProp() {}
+
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop) {

@@ -184,7 +184,6 @@ class BasePuerComponent extends PuerObject {
 
 	_onPropChange(prop) {
 		if (this.className === 'PuerTagDiv' && prop === 'text') {
-			debugger
 			// console.log('props', this.props)
 		}
 		this._applyProp(prop)
@@ -200,16 +199,11 @@ class BasePuerComponent extends PuerObject {
 				: this
 
 			component.parent = root
-			root.children.unshift(component)
+			root.children.push(component)
 
 			component.__render()
-
-			if (this.element.firstChild) {
-				this.element.insertBefore(component.element, this.element.firstChild)
-			} else {
-				this.element.appendChild(component.element)
-			}
-
+			console.log(this.element)
+			this.element.appendChild(component.element)
 		}
 	}
 
@@ -230,8 +224,12 @@ class BasePuerComponent extends PuerObject {
 				if (textElement) {
 					textElement.nodeValue = value
 				} else {
-					const component = text(this.props.text)
-					this.prepend(component)
+					if (value) {
+						// console.log('create text', value)
+						// const component = text(value)
+						// this.prepend(component)
+						this._createText()
+					}
 				}
 			} else if (typeof value !== 'function' || typeof value !== 'object') {
 				if (Puer.isAttr(prop)) {
