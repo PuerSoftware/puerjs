@@ -3,14 +3,24 @@
 	display       : flex;
 }
 	.form-input:focus-within {
-		border-color: #6EA7E0;
+		border-color : #6EA7E0;
 	}
-	.form-input>* {
+		.disabled .form-input {
+			border-color : #66798E !important;
+			opacity      : 0.4;
+		}
+			.disabled .form-input > input,
+			.disabled .form-input > select,
+			.disabled .form-input > textarea {
+				color   : #66798E !important;
+				opacity : 1;
+			}
+	.form-input > * {
 		display : inline-block;
 	}
-	.form-input>input,
-	.form-input>select,
-	.form-input>textarea {
+	.form-input > input,
+	.form-input > select,
+	.form-input > textarea {
 		border-width     : 0;
 		padding          : 5px 0;
 		background-color : transparent;
@@ -21,14 +31,14 @@
 		font-weight      : 400;
 		color            : #E7E7E7;
 	}
-		.form-input>input:focus,
-		.form-input>select:focus,
-		.form-input>textareas:focus {
+		.form-input > input:focus,
+		.form-input > select:focus,
+		.form-input > textareas:focus {
 			outline : none;
 		}
-		.form-input>input::placeholder,
-		.form-input>select::placeholder,
-		.form-input>textarea::placeholder {
+		.form-input > input::placeholder,
+		.form-input > select::placeholder,
+		.form-input > textarea::placeholder {
 			font-family    : Inter, sans-serif;
 			font-size      : 14px;
 			font-weight    : 200;
@@ -43,16 +53,19 @@
 	border     : 1px solid #2F4155;
 }
 	.form-input.confined:focus-within {
-		border-color: #6EA7E0;
+		border-color : #6EA7E0;
 	}
-	.form-input.confined>input,
-	.form-input.confined>select,
-	.form-input.confined>textarea {
+	.disabled .form-input.confined {
+		background-color : rgba(47, 65, 85, 0.26) !important;
+	}
+	.form-input.confined > input,
+	.form-input.confined > select,
+	.form-input.confined > textarea {
 		padding          : 7px;
 		background-color : rgba(0, 0, 0, 0.3);
 	}
 
 .error .form-input,
 .error .form-input * {
-	border-color: #EA7A7A !important;
+	border-color : #EA7A7A !important;
 }

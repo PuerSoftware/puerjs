@@ -15,13 +15,11 @@ class Form extends PuerComponent {
 	}
 
 	getInput(name) {
-		let input = null
-		this.$$.FormInput.forEach(ipt => {
-			if (ipt.props.name === name) {
-				input = ipt
-			} 
-		})
-		return input
+		for (const input of this.inputs) {
+			if (input.props.name === name) {
+				return input
+			}
+		}
 	}
 
 	
@@ -36,35 +34,36 @@ class Form extends PuerComponent {
 
 	getData() {
 		let data = {}
-		this.$$.FormInput.forEach(input => {
+		for (const input of this.inputs) {
 			if (!input.props.isHeader) {
 				data[input.props.name] = input.value
 			}
-		})
+		}
 		return data
 	}
 
 	getHeaders() {
 		let headers = {}
-		this.$$.FormInput.forEach(input => {
+		for (const input of this.inputs) {
 			if (input.props.isHeader) {
 				headers[input.props.name] = input.value
 			}
-		})
+		}
 		return headers
+	}
+
+	onReady() {
+		this.inputs = this.$$.FormInput.toArray()
 	}
 
 	onValidate(data) {
 		this.state.error = data.error || ''
-		for (const input of this.$$.FormInput) {
-			const inputField = input.$$$.FormField[0]
-			if (inputField) {
+		for (const input of this.inputs) {
+			if (input.field) {
 				if (data.error && (input.props.name in data.fields)) {
-					if (inputField) {
-						inputField.setError(data.fields[input.props.name])
-					}
+					input.field.setError(data.fields[input.props.name])
 				} else {
-					inputField.setError('')
+					input.field.setError('')
 				}
 			}
 		}

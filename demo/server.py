@@ -29,7 +29,8 @@ def validate():
 		errorCount += 1
 
 	if errorCount > 0:
-		response['error'] = f'This form contains {errorCount} errors'
+		s = 's' if errorCount > 1 else ''
+		response['error'] = f'This form contains {errorCount} error{s}'
 
 	return jsonify(response)
 

@@ -15,7 +15,7 @@ import Puer from './core/class.Puer.js'
 		'accesskey,action,allow,allowfullscreen,allowpaymentrequest,alt,as,async,'                     +
 		'autocomplete,autofocus,autoplay,border,charset,cite,class,color,cols,'                        +
 		'colspan,content,contenteditable,controls,coords,crossorigin,data,data-*,'                     +
-		'datetime,default,defer,dir,dirname,disabled,download,draggable,dropzone,'                     +
+		'datetime,default,defer,dir,dirname,download,draggable,dropzone,'                     +
 		'enctype,for,form,formaction,formenctype,formmethod,formnovalidate,formtarget,'                +
 		'height,hidden,href,hreflang,http-equiv,id,imagesizes,imagesrcset,integrity,'                  +
 		'ismap,itemprop,kind,label,lang,list,loop,max,maxlength,media,method,'                         +

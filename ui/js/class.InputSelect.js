@@ -35,10 +35,7 @@ class InputSelect extends FormInput {
 
 	addOptions(data) {
 		if (this.props.allowEmpty) {
-			data.unshift({
-				value : '0',
-				text  : ' - '
-			})
+			this.addOption('0', ' - ', !this.props.selected)
 		}
 		for (let item of data) {
 			this.addOption(
@@ -50,7 +47,14 @@ class InputSelect extends FormInput {
 	}
 
 	addOption(value, text, selected=false) {
-		this.input.append(option({value: value, text: text, selected: selected}))
+		const props = {
+			value : value,
+			text  : text
+		}
+		if (selected) {
+			props.selected = true
+		}
+		this.input.append(option(props))
 	}
 }
 

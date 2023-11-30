@@ -64,7 +64,6 @@ class PuerChainableSet extends Array {
 	}
 	
 	remove(index) {
-		console.log('remove', index)
 		delete this[index]
 	}
 
