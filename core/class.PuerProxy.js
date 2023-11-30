@@ -26,10 +26,8 @@ class PuerProxy {
 
 				if (prop in target.references) {
 					if (Puer.isReferencing && Puer.isPrimitive(target.references[prop].dereference())) {
-						// console.log('IF', prop, Puer.isReferencing)
 						return target.references[prop]
 					} else {
-						// console.log('ELSE', prop, Puer.isReferencing)
 						return target.references[prop].dereference()
 					}
 				} else if (prop in target) {
@@ -73,22 +71,17 @@ class PuerProxy {
 			? this.references[prop].dereference()
 			: null
 
-		if (value.isReference) {
+		if (value && value.isReference) {
 			this.references[prop] = value
 		} else {
 			if (this.references[prop]) {
 				this.references[prop].value = value
 			} else {
-				this.references[prop] = Puer.reference(prop, value)
+				this.references[prop] = Puer.reference(value)
 			}
 		}
 
 		this.references[prop].addOwner(this.owner, prop, this.onChangeMethod)
-		/////
-		// if (prop === 'value' || prop === 'stateValue') {
-		// 	console.log('setProp',  prop, this.references[prop].id)
-		// }
-		////
 		return oldValue !== value
 	}
 

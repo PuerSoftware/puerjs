@@ -1,9 +1,9 @@
 import StringMethods  from './class.StringMethods.js'
 import ReferenceOwner from './class.ReferenceOwner.js'
 
+
 class Reference {
-	constructor(prop, value) {
-		this.prop        = prop
+	constructor(value) {
 		this.value       = value
 		this.owners      = []
 		this.ownerIds    = new Set()
@@ -18,7 +18,6 @@ class Reference {
 	toString() {
 		return JSON.stringify({
 			reference : '#' + this.id,
-			prop      : this.prop,
 			owners    : this.owners.map(owner => owner.className),
 			value     : this.value
 		})
@@ -32,11 +31,6 @@ class Reference {
 	}
 
 	updateOwners() {
-		////////
-		if (this.prop === 'value' || this.prop === 'stateValue') {
-			console.log('updateOwners', this.prop, this.id)
-		}
-		//////
 		this.owners.forEach(owner => {
 			owner.update()
 		})

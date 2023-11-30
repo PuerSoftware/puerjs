@@ -1,6 +1,5 @@
 import Puer              from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
-import PuerState         from './class.PuerState.js'
 import PuerProxy         from './class.PuerProxy.js'
 
 
@@ -29,7 +28,6 @@ class PuerComponent extends BasePuerComponent {
 	_onPropChange(prop) {
 		// console.log('onPropChange', this.className, prop)
 		this._applyProp(prop)
-		
 		// const propCamelized = Puer.String.camelToUpper(prop)
 		// const methodName    = `on${propCamelized}Change`
 		// return this[methodName] && this[methodName](Puer.dereference(newValue))

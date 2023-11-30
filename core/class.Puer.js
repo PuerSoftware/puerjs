@@ -186,15 +186,15 @@ class Puer {
 		}
 	}
 	
-	static reference(prop, value) {
-		if (value.isReference) {
+	static reference(value) {
+		if (value && value.isReference) {
 			return value
 		}
-		return new Puer.Reference(prop, value)
+		return new Puer.Reference(value)
 	}
 
 	static dereference(value) {
-		return value.isReference 
+		return value && value.isReference 
 			? value.dereference()
 			: value
 	}

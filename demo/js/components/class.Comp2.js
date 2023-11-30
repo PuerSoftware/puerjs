@@ -39,7 +39,6 @@ class Comp2 extends PuerComponent {
 
 	render() {
 		return ul ({text: this.props.myProp}, [
-			// text   (),
 			div    (this.children),
 			li     ([text(this.state.liText)]),
 			li     ([text(this.state.liText + 'myText with data')]),

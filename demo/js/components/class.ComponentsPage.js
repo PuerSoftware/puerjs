@@ -1,7 +1,6 @@
 import Puer, {PuerComponent}  from '../../../puer.js'
 
-import SimpleComponent from './class.SimpleComponent.js'
-
+import Comp1 from './class.Comp1.js'
 
 class ComponentPage extends PuerComponent {
 
@@ -18,12 +17,7 @@ class ComponentPage extends PuerComponent {
 	render() {
 		return div([
 			h3({text: this.props.title}),
-			div([
-				p({text: 'State value'}),
-				p({text: this.state.stateValue}),
-			]),
-			Puer.SimpleComponent({value: this.state.stateValue}),
-			button({text: 'change state' , onclick: this.changeState})
+			Puer.Comp1({myProp: 'xd'})
 		])
 	}
 }

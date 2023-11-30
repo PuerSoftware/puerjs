@@ -183,6 +183,10 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_onPropChange(prop) {
+		if (this.className === 'PuerTagDiv' && prop === 'text') {
+			debugger
+			// console.log('props', this.props)
+		}
 		this._applyProp(prop)
 	}
 
@@ -210,14 +214,12 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_applyProps() {
-		// console.log('_applyProps', this.className)
 		for (const prop in this.props) {
 			this._applyProp(prop)
 		}
 	}
 
 	_applyProp(prop) {
-		// console.log('_applyProp', prop, this.className)
 		if (this.element) {
 			const value = Puer.dereference(this.props[prop])
 			if (prop.startsWith('css')) {
@@ -227,6 +229,9 @@ class BasePuerComponent extends PuerObject {
 				const textElement = this.getTextElement()
 				if (textElement) {
 					textElement.nodeValue = value
+				} else {
+					const component = text(this.props.text)
+					this.prepend(component)
 				}
 			} else if (typeof value !== 'function' || typeof value !== 'object') {
 				if (Puer.isAttr(prop)) {
