@@ -15,7 +15,6 @@ class FormField extends PuerComponent {
 	}
 
 	setError(error) {
-		console.log('FormField.onValidate', error)
 		this.state.error = error
 		error
 			? this.addCssClass('error')
