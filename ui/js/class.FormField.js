@@ -14,11 +14,15 @@ class FormField extends PuerComponent {
 		}
 	}
 
-	setError(error) {
+	set error(error) {
 		this.state.error = error
 		error
 			? this.addCssClass('error')
 			: this.removeCssClass('error')
+	}
+
+	get error() {
+		return this.state.error		
 	}
 
 	render() {

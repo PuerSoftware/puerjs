@@ -22,6 +22,7 @@ class InputSelect extends FormInput {
 	}
 
 	onData(dataSet) {
+		this.events.load && this.events.load(dataSet)
 		let data = dataSet.data
 		if (this.props.filter) {
 			data = dataSet.filter(this.props.filter)
@@ -55,6 +56,18 @@ class InputSelect extends FormInput {
 			props.selected = true
 		}
 		this.input.append(option(props))
+	}
+
+	reset() {
+		if (this.props.selected) {
+			this.value = this.props.selected
+		} else {
+			if (this.props.allowEmpty) {
+				this.value = '0'
+			} else {
+				this.value = null
+			}
+		}
 	}
 }
 

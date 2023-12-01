@@ -61,11 +61,15 @@ class Form extends PuerComponent {
 		for (const input of this.inputs) {
 			if (input.field) {
 				if (data.error && (input.props.name in data.fields)) {
-					input.field.setError(data.fields[input.props.name])
+					input.field.error = data.fields[input.props.name]
 				} else {
-					input.field.setError('')
+					input.field.error = ''
 				}
 			}
+		}
+		const isSubmitSuccessful = !data.error
+		if (isSubmitSuccessful) {
+			this.reset()
 		}
 	}
 
@@ -78,8 +82,17 @@ class Form extends PuerComponent {
 		}
 	}
 
+	reset() {
+		for (const input of this.inputs) {
+			if (!input.isHidden) {
+				input.reset()
+			}
+		}
+	}
+
 	submit() {	
 		this.validate(this.props.action + '1')
+
 	}
 
 	render() {

@@ -12,6 +12,8 @@ class FormInput extends PuerComponent {
 		this.form  = null
 		this.input = null
 		this.field = null
+
+		this.disabledByDefault = this.props.disabled.value
 	}
 	
 	set disabled(value) {
@@ -29,9 +31,8 @@ class FormInput extends PuerComponent {
 	}
 
 	set value(value) {
-		if (value) {
-			this.input.element.value = value
-		}
+		console.log(this.props.name, value)
+		this.input.element.value = value
 		this.events.change && this.events.change(event)
 	}
 
@@ -39,6 +40,16 @@ class FormInput extends PuerComponent {
 		return this.input && this.input.element
 			? this.input.element.value
 			: null
+	}
+
+	reset() {
+		if (!this.disabledByDefault) {
+			this.disabled = false
+		}
+		if (this.field) {
+			this.field.error = ''
+		}
+		this.value = ''
 	}
 
 	onReady() {

@@ -6,8 +6,7 @@
 		border-color : #6EA7E0;
 	}
 		.disabled .form-input {
-			border-color : #66798E !important;
-			opacity      : 0.4;
+			border-color : #2C2D31 !important;
 		}
 			.disabled .form-input > input,
 			.disabled .form-input > select,
@@ -56,7 +55,7 @@
 		border-color : #6EA7E0;
 	}
 	.disabled .form-input.confined {
-		background-color : rgba(47, 65, 85, 0.26) !important;
+		background-color : rgba(13, 14, 17, 1) !important;
 	}
 	.form-input.confined > input,
 	.form-input.confined > select,

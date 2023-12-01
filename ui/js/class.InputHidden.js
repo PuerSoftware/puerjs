@@ -3,6 +3,10 @@ import Puer from '../../puer.js'
 import FormInput from './class.FormInput.js'
 
 class InputHidden extends FormInput {
+	constructor( ... args) {
+		super( ... args)
+		this.isHidden = true
+	}
 
 	validate() {}
 
