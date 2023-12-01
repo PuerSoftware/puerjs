@@ -76,6 +76,10 @@ class PuerRouter {
 	}
 	/*********************** PUBLIC ***********************/
 
+	getRouteConfig() {
+		
+	}
+
 	navigate(hash) {
 		// console.log('Navigate:', hash)
 		let path = this._decode(hash)

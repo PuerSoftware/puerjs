@@ -221,9 +221,6 @@ class BasePuerComponent extends PuerObject {
 					textElement.nodeValue = value
 				} else {
 					if (value) {
-						// console.log('create text', value)
-						// const component = text(value)
-						// this.prepend(component)
 						this._createText()
 					}
 				}
@@ -332,6 +329,24 @@ class BasePuerComponent extends PuerObject {
 			}
 		}
 		this.parent.route(path, relative)
+	}
+
+	getRouteConfig() {
+		/*
+			{
+				App: {
+					'route' : 'page:main',
+					children: [
+						'comp1': ...
+					]
+				}
+			}
+		*/
+		if (this.isCustom && this.props.route) {
+			config[] = this.props.route
+		
+		}
+
 	}
 
 	as(mixinClass) {
