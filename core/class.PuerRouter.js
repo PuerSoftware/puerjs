@@ -1,6 +1,13 @@
 import Puer            from './class.Puer.js'
 import PuerRouteParser from './class.PuerRouteParser.js'
-// #home[cargo{param:value}[mail{id:1321321}].system]
+
+// page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
+
+// 1. Implement isDefaultRoute on corresponding level.
+//	If no corresponding set member is present, default becomes active and hash reflects that.
+// 2. Implement implied "*". If in a member of a route set is present in hash, it remains if not overwritten
+// if more than one default is present in a route set, error is thrown
+// if no default is set in route set, error is thrown
 
 
 class PuerRouter {
@@ -11,6 +18,7 @@ class PuerRouter {
 			this.app            = app
 			this.initialHash    = this._getHash()
 			this.path           = null
+			this.config         = null
 			PuerRouter.instance = this
 		}
 		return PuerRouter.instance
@@ -76,8 +84,8 @@ class PuerRouter {
 	}
 	/*********************** PUBLIC ***********************/
 
-	getRouteConfig() {
-		
+	getConfig() {
+		return this.app.getRouteConfig()
 	}
 
 	navigate(hash) {

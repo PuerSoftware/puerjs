@@ -25,6 +25,8 @@ class BasePuerComponent extends PuerObject {
 		this.parentElementCopy = null
 
 		this._listenerMap = new WeakMap()
+
+		this.props.default('isDefaultRoute', false)
 		
 		// this._setupEventHandlers()
 	}
@@ -334,19 +336,39 @@ class BasePuerComponent extends PuerObject {
 	getRouteConfig() {
 		/*
 			{
-				App: {
-					'route' : 'page:main',
-					children: [
-						'comp1': ...
-					]
-				}
+				route      : 'page:main',
+				isRelative : true,
+				className  : 'mycomp'
+				routes : [
+					...
+				]
 			}
 		*/
-		if (this.isCustom && this.props.route) {
-			config[] = this.props.route
-		
+
+		let config = null
+		if (this.props.route) {
+			config = {
+				route      : this.props.route,
+				className  : this.className,
+				default    : this.props.isDefaultRoute,
+				routes     : []
+			}
 		}
 
+		const descendants       = this.getDescendants()
+		let   descendantConfigs = []
+
+		for (const descendant of descendants) {
+			let descendantConfig = descendant.getRouteConfig()
+			descendantConfigs = descendantConfigs.concat(descendantConfig)
+		}
+
+		if (config) {
+			config.routes = descendantConfigs
+			return [config]
+		} else {
+			return descendantConfigs
+		}
 	}
 
 	as(mixinClass) {
@@ -414,6 +436,14 @@ class BasePuerComponent extends PuerObject {
 	setAttribute    (name, value) { return this.element.setAttribute(name, value) }
 	getAttribute    (name)        { return this.element.getAttribute(name)        }
 	removeAttribute (name)        { return this.element.removeAttribute(name)     }
+
+	getDescendants() {
+		if (this.isCustom) {
+			return [this.root]
+		} else {
+			return this.children
+		}
+	}
 
 	append(component) {
 		component.__render()
