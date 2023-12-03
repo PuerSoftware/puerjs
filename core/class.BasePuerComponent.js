@@ -191,7 +191,7 @@ class BasePuerComponent extends PuerObject {
 	_createText() {
 		const value = this.props.text 
 		if (value) {
-			const component = text(value)
+			const component = Puer.text(value)
 
 			const root = this.isCustom
 				? this.root

@@ -7,7 +7,7 @@ class FormPage extends PuerComponent {
 	}
 
 	render() {
-		return div([
+		return Puer.div([
 			h3({text: this.props.title}),
 			Puer.Form({validationUrl: '/validate'}, [
 				Puer.FormField({label: 'Username'}, [

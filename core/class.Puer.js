@@ -104,14 +104,23 @@ class PuerConstructor {
 		return [props, children]
 	}
 
+	_defineGetter(name, f) {
+		Object.defineProperty(this, name, {
+			get: function() {
+				console.log('start referencing')
+				return f
+			}
+		})
+	}
+
 	_defineText() {
 		let className = 'PuerTagText'
 		Object.defineProperty(PuerTextElement, 'name', { value: className })
 		PuerTextElement.prototype.chainName = 'text'
 
-		window['text'] = (text) => {
+		this._defineGetter('text', (text) => {
 			return new PuerTextElement(text)
-		}
+		})
 	}
 
 	_defineTag(name) {
@@ -123,17 +132,18 @@ class PuerConstructor {
 		Object.defineProperty(window[className], 'name', { value: className })
 		window[className].prototype.chainName = name
 
-		window[name] = (... args) => {
+		this._defineGetter(name, (... args) => {
 			return new window[className](... this._getConstructorArgs(args))
-		}
+		})
 	}
 
 	_defineComponent(cls, importUrl) {
 		this._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
-		this[cls.name] = (... args) => {
+		
+		this._defineGetter(cls.name, (... args) => {
 			return new cls(... this._getConstructorArgs(args))
-		}
+		})
 	}
 
 	define(cls, importUrl) {

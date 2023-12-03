@@ -10,18 +10,18 @@ import RoutingPage     from './components/class.RoutingPage.js'
 Puer.application(
 	class App extends PuerApp {
 		render() {
-			return div([
-				div('header', [
-					h2({text: 'PuerJS'}),
-					div([
+			return Puer.div([
+				Puer.div('header', [
+					Puer.h2({text: 'PuerJS'}),
+					Puer.div([
 						Puer.Link({ label: 'Home',       hash: 'page:index'     }),
-						span({text: ' | '}),
+						Puer.span({text: ' | '}),
 						Puer.Link({ label: 'Unit Tests', hash: 'page:unit'      }),
-						span({text: ' | '}),
+						Puer.span({text: ' | '}),
 						Puer.Link({ label: 'Form',       hash: 'page:form'      }),
-						span({text: ' | '}),
+						Puer.span({text: ' | '}),
 						Puer.Link({ label: 'Component',  hash: 'page:component' }),
-						span({text: ' | '}),
+						Puer.span({text: ' | '}),
 						Puer.Link({ label: 'Routing',    hash: 'page:routing'   }),
 					])
 				]),

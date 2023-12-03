@@ -55,7 +55,7 @@ class InputSelect extends FormInput {
 		if (selected) {
 			props.selected = true
 		}
-		this.input.append(option(props))
+		this.input.append(Puer.option(props))
 	}
 
 	reset() {

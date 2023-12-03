@@ -16,7 +16,7 @@ class LinkSet extends PuerComponent {
 	}
 
 	render() {
-		return div(this.children)
+		return Puer.div(this.children)
 	}
 }
 

@@ -15,7 +15,7 @@ class Align extends Box {
 		let textAlign = 'center'
 		let margin    = `${margin_t} ${margin_r} ${margin_b} ${margin_l}`
 		
-		return div({ cssMargin: margin, cssTextAlign: textAlign }, this.children)
+		return Puer.div({ cssMargin: margin, cssTextAlign: textAlign }, this.children)
 	}
 }
 

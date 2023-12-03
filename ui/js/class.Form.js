@@ -97,18 +97,18 @@ class Form extends PuerComponent {
 
 	render() {
 		return (
-			div([
-				h1 ({text: this.props.title}),
-				p  ({text: this.props.subtitle}),
-				p  ({text: this.state.error, class: 'error form-error'}),
-				form ({
+			Puer.div([
+				Puer.h1 ({text: this.props.title}),
+				Puer.p  ({text: this.props.subtitle}),
+				Puer.p  ({text: this.state.error, class: 'error form-error'}),
+				Puer.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype
 				}, [
 					... this.children,
-					div ('button-panel', [
+					Puer.div ('button-panel', [
 						Puer.InputButton ({
 							type    : 'button',
 							onclick : this.submit,

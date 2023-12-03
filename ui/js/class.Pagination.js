@@ -32,14 +32,14 @@ class Pagination extends PuerComponent {
 	}
 
 	render() {
-		return div({cssDisplay: this.state.display}, [
-			a ({text : '&laquo; previous', onClick: this.prev}),
-			span('pages', [
-				span({'text': this.state.page}),
-				span({'text': 'of'}),
-				span({'text': this.props.pages})
+		return Puer.div({cssDisplay: this.state.display}, [
+			Puer.a ({text : '&laquo; previous', onClick: this.prev}),
+			Puer.span('pages', [
+				Puer.span({'text': this.state.page}),
+				Puer.span({'text': 'of'}),
+				Puer.span({'text': this.props.pages})
 			]),
-			a ({text : 'next &raquo;', onClick: this.next})
+			Puer.a ({text : 'next &raquo;', onClick: this.next})
 		])
 	}
 }

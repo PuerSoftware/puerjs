@@ -31,13 +31,13 @@ class Comp1 extends PuerComponent {
 	}
 
 	render() {
-		return div('', {text: 'Some Div', onclick: this._onClick}, [
+		return Puer.div('', {text: 'Some Div', onclick: this._onClick}, [
 			Puer.Comp2({myProp: this.props.myProp},[
-				h1({myProp: 'test', cssBackgroundColor: this.state.randomColor}, [text('H1')])
+				Puer.h1({myProp: 'test', cssBackgroundColor: this.state.randomColor}, [text('H1')])
 			]),
-			button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
-			button({onClick: this.changeMyProp}, [text('Change prop')]),
-			button({onClick: this.setRandomColor}, [text('Change color')]),
+			Puer.button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
+			Puer.button({onClick: this.changeMyProp}, [text('Change prop')]),
+			Puer.button({onClick: this.setRandomColor}, [text('Change color')]),
 		])
 	}
 }

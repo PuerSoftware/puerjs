@@ -6,7 +6,7 @@ class SimpleComponent extends PuerComponent {
 	}
 
 	render() {
-		return div({text: this.props.value})
+		return Puer.div({text: this.props.value})
 	}
 }
 

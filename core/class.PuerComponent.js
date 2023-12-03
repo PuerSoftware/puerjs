@@ -62,7 +62,7 @@ class PuerComponent extends BasePuerComponent {
 	/*********************** PUBLIC ***********************/
 
 	render() {
-		return div()
+		return Puer.div()
 	}
 
 	on(name, f, options) {

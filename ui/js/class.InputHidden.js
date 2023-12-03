@@ -13,7 +13,7 @@ class InputHidden extends FormInput {
 	onReady() {}
 
 	render() {
-		this.input = input({ ... this.props, type: 'hidden' })
+		this.input = Puer.input({ ... this.props, type: 'hidden' })
 		return this.input
 	}
 }

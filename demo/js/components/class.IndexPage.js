@@ -8,9 +8,9 @@ class IndexPage extends PuerComponent{
 	}
 
 	render() {
-		return div([
+		return Puer.div([
 			h3({text: this.props.title}),
-			div({text: 'Because we\'ve "loved" React so much, that decided to brew some Puer...'}),
+			Puer.div({text: 'Because we\'ve "loved" React so much, that decided to brew some Puer...'}),
 			img({src: 'img/puer.jpg', width: '200'})
 		])
 	}

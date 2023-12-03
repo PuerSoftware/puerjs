@@ -26,10 +26,10 @@ class FormField extends PuerComponent {
 	}
 
 	render() {
-		return div([
-			label({text: this.props.label}),
+		return Puer.div([
+			Puer.label({text: this.props.label}),
 			... this.children,
-			div('error field-error', {text: this.state.error})
+			Puer.div('error field-error', {text: this.state.error})
 		])
 	}
 }

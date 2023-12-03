@@ -15,7 +15,7 @@ class ComponentPage extends PuerComponent {
 	}
 
 	render() {
-		return div([
+		return Puer.div([
 			h3({text: this.props.title}),
 			Puer.Comp1({myProp: 'xd'})
 		])

@@ -38,18 +38,18 @@ class Comp2 extends PuerComponent {
 	}
 
 	render() {
-		return ul ({text: this.props.myProp}, [
-			div    (this.children),
-			li     ([text(this.state.liText)]),
-			li     ([text(this.state.liText + 'myText with data')]),
-			li     ([text(`${this.props.myProp} myText with props`)]),
-			li     ([text(this.props.myProp)]),
-			li     ([text(this.props.myProp)]),
+		return Puer.ul ({text: this.props.myProp}, [
+			Puer.div    (this.children),
+			Puer.li     ([text(this.state.liText)]),
+			Puer.li     ([text(this.state.liText + 'myText with data')]),
+			Puer.li     ([text(`${this.props.myProp} myText with props`)]),
+			Puer.li     ([text(this.props.myProp)]),
+			Puer.li     ([text(this.props.myProp)]),
 			Puer.Comp3({myProp: this.props.myProp}),
-			button ({onClick: this.changeState}, [text('Change state')]),
-			button ({onClick: this.renderItem},  [text('Add Item')]),
-			button ({onClick: this.removeItem},  [text('Remove Item')]),
-			button ({onClick: this.showChain},   [text('Show Chain')])
+			Puer.button ({onClick: this.changeState}, [text('Change state')]),
+			Puer.button ({onClick: this.renderItem},  [text('Add Item')]),
+			Puer.button ({onClick: this.removeItem},  [text('Remove Item')]),
+			Puer.button ({onClick: this.showChain},   [text('Show Chain')])
 		])
 	}
 }

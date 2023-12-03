@@ -19,25 +19,25 @@ class UnitTestPage extends PuerComponent {
 	}
 
 	render() {
-		return div([
+		return Puer.div([
 			h3({text: this.props.title}),
-			ul([
-				li([
-					a({
+			Puer.ul([
+				Puer.li([
+					Puer.a({
 						text     : 'Test Puer Props',
 						testName : 'testPuerProps',
 						onclick  : this.test
 					})
 				]),
-				li([
-					a({
+				Puer.li([
+					Puer.a({
 						text     : 'Test Puer Component Set',
 						testName : 'testPuerComponentSet',
 						onclick  : this.test
 					})
 				]),
-				li([
-					a({
+				Puer.li([
+					Puer.a({
 						text     : 'Test Puer State',
 						testName : 'testPuerState',
 						onclick  : this.test

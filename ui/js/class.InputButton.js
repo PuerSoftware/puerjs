@@ -10,7 +10,7 @@ class InputButton extends PuerComponent {
 	}
 
 	render() {
-		return window[this.props.tagName.value]({ ... this.props })
+		return Puer[this.props.tagName.value]({ ... this.props })
 	}
 }
 

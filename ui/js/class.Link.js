@@ -19,8 +19,8 @@ class Link extends PuerComponent {
 	}
 
 	render() {
-		return div({onClick : this.navigate}, [
-			a ({text : this.props.label})
+		return Puer.div({onClick : this.navigate}, [
+			Puer.a ({text : this.props.label})
 		])
 	}
 }

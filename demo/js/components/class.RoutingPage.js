@@ -8,11 +8,11 @@ class RoutingPage extends PuerComponent{
 	}
 
 	render() {
-		return div({cssDisplay: 'flex', cssFlexDirection: 'column'}, [
+		return Puer.div({cssDisplay: 'flex', cssFlexDirection: 'column'}, [
 			h3({text: this.props.title}),
-			div({cssDisplay: 'flex', cssFlexDirection: 'row'}, [
-				div({text: 'Green', route: 'tab:green', cssBackgroundColor: 'green', cssFlex: 1}),
-				div({text: 'Blue',  route: 'tab:blue',  cssBackgroundColor: 'blue',  cssFlex: 1}),
+			Puer.div({cssDisplay: 'flex', cssFlexDirection: 'row'}, [
+				Puer.div({text: 'Green', route: 'tab:green', cssBackgroundColor: 'green', cssFlex: 1}),
+				Puer.div({text: 'Blue',  route: 'tab:blue',  cssBackgroundColor: 'blue',  cssFlex: 1}),
 				Puer.Link({label: 'Green', hash: 'page:routing[tab:green]'}),
 				Puer.Link({label: 'Blue',  hash: 'page:routing[tab:blue]'})
 			]),
