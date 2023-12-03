@@ -11,63 +11,73 @@ import DataSet         from '../library/class.DataSet.js'
 import Reference       from '../library/class.Reference.js'
 
 
-class Puer {
-	static app
-	static owner
-	static path
-	static appPath
-	static isReferencing
-	static _cssUrls  = new Set()
-	static _cssCount = 0
+class PuerConstructor {
+	static instance = null
+
+	constructor() {
+		if (!PuerConstructor.instance) {
+			this.app
+			this.owner
+			this.path
+			this.appPath
+			this.isReferencing
+			this._cssUrls  = new Set()
+			this._cssCount = 0
+			PuerConstructor.instance = this
+
+			this._init()
+		}
+		return PuerConstructor.instance
+	}
 
 	/********************** PRIVATE **********************/
 
-	static init() {
-		Puer._setTimezoneCookie()
-		Puer._classToType = {}
+	_init() {
+		this._setTimezoneCookie()
+		this._classToType = {}
 		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
 			.forEach(name => {
 				const typeName = name.toLowerCase()
-				Puer._classToType['[object ' + name + ']'] = typeName
+				this._classToType['[object ' + name + ']'] = typeName
 			})
-		Puer.Error  = PuerError
-		Puer.Event  = {}
-		Puer.Events = new PuerEvents(Puer)
+		this.Error  = PuerError
+		this.Event  = {}
+		this.Events = new PuerEvents(this)
 	}
 
-	static _setTimezoneCookie() {
+	_setTimezoneCookie() {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 		document.cookie = 'timezone=' + timezone + ';path=/;max-age=31536000'; // one year
 	}
 
-	static _onCssLoad() {
-		Puer._cssCount --
-		if (Puer._cssCount == 0) {
-			Puer.app.__ready()
+	_onCssLoad() {
+		this._cssCount --
+		if (this._cssCount == 0) {
+			this.app.__ready()
 		}
 	}
 
-	static _loadCss(componentUrl) {
+	_loadCss(componentUrl) {
 		if (componentUrl) {
 			let cssUrl = componentUrl.includes('puerjs') 
-				? Puer.path + componentUrl.split(Puer.path)[1].replace(/\bjs\b/g, 'css')
+				? this.path + componentUrl.split(this.path)[1].replace(/\bjs\b/g, 'css')
 				: componentUrl.replace(/\bjs\b/g, 'css')
 
-			if (!Puer._cssUrls.has(cssUrl)) {
+			if (!this._cssUrls.has(cssUrl)) {
 				let styleElement = document.createElement('link')
 				styleElement.setAttribute('type', 'text/css')
 				styleElement.setAttribute('rel', 'stylesheet')
 				styleElement.setAttribute('href', cssUrl)
-				styleElement.addEventListener('load',  Puer._onCssLoad, false)
-				styleElement.addEventListener('error', Puer._onCssLoad, false)
+				styleElement.addEventListener('load',  this._onCssLoad.bind(this), false)
+				styleElement.addEventListener('error', this._onCssLoad.bind(this), false)
 				document.head.appendChild(styleElement)
-				Puer._cssUrls.add(cssUrl)
-				Puer._cssCount ++
+				this._cssUrls.add(cssUrl)
+				this._cssCount ++
 			}
 		}
 	}
 
-	static _toClassesArray(value) {
+	_toClassesArray(value) {
 		if (value) {
 			if (typeof value == 'function') {
 				value = [value]
@@ -80,21 +90,21 @@ class Puer {
 		return value
 	}
 
-	static _getConstructorArgs(args) {
-		let [ cssClass,  props,    children ] = Puer.arganize(args,
+	_getConstructorArgs(args) {
+		let [ cssClass,  props,    children ] = this.arganize(args,
 			[ 'string',  'object', 'array', ],
 			[ '',        {},       [],      ]
 		)
-		if (props.text && Puer.isString(props.text)) {
-			props.text = Puer.String.decodeHtmlEntities(props.text)
+		if (props.text && this.isString(props.text)) {
+			props.text = this.String.decodeHtmlEntities(props.text)
 		}
-		props.classes = Puer._toClassesArray(props.classes)
-		cssClass      = Puer._toClassesArray(cssClass)
+		props.classes = this._toClassesArray(props.classes)
+		cssClass      = this._toClassesArray(cssClass)
 		props.classes = props.classes.concat(cssClass)
 		return [props, children]
 	}
 
-	static _defineText() {
+	_defineText() {
 		let className = 'PuerTagText'
 		Object.defineProperty(PuerTextElement, 'name', { value: className })
 		PuerTextElement.prototype.chainName = 'text'
@@ -104,7 +114,7 @@ class Puer {
 		}
 	}
 
-	static _defineTag(name) {
+	_defineTag(name) {
 		let className = 'PuerTag' + StringMethods.capitalize(name)
 		eval(
 			`class ${className} extends PuerHtmlElement {};` +
@@ -114,99 +124,99 @@ class Puer {
 		window[className].prototype.chainName = name
 
 		window[name] = (... args) => {
-			return new window[className](... Puer._getConstructorArgs(args))
+			return new window[className](... this._getConstructorArgs(args))
 		}
 	}
 
-	static _defineComponent(cls, importUrl) {
-		Puer._loadCss(importUrl)
+	_defineComponent(cls, importUrl) {
+		this._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
-		Puer[cls.name] = (... args) => {
-			return new cls(... Puer._getConstructorArgs(args))
+		this[cls.name] = (... args) => {
+			return new cls(... this._getConstructorArgs(args))
 		}
 	}
 
-	static define(cls, importUrl) {
+	define(cls, importUrl) {
 		if (typeof cls === 'string') {
 			if (window[cls]) {
 				throw new PuerError(`Could not define tag "${cls}": name occupied`, Puer, 'define')
 			} else {
 				if (cls === 'text') {
-					return Puer._defineText()
+					return this._defineText()
 				}
-				return Puer._defineTag(cls)
+				return this._defineTag(cls)
 			}
 		}
-		if (Puer[cls.name]) {
-			throw new PuerError(`Could not define component "Puer.${cls.name}": name occupied`, Puer, 'define')
+		if (this[cls.name]) {
+			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, Puer, 'define')
 		}
-		return Puer._defineComponent(cls, importUrl)
+		return this._defineComponent(cls, importUrl)
 	}
 
 	/*********************** PUBLIC ***********************/
 
-	static isFunction(o) { return Puer.type(o) === 'function' }
-	static isBoolean(o)  { return Puer.type(o) === 'boolean'  }
-	static isObject(o)   { return Puer.type(o) === 'object'   }
-	static isString(o)   { return Puer.type(o) === 'string'   }
-	static isNumber(o)   { return Puer.type(o) === 'number'   }
-	static isRegexp(o)   { return Puer.type(o) === 'regexp'   }
-	static isSymbol(o)   { return Puer.type(o) === 'symbol'   }
-	static isError(o)    { return Puer.type(o) === 'error'    }
-	static isArray(o)    { return Puer.type(o) === 'array'    }
-	static isDate(o)     { return Puer.type(o) === 'date'     }
+	isFunction(o) { return this.type(o) === 'function' }
+	isBoolean(o)  { return this.type(o) === 'boolean'  }
+	isObject(o)   { return this.type(o) === 'object'   }
+	isString(o)   { return this.type(o) === 'string'   }
+	isNumber(o)   { return this.type(o) === 'number'   }
+	isRegexp(o)   { return this.type(o) === 'regexp'   }
+	isSymbol(o)   { return this.type(o) === 'symbol'   }
+	isError(o)    { return this.type(o) === 'error'    }
+	isArray(o)    { return this.type(o) === 'array'    }
+	isDate(o)     { return this.type(o) === 'date'     }
 
-	static isPrimitive(o) {
-		return ['string', 'number', 'boolean'].includes(Puer.type(o))
+	isPrimitive(o) {
+		return ['string', 'number', 'boolean'].includes(this.type(o))
 	}
 
-	static application(cls, importUrl) {
-		Puer._defineComponent(cls, importUrl)
-		Puer.app    = Puer[cls.name]()
-		Puer.Router = new PuerRouter(Puer.app)
+	application(cls, importUrl) {
+		this._defineComponent(cls, importUrl)
+		this.app    = this[cls.name]()
+		this.Router = new PuerRouter(this.app)
 		return Puer
 	}
 
-	static router(getRoutes) {
-		return Puer.Router.define(getRoutes)
+	router(getRoutes) {
+		return this.Router.define(getRoutes)
 	}
 
-	static referencer(f, owner=window) {
+	referencer(f, owner=window) {
 		let alias = f
 		return (...args) => {
-			Puer.isReferencing = true
+			this.isReferencing = true
 			if (owner.isCustom) {
-				Puer.owner = owner
+				this.owner = owner
 			}
 			let result = alias.apply(owner, args)
 
-			Puer.owner    = null
-			Puer.isReferencing = false
+			this.owner    = null
+			this.isReferencing = false
 			return result
 		}
 	}
 	
-	static reference(value) {
+	reference(value) {
 		if (value && value.isReference) {
 			return value
 		}
-		return new Puer.Reference(value)
+		return new this.Reference(value)
 	}
 
-	static dereference(value) {
+	dereference(value) {
 		return value && value.isReference 
 			? value.dereference()
 			: value
 	}
 
-	static defer(f, timeout=1) {
+	defer(f, timeout=1) {
 		setTimeout(f, timeout)
 	}
 
-	static sync(asyncFunc) {
+	sync(asyncFunc) {
 		return function(...args) {
 			let callback = null
-			if (Puer.isFunction(args.at(-1))) {
+			if (this.isFunction(args.at(-1))) {
 				callback = args.pop()
 			}
  			asyncFunc(...args).then(result => {
@@ -217,9 +227,9 @@ class Puer {
 		}
 	}
 
-	static arganize(args, types, defaults, norm_args=[]) {
+	arganize(args, types, defaults, norm_args=[]) {
 		if (types.length) {
-			if (Puer.type(args[0]) == types.shift()) {
+			if (this.type(args[0]) == types.shift()) {
 				defaults.shift()
 				norm_args.push(args.shift())
 			} else {
@@ -230,28 +240,30 @@ class Puer {
 		return norm_args
 	}
 
-	static type(o) {
+	type(o) {
 		if (o == null) { return o + '' }
 		const className = Object.prototype.toString.call(o)
-		return Puer._classToType[className] || typeof o
+		return this._classToType[className] || typeof o
 	}
 
-	static timer(name) {
+	timer(name) {
 		const time = Date.now()
-		if (Puer._time) {
-			console.log('Timer end:', Puer._time_name, `${time - Puer._time} ms`)
+		if (this._time) {
+			console.log('Timer end:', this._time_name, `${time - this._time} ms`)
 		}
 		if (name) {
 			console.log('Timer start:', name)
-			Puer._time      = time
-			Puer._time_name = name
+			this._time      = time
+			this._time_name = name
 		} else {
-			Puer._time      = undefined
-			Puer._time_name = undefined
+			this._time      = undefined
+			this._time_name = undefined
 		}
 	}
 
 }
+
+const Puer = new PuerConstructor()
 
 Puer.String    = StringMethods
 Puer.Object    = ObjectMethods
@@ -259,8 +271,6 @@ Puer.Date      = DateMethods
 Puer.Request   = Request
 Puer.DataSet   = DataSet
 Puer.Reference = Reference 
-
-Puer.init()
 
 window.Puer = Puer
 export default Puer
