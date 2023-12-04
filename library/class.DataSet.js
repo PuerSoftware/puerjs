@@ -27,11 +27,11 @@ class DataSet {
 			const cachedResponse = await cache.match(url)
 
 			if (cachedResponse) {
-				console.log('Loading from cache', url)
+				// console.log('Loading from cache', url)
 				const data = await cachedResponse.json()
 				_this._setData(data, callback)
 			} else {
-				console.log('Loading from URL', url)
+				// console.log('Loading from URL', url)
 				const response = await fetch(url)
 				if (response.ok) {
 					cache.put(url, response.clone())
@@ -40,7 +40,7 @@ class DataSet {
 				}
 			}
 		} else {
-			console.log('Loading from URL', url)
+			// console.log('Loading from URL', url)
 			const response = await fetch(url)
 			if (response.ok) {
 				const data = await response.json()

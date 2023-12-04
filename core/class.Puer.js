@@ -6,6 +6,7 @@ import PuerTextElement from './class.PuerTextElement.js'
 import StringMethods   from '../library/class.StringMethods.js'
 import ObjectMethods   from '../library/class.ObjectMethods.js'
 import DateMethods     from '../library/class.DateMethods.js'
+import SetMethods      from '../library/class.SetMethods.js'
 import Request         from '../library/class.Request.js'
 import DataSet         from '../library/class.DataSet.js'
 import Reference       from '../library/class.Reference.js'
@@ -264,6 +265,7 @@ const Puer = new PuerConstructor()
 Puer.String    = StringMethods
 Puer.Object    = ObjectMethods
 Puer.Date      = DateMethods
+Puer.Set       = SetMethods
 Puer.Request   = Request
 Puer.DataSet   = DataSet
 Puer.Reference = Reference 

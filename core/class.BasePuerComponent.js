@@ -330,11 +330,13 @@ class BasePuerComponent extends PuerObject {
 
 		let config = null
 		if (this.props.route) {
+			const [name, value] = this.props.route.split(':')
 			config = {
-				route      : this.props.route,
-				className  : this.className,
-				default    : this.props.isDefaultRoute,
-				routes     : []
+				name      : name,
+				value     : value,
+				className : this.className,
+				default   : this.props.isDefaultRoute,
+				routes    : []
 			}
 		}
 
