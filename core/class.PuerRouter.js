@@ -70,8 +70,7 @@ class PuerRouter {
 		oldPath = oldPath || this.path || []
 		config  = config  || this.config
 
-		let result       = []
-		let resultObj = {}
+		let result = []
 
 		console.log('config',  JSON.stringify(config, null, 4))
 		console.log('oldPath', JSON.stringify(oldPath, null, 4))
@@ -83,10 +82,12 @@ class PuerRouter {
 		let   nextConfig  = null
 
 		for (const defaultObj of defaults) {
+			let resultObj  = {}
 			let oldPathObj = null
 			let newPathObj = null
 
 			resultObj.name = defaultObj.name
+			resultObj.components = []
 			
 			for (newPathObj of newPath) {
 				if (newPathObj.name === defaultObj.name) {
@@ -121,10 +122,8 @@ class PuerRouter {
 					nextOldPath,
 					nextConfig
 				)
-				
-			} else {
-				resultObj.components = []
 			}
+			console.log('PUSH', resultObj)
 			result.push(resultObj)
 		}
 
