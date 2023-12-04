@@ -67,7 +67,7 @@ class PuerRouter {
 
 	/* Applies relative path object to current path (this.path)	*/
 	_apply(newPath, oldPath, config) {
-		oldPath = oldPath || this.path
+		oldPath = oldPath || this.path || []
 		config  = config  || this.config
 
 		let result       = []
@@ -152,25 +152,22 @@ class PuerRouter {
 	navigate(hash) {
 		// console.log('Navigate:', hash)
 		let path = this._decode(hash)
-		if (hash != this.initialHash) {
-			path = this._apply(path)
-			console.log('RESULT:', JSON.stringify(path, null, 4))
-		}
+		
+		path = this._apply(path)
+		console.log('RESULT:', JSON.stringify(path, null, 4))
 		hash = this._encode(path)
 		window.location.hash = '#' + hash
-		// this.app.__update()
-	}
-
-	default(hash) {
-		this.initialHash = this.initialHash || hash
 	}
 
 	start() {
 		this.config = this.getConfig()
 		this.navigate(this.initialHash)
 		window.addEventListener('hashchange', (event) => {
-			const hash = this._getHash(event.newURL)
+			let hash = this._getHash(event.newURL)
+			const path = this._apply(this._decode(hash))
+			hash = this._encode(path)
 			this._route(hash)
+			window.location.hash = '#' + hash
 		})
 		this._route(this.initialHash)
 	}
