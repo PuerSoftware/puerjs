@@ -107,7 +107,8 @@ class PuerConstructor {
 	_defineGetter(name, f) {
 		Object.defineProperty(this, name, {
 			get: function() {
-				console.log('start referencing')
+				// console.log('start referencing')
+				this.isReferencing = true
 				return f
 			}
 		})
@@ -189,21 +190,6 @@ class PuerConstructor {
 
 	router(getRoutes) {
 		return this.Router.define(getRoutes)
-	}
-
-	referencer(f, owner=window) {
-		let alias = f
-		return (...args) => {
-			this.isReferencing = true
-			if (owner.isCustom) {
-				this.owner = owner
-			}
-			let result = alias.apply(owner, args)
-
-			this.owner    = null
-			this.isReferencing = false
-			return result
-		}
 	}
 	
 	reference(value) {

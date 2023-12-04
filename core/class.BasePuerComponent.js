@@ -14,7 +14,7 @@ class BasePuerComponent extends PuerObject {
 		this.root     = null
 		this.children = new PuerComponentSet (children, this._onChildrenChange, this)
 		this.props    = new PuerProps        (props,    '_onPropChange',              this)
-
+		
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
@@ -27,8 +27,6 @@ class BasePuerComponent extends PuerObject {
 		this._listenerMap = new WeakMap()
 
 		this.props.default('isDefaultRoute', false)
-		
-		// this._setupEventHandlers()
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -264,21 +262,6 @@ class BasePuerComponent extends PuerObject {
 			this.root[methodName](... args)
 		} else {
 			this.children.forEach(child => child[methodName](... args))
-		}
-	}
-
-	_setupEventHandlers() {
-		for (const prop of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) {
-			if (typeof this[prop] === 'function' && prop.startsWith('on')) {
-				const originalMethod = this[prop].bind(this)
-
-				this[prop] = () => {
-					if (Object.getPrototypeOf(this)[prop]) {
-						Object.getPrototypeOf(this)[prop].call(this)
-					}
-					originalMethod()
-				}
-			}
 		}
 	}
 	

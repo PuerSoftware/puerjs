@@ -31,7 +31,6 @@ class FormInput extends PuerComponent {
 	}
 
 	set value(value) {
-		console.log(this.props.name, value)
 		this.input.element.value = value
 		this.events.change && this.events.change(event)
 	}
@@ -65,7 +64,7 @@ class FormInput extends PuerComponent {
 	}
 
 	render() {
-		this.input = Puer[this.props.tagName.value]({ ... this.props })
+		this.input = Puer[this.props.tagName]({ ... this.props })
 		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
 

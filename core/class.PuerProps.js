@@ -20,9 +20,10 @@ class PuerProps extends PuerProxy {
 
 	extractEvents(owner) {
 		const events = {}
+
 		for (const prop in this.references) {
 			let value = this.references[prop].dereference()
-			if (typeof value === 'function' && prop.startsWith('on')) {
+			if (typeof value === 'function' && Puer.isEvent(prop)) {
 				events[prop.substring(2).toLowerCase()] = value.bind(owner)
 				delete this.references[prop]
 			}

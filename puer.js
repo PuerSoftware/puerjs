@@ -15,7 +15,7 @@ import Puer from './core/class.Puer.js'
 		'accesskey,action,allow,allowfullscreen,allowpaymentrequest,alt,as,async,'                     +
 		'autocomplete,autofocus,autoplay,border,charset,cite,class,color,cols,'                        +
 		'colspan,content,contenteditable,controls,coords,crossorigin,data,data-*,'                     +
-		'datetime,default,defer,dir,dirname,download,draggable,dropzone,'                     +
+		'datetime,default,defer,dir,dirname,download,draggable,dropzone,'                              +
 		'enctype,for,form,formaction,formenctype,formmethod,formnovalidate,formtarget,'                +
 		'height,hidden,href,hreflang,http-equiv,id,imagesizes,imagesrcset,integrity,'                  +
 		'ismap,itemprop,kind,label,lang,list,loop,max,maxlength,media,method,'                         +
@@ -27,6 +27,39 @@ import Puer from './core/class.Puer.js'
 		'spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,'              +
 		'type,usemap,value,width,wrap'
 	).split(',')
+	
+	const events = (
+		'abort,ended,addtrack,change,removetrack,messageerror,message,animationcancel,animationend,'        +
+		'animationiteration,animationstart,copy,cut,dragend,dragenter,dragleave,dragover,dragstart,'        +
+		'drag,drop,fullscreenchange,fullscreenerror,gotpointercapture,keydown,keypress,keyup,'              +
+		'lostpointercapture,paste,pointercancel,pointerdown,pointerenter,pointerleave,pointerlockchange,'   +
+		'pointerlockerror,pointermove,pointerout,pointerover,pointerup,readystatechange,scroll,'            +
+		'selectionchange,touchcancel,touchend,touchmove,touchstart,transitioncancel,transitionend,'         +
+		'transitionrun,transitionstart,visibilitychange,wheel,afterscriptexecute,auxclick,'                 +
+		'beforescriptexecute,blur,click,compositionend,compositionstart,compositionupdate,contextmenu,'     +
+		'dblclick,error,focusin,focusout,focus,gesturechange,gestureend,gesturestart,mousedown,'            +
+		'mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,mousewheel,select,'                     +
+		'webkitmouseforcechanged,webkitmouseforcedown,webkitmouseforceup,webkitmouseforcewillbegin,'        +
+		'cancel,open,loadend,loadstart,load,progress,webglcontextcreationerror,webglcontextlost,'           +
+		'webglcontextrestored,toggle,close,beforeinput,input,formdata,reset,submit,invalid,search,'         +
+		'canplaythrough,canplay,durationchange,emptied,loadeddata,loadedmetadata,pause,playing,play,'       +
+		'ratechange,seeked,seeking,stalled,suspend,timeupdate,volumechange,waiting,slotchange,cuechange,'   +
+		'enterpictureinpicture,leavepictureinpicture,versionchange,blocked,upgradeneeded,success,'          +
+		'complete,devicechange,mute,unmute,merchantvalidation,paymentmethodchange,shippingaddresschange,'   +
+		'shippingoptionchange,payerdetailchange,resourcetimingbufferfull,resize,bufferedamountlow,closing,' +
+		'tonechange,gatheringstatechange,selectedcandidatepairchange,statechange,addstream,'                +
+		'connectionstatechange,datachannel,icecandidateerror,icecandidate,iceconnectionstatechange,'        +
+		'icegatheringstatechange,negotiationneeded,removestream,signalingstatechange,track,audioprocess,'   +
+		'activate,contentdelete,install,notificationclick,pushsubscriptionchange,push,connect,audioend,'    +
+		'audiostart,end,nomatch,result,soundend,soundstart,speechend,speechstart,start,voiceschanged,'      +
+		'boundary,mark,resume,beginEvent,endEvent,repeatEvent,unload,removeTrack,afterprint,appinstalled,'  +
+		'beforeprint,beforeunload,devicemotion,deviceorientation,gamepadconnected,gamepaddisconnected,'     +
+		'hashchange,languagechange,offline,online,orientationchange,pagehide,pageshow,popstate,'            +
+		'rejectionhandled,storage,unhandledrejection,vrdisplayactivate,vrdisplayblur,vrdisplayconnect,'     +
+		'vrdisplaydeactivate,vrdisplaydisconnect,vrdisplayfocus,vrdisplaypointerrestricted,'                +
+		'vrdisplaypointerunrestricted,vrdisplaypresentchange,timeout,inputsourceschange,selectend,'         +
+		'selectstart,squeezeend,squeezestart,squeeze' 
+	).split(',')
 
 	for (const tag of tags) {
 		Puer.define(tag)
@@ -37,7 +70,8 @@ import Puer from './core/class.Puer.js'
 		return filePath.slice(0, filePath.lastIndexOf('/'))
 	}
 	Puer.path = dirName(import.meta.url) + '/'
-	Puer.isAttr = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 }
+	Puer.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 }
+	Puer.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
 })()
 
 export { default as PuerComponent } from './core/class.PuerComponent.js'

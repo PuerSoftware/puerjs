@@ -12,6 +12,7 @@ class Form extends PuerComponent {
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
 		this.state.error = ''
+		this.isSaving    = false
 	}
 
 	getInput(name) {
@@ -68,9 +69,10 @@ class Form extends PuerComponent {
 			}
 		}
 		const isSubmitSuccessful = !data.error
-		if (isSubmitSuccessful) {
+		if (isSubmitSuccessful && this.isSaving) {
 			this.reset()
 		}
+		this.isSaving = false
 	}
 
 	validate(url) {
@@ -92,7 +94,6 @@ class Form extends PuerComponent {
 
 	submit() {	
 		this.validate(this.props.action + '1')
-
 	}
 
 	render() {

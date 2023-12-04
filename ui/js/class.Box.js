@@ -8,7 +8,7 @@ class Box extends PuerComponent {
 	}
 
 	render() {
-		return Puer[this.props.tagName.value]({}, this.children)
+		return Puer[this.props.tagName]({}, this.children)
 	}
 }
 

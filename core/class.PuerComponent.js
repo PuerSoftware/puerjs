@@ -10,8 +10,6 @@ class PuerComponent extends BasePuerComponent {
 		this.classes   = this._computeClasses()
 		this.isCustom  = true
 		this.listeners = {}
-
-		this._deferRenderers()
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -37,20 +35,14 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_setupRoot() {
-		this.root = this.render()
+		Puer.owner = this
+		this.root  = this.render()
+		Puer.owner = null
         this.root.parent = this
 	}
 
 	_setupElement() {
 		this.element = this.root.element
-	}
-
-	_deferRenderers() {
-		this.getMethods()
-			.filter(method => method.startsWith('render') || method.startsWith('_render'))
-			.map(method => {
-				this[method] = Puer.referencer(this[method], this)
-			})
 	}
 
 	_computeClasses() {

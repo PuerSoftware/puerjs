@@ -11,6 +11,8 @@ class PuerProxy {
 			this.setProp(prop, props[prop])
 		}
 		
+		Puer.isReferencing = false
+
 		const handler = Object.assign({
 			get: (target, prop) => {
 				if (prop === Symbol.iterator) {
