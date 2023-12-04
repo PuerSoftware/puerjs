@@ -49,14 +49,16 @@ class PuerRouter {
 			names.add(o.name)
 			if (defaultNames.has(o.name)) {
 				if (o.default) {
-					throw `More than one default for "${name}"`
+					throw `More than one default for "${o.name}"`
 				}
 			} else {
-				defaultNames.add(o.name)
-				defaults.push(o)
+				if (o.default) {
+					defaultNames.add(o.name)
+					defaults.push(o)
+				}
 			}
 		}
-
+		
 		const nonDefaultNames = Puer.Set.difference(names, defaultNames)
 		if (nonDefaultNames.size > 0) {
 			throw `No default values are set for "${Array.from(nonDefaultNames).join(', ')}"`
@@ -71,10 +73,6 @@ class PuerRouter {
 		config  = config  || this.config
 
 		let result = []
-
-		console.log('config',  JSON.stringify(config, null, 4))
-		console.log('oldPath', JSON.stringify(oldPath, null, 4))
-		console.log('newPath', JSON.stringify(newPath, null, 4))
 
 		const defaults = this._getDefaults(config)
 		let   nextNewPath = newPath
@@ -93,7 +91,6 @@ class PuerRouter {
 				if (newPathObj.name === defaultObj.name) {
 					resultObj.value = newPathObj.value
 					nextNewPath = newPathObj.components || []
-					console.log('moved new path')
 					break
 				}
 			}
@@ -104,7 +101,6 @@ class PuerRouter {
 						resultObj.value = oldPathObj.value
 					}
 					nextOldPath = oldPathObj.components || []
-					console.log('moved old path')
 					break
 				}
 			}
@@ -114,8 +110,6 @@ class PuerRouter {
 			}
 			nextConfig = defaultObj.routes || null
 
-			console.log('RESULT OBJ', JSON.stringify(resultObj, null, 4))
-
 			if (nextConfig) {
 				resultObj.components = this._apply(
 					nextNewPath,
@@ -123,7 +117,6 @@ class PuerRouter {
 					nextConfig
 				)
 			}
-			console.log('PUSH', resultObj)
 			result.push(resultObj)
 		}
 
@@ -138,7 +131,7 @@ class PuerRouter {
 	_route(hash) {
 		const path = this._decode(hash)
 		this.path = path
-		// console.log(Puer.String.titleDivider(path.join('/'), 50, '-'))
+
 		this.app.__route(path)
 		this.app.__routeChange()
 	}
@@ -149,11 +142,9 @@ class PuerRouter {
 	}
 
 	navigate(hash) {
-		// console.log('Navigate:', hash)
 		let path = this._decode(hash)
 		
 		path = this._apply(path)
-		console.log('RESULT:', JSON.stringify(path, null, 4))
 		hash = this._encode(path)
 		window.location.hash = '#' + hash
 	}
