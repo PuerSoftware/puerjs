@@ -40,8 +40,8 @@ class PuerRouteParser {
 		this.n = 0
 		this.a = []
 
-		this.components = this.a
-		this.component  = null
+		this.routes = this.a
+		this.route  = null
 		this.indent     = 0
 	}
 
@@ -92,42 +92,42 @@ class PuerRouteParser {
 		return false
 	}
 
-	_parseComponent() {
-		const componentName = this._getAlpha()
-		const component     = this.component
+	_parseRoute() {
+		const routeName = this._getAlpha()
+		const route     = this.route
 
-		if (componentName) {
+		if (routeName) {
 			if (this._parseColon()) {
-				const componentValue = this._getAlpha()
-				if (componentValue) {
-					this.component = {
-						name       : componentName,
-						value      : componentValue,
-						components : []
+				const routeValue = this._getAlpha()
+				if (routeValue) {
+					this.route = {
+						name       : routeName,
+						value      : routeValue,
+						routes : []
 					}
-					let existingIndex = this.components.findIndex(o => o.name === componentName)
+					let existingIndex = this.routes.findIndex(o => o.name === routeName)
 					if (existingIndex != -1) {
-						this.components[existingIndex] = this.component
+						this.routes[existingIndex] = this.route
 					} else {
-						this.components.push(this.component)
+						this.routes.push(this.route)
 					}
 					if (this._parseSbOpen()) {
-						if (this._parseComponents()) {
+						if (this._parseRoutes()) {
 							if (!this._parseSbClose()) {
-								this._error('Missing "]" at the end of components clause')
+								this._error('Missing "]" at the end of routes clause')
 							}
 						}
 					}
 					this._parseProps()
 				}
 			}
-			this.component = component
+			this.route = route
 			return true
 		}
 		return false
 	}
 
-	_expectNextComponent() {
+	_expectNextRoute() {
 		this._parseSpace()
 		if (this._parseComma()) {
 			this._parseSpace()
@@ -137,27 +137,27 @@ class PuerRouteParser {
 		return false
 	}
 
-	_parseComponents() {
+	_parseRoutes() {
 		let   result     = false
-		const components = this.components
-		this.components  = this.component ? this.component.components : this.a
+		const routes = this.routes
+		this.routes  = this.route ? this.route.routes : this.a
 		this._parseSpace()
 		while (true) {
-			if (this._parseComponent()) {
+			if (this._parseRoute()) {
 				result = true
-				if (!this._expectNextComponent()) {
+				if (!this._expectNextRoute()) {
 					break
 				}
 			} else if (this._parseStar()) {
 				result = true
-				this.components.push('*')
-				if (!this._expectNextComponent()) {
+				this.routes.push('*')
+				if (!this._expectNextRoute()) {
 					break
 				}
 			}
 		}
 		this._parseSpace()
-		this.components = components
+		this.routes = routes
 		return result
 	}
 
@@ -166,7 +166,7 @@ class PuerRouteParser {
 	parse(path) {
 		if (path) {
 			this._reset(path.toLowerCase())
-			this._parseComponents()
+			this._parseRoutes()
 			// console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
 			return this.a
 		}

@@ -335,7 +335,7 @@ class BasePuerComponent extends PuerObject {
 				name      : name,
 				value     : value,
 				className : this.className,
-				default   : this.props.isDefaultRoute,
+				isDefault : this.props.isDefaultRoute,
 				routes    : []
 			}
 		}
