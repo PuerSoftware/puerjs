@@ -258,6 +258,18 @@ class PuerConstructor {
 		}
 	}
 
+	log( ... args ) {
+		const newArgs = []
+		for (const arg of args) {
+			if (Puer.isString(arg) || Puer.isNumber(arg) || Puer.isBoolean(arg)) {
+				newArgs.push(arg)
+			} else {
+				newArgs.push(JSON.stringify(arg, null, 4))
+			}
+		}
+		console.log( ... newArgs )
+	}
+
 }
 
 const Puer = new PuerConstructor()

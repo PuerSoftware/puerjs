@@ -67,12 +67,20 @@ class PuerRouter {
 		return defaults
 	}
 
+	_getConfigObjByNameValue(config, name, value) {
+
+	}
+
 	/* Applies relative path object to current path (this.path)	*/
 	_apply(newPath, oldPath, config) {
 		oldPath = oldPath || this.path || []
 		config  = config  || this.config
 
 		let result = []
+
+		Puer.log('newPath', newPath)
+		Puer.log('oldPath', oldPath)
+		Puer.log('config', config)
 
 		const defaults = this._getDefaults(config)
 		let   nextNewPath = newPath
@@ -91,6 +99,7 @@ class PuerRouter {
 				if (newPathObj.name === defaultObj.name) {
 					resultObj.value = newPathObj.value
 					nextNewPath = newPathObj.components || []
+					console.log('move new path')
 					break
 				}
 			}
@@ -101,6 +110,7 @@ class PuerRouter {
 						resultObj.value = oldPathObj.value
 					}
 					nextOldPath = oldPathObj.components || []
+					console.log('move old path')
 					break
 				}
 			}
@@ -108,7 +118,15 @@ class PuerRouter {
 			if (!resultObj.value) {
 				resultObj.value = defaultObj.value
 			}
-			nextConfig = defaultObj.routes || null
+			const nextConfigObj = this._getConfigObjByName(name, config)
+			if (nextConfigObj) {
+				nextConfig = defaultObj.routes || null
+			} else {
+				nextConfig = []
+			}
+			console.log('move config')
+
+			Puer.log('RESULT OBJ', resultObj)
 
 			if (nextConfig) {
 				resultObj.components = this._apply(
@@ -117,6 +135,7 @@ class PuerRouter {
 					nextConfig
 				)
 			}
+
 			result.push(resultObj)
 		}
 
@@ -145,6 +164,7 @@ class PuerRouter {
 		let path = this._decode(hash)
 		
 		path = this._apply(path)
+		Puer.log('RESULT1:', path)
 		hash = this._encode(path)
 		window.location.hash = '#' + hash
 	}
@@ -155,6 +175,7 @@ class PuerRouter {
 		window.addEventListener('hashchange', (event) => {
 			let hash = this._getHash(event.newURL)
 			const path = this._apply(this._decode(hash))
+			Puer.log('RESULT2:', path)
 			hash = this._encode(path)
 			this._route(hash)
 			window.location.hash = '#' + hash
