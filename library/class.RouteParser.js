@@ -1,4 +1,4 @@
-class PuerRouteParser {
+class RouteParser {
 	constructor() {
 		// const _this = this
 		// Object.getOwnPropertyNames(Object.getPrototypeOf(this))
@@ -174,4 +174,4 @@ class PuerRouteParser {
 	}
 }
 
-export default PuerRouteParser
+export default RouteParser

@@ -61,7 +61,7 @@ class BasePuerComponent extends PuerObject {
 						} else {
 							this.activate()
 						}
-						this._cascade('__route', [path.components])
+						this._cascade('__route', [path.routes])
 					} else {
 						if (this.onDeactivate) {
 							this.onDeactivate()

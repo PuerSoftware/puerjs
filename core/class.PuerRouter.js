@@ -1,5 +1,4 @@
 import Puer            from './class.Puer.js'
-import PuerRouteParser from './class.PuerRouteParser.js'
 
 // page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
 
@@ -26,23 +25,8 @@ class PuerRouter {
 
 	/********************** PRIVATE ***********************/
 
-	_encode(path) {
-        return path.map(obj => {
-            let routesString = obj.routes && obj.routes.length > 0
-                ? `[${this._encode(obj.routes)}]`
-                : ''
-            return `${obj.name}:${obj.value}${routesString}`
-        }).join(',')
-    }
-
-	_decode(s) {
-		const parser = new PuerRouteParser()
-		return parser.parse(s)
-	}
-
-	_init(config) {
+	_init() {
 		this.routes = new Puer.Route(null, null, true, null, this.getConfig())
-		this.routes.display()
 	}
 
 	_getHash() {
@@ -51,12 +35,12 @@ class PuerRouter {
 	}
 
 	_route(hash) {
-		const path = this._decode(hash)
-		this.path = path
-
-		this.app.__route(path)
+		this.path = this.routes.getPath(hash)
+		console.log('_route', this.path)
+		this.app.__route(this.path)
 		this.app.__routeChange()
 	}
+
 	/*********************** PUBLIC ***********************/
 
 	getConfig() {
@@ -64,21 +48,17 @@ class PuerRouter {
 	}
 
 	navigate(hash) {
-		let path = this._decode(hash)
-		this.routes.setActivePath(path)
-		window.location.hash = '#' + this.routes.getHash()
+		
+		hash = this.routes.updateHash(hash)
+		window.location.hash = '#' + hash
 	}
 
 	start() {
 		this._init()
-		this.navigate(this.initialHash)
+		this.navigate(this.initialHash || this.routes.getInitialHash())
 		window.addEventListener('hashchange', (event) => {
-			let hash = this._getHash(event.newURL)
-			this._setActiveRoute(this._decode(hash))
-			hash1 = this.routes.getHash()
-			console.log(hash1)
+			const hash = this.routes.updateHash(this._getHash(event.newURL))
 			this._route(hash)
-			window.location.hash = '#' + hash
 		})
 		this._route(this.initialHash)
 	}
