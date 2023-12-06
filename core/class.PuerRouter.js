@@ -17,7 +17,7 @@ class PuerRouter {
 			this.app            = app
 			this.initialHash    = this._getHash()
 			this.path           = null
-			this.routes         = null
+			this.routeRoot      = null
 			PuerRouter.instance = this
 		}
 		return PuerRouter.instance
@@ -25,18 +25,14 @@ class PuerRouter {
 
 	/********************** PRIVATE ***********************/
 
-	_init() {
-		this.routes = new Puer.Route(null, null, true, null, this.getConfig())
-	}
-
 	_getHash() {
 		let hash = window.location.hash.split('#')[1]
 		return hash ? decodeURIComponent(hash) : hash
 	}
 
 	_route(hash) {
-		this.path = this.routes.getPath(hash)
-		console.log('_route', this.path)
+		this.path = this.routeRoot.getPath(hash)
+		console.log('_route. Routing to:', hash)
 		this.app.__route(this.path)
 		this.app.__routeChange()
 	}
@@ -48,19 +44,25 @@ class PuerRouter {
 	}
 
 	navigate(hash) {
-		
-		hash = this.routes.updateHash(hash)
+		console.log('Navigate', hash)
+		hash = this.routeRoot.updateHash(hash)
+		console.log('Returned', hash)
 		window.location.hash = '#' + hash
 	}
 
 	start() {
-		this._init()
-		this.navigate(this.initialHash || this.routes.getInitialHash())
+		const config = this.getConfig()
+		Puer.log('config', config)
+		this.routeRoot = new Puer.RouteRoot(this.getConfig())
+		Puer.log('routeRoot', this.routeRoot.toObject())
+		this.navigate(this.initialHash || this.routeRoot.getDefaultHash())
 		window.addEventListener('hashchange', (event) => {
-			const hash = this.routes.updateHash(this._getHash(event.newURL))
-			this._route(hash)
+			const hash = this.routeRoot.updateHash(this._getHash(event.newURL))
+			if (this._getHash() !== hash) {
+				this._route(hash)
+			}
 		})
-		this._route(this.initialHash)
+		this._route(this.initialHash || this.routeRoot.getDefaultHash())
 	}
 }
 

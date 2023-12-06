@@ -166,17 +166,6 @@ class BasePuerComponent extends PuerObject {
 
 	/*********************** PRIVATE ***********************/
 
-	_getSubRoute() {
-		let route = ''
-		if (this.props.route && this._isActive) {
-			route += this._cascade('_getSubRoute', [])
-			route = this.props.route + route
-		}
-		return route
-	}
-
-	_getRoute() {}
-
 	_onChildrenChange() {
 		console.log(`${this.className}._onChildrenChange`)
 		this._applyProps()
@@ -350,10 +339,9 @@ class BasePuerComponent extends PuerObject {
 
 		if (config) {
 			config.routes = descendantConfigs
-			return [config]
-		} else {
-			return descendantConfigs
+			descendantConfigs = [config]
 		}
+		return descendantConfigs
 	}
 
 	as(mixinClass) {

@@ -10,7 +10,7 @@ import SetMethods      from '../library/class.SetMethods.js'
 import Request         from '../library/class.Request.js'
 import DataSet         from '../library/class.DataSet.js'
 import Reference       from '../library/class.Reference.js'
-import Route           from '../library/class.Route.js'
+import RouteRoot       from '../library/class.Route.js'
 
 
 class PuerConstructor {
@@ -282,7 +282,7 @@ Puer.Set       = SetMethods
 Puer.Request   = Request
 Puer.DataSet   = DataSet
 Puer.Reference = Reference 
-Puer.Route     = Route
+Puer.RouteRoot = RouteRoot
 
 window.Puer = Puer
 export default Puer

@@ -1,4 +1,6 @@
 class RouteParser {
+	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789'
+
 	constructor() {
 		// const _this = this
 		// Object.getOwnPropertyNames(Object.getPrototypeOf(this))
@@ -29,7 +31,11 @@ class RouteParser {
 	_next() {
 		// console.log(this.c)
 		this.n ++
-		this.c = this.s[this.n]
+		if (this.n < this.s.length) {
+			this.c = this.s[this.n]
+		} else {
+			this.c = null
+		}
 	}
 
 	_reset(s=null) {
@@ -53,11 +59,18 @@ class RouteParser {
 
 	_getAlpha() {
 		let s = ''
-		while ('abcdefghijklmnopqrstuvwxyz0123456789'.includes(this.c)) {
+		while (RouteParser.ALPHA.includes(this.c)) {
 			s += this.c
 			this._next()
 		}
 		return s
+	}
+
+	_peek() {
+		if (this.n + 1 < this.s.length) {
+			return this.s[this.n + 1]
+		}
+		return null
 	}
 
 	/********************** PARSER ***********************/
@@ -131,7 +144,9 @@ class RouteParser {
 		this._parseSpace()
 		if (this._parseComma()) {
 			this._parseSpace()
-			return true
+			if (RouteParser.ALPHA.includes(this._peek())) {
+				return true
+			}
 		}
 		this._parseSpace()
 		return false
@@ -145,12 +160,6 @@ class RouteParser {
 		while (true) {
 			if (this._parseRoute()) {
 				result = true
-				if (!this._expectNextRoute()) {
-					break
-				}
-			} else if (this._parseStar()) {
-				result = true
-				this.routes.push('*')
 				if (!this._expectNextRoute()) {
 					break
 				}

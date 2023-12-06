@@ -1,147 +1,152 @@
-import RouteParser from './class.RouteParser.js'
-
-
-class Route {
-	constructor(name, value, isDefault=false, parent, routes=[]) {
-		this.isRoot    = Boolean(!name && !value && !parent)
-		this.name      = name
-		this.value     = value
-		this.isDefault = isDefault
-		this.isActive  = false
-		this.routes    = []
-		this.parent    = null
-
-		for (const route of routes) {
-			this.routes.push(new Route(
-				route.name,
-				route.value,
-				route.isDefault,
-				this,
-				route.routes
-			))
-		}
-	}
-
-	/********************** PRIVATE ***********************/
-
-	_getHash() {
-		const children = []
-		for (const child of this.routes) {
-			const childRoute = child.getInitialHash()
-			childRoute && children.push(childRoute)
-		}
-		if (this.isRoot) {
-			return children.join(',')
-		}
-		if (!this.isActive) {
-			return false
-		}
-		const routeString = `${this.name}:${this.value}` 
-		if (children.length > 0) {
-			return `${routeString}[${children.join(',')}]`
-		}
-		return routeString
-	}
-
-	_select(name, value=null) {
-		const children = []
-		for (const child of this.routes) {
-			console.log(`_select |${name}|${value}`, child.name, child.value)
-			if (child.name === name) {
-				if (value) {
-					if (child.value === value) {
-						children.push(child)
+/**************************************************************
+{[
+	{page: {
+		mail: {
+			isDefault,
+			isActive,
+			
+			routes: [
+				{
+					ltab: {
+						vessel:
+						cargo:
 					}
-				} else {
-					children.push(child)
+					rtab: {}
 				}
-			}
-		}
-		return children
+			]
+		},
+		vessel: {
+			isDefault,
+			isActive
+		},
+	}}
+]}
+
+/**************************************************************/
+
+/**************************************************************/
+/**************************************************************/
+
+class BaseRoute {
+	constructor(routes) {
+		this.routeSets = {}
+		this.addRouteSets(routes)
 	}
 
-	_setActiveChildren(routes) {
+	addRouteSets(routes) {
 		for (const route of routes) {
-			let children = this._select(route.name, route.value)
-			if (children.length > 0) {
-				for (const child of children) {
-					child.isActive = true
-					child._setActiveChildren(route.routes)
-				}
-			} else {
-				for (childRoute of this.) {
-
-				}
+			this.addRouteSet(route)
+		}
+		// console.log(this.routeSets)
+		for (const name in this.routeSets) {
+			const routeSet = this.routeSets[name]
+			// console.log(routeSet)
+			if (!routeSet.getDefault()) {
+				throw `Default is not registered for RouteSet: "${routeSet.name}"`
 			}
 		}
 	}
 
-	/*********************** PUBLIC ***********************/
-
-	updateHash(hash) {
-		// ltab:vessel
-		const path = this.getPath(hash)
-		console.log(`updateHash: ${this.name}:${this.value}`, path)
-		if (this.isRoot) {
-			this._setActiveChildren(path)
+	addRouteSet(route) {
+		if (!this.routeSets[route.name]) {
+			this.routeSets[route.name] = new RouteSet(route.name)
 		}
-		return this._getHash()
-	}
-
-	getPath(hash) {
-		const parser = new RouteParser()
-		return parser.parse(hash)
-	}
-
-	getInitialHash() {
-		if (!this.isDefault) {
-			return false
-		}
-		const children = []
-		for (const child of this.routes) {
-			const childRoute = child.getInitialHash()
-			childRoute && children.push(childRoute)
-		}
-		if (this.isRoot) {
-			return children.join(',')
-		}
-		const routeString = `${this.name}:${this.value}` 
-		if (children.length > 0) {
-			return `${routeString}[${children.join(',')}]`
-		}
-		return routeString
+		this.routeSets[route.name].addRoute(route)
 	}
 
 	toObject() {
-		const children = []
-		for (const child of this.routes) {
-			children.push(child.toObject())
+		const result = {}
+		if (this.isDefault) { result.isDefault = true }
+		if (this.isActive)  { result.isActive  = true }
+		result.routes = {}
+		for (const name in this.routeSets) {
+			const routeSet = this.routeSets[name]
+			result.routes[name] = routeSet.toObject()
 		}
-		let o = {}
-		if (this.isRoot) {
-			o.isRoot   = true
-		} else {
-			o = Object.assign(o, {
-				name  : this.name,
-				value : this.value
-			})
-
-			if (this.isActive)  { o.isActive = true }
-			if (this.isDefault) { o.isDefault = true }
-		}
-
-		return Object.assign(o, {
-			routes : children
-		})
+		return result
 	}
 
-	toString() {
-		return JSON.stringify(this.toObject(), null, 4)
-	}
-
-	display() {
-		console.log(this.toString())
+	getDefaultHash() {
+		for (const name in this.routeSets) {
+			const defaultRoute = this.routeSets[name].getDefault()
+		}
 	}
 }
 
-export default Route
+/**************************************************************/
+/**************************************************************/
+
+class RouteRoot extends BaseRoute {
+	constructor(routes) {
+		super(routes)
+		this.isRoot = true
+	}
+
+	getDefaultHash() {
+		
+	}
+}
+
+/**************************************************************/
+/**************************************************************/
+
+class RouteSet {
+	constructor(name) {
+		this.name   = name
+		this.routes = {}
+	}
+
+	getDefault() {
+		let defaultRoute = null
+		for (const value in this.routes) {
+			const route = this.routes[value]
+			if (route.isDefault) {
+				if (defaultRoute) {
+					throw `More than one default is registered for RouteSet "${this.name}"`
+				} else {
+					defaultRoute = route
+				}
+			}
+		}
+		return defaultRoute
+	}
+
+	addRoute(route) {
+		if (this.routes[route.value]) {
+			if (route.isDefault) {
+				this.routes[route.value].isDefault = true
+			}
+		} else {
+			this.routes[route.value] = new Route(route)
+		}
+	}
+
+	toObject() {
+		const result = {}
+		for (const name in this.routes) {
+			const route = this.routes[name]
+			result[route.value] = route.toObject()
+		}
+		return result
+	}
+}
+
+/**************************************************************/
+/**************************************************************/
+
+class Route extends BaseRoute {
+	constructor(route) {
+		super(route.routes)
+		this.value     = route.value
+		this.name      = route.name
+		this.isActive  = false
+		this.isDefault = route.isDefault
+	}
+
+	get id() { return this.name + ':' + this.value }
+}
+
+/**************************************************************/
+/**************************************************************/
+
+export default RouteRoot
