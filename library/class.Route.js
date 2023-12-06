@@ -26,6 +26,8 @@
 
 /**************************************************************/
 /**************************************************************/
+import RouteParser from './class.RouteParser.js'
+
 
 class BaseRoute {
 	constructor(routes) {
@@ -41,7 +43,7 @@ class BaseRoute {
 		for (const name in this.routeSets) {
 			const routeSet = this.routeSets[name]
 			// console.log(routeSet)
-			if (!routeSet.getDefault()) {
+			if (!routeSet.getDefaultRoute()) {
 				throw `Default is not registered for RouteSet: "${routeSet.name}"`
 			}
 		}
@@ -52,6 +54,16 @@ class BaseRoute {
 			this.routeSets[route.name] = new RouteSet(route.name)
 		}
 		this.routeSets[route.name].addRoute(route)
+	}
+
+	_getDefaultHashes() {
+		const defaultHashes = []
+		for (const name in this.routeSets) {
+			const routeSet = this.routeSets[name]
+			const defaultRoute = routeSet.getDefaultRoute()
+			defaultHashes.push(defaultRoute.getDefaultHash())
+		}
+		return defaultHashes
 	}
 
 	toObject() {
@@ -65,12 +77,6 @@ class BaseRoute {
 		}
 		return result
 	}
-
-	getDefaultHash() {
-		for (const name in this.routeSets) {
-			const defaultRoute = this.routeSets[name].getDefault()
-		}
-	}
 }
 
 /**************************************************************/
@@ -82,9 +88,19 @@ class RouteRoot extends BaseRoute {
 		this.isRoot = true
 	}
 
-	getDefaultHash() {
-		
+	getDefaultHash() { return this._getDefaultHashes().join(',') }
+
+	getActiveHash() {
+
 	}
+
+	updateHash(hash) {
+		const paths = new RouteParser().parse(hash)
+		for (const path in paths) {
+			this.setActivePath(path)
+		}
+	}
+
 }
 
 /**************************************************************/
@@ -96,7 +112,7 @@ class RouteSet {
 		this.routes = {}
 	}
 
-	getDefault() {
+	getDefaultRoute() {
 		let defaultRoute = null
 		for (const value in this.routes) {
 			const route = this.routes[value]
@@ -142,6 +158,26 @@ class Route extends BaseRoute {
 		this.isActive  = false
 		this.isDefault = route.isDefault
 	}
+
+	getDefaultHash() {
+		const defaultHashes = this._getDefaultHashes()
+		let hash = this.id
+		if (defaultHashes.length > 0) {
+			hash += `[${defaultHashes.join(',')}]`
+		}
+		return hash
+	}
+
+	setActivePath(path) {
+		const routeSet = this.routeSets[path.name]
+		if (routeSet) {
+			// routeSet.routes
+		} else {
+			// const defaultRoute = get default route
+			//
+		}
+	}
+
 
 	get id() { return this.name + ':' + this.value }
 }

@@ -54,6 +54,7 @@ class PuerRouter {
 		const config = this.getConfig()
 		Puer.log('config', config)
 		this.routeRoot = new Puer.RouteRoot(this.getConfig())
+		console.log('default hash', this.routeRoot.getDefaultHash())
 		Puer.log('routeRoot', this.routeRoot.toObject())
 		this.navigate(this.initialHash || this.routeRoot.getDefaultHash())
 		window.addEventListener('hashchange', (event) => {
