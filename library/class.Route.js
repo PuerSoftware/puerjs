@@ -1,30 +1,3 @@
-/**************************************************************
-{[
-	{page: {
-		mail: {
-			isDefault,
-			isActive,
-			
-			routes: [
-				{
-					ltab: {
-						vessel:
-						cargo:
-					}
-					rtab: {}
-				}
-			]
-		},
-		vessel: {
-			isDefault,
-			isActive
-		},
-	}}
-]}
-
-/**************************************************************/
-/**************************************************************/
-
 import RouteParser from './class.RouteParser.js'
 
 
@@ -34,55 +7,83 @@ class BaseRoute {
 		this.addRouteSets(routes)
 	}
 
+	_getHashes(active=false) {
+		const hashes = []
+		for (const name in this.routeSets) {
+			const routeSet = this.routeSets[name]
+
+			const route = active
+				? routeSet.getActiveRoute()
+				: routeSet.getDefaultRoute()
+			route && hashes.push(route.getHash(active))
+		}
+		return hashes
+	}
+
 	addRouteSets(routes) {
 		for (const route of routes) {
 			this.addRouteSet(route)
 		}
-		// console.log(this.routeSets)
 		for (const name in this.routeSets) {
 			const routeSet = this.routeSets[name]
-			// console.log(routeSet)
 			if (!routeSet.getDefaultRoute()) {
 				throw `Default is not registered for RouteSet: "${routeSet.name}"`
 			}
 		}
 	}
 
-	getExistingRoute(name, value) {
-		if (this.routeSets[name]) {
-			if (this.routeSets[name].routes[value]) {
-				return this.routeSets[name].routes[value]
-			}
-		}
-		return null
-	}
-
-	getRoute(name, value) {
-		if (this.routeSets[name]) {
-			let route = this.getExistingRoute(name, value)
-			if (!route) {
-				route = this.routeSets[name].getActiveRoute() || this.routeSets[name].getDefaultRoute()
-			}
-			return route
-		}
-		return null
-	}
-
 	addRouteSet(route) {
 		if (!this.routeSets[route.name]) {
-			this.routeSets[route.name] = new RouteSet(route.name)
+			this.routeSets[route.name] = new RouteSet(route.name, this)
 		}
 		this.routeSets[route.name].addRoute(route)
 	}
 
-	_getDefaultHashes() {
-		const defaultHashes = []
-		for (const name in this.routeSets) {
-			const routeSet = this.routeSets[name]
-			const defaultRoute = routeSet.getDefaultRoute()
-			defaultHashes.push(defaultRoute.getDefaultHash())
+	findAndActivate(path) {
+		const name     = path.name
+		const value    = path.value
+		const routeSet =  this.routeSets[name]
+		if (routeSet) {
+			const route = routeSet.routes[value]
+			if (route) {
+				if (path.routes && path.routes.length) {
+					route.setActivePath(path.routes)
+				} else {
+					route.activate()
+				}
+			}
+		} else {
+			for (const routeSetName in this.routeSets) {
+				const routeSet = this.routeSets[routeSetName]
+				for (const routeValue in routeSet.routes) {
+					routeSet.routes[routeValue].findAndActivate(path)
+				}
+			}
 		}
-		return defaultHashes
+	}
+
+	setActivePath(paths) {
+		for (const path of paths) {
+			this.findAndActivate(path)
+		}
+	}
+
+	activate() {
+		this.parentSet.activateRoute(this.value)
+		this.parentSet.parentRoute.activate()
+	}
+
+	activateDefaultMissingPaths() {
+		for (const routeSetName in this.routeSets) {
+			const routeSet = this.routeSets[routeSetName]
+			const route    = routeSet.getActiveRoute()
+			if (!route) {
+				routeSet.getDefaultRoute().isActive = true
+			}
+			for (const routeValue in routeSet.routes) {
+				routeSet.routes[routeValue].activateDefaultMissingPaths()
+			}
+		}
 	}
 
 	toObject() {
@@ -101,45 +102,69 @@ class BaseRoute {
 /**************************************************************/
 /**************************************************************/
 
+class Route extends BaseRoute {
+	constructor(route, parentSet) {
+		super(route.routes)
+		this.parentSet = parentSet
+		this.value     = route.value
+		this.name      = route.name
+		this.isActive  = false
+		this.isDefault = route.isDefault
+	}
+
+	getHash(active=false) {
+		const hashes = this._getHashes(active)
+		let hash = this.id
+		if (hashes.length > 0) {
+			hash += `[${hashes.join(',')}]`
+		}
+		return hash
+	}
+
+	get id() { return this.name + ':' + this.value }
+}
+
+/**************************************************************/
+/**************************************************************/
+
 class RouteRoot extends BaseRoute {
 	constructor(routes) {
 		super(routes)
 		this.isRoot = true
 	}
 
-	getDefaultHash() { return this._getDefaultHashes().join(',') }
+	getDefaultHash () { return this._getHashes(false).join(',') }
+	getActiveHash  () { return this._getHashes(true).join(',') }
 
-	getActiveHash() {
-
-	}
-
-	setActivePath(paths) {
-		Puer.log('received paths in setActivePath', paths)
-		for (const path of paths) {
-
-		}
-	}
+	getPath       (hash) { return new RouteParser().parse(hash) }
 
 	updateHash(hash) {
-		const paths = new RouteParser().parse(hash)
+		const paths = this.getPath(hash)
 		this.setActivePath(paths)
+		this.activateDefaultMissingPaths()
 		return this.getActiveHash()
 	}
+
+	activate() {}
 }
 
 /**************************************************************/
 /**************************************************************/
 
 class RouteSet {
-	constructor(name) {
-		this.name   = name
-		this.routes = {}
+	constructor(name, parentRoute) {
+		this.name        = name
+		this.parentRoute = parentRoute
+		this.routes      = {}
 	}
 
-	_deactivate() {
-		for (const value in this.routes) {
-			const route = this.routes[value]
-			route.isActive = false
+	addRoute(route) {
+		if (this.routes[route.value]) {
+			if (route.isDefault) {
+				this.routes[route.value].isDefault = true
+			}
+		} else {
+			this.routes[route.value] = new Route(route, this)
 		}
 	}
 
@@ -167,16 +192,11 @@ class RouteSet {
 		return null
 	}
 
-	setActivePath(path) {
-	}
-
-	addRoute(route) {
-		if (this.routes[route.value]) {
-			if (route.isDefault) {
-				this.routes[route.value].isDefault = true
+	activateRoute(activeValue) {
+		if (activeValue) {
+			for (const value in this.routes) {
+				this.routes[value].isActive = (value === activeValue)
 			}
-		} else {
-			this.routes[route.value] = new Route(route, this)
 		}
 	}
 
@@ -188,31 +208,6 @@ class RouteSet {
 		}
 		return result
 	}
-}
-
-/**************************************************************/
-/**************************************************************/
-
-class Route extends BaseRoute {
-	constructor(route, parent) {
-		super(route.routes)
-		this.parentSet = parent
-		this.value     = route.value
-		this.name      = route.name
-		this.isActive  = false
-		this.isDefault = route.isDefault
-	}
-
-	getDefaultHash() {
-		const defaultHashes = this._getDefaultHashes()
-		let hash = this.id
-		if (defaultHashes.length > 0) {
-			hash += `[${defaultHashes.join(',')}]`
-		}
-		return hash
-	}
-
-	get id() { return this.name + ':' + this.value }
 }
 
 /**************************************************************/
