@@ -53,12 +53,12 @@ class PuerRouter {
 
 		window.addEventListener('hashchange', (event) => {
 			let hash = this._getHash(event.newURL)
-			if (!hash) { // if hash is empty string or undefined
+			if (hash) {
+				hash = this.routeRoot.updateHash(hash)
+				this._route(hash)
+			} else { // if hash is empty string or undefined /#
 				this.navigate(this.routeRoot.getDefaultHash())
-				return
 			}
-			hash = this.routeRoot.updateHash(hash)
-			this._route(hash)
 		})
 		this._route(this.initialHash || this.routeRoot.getDefaultHash())
 	}

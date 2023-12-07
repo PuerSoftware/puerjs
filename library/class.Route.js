@@ -136,7 +136,7 @@ class RouteRoot extends BaseRoute {
 	getDefaultHash () { return this._getHashes(false).join(',') }
 	getActiveHash  () { return this._getHashes(true).join(',') }
 
-	getPath       (hash) { return new RouteParser().parse(hash) }
+	getPath(hash) { return new RouteParser().parse(hash) }
 
 	updateHash(hash) {
 		const paths = this.getPath(hash)
