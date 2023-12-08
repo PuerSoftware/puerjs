@@ -8,13 +8,13 @@ class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
 		this.owner    = Puer.owner
-		this.id       = Puer.String.randomHex(4)
+		this.id       = props['id'] || Puer.String.randomHex(4)
 		this.element  = null
 		this.parent   = null
 		this.root     = null
-		this.children = new PuerComponentSet (children, this._onChildrenChange, this)
-		this.props    = new PuerProps        (props,    '_onPropChange',              this)
-		
+		this.children = new PuerComponentSet(children, this._onChildrenChange, this)
+		this.props    = new PuerProps(props, '_onPropChange', this)
+
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
@@ -26,6 +26,7 @@ class BasePuerComponent extends PuerObject {
 
 		this._listenerMap = new WeakMap()
 
+		Puer.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
 	}
 
@@ -358,13 +359,13 @@ class BasePuerComponent extends PuerObject {
 
 	/********************* DOM METHODS *********************/
 
-	findAll(selector) {
-		return this.element.querySelectorAll(selector)
-	}
+	// findAll(selector) {
+	// 	return this.element.querySelectorAll(selector)
+	// }
 
-	find(selector) {
-		return this.element.querySelector(selector)
-	}
+	// find(selector) {
+	// 	return this.element.querySelector(selector)
+	// }
 
 	getTextElement() {
 		return Array.from(this.element.childNodes).find(child => child.nodeType === 3)
@@ -462,6 +463,7 @@ class BasePuerComponent extends PuerObject {
 			const index = this.parent.children.indexOf(this)
 			delete this.parent.children[index]
 		}
+		this.id && delete Puer.components[this.id]
 	}
 
 	removeChildren() {

@@ -70,7 +70,7 @@ import Puer from './core/class.Puer.js'
 		return filePath.slice(0, filePath.lastIndexOf('/'))
 	}
 	Puer.path = dirName(import.meta.url) + '/'
-	Puer.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 }
+	Puer.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 || s.startsWith('data-') }
 	Puer.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
 })()
 

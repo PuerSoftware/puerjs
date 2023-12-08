@@ -23,6 +23,7 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_setupElement() {
 		this.element = this._renderElement()
+		this.element.setAttribute('id', this.id)
 		for (const child of this.children) {
 			child.parent = this
 			this.element.appendChild(child.element)

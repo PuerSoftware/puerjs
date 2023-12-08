@@ -25,6 +25,7 @@ class PuerConstructor {
 			this.isReferencing
 			this._cssUrls  = new Set()
 			this._cssCount = 0
+			this.components = {}
 			PuerConstructor.instance = this
 
 			this._init()
