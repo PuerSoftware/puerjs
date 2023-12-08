@@ -1,4 +1,4 @@
-import Puer from './core/class.Puer.js'
+import $ from './core/class.Puer.js'
 
 (() => {
 	const tags = (
@@ -62,19 +62,19 @@ import Puer from './core/class.Puer.js'
 	).split(',')
 
 	for (const tag of tags) {
-		Puer.define(tag)
+		$.define(tag)
 	}
 	
 	function dirName(filePath) {
 		filePath = new URL(filePath).pathname
 		return filePath.slice(0, filePath.lastIndexOf('/'))
 	}
-	Puer.path = dirName(import.meta.url) + '/'
-	Puer.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 || s.startsWith('data-') }
-	Puer.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
+	$.path = dirName(import.meta.url) + '/'
+	$.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 || s.startsWith('data-') }
+	$.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
 })()
 
 export { default as PuerComponent } from './core/class.PuerComponent.js'
 export { default as PuerApp       } from './core/class.PuerApp.js'
 
-export default Puer
+export default $

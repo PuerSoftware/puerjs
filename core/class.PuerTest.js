@@ -1,4 +1,4 @@
-import Puer from './class.Puer.js'
+import $ from './class.Puer.js'
 
 
 class PuerTest {
@@ -10,7 +10,7 @@ class PuerTest {
 
     run() {
         let successCount = 0
-        console.log('%c' + Puer.String.titleDivider(`${this.name} (${this.length})`, 50), 'font-weight: bold; color:white')
+        console.log('%c' + $.String.titleDivider(`${this.name} (${this.length})`, 50), 'font-weight: bold; color:white')
         for (const testName in this.tests) {
             this._run(
                 testName,
@@ -47,7 +47,7 @@ class PuerTest {
 
     _run(testName, expression, expected) {
         const output  = expression()
-        const success = Puer.Object.compare(output, expected)
+        const success = $.Object.compare(output, expected)
         if (success) {
             console.log('%cOK:', 'color: #66CC66', testName)
         } else {

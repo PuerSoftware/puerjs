@@ -1,4 +1,4 @@
-import Puer from '../../puer.js'
+import $ from '../../puer.js'
 
 import FormInput from './class.FormInput.js'
 
@@ -13,10 +13,10 @@ class InputHidden extends FormInput {
 	onReady() {}
 
 	render() {
-		this.input = Puer.input({ ... this.props, type: 'hidden' })
+		this.input = $.input({ ... this.props, type: 'hidden' })
 		return this.input
 	}
 }
 
-Puer.define(InputHidden)
+$.define(InputHidden)
 export default InputHidden

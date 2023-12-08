@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class Form extends PuerComponent {
@@ -80,7 +80,7 @@ class Form extends PuerComponent {
 		const formData = this.getData()
 		const headers  = this.getHeaders()
 		if (this.props.action) {
-			Puer.Request.post(url, this.onValidate.bind(this), formData, headers)
+			$.Request.post(url, this.onValidate.bind(this), formData, headers)
 		}
 	}
 
@@ -98,19 +98,19 @@ class Form extends PuerComponent {
 
 	render() {
 		return (
-			Puer.div([
-				Puer.h1 ({text: this.props.title}),
-				Puer.p  ({text: this.props.subtitle}),
-				Puer.p  ({text: this.state.error, class: 'error form-error'}),
-				Puer.form ({
+			$.div([
+				$.h1 ({text: this.props.title}),
+				$.p  ({text: this.props.subtitle}),
+				$.p  ({text: this.state.error, class: 'error form-error'}),
+				$.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype
 				}, [
 					... this.children,
-					Puer.div ('button-panel', [
-						Puer.InputButton ({
+					$.div ('button-panel', [
+						$.InputButton ({
 							type    : 'button',
 							onclick : this.submit,
 							text    : this.props.buttonCaption,
@@ -124,5 +124,5 @@ class Form extends PuerComponent {
 }
 
 
-Puer.define(Form, import.meta.url)
+$.define(Form, import.meta.url)
 export default Form

@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 class Pagination extends PuerComponent {
 	constructor(props, children) {
@@ -10,7 +10,7 @@ class Pagination extends PuerComponent {
 
 	setPage(page) {
 		this.state.page = page
-		this.trigger(Puer.Event.PAGINATE, {page: this.state.page})
+		this.trigger($.Event.PAGINATE, {page: this.state.page})
 	}
 
 	prev(event) {
@@ -32,18 +32,18 @@ class Pagination extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div({cssDisplay: this.state.display}, [
-			Puer.a ({text : '&laquo; previous', onClick: this.prev}),
-			Puer.span('pages', [
-				Puer.span({'text': this.state.page}),
-				Puer.span({'text': 'of'}),
-				Puer.span({'text': this.props.pages})
+		return $.div({cssDisplay: this.state.display}, [
+			$.a ({text : '&laquo; previous', onClick: this.prev}),
+			$.span('pages', [
+				$.span({'text': this.state.page}),
+				$.span({'text': 'of'}),
+				$.span({'text': this.props.pages})
 			]),
-			Puer.a ({text : 'next &raquo;', onClick: this.next})
+			$.a ({text : 'next &raquo;', onClick: this.next})
 		])
 	}
 }
 
-Puer.Events.define(['PAGINATE'])
-Puer.define(Pagination, import.meta.url)
+$.Events.define(['PAGINATE'])
+$.define(Pagination, import.meta.url)
 export default Pagination

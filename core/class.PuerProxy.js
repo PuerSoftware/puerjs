@@ -1,4 +1,4 @@
-import Puer from './class.Puer.js'
+import $ from './class.Puer.js'
 
 
 class PuerProxy {
@@ -11,7 +11,7 @@ class PuerProxy {
 			this.setProp(prop, props[prop])
 		}
 		
-		Puer.isReferencing = false
+		$.isReferencing = false
 
 		const handler = Object.assign({
 			get: (target, prop) => {
@@ -27,7 +27,7 @@ class PuerProxy {
 				}
 
 				if (prop in target.references) {
-					if (Puer.isReferencing && Puer.isPrimitive(target.references[prop].dereference())) {
+					if ($.isReferencing && $.isPrimitive(target.references[prop].dereference())) {
 						return target.references[prop]
 					} else {
 						return target.references[prop].dereference()
@@ -79,7 +79,7 @@ class PuerProxy {
 			if (this.references[prop]) {
 				this.references[prop].value = value
 			} else {
-				this.references[prop] = Puer.reference(value)
+				this.references[prop] = $.reference(value)
 			}
 		}
 

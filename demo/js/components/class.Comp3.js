@@ -1,4 +1,4 @@
-import Puer          from '../../../core/class.Puer.js'
+import $          from '../../../core/class.$.js'
 import PuerComponent from '../../../core/class.PuerComponent.js'
 
 
@@ -8,5 +8,5 @@ class Comp3 extends PuerComponent {
 	}
 }
 
-Puer.define(Comp3, import.meta.url)
+$.define(Comp3, import.meta.url)
 export default Comp3

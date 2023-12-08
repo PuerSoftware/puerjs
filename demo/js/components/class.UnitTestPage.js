@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../../puer.js'
+import $, {PuerComponent} from '../../../puer.js'
 
 import testPuerProps         from '../tests/testPuerProps.js'
 import testPuerComponentSet  from '../tests/testPuerComponentSet.js'
@@ -19,26 +19,26 @@ class UnitTestPage extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div([
+		return $.div([
 			h3({text: this.props.title}),
-			Puer.ul([
-				Puer.li([
-					Puer.a({
-						text     : 'Test Puer Props',
+			$.ul([
+				$.li([
+					$.a({
+						text     : 'Test $ Props',
 						testName : 'testPuerProps',
 						onclick  : this.test
 					})
 				]),
-				Puer.li([
-					Puer.a({
-						text     : 'Test Puer Component Set',
+				$.li([
+					$.a({
+						text     : 'Test $ Component Set',
 						testName : 'testPuerComponentSet',
 						onclick  : this.test
 					})
 				]),
-				Puer.li([
-					Puer.a({
-						text     : 'Test Puer State',
+				$.li([
+					$.a({
+						text     : 'Test $ State',
 						testName : 'testPuerState',
 						onclick  : this.test
 					})
@@ -48,5 +48,5 @@ class UnitTestPage extends PuerComponent {
 	}
 }
 
-Puer.define(UnitTestPage, import.meta.url)
+$.define(UnitTestPage, import.meta.url)
 export default UnitTestPage

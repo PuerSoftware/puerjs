@@ -18,7 +18,7 @@
 
 class MyComp {
  constructor() {
-  Puer.Events.on(MY_EVENT, _onMyEvent)
+  $.Events.on(MY_EVENT, _onMyEvent)
  }
 
  _onMyEvent() {}

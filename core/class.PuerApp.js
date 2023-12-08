@@ -1,4 +1,4 @@
-import Puer          from './class.Puer.js'
+import $          from './class.Puer.js'
 import PuerComponent from './class.PuerComponent.js'
 
 
@@ -11,7 +11,7 @@ class PuerApp extends PuerComponent {
 
 	__ready() {
 		super.__ready()
-		Puer.Router.start()
+		$.Router.start()
 		this.show() // Display after css has loaded
 	}
 
@@ -23,7 +23,7 @@ class PuerApp extends PuerComponent {
 	}
 
 	route(path) {
-		Puer.Router.navigate(path)
+		$.Router.navigate(path)
 	}
 
 	toTreeString(root, indent='') {
@@ -45,5 +45,5 @@ class PuerApp extends PuerComponent {
 	}
 }
 
-Puer.define(PuerApp)
+$.define(PuerApp)
 export default PuerApp

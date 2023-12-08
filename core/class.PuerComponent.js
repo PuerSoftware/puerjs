@@ -1,4 +1,4 @@
-import Puer              from './class.Puer.js'
+import $                 from './class.Puer.js'
 import BasePuerComponent from './class.BasePuerComponent.js'
 import PuerProxy         from './class.PuerProxy.js'
 
@@ -25,7 +25,7 @@ class PuerComponent extends BasePuerComponent {
 
 	_onPropChange(prop) {
 		this._applyProp(prop)
-		const propCamelized = Puer.String.camelToUpper(prop)
+		const propCamelized = $.String.camelToUpper(prop)
 		const methodName    = `on${propCamelized}Change`
 		return this[methodName] && this[methodName](this.props[prop])
 	}
@@ -35,9 +35,9 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_setupRoot() {
-		Puer.owner = this
+		$.owner = this
 		this.root  = this.render()
-		Puer.owner = null
+		$.owner = null
         this.root.parent = this
 	}
 
@@ -47,14 +47,14 @@ class PuerComponent extends BasePuerComponent {
 
 	_computeClasses() {
 		return this.getPropsInProto('chainName', 'PuerComponent')
-			.map(s => Puer.String.camelToKebab(s))
+			.map(s => $.String.camelToKebab(s))
 			.concat(this.classes)
 	}
 
 	/*********************** PUBLIC ***********************/
 
 	render() {
-		return Puer.div()
+		return $.div()
 	}
 
 	on(name, f, options) {
@@ -63,20 +63,20 @@ class PuerComponent extends BasePuerComponent {
 				f.bind(this)(...args)
 			}
 		}
-		Puer.Events.on(name, this.listeners[name], options)
+		$.Events.on(name, this.listeners[name], options)
 	}
 
 	once(name, f, options) {
-		Puer.Events.once(name, f.bind(this), options)
+		$.Events.once(name, f.bind(this), options)
 	}
 
 	off(name) {
-		this.listeners[name] && Puer.Events.off(name, this.listeners[name])
+		this.listeners[name] && $.Events.off(name, this.listeners[name])
 	}
 
 	trigger(name, data) {
 		data.targetComponent = this
-		Puer.Events.trigger(name, data)
+		$.Events.trigger(name, data)
 	}
 }
 

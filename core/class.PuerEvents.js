@@ -1,4 +1,4 @@
-import Puer from './class.Puer.js'
+import $ from './class.Puer.js'
 
 
 class PuerEvents extends EventTarget {
@@ -58,7 +58,7 @@ class PuerEvents extends EventTarget {
 			} else {
 				this.trigger(data.name, data.data)
 			}
-			this.send(Puer.Event.SYS_CONFIRM, {name: data.name, key: data.key})
+			this.send($.Event.SYS_CONFIRM, {name: data.name, key: data.key})
 		}
 
 		this.socket.onclose = (event) => {
@@ -90,7 +90,7 @@ class PuerEvents extends EventTarget {
 			if (this.connecting) {
 				this._cache(name, data)
 			} else {
-				throw new Puer.Error('Puer.Events.connect() must be called prior to sending events', this, 'send')
+				throw new $.Error('$.Events.connect() must be called prior to sending events', this, 'send')
 			}
 		} else {
 			console.log('Sent event:', name, data)
@@ -100,7 +100,7 @@ class PuerEvents extends EventTarget {
 
 	define(events) {
 		for (const event of events) {
-			Puer.Event[event] = event
+			$.Event[event] = event
 		}
 	}
 }

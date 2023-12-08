@@ -4,7 +4,7 @@ import RouteParser from './class.RouteParser.js'
 class Route {
 	static create(routes) {
 		routes = Route._validateRoutes(routes, new Set())
-		Puer.log(routes)
+		$.log(routes)
 		return new Route(null, null, false, null, routes)
 	}
 
@@ -32,28 +32,28 @@ class Route {
 		for (const route of routes) {
 			if (route.isDefault) {
 				if (defaults.has(route.name)) {
-					throw `Puer.Route: More than one default is registered for route set "${route.name}"`
+					throw `$.Route: More than one default is registered for route set "${route.name}"`
 				} else {
 					defaults.add(route.name)
 				}
 			}
 			if (crossLevelNames.has(route.name)) {
-				throw `Puer.Route: route set name is not unique: "${route.name}"`
+				throw `$.Route: route set name is not unique: "${route.name}"`
 			}
 			names.add(route.name)
 			route.routes = Route._validateRoutes(route.routes, crossLevelNames)
 		}
-		crossLevelNames = Puer.Set.union(crossLevelNames, names)
-		const nonDefaultNames = Puer.Set.difference(names, defaults)
+		crossLevelNames = $.Set.union(crossLevelNames, names)
+		const nonDefaultNames = $.Set.difference(names, defaults)
 		if (nonDefaultNames.size > 0) {
-			throw `Puer.Route: Defaults are not registered for route sets: "${Array.from(nonDefaultNames).join(', ')}"`
+			throw `$.Route: Defaults are not registered for route sets: "${Array.from(nonDefaultNames).join(', ')}"`
 		}
 
 		return routes
 	}
 
 	constructor(name, value, isDefault=false, parent, routes=[]) {
-		Puer.log(routes)
+		$.log(routes)
 		this.isRoot    = Boolean(!name && !value && !parent)
 		this.name      = name
 		this.value     = value
@@ -188,7 +188,7 @@ class Route {
 		if (this.isRoot) {
 			this._setActiveChildren(path)
 		}
-		Puer.log('updateHash', this.toObject())
+		$.log('updateHash', this.toObject())
 		return this._getHash()
 	}
 

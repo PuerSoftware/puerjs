@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class LinkSet extends PuerComponent {
@@ -16,9 +16,9 @@ class LinkSet extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div(this.children)
+		return $.div(this.children)
 	}
 }
 
-Puer.define(LinkSet, import.meta.url)
+$.define(LinkSet, import.meta.url)
 export default LinkSet

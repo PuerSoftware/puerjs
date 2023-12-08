@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class Link extends PuerComponent {
@@ -19,11 +19,11 @@ class Link extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div({onClick : this.navigate}, [
-			Puer.a ({text : this.props.label})
+		return $.div({onClick : this.navigate}, [
+			$.a ({text : this.props.label})
 		])
 	}
 }
 
-Puer.define(Link, import.meta.url)
+$.define(Link, import.meta.url)
 export default Link

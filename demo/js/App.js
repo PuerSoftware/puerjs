@@ -1,4 +1,4 @@
-import Puer, {PuerApp} from '../../puer.js'
+import $, {PuerApp} from '../../puer.js'
 import {Link}          from '../../ui/index.js'
 
 import IndexPage       from './components/class.IndexPage.js'
@@ -7,29 +7,29 @@ import ComponentPage   from './components/class.ComponentsPage.js'
 import FormPage        from './components/class.FormPage.js'
 import RoutingPage     from './components/class.RoutingPage.js'
 
-Puer.application(
+$.application(
 	class App extends PuerApp {
 		render() {
-			return Puer.div([
-				Puer.div('header', [
-					Puer.h2({text: 'PuerJS'}),
-					Puer.div([
-						Puer.Link({ label: 'Home',       hash: 'page:index'     }),
-						Puer.span({text: ' | '}),
-						Puer.Link({ label: 'Unit Tests', hash: 'page:unit'      }),
-						Puer.span({text: ' | '}),
-						Puer.Link({ label: 'Form',       hash: 'page:form'      }),
-						Puer.span({text: ' | '}),
-						Puer.Link({ label: 'Component',  hash: 'page:component' }),
-						Puer.span({text: ' | '}),
-						Puer.Link({ label: 'Routing',    hash: 'page:routing'   }),
+			return $.div([
+				$.div('header', [
+					$.h2({text: 'PuerJS'}),
+					$.div([
+						$.Link({ label: 'Home',       hash: 'page:index'     }),
+						$.span({text: ' | '}),
+						$.Link({ label: 'Unit Tests', hash: 'page:unit'      }),
+						$.span({text: ' | '}),
+						$.Link({ label: 'Form',       hash: 'page:form'      }),
+						$.span({text: ' | '}),
+						$.Link({ label: 'Component',  hash: 'page:component' }),
+						$.span({text: ' | '}),
+						$.Link({ label: 'Routing',    hash: 'page:routing'   }),
 					])
 				]),
-				Puer.IndexPage     ({ title: 'Home',           route: 'page:index'     }),
-				Puer.UnitTestPage  ({ title: 'Unit Tests',     route: 'page:unit'      }),
-				Puer.FormPage      ({ title: 'Form Demo',      route: 'page:form'      }),
-				Puer.ComponentPage ({ title: 'Component Demo', route: 'page:component' }),
-				Puer.RoutingPage   ({ title: 'Routing Demo',   route: 'page:routing'   }),
+				$.IndexPage     ({ title: 'Home',           route: 'page:index'     }),
+				$.UnitTestPage  ({ title: 'Unit Tests',     route: 'page:unit'      }),
+				$.FormPage      ({ title: 'Form Demo',      route: 'page:form'      }),
+				$.ComponentPage ({ title: 'Component Demo', route: 'page:component' }),
+				$.RoutingPage   ({ title: 'Routing Demo',   route: 'page:routing'   }),
 			])
 		}
 	}, import.meta.url

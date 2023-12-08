@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class InputButton extends PuerComponent {
@@ -10,9 +10,9 @@ class InputButton extends PuerComponent {
 	}
 
 	render() {
-		return Puer[this.props.tagName]({ ... this.props })
+		return $[this.props.tagName]({ ... this.props })
 	}
 }
 
-Puer.define(InputButton, import.meta.url)
+$.define(InputButton, import.meta.url)
 export default InputButton

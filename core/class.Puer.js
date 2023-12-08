@@ -153,7 +153,7 @@ class PuerConstructor {
 	define(cls, importUrl) {
 		if (typeof cls === 'string') {
 			if (window[cls]) {
-				throw new PuerError(`Could not define tag "${cls}": name occupied`, Puer, 'define')
+				throw new PuerError(`Could not define tag "${cls}": name occupied`, $, 'define')
 			} else {
 				if (cls === 'text') {
 					return this._defineText()
@@ -162,7 +162,7 @@ class PuerConstructor {
 			}
 		}
 		if (this[cls.name]) {
-			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, Puer, 'define')
+			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, $, 'define')
 		}
 		return this._defineComponent(cls, importUrl)
 	}
@@ -188,7 +188,7 @@ class PuerConstructor {
 		this._defineComponent(cls, importUrl)
 		this.app    = this[cls.name]()
 		this.Router = new PuerRouter(this.app)
-		return Puer
+		return $
 	}
 
 	router(getRoutes) {
@@ -263,7 +263,7 @@ class PuerConstructor {
 	log( ... args ) {
 		const newArgs = []
 		for (const arg of args) {
-			if (Puer.isString(arg) || Puer.isNumber(arg) || Puer.isBoolean(arg)) {
+			if ($.isString(arg) || $.isNumber(arg) || $.isBoolean(arg)) {
 				newArgs.push(arg)
 			} else {
 				newArgs.push(JSON.stringify(arg, null, 4))
@@ -274,16 +274,16 @@ class PuerConstructor {
 
 }
 
-const Puer = new PuerConstructor()
+const $ = new PuerConstructor()
 
-Puer.String    = StringMethods
-Puer.Object    = ObjectMethods
-Puer.Date      = DateMethods
-Puer.Set       = SetMethods
-Puer.Request   = Request
-Puer.DataSet   = DataSet
-Puer.Reference = Reference 
-Puer.RouteRoot = RouteRoot
+$.String    = StringMethods
+$.Object    = ObjectMethods
+$.Date      = DateMethods
+$.Set       = SetMethods
+$.Request   = Request
+$.DataSet   = DataSet
+$.Reference = Reference 
+$.RouteRoot = RouteRoot
 
-window.Puer = Puer
-export default Puer
+window.$ = $
+export default $

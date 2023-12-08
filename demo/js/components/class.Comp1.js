@@ -1,4 +1,4 @@
-import Puer          from '../../../core/class.Puer.js'
+import $          from '../../../core/class.$.js'
 import PuerComponent from '../../../core/class.PuerComponent.js'
 import Comp2         from './class.Comp2.js'
 
@@ -10,7 +10,7 @@ class Comp1 extends PuerComponent {
 	}
 
 	init() {
-		Puer.Events.send('Event', {})
+		$.Events.send('Event', {})
 	}
 
 	_onClick(e) {
@@ -27,20 +27,20 @@ class Comp1 extends PuerComponent {
 	}
 
 	setRandomColor() {
-		this.state.randomColor = '#' + Puer.String.randomHex(6)
+		this.state.randomColor = '#' + $.String.randomHex(6)
 	}
 
 	render() {
-		return Puer.div('', {text: 'Some Div', onclick: this._onClick}, [
-			Puer.Comp2({myProp: this.props.myProp},[
-				Puer.h1({myProp: 'test', cssBackgroundColor: this.state.randomColor}, [text('H1')])
+		return $.div('', {text: 'Some Div', onclick: this._onClick}, [
+			$.Comp2({myProp: this.props.myProp},[
+				$.h1({myProp: 'test', cssBackgroundColor: this.state.randomColor}, [text('H1')])
 			]),
-			Puer.button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
-			Puer.button({onClick: this.changeMyProp}, [text('Change prop')]),
-			Puer.button({onClick: this.setRandomColor}, [text('Change color')]),
+			$.button({onClick: this.showChain}, [text('Show Chain in Comp1')]),
+			$.button({onClick: this.changeMyProp}, [text('Change prop')]),
+			$.button({onClick: this.setRandomColor}, [text('Change color')]),
 		])
 	}
 }
 
-Puer.define(Comp1, import.meta.url)
+$.define(Comp1, import.meta.url)
 export default Comp1

@@ -1,4 +1,4 @@
-import Puer      from './class.Puer.js'
+import $         from './class.Puer.js'
 import PuerProxy from './class.PuerProxy.js'
 
 class PuerProps extends PuerProxy {
@@ -14,7 +14,7 @@ class PuerProps extends PuerProxy {
 
 	require(prop, owner) {
 		if (!this.references.hasOwnProperty(prop)) {
-			throw new Puer.Error(`Property "${prop}" is required but not set.`, owner || this, 'require')
+			throw new $.Error(`Property "${prop}" is required but not set.`, owner || this, 'require')
 		}
 	}
 
@@ -23,7 +23,7 @@ class PuerProps extends PuerProxy {
 
 		for (const prop in this.references) {
 			let value = this.references[prop].dereference()
-			if (typeof value === 'function' && Puer.isEvent(prop)) {
+			if (typeof value === 'function' && $.isEvent(prop)) {
 				events[prop.substring(2).toLowerCase()] = value.bind(owner)
 				delete this.references[prop]
 			}

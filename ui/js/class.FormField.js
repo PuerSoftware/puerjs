@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class FormField extends PuerComponent {
@@ -10,7 +10,7 @@ class FormField extends PuerComponent {
 
 	onUpdate() {
 		if (!this.$$$.Form[0]) {
-			throw new Puer.Error('FormField must be a descendent of Form!', this, 'onReady')
+			throw new $.Error('FormField must be a descendent of Form!', this, 'onReady')
 		}
 	}
 
@@ -26,13 +26,13 @@ class FormField extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div([
-			Puer.label({text: this.props.label}),
+		return $.div([
+			$.label({text: this.props.label}),
 			... this.children,
-			Puer.div('error field-error', {text: this.state.error})
+			$.div('error field-error', {text: this.state.error})
 		])
 	}
 }
 
-Puer.define(FormField, import.meta.url)
+$.define(FormField, import.meta.url)
 export default FormField

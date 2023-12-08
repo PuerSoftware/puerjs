@@ -1,4 +1,4 @@
-import Puer from '../../puer.js'
+import $ from '../../puer.js'
 
 import FormInput from './class.FormInput.js'
 
@@ -12,7 +12,7 @@ class InputSelect extends FormInput {
 	}
 
 	onUrlChange(value) {
-		value && Puer.DataSet.load(value, this.onData.bind(this))
+		value && $.DataSet.load(value, this.onData.bind(this))
 	}
 
 	onSelectedChange(value) {
@@ -55,7 +55,7 @@ class InputSelect extends FormInput {
 		if (selected) {
 			props.selected = true
 		}
-		this.input.append(Puer.option(props))
+		this.input.append($.option(props))
 	}
 
 	reset() {
@@ -71,5 +71,5 @@ class InputSelect extends FormInput {
 	}
 }
 
-Puer.define(InputSelect, import.meta.url)
+$.define(InputSelect, import.meta.url)
 export default InputSelect

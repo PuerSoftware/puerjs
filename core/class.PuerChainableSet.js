@@ -1,9 +1,9 @@
-import Puer from './class.Puer.js'
+import $ from './class.Puer.js'
 
 
 class PuerChainableSet extends Array {
 	constructor(items, onChange, operators) {
-		if (Puer.isNumber(items)) {
+		if ($.isNumber(items)) {
 			items = Array(items)
 		}
 		super(... items)
@@ -44,7 +44,7 @@ class PuerChainableSet extends Array {
 			},
 
 			deleteProperty: function(target, prop, receiver) {
-				if (Puer.String.isNumeric(prop)) {
+				if ($.String.isNumeric(prop)) {
 					_this.splice(parseInt(prop), 1)
 					return true
 				}

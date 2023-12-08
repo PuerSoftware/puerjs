@@ -1,4 +1,4 @@
-import Puer             from './class.Puer.js'
+import $             from './class.Puer.js'
 import PuerProps        from './class.PuerProps.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
@@ -7,8 +7,8 @@ import PuerComponentSet from './class.PuerComponentSet.js'
 class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
-		this.owner    = Puer.owner
-		this.id       = props['id'] || Puer.String.randomHex(4)
+		this.owner    = $.owner
+		this.id       = props['id'] || $.String.randomHex(4)
 		this.element  = null
 		this.parent   = null
 		this.root     = null
@@ -26,7 +26,7 @@ class BasePuerComponent extends PuerObject {
 
 		this._listenerMap = new WeakMap()
 
-		Puer.components[this.id] = this
+		$.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
 	}
 
@@ -37,7 +37,7 @@ class BasePuerComponent extends PuerObject {
 		this._cascade('__render')
 		this._setupElement()
 		this._createText()
-		this.addCssClass(... this.classes.map(c => Puer.dereference(c)))
+		this.addCssClass(... this.classes.map(c => $.dereference(c)))
 		this._addEvents()
 		this.onRender && this.onRender()
 	}
@@ -80,7 +80,7 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	__routeChange() {
-		this.onRoute && this.onRoute(Puer.Router.path)
+		this.onRoute && this.onRoute($.Router.path)
 		this._cascade('__routeChange', [])
 	}
 
@@ -179,7 +179,7 @@ class BasePuerComponent extends PuerObject {
 	_createText() {
 		const value = this.props.text 
 		if (value) {
-			const component = Puer.text(value)
+			const component = $.text(value)
 
 			const root = this.isCustom
 				? this.root
@@ -201,9 +201,9 @@ class BasePuerComponent extends PuerObject {
 
 	_applyProp(prop) {
 		if (this.element) {
-			const value = Puer.dereference(this.props[prop])
+			const value = $.dereference(this.props[prop])
 			if (prop.startsWith('css')) {
-				const cssProp = Puer.String.camelToLower(prop.replace(/^css/, ''))
+				const cssProp = $.String.camelToLower(prop.replace(/^css/, ''))
 				this.css(cssProp, value)
 			} else if (prop === 'text') {
 				const textElement = this.getTextElement()
@@ -215,7 +215,7 @@ class BasePuerComponent extends PuerObject {
 					}
 				}
 			} else if (typeof value !== 'function' || typeof value !== 'object') {
-				if (Puer.isAttr(prop)) {
+				if ($.isAttr(prop)) {
 					this.setAttribute(prop, value)
 				}
 			}
@@ -381,7 +381,7 @@ class BasePuerComponent extends PuerObject {
 
 	toggleCssClass(...args) {
 		let methodName = 'toggle'
-		if (Puer.isBoolean(args.at(-1))) {
+		if ($.isBoolean(args.at(-1))) {
 			methodName = args.pop()
 				? 'add'
 				: 'remove'
@@ -463,7 +463,7 @@ class BasePuerComponent extends PuerObject {
 			const index = this.parent.children.indexOf(this)
 			delete this.parent.children[index]
 		}
-		this.id && delete Puer.components[this.id]
+		this.id && delete $.components[this.id]
 	}
 
 	removeChildren() {

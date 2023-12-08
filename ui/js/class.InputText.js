@@ -1,4 +1,4 @@
-import Puer from '../../puer.js'
+import $ from '../../puer.js'
 
 import FormInput from './class.FormInput.js'
 
@@ -11,5 +11,5 @@ class InputText extends FormInput {
 	}
 }
 
-Puer.define(InputText, import.meta.url)
+$.define(InputText, import.meta.url)
 export default InputText

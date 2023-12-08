@@ -1,4 +1,4 @@
-import Puer, { PuerComponent } from '../../puer.js'
+import $, { PuerComponent } from '../../puer.js'
 
 
 class FormInput extends PuerComponent {
@@ -64,17 +64,17 @@ class FormInput extends PuerComponent {
 	}
 
 	render() {
-		this.input = Puer[this.props.tagName]({ ... this.props })
+		this.input = $[this.props.tagName]({ ... this.props })
 		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
 
-		return Puer.div([
-			Puer.div('before', beforeProps),
+		return $.div([
+			$.div('before', beforeProps),
 			this.input,
-			Puer.div('after', afterProps)
+			$.div('after', afterProps)
 		])
 	}
 }
 
-Puer.define(FormInput, import.meta.url)
+$.define(FormInput, import.meta.url)
 export default FormInput

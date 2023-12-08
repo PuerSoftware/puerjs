@@ -1,4 +1,4 @@
-import Puer, {PuerComponent} from '../../puer.js'
+import $, {PuerComponent} from '../../puer.js'
 
 
 class Box extends PuerComponent {
@@ -8,9 +8,9 @@ class Box extends PuerComponent {
 	}
 
 	render() {
-		return Puer[this.props.tagName]({}, this.children)
+		return $[this.props.tagName]({}, this.children)
 	}
 }
 
-Puer.define(Box, import.meta.url)
+$.define(Box, import.meta.url)
 export default Box

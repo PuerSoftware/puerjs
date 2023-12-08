@@ -1,4 +1,4 @@
-import Puer from '../../puer.js'
+import $ from '../../puer.js'
 import Box  from './class.Box.js'
 
 class Align extends Box {
@@ -15,9 +15,9 @@ class Align extends Box {
 		let textAlign = 'center'
 		let margin    = `${margin_t} ${margin_r} ${margin_b} ${margin_l}`
 		
-		return Puer.div({ cssMargin: margin, cssTextAlign: textAlign }, this.children)
+		return $.div({ cssMargin: margin, cssTextAlign: textAlign }, this.children)
 	}
 }
 
-Puer.define(Align)
+$.define(Align)
 export default Align

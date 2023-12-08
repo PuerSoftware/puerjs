@@ -1,4 +1,4 @@
-import Puer          from '../../../core/class.Puer.js'
+import $          from '../../../core/class.$.js'
 import PuerComponent from '../../../core/class.PuerComponent.js'
 import Comp3         from './class.Comp3.js'
 
@@ -38,21 +38,21 @@ class Comp2 extends PuerComponent {
 	}
 
 	render() {
-		return Puer.ul ({text: this.props.myProp}, [
-			Puer.div    (this.children),
-			Puer.li     ([text(this.state.liText)]),
-			Puer.li     ([text(this.state.liText + 'myText with data')]),
-			Puer.li     ([text(`${this.props.myProp} myText with props`)]),
-			Puer.li     ([text(this.props.myProp)]),
-			Puer.li     ([text(this.props.myProp)]),
-			Puer.Comp3({myProp: this.props.myProp}),
-			Puer.button ({onClick: this.changeState}, [text('Change state')]),
-			Puer.button ({onClick: this.renderItem},  [text('Add Item')]),
-			Puer.button ({onClick: this.removeItem},  [text('Remove Item')]),
-			Puer.button ({onClick: this.showChain},   [text('Show Chain')])
+		return $.ul ({text: this.props.myProp}, [
+			$.div    (this.children),
+			$.li     ([text(this.state.liText)]),
+			$.li     ([text(this.state.liText + 'myText with data')]),
+			$.li     ([text(`${this.props.myProp} myText with props`)]),
+			$.li     ([text(this.props.myProp)]),
+			$.li     ([text(this.props.myProp)]),
+			$.Comp3({myProp: this.props.myProp}),
+			$.button ({onClick: this.changeState}, [text('Change state')]),
+			$.button ({onClick: this.renderItem},  [text('Add Item')]),
+			$.button ({onClick: this.removeItem},  [text('Remove Item')]),
+			$.button ({onClick: this.showChain},   [text('Show Chain')])
 		])
 	}
 }
 
-Puer.define(Comp2, import.meta.url)
+$.define(Comp2, import.meta.url)
 export default Comp2

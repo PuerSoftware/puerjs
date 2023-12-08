@@ -1,4 +1,4 @@
-import Puer from '../../puer.js'
+import $ from '../../puer.js'
 import Box  from './class.Box.js'
 
 class Rows extends Box {
@@ -12,5 +12,5 @@ class Rows extends Box {
 	}
 }
 
-Puer.define(Rows, import.meta.url)
+$.define(Rows, import.meta.url)
 export default Rows

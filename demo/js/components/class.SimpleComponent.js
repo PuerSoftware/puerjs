@@ -1,4 +1,4 @@
-import Puer, {PuerComponent}   from '../../../puer.js'
+import $, {PuerComponent}   from '../../../puer.js'
 
 class SimpleComponent extends PuerComponent {
 	constructor(props, children) {
@@ -6,9 +6,9 @@ class SimpleComponent extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div({text: this.props.value})
+		return $.div({text: this.props.value})
 	}
 }
 
-Puer.define(SimpleComponent)
+$.define(SimpleComponent)
 export default SimpleComponent

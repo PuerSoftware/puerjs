@@ -1,4 +1,4 @@
-import Puer            from './class.Puer.js'
+import $ from './class.Puer.js'
 
 // page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
 
@@ -48,7 +48,7 @@ class PuerRouter {
 	}
 
 	start() {
-		this.routeRoot = new Puer.RouteRoot(this.getConfig())
+		this.routeRoot = new $.RouteRoot(this.getConfig())
 		this.navigate(this.initialHash || this.routeRoot.getDefaultHash())
 
 		window.addEventListener('hashchange', (event) => {

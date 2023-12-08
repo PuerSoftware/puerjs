@@ -1,4 +1,4 @@
-import Puer, {PuerComponent}   from '../../../puer.js'
+import $, {PuerComponent}   from '../../../puer.js'
 
 
 class FormPage extends PuerComponent {
@@ -7,18 +7,18 @@ class FormPage extends PuerComponent {
 	}
 
 	render() {
-		return Puer.div([
+		return $.div([
 			h3({text: this.props.title}),
-			Puer.Form({validationUrl: '/validate'}, [
-				Puer.FormField({label: 'Username'}, [
-					Puer.InputText({
+			$.Form({validationUrl: '/validate'}, [
+				$.FormField({label: 'Username'}, [
+					$.InputText({
 						type           : 'text',
 						name           : 'username',
 						validationType : 'username'
 					}),
 				]),
-				Puer.FormField({label: 'Password'}, [
-					Puer.InputText({
+				$.FormField({label: 'Password'}, [
+					$.InputText({
 						type           : 'password',
 						name           : 'password',
 						validationType : 'password'
@@ -29,5 +29,5 @@ class FormPage extends PuerComponent {
 	}
 }
 
-Puer.define(FormPage, import.meta.url)
+$.define(FormPage, import.meta.url)
 export default FormPage
