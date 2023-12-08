@@ -8,7 +8,7 @@ class InputButton extends PuerComponent {
 		this.props.default('type',    'button')
 		this.input = null
 	}
-
+	
 	render() {
 		return $[this.props.tagName]({ ... this.props })
 	}

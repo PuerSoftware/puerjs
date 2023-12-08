@@ -1,0 +1,36 @@
+.button,
+.button.primary {
+	background-color : #07569E;
+	color            : #FFFFFF;
+	font-family      : Inter, sans-serif;
+	font-size        : 14px;
+	font-weight      : 500;
+	line-height      : 17px;
+	letter-spacing   : 0em;
+	text-align       : center;
+	border           : 1px solid #07569E;
+	border-radius    : 2px;
+	padding          : 8px 20px;
+}
+
+.button.secondary {
+	background-color : #000;
+	border-color     : #07569E;
+}
+
+.button.neutral,
+.button.neutral.primary {
+	background-color : #0C1015;
+	border           : 1px solid #0C1015;
+	color            : #FFFFFF;
+	font-size        : 12px;
+	padding          : 6px 8px;
+}
+
+.button.neutral.secondary {
+	background-color: transparent;
+}
+
+	.button:focus {
+		outline : none;
+	}
