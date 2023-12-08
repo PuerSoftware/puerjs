@@ -32,7 +32,9 @@ class PuerRouter {
 
 	_route(hash) {
 		this.path = this.routeRoot.getPath(hash)
+		$.isRouting = true
 		this.app.__route(this.path)
+		$.isRouting = false
 		this.app.__routeChange()
 	}
 

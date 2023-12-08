@@ -23,6 +23,7 @@ class PuerConstructor {
 			this.path
 			this.appPath
 			this.isReferencing
+			this.isRouting
 			this._cssUrls  = new Set()
 			this._cssCount = 0
 			this.components = {}
