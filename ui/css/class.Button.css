@@ -8,29 +8,71 @@
 	line-height      : 17px;
 	letter-spacing   : 0em;
 	text-align       : center;
-	border           : 1px solid #07569E;
+	border           : none;
 	border-radius    : 2px;
-	padding          : 8px 20px;
+	padding          : 9px 21px;
 }
+	.button:hover,
+	.button.primary:hover {
+		background-color : #0E76D5;
+		border-color     : #0E76D5;
+	}
+	.button:active,
+	.button.primary:active {
+		color            : #4C89C2;
+		background-color : #06325B;
+		border-color     : #06325B;
+	}
 
 .button.secondary {
 	background-color : #000;
-	border-color     : #07569E;
+	border           : 2px solid #07569E;
+	padding          : 6px 18px;
 }
+	.button.secondary:hover {
+		background-color : rgba(7, 86, 158, 0.22);
+		color            : #5798D4;
+		border           : 2px solid #07569E;
+		padding          : 6px 18px;
+	}
+	.button.secondary:active {
+		background-color : rgba(7, 86, 158, 0.49);
+		color            : #62A9EA;
+		border           : 2px solid #07569E;
+		padding          : 6px 18px;
+	}
 
 .button.neutral,
 .button.neutral.primary {
-	background-color : #0C1015;
-	border           : 1px solid #0C1015;
+	background-color : #26262a;
 	color            : #FFFFFF;
 	font-size        : 12px;
-	padding          : 6px 8px;
+	padding          : 7px 15px;
 }
+	.button.neutral:hover,
+	.button.neutral.primary:hover {
+		background-color : #0C1015;
+		color            : #FFFFFF;
+		font-size        : 12px;
+	}
+	.button.neutral:active,
+	.button.neutral.primary:active {
+		background-color : #07569F;
+	}
 
 .button.neutral.secondary {
-	background-color: transparent;
+	background-color : rgba(12, 16, 21, 0.2);
+	border           : 2px solid #0C1015;
+	color            : #B4B4B4;
+	font-size        : 14px;
 }
-
-	.button:focus {
-		outline : none;
+	.button.neutral.secondary:hover {
+		background-color : rgba(12, 16, 21, 0.55);
+		color            : #EFEFEF;
 	}
+	.button.neutral.secondary:active {
+		background-color : rgba(6, 66, 120, 0.33);
+		border-color     : #07569F;
+		color            : #EFEFEF;
+	}
+

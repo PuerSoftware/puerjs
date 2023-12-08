@@ -1,4 +1,4 @@
-import $          from '../../../core/class.$.js'
+import $          from '../../../core/class.Puer.js'
 import PuerComponent from '../../../core/class.PuerComponent.js'
 import Comp2         from './class.Comp2.js'
 

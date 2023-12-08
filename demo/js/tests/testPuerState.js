@@ -1,4 +1,4 @@
-import PuerState from '../../../core/class.PuerState.js'
+import PuerProxy from '../../../core/class.PuerProxy.js'
 import PuerTest  from '../../../core/class.PuerTest.js'
 
 
@@ -13,7 +13,7 @@ const Tests_PuerState = {
 	result: null,
 
 	setup: () => {
-		return new PuerState(
+		return new PuerProxy(
 			{foo1: 'bar1', foo2: 'bar,2'},
 			(prop, oldValue, newValue) => {
 				Tests_PuerState.result = [prop, oldValue, newValue]

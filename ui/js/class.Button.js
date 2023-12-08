@@ -11,7 +11,7 @@ class Button extends PuerComponent {
 	}
 
 	render() {
-		return $.button({ ... this.props })
+		return $.button()
 	}
 }
 
