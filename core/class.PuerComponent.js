@@ -59,7 +59,7 @@ class PuerComponent extends BasePuerComponent {
 
 	on(name, f, options) {
 		this.listeners[name] = (...args) => {
-			if (this.isActive()) {
+			if (this.isActive) {
 				f.bind(this)(...args)
 			}
 		}

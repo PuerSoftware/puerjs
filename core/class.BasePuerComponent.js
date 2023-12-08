@@ -1,4 +1,4 @@
-import $             from './class.Puer.js'
+import $                from './class.Puer.js'
 import PuerProps        from './class.PuerProps.js'
 import PuerObject       from './class.PuerObject.js'
 import PuerComponentSet from './class.PuerComponentSet.js'
@@ -47,35 +47,48 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
-	__route(paths) {
+	__route(paths, activation) {
+		/*
+		*  activation can be: -1 0 1
+		*  ------ -1  - route patent deactivated
+		*  ------- 0  - route patent did not change _isActive
+		*  ------- 1  - route patent activated
+		*/
 		let hasMatch = false
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
 			for (const path of paths) {
 
-				if (routeName == path.name) {
+				if (routeName === path.name) {
 
 					hasMatch = true
 					if (routeValue === path.value) {
-						if (this.onActivate) {
-							this.onActivate()
-						} else {
-							this.activate()
-						}
-						this._cascade('__route', [path.routes])
+						activation = this._isActive ? 0 : 1
+						this.onActivate
+							? this.onActivate()
+							: this.activate()
+
+						this._cascade('__route', [path.routes, activation])
 					} else {
-						if (this.onDeactivate) {
-							this.onDeactivate()
-						} else {
-							this.deactivate()
-						}
+						activation = !this._isActive ? 0 : -1
+						this.onDeactivate
+							? this.onDeactivate()
+							: this.deactivate()
+
+						this._cascade('__route', [path.routes, activation])
 					}
 				}
+			}
+		} else {
+			if (activation < 0) {
+				this.onDeactivate && this.onDeactivate()
+			} else if (activation > 0) {
+				this.onActivate && this.onActivate()
 			}
 		}
 		if (!hasMatch) {
 			this.activate()
-			this._cascade('__route', [paths])
+			this._cascade('__route', [paths, activation])
 		}
 	}
 
@@ -263,13 +276,14 @@ class BasePuerComponent extends PuerObject {
 
 	/********************* PREDICATES *********************/
 
-	isActive() {
-		// this.props.route && console.log(this.className, this._isActive, this.props.route)
+	get isActive() {
 		if (!this._isActive) {
 			return false
 		}
-		return this.parent ? this.parent.isActive() : true
+		return this.parent ? this.parent.isActive : true
 	}
+
+
 
 	/********************* DIRECTIVES *********************/
 
