@@ -7,10 +7,21 @@ class InputToggle extends FormInput {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('allowEmpty', true)
+		this.props.default('selected', '1')
+		this.props.default('options', [
+			{value: '1', text: 'Yes'},
+			{value: '0', text: 'No'}
+		])
 
-		this.props.type = 'hidden'
-		this.buttons    = null
-		this.options    = {}
+		this.props.type    = 'hidden'
+		this.props.tagName = 'input'
+		this.buttons       = null
+		this.options       = {}
+	}
+
+	_onButtonClick(event) {
+
+		this.value = event.targetComponent.props.value
 	}
 
 	/**********************************************************/
@@ -31,6 +42,8 @@ class InputToggle extends FormInput {
 	onReady() {
 		super.onReady()
 		this.addOptions(this.props.options)
+
+		this.value = this.props.selected
 	}
 
 	/**********************************************************/
@@ -53,10 +66,14 @@ class InputToggle extends FormInput {
 	}
 
 	addOption(value, text, selected=false) {
-		const cssClasses = ['button']
+		const cssClasses = ['option']
 		if (selected) { cssClasses.push('selected') }
 
-		this.options[value] = $.div(cssClasses.join(' '))
+		this.options[value] = $.div(cssClasses.join(' '), {
+			text    : text,
+			value   : value,
+			onclick : this._onButtonClick.bind(this)
+		})
 		this.buttons.append(this.options[value])		
 	}
 
@@ -78,7 +95,7 @@ class InputToggle extends FormInput {
 	}
 
 	render() {
-		this.buttons = $.div('buttons')
+		this.buttons = $.div('unselectable buttons')
 		this.children = [
 			this.buttons
 		]

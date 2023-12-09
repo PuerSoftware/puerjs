@@ -3,20 +3,27 @@
 	height: 40px;
 	font-family: Inter, sans-serif;
 	font-weight: bold;
+	margin: 2px;
+	cursor: default;
 }
 	.input-toggle > .buttons {
+		border: 1px solid #263545;
+		border-radius: 2px;
+		background-color: #263545;
 	}
-		.input-toggle > .buttons > .button {
+		.input-toggle > .buttons > .option {
 			display: inline-block;
 			padding: 10px 15px;
-			background-color: #666;
-			color: #FFF;
+			color: #616C77;
+			margin: 0;
 		}
 
-		.input-toggle > .buttons > .button.selected {
-			background-color: blue;
+		.input-toggle > .buttons > .option.selected {
+			background-color: #0C1015;
+			border-radius: 2px;
+			color: #FFFFFF;
 		}
 	.disabled .input-toggle > .buttons {
 	}
-		.disabled .input-toggle > .buttons > .button {
+		.disabled .input-toggle > .buttons > .option {
 		}

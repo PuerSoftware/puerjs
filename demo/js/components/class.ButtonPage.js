@@ -1,6 +1,6 @@
 import $, {PuerComponent} from '../../../puer.js'
 
-import * as ui from '../../../ui/index.js'
+import {InputToggle} from '../../../ui/index.js'
 
 class ButtonPage extends  PuerComponent {
 
@@ -9,12 +9,21 @@ class ButtonPage extends  PuerComponent {
 	}
 
 	render() {
-		return $.div({cssDisplay: 'inline', cssWidth: '100%'}, [
+		return $.div([
+			$.div([
 				$.Button('primary',           { text: 'Register Vessel ID', onclick: this.onClick}),
 				$.Button('secondary',         { text: 'Cancel'            , onclick: this.onClick}),
+			]),
+			$.div([
 				$.Button('neutral primary',   { text: 'Give access'       , onclick: this.onClick}),
 				$.Button('neutral secondary', { text: 'Delete'            , onclick: this.onClick}),
+			]),
+			$.div([
 			    $.Button('disabled',          { text: 'Re-Generate'       , onclick: this.onClick})
+			]),
+			$.div([
+				$.InputToggle({name: 'test'})
+			])
 		])
 	}
 }

@@ -161,17 +161,17 @@ class BasePuerComponent extends PuerObject {
 			? []
 			: item.parent.getChainAncestor(chainName, false)
 	}
-
-	getCustomParent() {
-		if (this.isCustom) {
-			return this
-		} else {
-			if (this.parent) {
-				return this.parent.getCustomParent()
-			}
-			return null
-		}
-	}
+	//
+	// getCustomParent() {
+	// 	if (this.isCustom) {
+	// 		return this
+	// 	} else {
+	// 		if (this.parent) {
+	// 			return this.parent.getCustomParent()
+	// 		}
+	// 		return null
+	// 	}
+	// }
 
 	get $   () { return new PuerComponentSet([this]).$   }
 	get $$  () { return new PuerComponentSet([this]).$$  }
@@ -243,12 +243,12 @@ class BasePuerComponent extends PuerObject {
 
 	_on(name, f, options) {
 		if (!this._listenerMap.has(f)) {
-			let targetComponent = this
+			const targetComponent = this
 			let _f = function (event) {
 				event.targetComponent = targetComponent
 				return f.call(this, event)
 			}
-			_f = _f.bind(this.getCustomParent())
+			_f = _f.bind(this.owner)
 			this._listenerMap.set(f, _f)
 			this.element.addEventListener(name, _f, options)
 		}
@@ -446,6 +446,7 @@ class BasePuerComponent extends PuerObject {
 			: this
 
 		component.parent = root
+		component.owner  = this.owner
 		root.children.push(component)
 
 		this.element.appendChild(component.element)
@@ -462,6 +463,7 @@ class BasePuerComponent extends PuerObject {
 			: this
 
 		component.parent = root
+		component.owner  = this.owner
 		root.children.unshift(component)
 
 		if (this.element.firstChild) {

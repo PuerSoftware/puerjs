@@ -14,6 +14,7 @@ import InputText   from './js/class.InputText.js'
 import InputNumber from './js/class.InputNumber.js'
 import InputButton from './js/class.InputButton.js'
 import InputHidden from './js/class.InputHidden.js'
+import InputToggle from './js/class.InputToggle.js'
 import Button      from './js/class.Button.js'
 
 
@@ -34,5 +35,6 @@ export {
 	InputNumber,
 	InputButton,
 	InputHidden,
+	InputToggle,
 	Button,
 }
