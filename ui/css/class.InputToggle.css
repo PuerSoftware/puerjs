@@ -20,7 +20,7 @@
 
 		.input-toggle > .buttons > .option.selected {
 			background-color : #0C1015;
-			border-radius    : 2px;
+			border-radius    : 1px;
 			color            : #FFFFFF;
 		}
 	.disabled .input-toggle > .buttons {

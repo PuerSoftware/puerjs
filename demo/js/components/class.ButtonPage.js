@@ -22,7 +22,7 @@ class ButtonPage extends  PuerComponent {
 			    $.Button('disabled', { text: 'Re-Generate', onclick: this.onClick})
 			]),
 			$.div([
-				$.InputToggle({name: 'test', selected: 0, options: [
+				$.InputToggle({id: 'haha', name: 'toggleTest', selected: 0, options: [
 					{value: -1, text: 'NO'},
 					{value: 0,  text: 'MAYBE'},
 					{value: 1,  text: 'YES'}

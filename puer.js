@@ -17,7 +17,7 @@ import $ from './core/class.Puer.js'
 		'colspan,content,contenteditable,controls,coords,crossorigin,data,data-*,'                     +
 		'datetime,default,defer,dir,dirname,download,draggable,dropzone,'                              +
 		'enctype,for,form,formaction,formenctype,formmethod,formnovalidate,formtarget,'                +
-		'height,hidden,href,hreflang,http-equiv,id,imagesizes,imagesrcset,integrity,'                  +
+		'height,hidden,href,hreflang,http-equiv,imagesizes,imagesrcset,integrity,'                     +
 		'ismap,itemprop,kind,label,lang,list,loop,max,maxlength,media,method,'                         +
 		'min,minlength,multiple,muted,name,nonce,novalidate,onafterprint,onbeforeprint,'               +
 		'onbeforeunload,onhashchange,onlanguagechange,onmessage,onmessageerror,onoffline,'             +
