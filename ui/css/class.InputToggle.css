@@ -1,10 +1,11 @@
 .input-toggle {
 	display     : inline-block;
 	font-family : Inter, sans-serif;
-	font-weight : bold;
+	font-weight : 400;
 	margin      : 2px;
 	cursor      : default;
 	border      : none;
+	font-size   : 12px;
 }
 	.input-toggle > .buttons {
 		border           : 2px solid #263545;
