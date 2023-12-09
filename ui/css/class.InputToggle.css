@@ -1,0 +1,22 @@
+.input-toggle {
+	display: inline-block;
+	height: 40px;
+	font-family: Inter, sans-serif;
+	font-weight: bold;
+}
+	.input-toggle > .buttons {
+	}
+		.input-toggle > .buttons > .button {
+			display: inline-block;
+			padding: 10px 15px;
+			background-color: #666;
+			color: #FFF;
+		}
+
+		.input-toggle > .buttons > .button.selected {
+			background-color: blue;
+		}
+	.disabled .input-toggle > .buttons {
+	}
+		.disabled .input-toggle > .buttons > .button {
+		}
