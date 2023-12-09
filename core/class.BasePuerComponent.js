@@ -242,18 +242,20 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, options) {
-		let targetComponent = this
-		let _f = function(event) {
-			event.targetComponent = targetComponent
-			return f.call(this, event)
+		if (!this._listenerMap.has(f)) {
+			let targetComponent = this
+			let _f = function (event) {
+				event.targetComponent = targetComponent
+				return f.call(this, event)
+			}
+			_f = _f.bind(this.getCustomParent())
+			this._listenerMap.set(f, _f)
+			this.element.addEventListener(name, _f, options)
 		}
-		_f = _f.bind(this.getCustomParent())
-		this._listenerMap.set(f, _f)
-		this.element.addEventListener(name, _f, options)
 	}
 
 	_off(name, f, options) {
-		if (this._listenerMap.has(listener)) {
+		if (this._listenerMap.has(f)) {
 			const _f = this._listenerMap.get(f)
 			this.element.removeEventListener(name, _f, options)
 			this._listenerMap.delete(f)
