@@ -499,6 +499,10 @@ class BasePuerComponent extends PuerObject {
 	show(display='block') {
 		this.css({display: display}) // TODO: restore previous display value
 	}
+
+	toggle(visible) {
+		visible ? this.show() : this.hide()
+	}
 }
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'
