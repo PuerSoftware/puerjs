@@ -1,27 +1,27 @@
 .input-toggle {
-	display: inline-block;
-	height: 40px;
-	font-family: Inter, sans-serif;
-	font-weight: bold;
-	margin: 2px;
-	cursor: default;
+	display     : inline-block;
+	font-family : Inter, sans-serif;
+	font-weight : bold;
+	margin      : 2px;
+	cursor      : default;
+	border      : none;
 }
 	.input-toggle > .buttons {
-		border: 1px solid #263545;
-		border-radius: 2px;
-		background-color: #263545;
+		border           : 2px solid #263545;
+		border-radius    : 2px;
+		background-color : #263545;
 	}
 		.input-toggle > .buttons > .option {
-			display: inline-block;
-			padding: 10px 15px;
-			color: #616C77;
-			margin: 0;
+			display : inline-block;
+			padding : 6px 15px;
+			color   : #7d8893;
+			margin  : 0;
 		}
 
 		.input-toggle > .buttons > .option.selected {
-			background-color: #0C1015;
-			border-radius: 2px;
-			color: #FFFFFF;
+			background-color : #0C1015;
+			border-radius    : 2px;
+			color            : #FFFFFF;
 		}
 	.disabled .input-toggle > .buttons {
 	}

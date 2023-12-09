@@ -11,18 +11,22 @@ class ButtonPage extends  PuerComponent {
 	render() {
 		return $.div([
 			$.div([
-				$.Button('primary',           { text: 'Register Vessel ID', onclick: this.onClick}),
-				$.Button('secondary',         { text: 'Cancel'            , onclick: this.onClick}),
+				$.Button('primary', { text: 'Register Vessel ID', onclick: this.onClick}),
+				$.Button('secondary', { text: 'Cancel', onclick: this.onClick}),
 			]),
 			$.div([
-				$.Button('neutral primary',   { text: 'Give access'       , onclick: this.onClick}),
-				$.Button('neutral secondary', { text: 'Delete'            , onclick: this.onClick}),
+				$.Button('neutral primary',   { text: 'Give access' , onclick: this.onClick}),
+				$.Button('neutral secondary', { text: 'Delete'      , onclick: this.onClick}),
 			]),
 			$.div([
-			    $.Button('disabled',          { text: 'Re-Generate'       , onclick: this.onClick})
+			    $.Button('disabled', { text: 'Re-Generate', onclick: this.onClick})
 			]),
 			$.div([
-				$.InputToggle({name: 'test'})
+				$.InputToggle({name: 'test', selected: 0, options: [
+					{value: -1, text: 'NO'},
+					{value: 0,  text: 'MAYBE'},
+					{value: 1,  text: 'YES'}
+				]})
 			])
 		])
 	}

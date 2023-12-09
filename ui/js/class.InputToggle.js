@@ -27,6 +27,7 @@ class InputToggle extends FormInput {
 	/**********************************************************/
 
 	set value(value) {
+		value = value.toString()
 		super.value = value
 		for (const optionValue in this.options) {
 			this.options[optionValue].toggleCssClass('selected', optionValue === value)
@@ -71,7 +72,7 @@ class InputToggle extends FormInput {
 
 		this.options[value] = $.div(cssClasses.join(' '), {
 			text    : text,
-			value   : value,
+			value   : value.toString(),
 			onclick : this._onButtonClick.bind(this)
 		})
 		this.buttons.append(this.options[value])		
