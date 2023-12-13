@@ -9,6 +9,7 @@ import DateMethods     from '../library/class.DateMethods.js'
 import SetMethods      from '../library/class.SetMethods.js'
 import Request         from '../library/class.Request.js'
 import DataSet         from '../library/class.DataSet.js'
+import DataStore       from '../library/class.DataStore.js'
 import Reference       from '../library/class.Reference.js'
 import RouteRoot       from '../library/class.Route.js'
 
@@ -200,7 +201,7 @@ class PuerConstructor {
 		if (value && value.isReference) {
 			return value
 		}
-		return new this.Reference(value)
+		return new this.Reference(value, this)
 	}
 
 	dereference(value) {
@@ -283,6 +284,7 @@ $.Date      = DateMethods
 $.Set       = SetMethods
 $.Request   = Request
 $.DataSet   = DataSet
+$.DataStore = DataStore
 $.Reference = Reference 
 $.RouteRoot = RouteRoot
 

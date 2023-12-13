@@ -13,7 +13,7 @@ class FormInput extends PuerComponent {
 		this.input = null
 		this.field = null
 
-		this.disabledByDefault = this.props.disabled.value
+		this.disabledByDefault = this.props.disabled
 	}
 	
 	set disabled(value) {

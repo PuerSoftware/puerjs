@@ -1,18 +1,47 @@
-import StringMethods  from './class.StringMethods.js'
 import ReferenceOwner from './class.ReferenceOwner.js'
 
 
 class Reference {
-	constructor(value) {
-		this.value       = value
+	constructor(value, puer) {
+		this.puer        = puer
 		this.owners      = []
 		this.ownerIds    = new Set()
-		this.id          = StringMethods.randomHex(5)
+		this.id          = puer.DataStore.set(null, value)
 		this.isReference = true
+		this._accessors  = []
+
+		const proxy = new Proxy(this, {
+			get(target, prop) {
+				if (target[prop]) {
+					if (typeof target[prop] === 'function') {
+						return target[prop].bind(target)
+					} else {
+						return target[prop]
+					}
+				} else if (typeof prop == 'string') {
+					target._accessors.push(prop)
+				}
+				return proxy
+			}
+		})
+		return proxy
+	}
+
+	get value() {
+		return this.puer.DataStore.get(this.id)
+	}
+
+	set value(value) {
+		this.puer.DataStore.set(this.id, value)
 	}
 
 	dereference() {
-		return this.value
+		let value = this.value
+		for (const accessor of this._accessors) {
+			console.log('accessor', accessor)
+			value = value[accessor]
+		}
+		return value
 	}
 
 	toString() {
