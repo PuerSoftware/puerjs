@@ -10,6 +10,8 @@ import SetMethods      from '../library/class.SetMethods.js'
 import Request         from '../library/class.Request.js'
 import DataSet         from '../library/class.DataSet.js'
 import DataStore       from '../library/class.DataStore.js'
+import DataAdapter     from '../library/class.DataAdapter.js'
+import DataSource      from '../library/class.DataSource.js'
 import Reference       from '../library/class.Reference.js'
 import RouteRoot       from '../library/class.Route.js'
 
@@ -197,11 +199,8 @@ class PuerConstructor {
 		return this.Router.define(getRoutes)
 	}
 	
-	reference(value) {
-		if (value && value.isReference) {
-			return value
-		}
-		return new this.Reference(value, this)
+	reference(id) {
+		return new this.Reference(id, this)
 	}
 
 	dereference(value) {
@@ -278,15 +277,20 @@ class PuerConstructor {
 
 const $ = new PuerConstructor()
 
-$.String    = StringMethods
-$.Object    = ObjectMethods
-$.Date      = DateMethods
-$.Set       = SetMethods
-$.Request   = Request
-$.DataSet   = DataSet
-$.DataStore = DataStore
-$.Reference = Reference 
-$.RouteRoot = RouteRoot
+$.String      = StringMethods
+$.Object      = ObjectMethods
+$.Date        = DateMethods
+$.Set         = SetMethods
+$.Request     = Request
+$.DataSet     = DataSet
+$.DataStore   = DataStore
+$.DataAdapter = DataAdapter
+$.DataSource  = DataSource
+$.Reference   = Reference
+$.RouteRoot   = RouteRoot
+
+$.DataSource.PUER = $
+$.DataSet.PUER    = $
 
 window.$ = $
 export default $

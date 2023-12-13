@@ -79,7 +79,8 @@ class PuerProxy {
 			if (this.references[prop]) {
 				this.references[prop].value = value
 			} else {
-				this.references[prop] = $.reference(value)
+				const id = $.DataStore.set(null, value)
+				this.references[prop] = $.reference(id)
 			}
 		}
 

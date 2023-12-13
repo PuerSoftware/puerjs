@@ -10,7 +10,7 @@ class DataSource {
 class DataSet {
 	// Items must be array of objects
 	constructor(items) {
-		this.items   = items || []
+		// this.items   = items || []
 		this.clients = []
 		this.sorting = {}
 		this.filter  = {}

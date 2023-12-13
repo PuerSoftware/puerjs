@@ -2,11 +2,11 @@ import ReferenceOwner from './class.ReferenceOwner.js'
 
 
 class Reference {
-	constructor(value, puer) {
+	constructor(id, puer) {
 		this.puer        = puer
 		this.owners      = []
 		this.ownerIds    = new Set()
-		this.id          = puer.DataStore.set(null, value)
+		this.id          = id
 		this.isReference = true
 		this._accessors  = []
 

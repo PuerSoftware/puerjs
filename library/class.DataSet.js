@@ -1,103 +1,93 @@
-import Request from './class.Request.js'
+export default class DataSet {
 
+	static PUER = null // set in puer
 
-class DataSet {
-
-	static CACHE_NAME ='dataSetCache'
-
-	constructor() {
-		this.data = {}
+	static define(name, dataId) {
+		const dataSet = new DataSet(name, dataId)
+		Object.defineProperty(DataSet, name, {
+			get: function() {
+				return dataSet
+			}
+		})
+		return dataSet
 	}
 
-	async _setData(data, callback) {
-		if (Array.isArray(data)) {
-			this.data = data
-		} else if (data !== null && typeof data === 'object') {
-			this.data = data
-		} else {
-			throw new Error('DataSet: incompatible data type')
-		}
-		if (callback) callback(this)
+	constructor(name, dataId) {
+		this.name      = name
+		this.id        = dataId
+		this.displayId = null
+		this.orderId   = null
+
+		this.onFilterListeners = []
+		this.onSortListeners   = []
 	}
 
-	async _load(url, callback, useCache) {
-		const _this = this
-		if (useCache) {
-			const cache = await caches.open(DataSet.CACHE_NAME)
-			const cachedResponse = await cache.match(url)
+	_updateListeners(data, isOrder) {
+		const listeners = isOrder
+			? this.onSortListeners
+			: this.onFilterListeners
 
-			if (cachedResponse) {
-				// console.log('Loading from cache', url)
-				const data = await cachedResponse.json()
-				_this._setData(data, callback)
-			} else {
-				// console.log('Loading from URL', url)
-				const response = await fetch(url)
-				if (response.ok) {
-					cache.put(url, response.clone())
-					const data = await response.json()
-					_this._setData(data, callback)
-				}
-			}
-		} else {
-			// console.log('Loading from URL', url)
-			const response = await fetch(url)
-			if (response.ok) {
-				const data = await response.json()
-				_this._setData(data, callback)
-			}
+		for (const listener of listeners) {
+			listener(data)
 		}
 	}
 
 	filter(f) {
-		return this.data.map(f)
+		const items = DataSet.PUER.DataStore.get(this.id)
+		const map   = {}
+
+		this.displayId && DataSet.PUER.DataStore.unset(this.displayId)
+
+		items.forEach((item, index) => {
+			map[index] = f(item)
+		})
+		this.displayId = DataSet.PUER.DataStore.set(null, map)
+		this._updateListeners(map, false)
+		return map
 	}
 
-	search(f) {
-		return this.data.filter(f)
+	sort(f)   {
+		const items   = DataSet.PUER.DataStore.get(this.id)
+		const map     = {}
+		const indices = items.map((_, index) => index)
+
+		this.orderId && DataSet.PUER.DataStore.unset(this.orderId)
+
+		// Sort the indices array based on the custom comparison of values in the original array
+		indices.sort((a, b) => f(items[a], items[b]))
+
+
+		indices.forEach((sortedIndex, originalIndex) => {
+			map[sortedIndex] = originalIndex
+		})
+		this.orderId = DataSet.PUER.DataStore.set(null, map)
+		this._updateListeners(map, true)
+		return map
 	}
 
-	static async clear(url = null) {
-		const cache = await caches.open(DataSet.CACHE_NAME)
+	get items() {
+		if (DataSet.PUER.isReferencing) {
+			return DataSet.PUER.reference(this.id)
+		}
+		return DataSet.PUER.DataStore.get(this.id)
+	}
+	get itemDisplayMap() {
+		if (DataSet.PUER.isReferencing) {
 
-		if (url) {
-			// Clear cache for specific URL
-			const keys = await cache.keys()
-			for (const request of keys) {
-				if (request.url === url) {
-					await cache.delete(request)
-					console.log(`Cache for URL '${url}' cleared.`)
-					return
-				}
-			}
-			console.log(`No cache found for URL '${url}'.`)
-		} else {
-			// Clear entire cache
-			const cacheExists = await caches.has(DataSet.CACHE_NAME)
-			if (cacheExists) {
-				await caches.delete(DataSet.CACHE_NAME)
-				console.log(`Entire cache '${DataSet.CACHE_NAME}' cleared.`)
-			} else {
-				console.log(`Cache '${DataSet.CACHE_NAME}' does not exist.`)
-			}
+		}
+	}
+	get itemOrderMap() {
+		if (DataSet.PUER.isReferencing) {
+
 		}
 	}
 
-	static async keys() {
-        const cache = await caches.open(DataSet.CACHE_NAME)
-        const requests = await cache.keys()
-        return requests.map(request => request.url)
-    }
-
-	static load(url, callback = null, useCache = true) {
-		const ds = new DataSet()	
-		if (typeof url === 'string') {
-			ds._load(url, callback, useCache)
-		} else {
-			ds.data = url
-		}
-		return ds
+	set onFilter(f) {
+		this.onFilterListeners.push(f)
 	}
+
+	set onSort(f) {
+		this.onSortListeners.push(f)
+	}
+
 }
-
-export default DataSet
