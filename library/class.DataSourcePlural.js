@@ -26,8 +26,11 @@ export default class DataSourcePlural extends DataSource {
 	}
 
 	_addItemToStore(item) {
+		const itemId = DataSource.PUER.DataStore.set(null, item)
+		item.dataId = itemId
+
 		this.itemIds = []
-		this.itemIds.push(DataSource.PUER.DataStore.set(null, item))
+		this.itemIds.push(itemId)
 		this.itemListId = DataSource.PUER.DataStore.set(this.itemListId, this.itemIds)
 	}
 

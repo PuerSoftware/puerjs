@@ -26,5 +26,6 @@ export default class DataSourceSingular extends DataSource {
 
 	_addItemToStore(item) {
 		this.itemId = DataSource.PUER.DataStore.set(null, item)
+		item.dataId = this.itemId
 	}
 }

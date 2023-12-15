@@ -147,6 +147,7 @@ class PuerConstructor {
 	_defineComponent(cls, importUrl) {
 		this._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
+		window[cls.name] = cls
 		
 		this._defineGetter(cls.name, (... args) => {
 			return new cls(... this._getConstructorArgs(args))

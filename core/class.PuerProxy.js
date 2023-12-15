@@ -81,6 +81,10 @@ class PuerProxy {
 		$.DataStore.addOwner(id, prop, this.owner, this.onChangeMethod)
 	}
 
+	setById(prop, id) {
+		this.references[prop] = new Reference(id)
+	}
+
 	forEach(callback) {
 		for (const prop in this.references) {
 			const value = $.DataStore.values[this.references[prop].id]

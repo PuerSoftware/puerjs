@@ -40,8 +40,8 @@ export default class DataSource {
 		})
 	}
 
-	_addItemToDb(item)    {}
-	_addItemToStore(item) {}
+	_addItemToDb    (item) {}
+	_addItemToStore (item) {}
 
 	/******************************************************************/
 
