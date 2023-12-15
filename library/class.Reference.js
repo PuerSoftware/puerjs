@@ -1,11 +1,7 @@
-import ReferenceOwner from './class.ReferenceOwner.js'
-
-
 class Reference {
-	constructor(id, puer) {
-		this.puer        = puer
-		this.owners      = []
-		this.ownerIds    = new Set()
+	static PUER = null // set in Puer
+
+	constructor(id) {
 		this.id          = id
 		this.isReference = true
 		this._accessors  = []
@@ -19,49 +15,59 @@ class Reference {
 						return target[prop]
 					}
 				} else if (typeof prop == 'string') {
-					target._accessors.push(prop)
+					const refClone = target.clone()
+					refClone._accessors.push(prop)
+					return refClone
 				}
 				return proxy
+			},
+			set(target, prop, value) {
+				if (!target[prop] && typeof prop == 'string') {
+					let _value = target.rootValue
+					for (const accessor of target._accessors) {
+						_value = _value[accessor]
+					}
+					_value[prop] = value
+					// target._accessors.push(prop)
+					// target._accessors = [] TODO
+				}
+				return true
 			}
 		})
 		return proxy
 	}
 
-	get value() {
-		return this.puer.DataStore.get(this.id)
+	get rootValue() { // root value
+		return Reference.PUER.DataStore.get(this.id)
 	}
 
-	set value(value) {
-		this.puer.DataStore.set(this.id, value)
+	set rootValue(value) { // root value
+		Reference.PUER.DataStore.set(this.id, value)
 	}
 
-	dereference() {
-		let value = this.value
+	reuse(id) {
+		this.id = id
+		this._accessors = []
+	}
+
+	dereference() { // value
+		let value = this.rootValue
 		for (const accessor of this._accessors) {
-			console.log('accessor', accessor)
 			value = value[accessor]
 		}
 		return value
 	}
 
+	clone() {
+		const ref =  new Reference(this.id)
+		ref._accessors = [...this._accessors]
+		return ref
+	}
+
 	toString() {
 		return JSON.stringify({
 			reference : '#' + this.id,
-			owners    : this.owners.map(owner => owner.className),
-			value     : this.value
-		})
-	}
-
-	addOwner(owner, prop, updateMethod) {
-		if (!this.ownerIds.has(owner.id)) {
-			this.owners.push(new ReferenceOwner(owner, prop, updateMethod))
-			this.ownerIds.add(owner.id)
-		}
-	}
-
-	updateOwners() {
-		this.owners.forEach(owner => {
-			owner.update()
+			value     : this.rootValue
 		})
 	}
 }

@@ -190,10 +190,11 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_createText() {
-		const value = this.props.text 
+		// $.isReferencing = true // TODO
+		const value = this.props.text
+
 		if (value) {
 			const component = $.text(value)
-
 			const root = this.isCustom
 				? this.root
 				: this
@@ -204,6 +205,7 @@ class BasePuerComponent extends PuerObject {
 			component.__render()
 			this.element.appendChild(component.element)
 		}
+		// $.isReferencing = false // TODO
 	}
 
 	_applyProps() {

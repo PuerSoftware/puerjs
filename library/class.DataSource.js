@@ -2,68 +2,80 @@ import DataBase from './class.DataBase.js'
 
 
 export default class DataSource {
-	static DB_NAME = 'DataSource'
-	static PUER    = null // set in puer
-	
-	static define(name, url, adapter, onLoad) {
-		const dataSource = new DataSource(name, url, adapter, onLoad)
-		Object.defineProperty(DataSource, name, {
-			get: function() {
-				return dataSource
-			}
-		})
-		return dataSource
-	}
-	
-	constructor(name, url, adapter, onLoad) {
+	static PUER = null // set in puer
+
+	constructor(name, url, onLoad) {
 		this.name    = name
-		this.id      = null
 		this.url     = url
-
+		this.count   = null
 		this.db      = null
-		this.adapter = adapter
-		this.load(onLoad)
 	}
 
-	_adapt(data) {
-		data = this.adapter.adapt(data)
-		this._storeItems(data)
-		this.db.addItems(data)
-	}
-
-	_storeItems(items) {
-		this.id = DataSource.PUER.DataStore.set(null, items)
-	}
-
-	_loadFromUrl(onLoad) {
-		DataSource.PUER.Request.get(this.url, (data) => {
-			this._adapt(data)
-			onLoad && onLoad()
-		})
-	}
-
-	load(onLoad, invalidate=false) {
-		const _this = this
-
-		this.connect(db => {
-			db.getCount(count => {
-				if (count > 0) {
-					db.readItems(0, 1000, (items) => {
-						_this._storeItems(items)
-						onLoad && onLoad()
-					})
-				} else {
-					_this._loadFromUrl(onLoad)
-				}
-			})
-		})
-	}
-
-	connect(callback) {
+	_connect(callback) {
 		const _this = this
 		DataBase.connect(this.name, db => {
 			_this.db = db
 			callback(db)
+		})
+	}
+
+	_loadFromUrl(onLoad) {
+		DataSource.PUER.Request.get(this.url, (items) => {
+			if (DataSource.PUER.isArray(items)) {
+				this.addItems(items)
+			} else {
+				this.addItem(items)
+			}
+			onLoad && onLoad()
+		})
+	}
+
+	_loadFromDb(onLoad) {
+		const _this = this
+		this.db.readItems(0, _this.count, (items) => {
+			for (const item of items) {
+				_this._addItemToStore(item)
+			}
+			onLoad && onLoad()
+		})
+	}
+
+	_addItemToDb(item)    {}
+	_addItemToStore(item) {}
+
+	/******************************************************************/
+
+	addItem(item) {
+		item = this.adaptItem(item)
+		this._addItemToDb(item)
+		this._addItemToStore(item)
+	}
+
+	addItems(items) {
+		items = this.adaptItems(items)
+		for (const item of items) {
+			this.addItem(item)
+		}
+	}
+
+	removeItem(item) {}
+
+	adaptItems (items) { return items }
+	adaptItem  (item)  { return item  }
+	spawnDataSet ()    { return null }
+
+	load(onLoad, invalidate=false) {
+		const _this = this
+
+		this._connect(db => {
+			db.getCount(count => {
+				if (count > 0) {
+					_this.count = count
+					_this._loadFromDb(onLoad)
+				} else {
+					_this._loadFromUrl(onLoad)
+				}
+			})
 		})
 	}
 }

@@ -2,8 +2,11 @@ export default class DataSet {
 
 	static PUER = null // set in puer
 
-	static define(name, dataId) {
-		const dataSet = new DataSet(name, dataId)
+	static define(name, itemIds) {
+		if (DataSet.hasOwnProperty(name)) {
+			throw `DataSet already has property "${name}"`
+		}
+		const dataSet = new DataSet(name, itemIds)
 		Object.defineProperty(DataSet, name, {
 			get: function() {
 				return dataSet
@@ -12,82 +15,77 @@ export default class DataSet {
 		return dataSet
 	}
 
-	constructor(name, dataId) {
-		this.name      = name
-		this.id        = dataId
-		this.displayId = null
-		this.orderId   = null
+	constructor(name, itemListId) {
+		this.name        = name
+		this.itemListId  = itemListId
+		this.itemIds     = this._getIds()
+		this.filterMapId = null
+		this.sortMapId   = null
 
-		this.onFilterListeners = []
-		this.onSortListeners   = []
+		this._lastFilter = null
+		this._lastSort   = null
+
+		DataSet.PUER.DataStore.addOwner(itemListId, 'itemListId', this, '_onItemsChange')
 	}
 
-	_updateListeners(data, isOrder) {
-		const listeners = isOrder
-			? this.onSortListeners
-			: this.onFilterListeners
+	_getIds() {
+		return DataSet.PUER.DataStore.get(this.itemListId)
+	}
 
-		for (const listener of listeners) {
-			listener(data)
+	_onItemsChange(prop) {
+		const ids = this._getIds()
+		if (ids.length > this.itemIds.length) {
+			this._lastFilter && this.filter(this._lastFilter)
+			this._lastSort   && this.sort(this._lastSort)
 		}
 	}
 
 	filter(f) {
-		const items = DataSet.PUER.DataStore.get(this.id)
+		const items = DataSet.PUER.DataStore.get(this.itemIds)
 		const map   = {}
 
-		this.displayId && DataSet.PUER.DataStore.unset(this.displayId)
+		this._lastFilter = f
+		this.filterMapId && DataSet.PUER.DataStore.unset(this.filterMapId)
 
 		items.forEach((item, index) => {
 			map[index] = f(item)
 		})
-		this.displayId = DataSet.PUER.DataStore.set(null, map)
-		this._updateListeners(map, false)
+		this.filterMapId = DataSet.PUER.DataStore.set(null, map)
 		return map
 	}
 
 	sort(f)   {
-		const items   = DataSet.PUER.DataStore.get(this.id)
+		const items   = DataSet.PUER.DataStore.get(this.itemIds)
 		const map     = {}
 		const indices = items.map((_, index) => index)
 
-		this.orderId && DataSet.PUER.DataStore.unset(this.orderId)
-
+		this._lastSort = f
+		this.sortMapId && DataSet.PUER.DataStore.unset(this.sortMapId)
 		// Sort the indices array based on the custom comparison of values in the original array
 		indices.sort((a, b) => f(items[a], items[b]))
-
-
 		indices.forEach((sortedIndex, originalIndex) => {
 			map[sortedIndex] = originalIndex
 		})
-		this.orderId = DataSet.PUER.DataStore.set(null, map)
-		this._updateListeners(map, true)
+		this.sortMapId = DataSet.PUER.DataStore.set(null, map)
 		return map
 	}
 
 	get items() {
 		if (DataSet.PUER.isReferencing) {
-			return DataSet.PUER.reference(this.id)
+			return DataSet.PUER.reference(this.itemIds)
 		}
-		return DataSet.PUER.DataStore.get(this.id)
+		return DataSet.PUER.DataStore.get(this.itemIds)
 	}
+
 	get itemDisplayMap() {
 		if (DataSet.PUER.isReferencing) {
 
 		}
 	}
+
 	get itemOrderMap() {
 		if (DataSet.PUER.isReferencing) {
 
 		}
 	}
-
-	set onFilter(f) {
-		this.onFilterListeners.push(f)
-	}
-
-	set onSort(f) {
-		this.onSortListeners.push(f)
-	}
-
 }

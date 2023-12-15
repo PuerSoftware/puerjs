@@ -1,4 +1,5 @@
-import $ from './class.Puer.js'
+import $         from './class.Puer.js'
+import Reference from '../library/class.Reference.js'
 
 
 class PuerProxy {
@@ -17,21 +18,15 @@ class PuerProxy {
 			get: (target, prop) => {
 				if (prop === Symbol.iterator) {
 					return function*() {
-						for (let key in target.references) {
-							yield [key, target.references[key].dereference()]
+						for (let _prop in target.references) {
+							yield [_prop, target.references[_prop].dereference()]
 						}
 					}
 				}
-				if (prop === 'toString') {
-					return target[prop]
-				}
-
 				if (prop in target.references) {
-					if ($.isReferencing && $.isPrimitive(target.references[prop].dereference())) {
-						return target.references[prop]
-					} else {
-						return target.references[prop].dereference()
-					}
+					return $.isReferencing
+						? target.references[prop]
+						: target.references[prop].dereference()
 				} else if (prop in target) {
 					return typeof target[prop] === 'function'
 						? target[prop].bind(target)
@@ -39,18 +34,15 @@ class PuerProxy {
 				}
 			},
 			set: (target, prop, value) => {
-				const isChanged = target.setProp(prop, value)
-				if (isChanged) {
-					target.references[prop].updateOwners()
-				}
+				target.setProp(prop, value)
 				return true
 			},
 			has: (target, prop) => {
 		        return prop in target.references
 		    },
 			deleteProperty: (target, prop) => {
-				target.owner[onChangeMethod](prop)
 				delete target.references[prop]
+				target.owner[onChangeMethod](prop)
 				return true
 			},
 			ownKeys: (target) => {
@@ -69,28 +61,30 @@ class PuerProxy {
 	}
 
 	setProp(prop, value) {
-		const oldValue = this.references[prop]
-			? this.references[prop].dereference()
-			: null
+		let id
+		let reference = this.references[prop]
 
 		if (value && value.isReference) {
 			this.references[prop] = value
+			id = value.id
 		} else {
-			if (this.references[prop]) {
-				this.references[prop].value = value
+			id = $.DataStore.set(null, value)
+			if (reference) {
+				reference.reuse(id)
 			} else {
-				const id = $.DataStore.set(null, value)
-				this.references[prop] = $.reference(id)
+				reference = new Reference(id)
 			}
+
+			this.references[prop] = reference
 		}
 
-		this.references[prop].addOwner(this.owner, prop, this.onChangeMethod)
-		return oldValue !== value
+		$.DataStore.addOwner(id, prop, this.owner, this.onChangeMethod)
 	}
 
 	forEach(callback) {
-		for (let key in this.references) {
-			callback(this.references[key].dereference(), key, this.references)
+		for (const prop in this.references) {
+			const value = $.DataStore.values[this.references[prop].id]
+			callback(value, prop, this.references)
 		}
 	}
 
@@ -99,10 +93,7 @@ class PuerProxy {
 	}
 
 	toString() {
-		return JSON.stringify(this.toObject())
-			.split('","').join('", "')
-			.replace(/"([^"]+)":/g, '$1: ')
-			.split('"').join("'")
+		return JSON.stringify(this.toObject(), null, 4)
 	}
 }
 

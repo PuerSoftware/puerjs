@@ -26,12 +26,15 @@ class PuerComponent extends BasePuerComponent {
 	_onPropChange(prop) {
 		this._applyProp(prop)
 		const propCamelized = $.String.camelToUpper(prop)
-		const methodName    = `on${propCamelized}Change`
+		const methodName    = `onProp${propCamelized}Change`
 		return this[methodName] && this[methodName](this.props[prop])
 	}
 	
 	_onStateChange(prop) {
 		this._applyProps()
+		const propCamelized = $.String.camelToUpper(prop)
+		const methodName    = `onState${propCamelized}Change`
+		return this[methodName] && this[methodName](this.state[prop])
 	}
 
 	_setupRoot() {

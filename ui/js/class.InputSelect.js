@@ -12,7 +12,7 @@ class InputSelect extends FormInput {
 	}
 
 	onUrlChange(value) {
-		value && $.DataSet.load(value, this.onData.bind(this))
+		// value && $.DataSet.load(value, this.onData.bind(this))
 	}
 
 	onSelectedChange(value) {
