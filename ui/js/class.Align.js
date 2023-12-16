@@ -1,5 +1,5 @@
-import $ from '../../puer.js'
-import Box  from './class.Box.js'
+import $   from '../../index.js'
+import Box from './class.Box.js'
 
 class Align extends Box {
 	constructor(props, children) {

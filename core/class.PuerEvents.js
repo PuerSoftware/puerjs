@@ -131,8 +131,12 @@ class PuerEvents extends EventTarget {
 	}
 
 	define(events) {
-		for (const event of events) {
-			$.Event[event] = event
+		if ($.isArray(events)) {
+			for (const event of events) {
+				$.Event[event] = event
+			}
+		} else {
+			$.Event[events] = events
 		}
 	}
 }

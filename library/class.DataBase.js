@@ -40,7 +40,7 @@ export default class DataBase {
 	_executeTransaction(operation, items, onSuccess, onError, rights='readwrite') {
 		const transaction = this.db.transaction([this.name], rights)
 		const store = transaction.objectStore(this.name)
-
+	
 		let request
 		switch (operation) {
 			case 'add':

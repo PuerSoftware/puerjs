@@ -71,7 +71,7 @@ class DataSet {
 }
 
 // Must implement proper methods
-class DataSetClient extends PuerComponent {
+class DataSetClient extends $.Component {
 	constructor( ... args) {
 		super( ... args)
 		this.dataset = this.props.dataset

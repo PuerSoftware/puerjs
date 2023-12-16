@@ -287,7 +287,20 @@ class BasePuerComponent extends PuerObject {
 		return this.parent ? this.parent.isActive : true
 	}
 
+	hasDescendant(component) {
+		return component.hasAncestor(this)
+	}
 
+	hasAncestor(component) {
+		if (this.parent) {
+			if (this.parent === component) {
+				return true
+			} else {
+				 return this.parent.hasAncestor(component)
+			}
+		}
+		return false
+	}
 
 	/********************* DIRECTIVES *********************/
 

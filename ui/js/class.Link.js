@@ -1,10 +1,10 @@
-import $, {PuerComponent} from '../../puer.js'
+import $ from '../../index.js'
 
 
-class Link extends PuerComponent {
+class Link extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		// this.props.require('hash', this)
+		// this.props.require('hash')
 	}
 
 	navigate() {

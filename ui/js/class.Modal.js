@@ -1,7 +1,7 @@
-import $, {PuerComponent} from '../../puer.js'
+import $ from '../../index.js'
 
 
-class Modal extends PuerComponent {
+class Modal extends $.Component {
 
 	render() {
 		return $.div({cssDisplay: 'none'}, [

@@ -1,5 +1,4 @@
-import $ from '../../puer.js'
-
+import $         from '../../index.js'
 import InputText from './class.FormInput.js'
 
 

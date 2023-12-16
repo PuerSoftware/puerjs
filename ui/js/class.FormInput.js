@@ -1,10 +1,10 @@
-import $, { PuerComponent } from '../../puer.js'
+import $ from '../../index.js'
 
 
-class FormInput extends PuerComponent {
+class FormInput extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('name', this)
+		this.props.require('name')
 		this.props.default('isHeader', false)
 		this.props.default('autocomplete', 'off')
 		this.props.default('disabled', false)

@@ -1,7 +1,4 @@
 export default class DataSet {
-
-	static PUER = null // set in puer
-
 	static define(name, itemIds) {
 		if (DataSet.hasOwnProperty(name)) {
 			throw `DataSet already has property "${name}"`
@@ -12,8 +9,14 @@ export default class DataSet {
 				return dataSet
 			}
 		})
+		DataSet.PUER.Events.trigger(
+			DataSet.PUER.Event.DATASET_AVAILABLE,
+			dataSet
+		)
 		return dataSet
 	}
+
+	static PUER = null // set in puer
 
 	constructor(name, itemListId) {
 		this.name        = name

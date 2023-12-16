@@ -1,34 +1,44 @@
 import DataBase from './class.DataBase.js'
-
+import DataSet  from './class.DataSet.js'
 
 export default class DataSource {
+	static define(cls, url, onLoad) {
+		if (DataSource.hasOwnProperty(cls.name)) {
+			throw `DataSource class already has property "${cls.name}"`
+		}
+
+		const dataSource = new cls(url, onLoad)
+		Object.defineProperty(DataSource, cls.name, {
+			get: function() {
+				return dataSource
+			}
+		})
+		return dataSource
+	}
+
 	static PUER = null // set in puer
 
-	constructor(name, url, onLoad) {
-		this.name    = name
-		this.url     = url
-		this.count   = null
-		this.db      = null
+	constructor(url, onLoad) {
+		this.dataId   = null
+		this.url      = url
+		this.count    = null
+		this.db       = null
+		this.dataSets = {}
+		this.load(() => {
+			this._initDataSets()
+			onLoad && onLoad()
+		})
 	}
 
 	_connect(callback) {
 		const _this = this
-		DataBase.connect(this.name, db => {
+		DataBase.connect(this.constructor.name, db => {
 			_this.db = db
 			callback(db)
 		})
 	}
 
-	_loadFromUrl(onLoad) {
-		DataSource.PUER.Request.get(this.url, (items) => {
-			if (DataSource.PUER.isArray(items)) {
-				this.addItems(items)
-			} else {
-				this.addItem(items)
-			}
-			onLoad && onLoad()
-		})
-	}
+	_loadFromUrl(onLoad) {}
 
 	_loadFromDb(onLoad) {
 		const _this = this
@@ -36,12 +46,18 @@ export default class DataSource {
 			for (const item of items) {
 				_this._addItemToStore(item)
 			}
-			onLoad && onLoad()
+			onLoad()
 		})
 	}
 
 	_addItemToDb    (item) {}
 	_addItemToStore (item) {}
+
+	_initDataSets() {
+		for (const dataSetName in this.dataSets) {
+			this.dataSets[dataSetName] = DataSet.define(dataSetName, this.dataId)
+		}
+	}
 
 	/******************************************************************/
 
@@ -62,7 +78,6 @@ export default class DataSource {
 
 	adaptItems (items) { return items }
 	adaptItem  (item)  { return item  }
-	spawnDataSet ()    { return null }
 
 	load(onLoad, invalidate=false) {
 		const _this = this
@@ -77,5 +92,10 @@ export default class DataSource {
 				}
 			})
 		})
+	}
+
+	defineDataSet(name) {
+		this.dataSets[name] = null
+		return this
 	}
 }

@@ -1,7 +1,7 @@
-import $, {PuerComponent} from '../../puer.js'
+import $ from '../../index.js'
 
 
-class LinkSet extends PuerComponent {
+class LinkSet extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.selected = null

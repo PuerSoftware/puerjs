@@ -1,18 +1,23 @@
-import PuerRouter      from './class.PuerRouter.js'
-import PuerEvents      from './class.PuerEvents.js'
-import PuerError       from './class.PuerError.js'
-import PuerHtmlElement from './class.PuerHtmlElement.js'
-import PuerTextElement from './class.PuerTextElement.js'
-import StringMethods   from '../library/class.StringMethods.js'
-import ObjectMethods   from '../library/class.ObjectMethods.js'
-import DateMethods     from '../library/class.DateMethods.js'
-import SetMethods      from '../library/class.SetMethods.js'
-import Request         from '../library/class.Request.js'
-import DataSet         from '../library/class.DataSet.js'
-import DataStore       from '../library/class.DataStore.js'
-import BaseDataSource      from '../library/class.DataSource.js'
-import Reference       from '../library/class.Reference.js'
-import RouteRoot       from '../library/class.Route.js'
+// import PuerApp            from './class.PuerApp.js'
+import PuerComponent      from './class.PuerComponent.js'
+import PuerRouter         from './class.PuerRouter.js'
+import PuerEvents         from './class.PuerEvents.js'
+import PuerError          from './class.PuerError.js'
+import PuerHtmlElement    from './class.PuerHtmlElement.js'
+import PuerTextElement    from './class.PuerTextElement.js'
+
+import StringMethods      from '../library/class.StringMethods.js'
+import ObjectMethods      from '../library/class.ObjectMethods.js'
+import DateMethods        from '../library/class.DateMethods.js'
+import SetMethods         from '../library/class.SetMethods.js'
+import Request            from '../library/class.Request.js'
+import DataSet            from '../library/class.DataSet.js'
+import DataStore          from '../library/class.DataStore.js'
+import DataSource         from '../library/class.DataSource.js'
+import DataSourcePlural   from '../library/class.DataSourcePlural.js'
+import DataSourceSingular from '../library/class.DataSourceSingular.js'
+import Reference          from '../library/class.Reference.js'
+import RouteRoot          from '../library/class.Route.js'
 
 
 class PuerConstructor {
@@ -277,16 +282,23 @@ class PuerConstructor {
 
 const $ = new PuerConstructor()
 
-$.String      = StringMethods
-$.Object      = ObjectMethods
-$.Date        = DateMethods
-$.Set         = SetMethods
-$.Request     = Request
-$.DataSet     = DataSet
-$.DataStore   = DataStore
-$.DataSource  = BaseDataSource
-$.Reference   = Reference
-$.RouteRoot   = RouteRoot
+$.Component          = PuerComponent
+
+$.String             = StringMethods
+$.Object             = ObjectMethods
+$.Date               = DateMethods
+$.Set                = SetMethods
+$.Request            = Request
+
+$.DataSet            = DataSet
+$.DataStore          = DataStore
+$.DataSource         = DataSource
+$.DataSourcePlural   = DataSourcePlural
+$.DataSourceSingular = DataSourceSingular
+
+$.Reference          = Reference
+
+$.RouteRoot          = RouteRoot
 
 $.Reference.PUER  = $
 $.DataSource.PUER = $

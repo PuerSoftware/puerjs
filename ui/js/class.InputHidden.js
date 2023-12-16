@@ -1,5 +1,4 @@
-import $ from '../../puer.js'
-
+import $         from '../../index.js'
 import FormInput from './class.FormInput.js'
 
 class InputHidden extends FormInput {

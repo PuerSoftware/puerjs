@@ -12,9 +12,9 @@ class PuerProps extends PuerProxy {
 		}
 	}
 
-	require(prop, owner) {
+	require(prop) {
 		if (!this.references.hasOwnProperty(prop)) {
-			throw new $.Error(`Property "${prop}" is required but not set.`, owner || this, 'require')
+			throw new $.Error(`Property "${prop}" is required but not set.`, this.owner, 'require')
 		}
 	}
 

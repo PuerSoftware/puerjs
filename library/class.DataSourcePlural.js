@@ -2,23 +2,16 @@ import DataSource from './class.DataSource.js'
 
 
 export default class DataSourcePlural extends DataSource {
-	static define(name, url, onLoad) {
-		if (DataSource.hasOwnProperty(name)) {
-			throw `DataSource class already has property "${name}"`
-		}
-		const dataSource = new DataSourcePlural(name, url, onLoad)
-		Object.defineProperty(DataSource, name, {
-			get: function() {
-				return dataSource
-			}
-		})
-		return dataSource
+	constructor(url, onLoad) {
+		super(url, onLoad)
+		this.itemIds = []
 	}
 
-	constructor(name, url, onLoad) {
-		super(name, url, onLoad)
-		this.itemIds    = []
-		this.itemListId = null
+	_loadFromUrl(onLoad) {
+		DataSource.PUER.Request.get(this.url, (items) => {
+			this.addItems(items)
+			onLoad()
+		})
 	}
 
 	_addItemToDb(item) {
@@ -29,15 +22,11 @@ export default class DataSourcePlural extends DataSource {
 		const itemId = DataSource.PUER.DataStore.set(null, item)
 		item.dataId = itemId
 
-		this.itemIds = []
+		// this.itemIds = [] // TODO
 		this.itemIds.push(itemId)
-		this.itemListId = DataSource.PUER.DataStore.set(this.itemListId, this.itemIds)
+		this.dataId = DataSource.PUER.DataStore.set(this.dataId, this.itemIds)
 	}
 
 	/******************************************************************/
-
-	spawnDataSet(name) {
-		return new DataSet(name, this.itemListId)
-	}
 
 }

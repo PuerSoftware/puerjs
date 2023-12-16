@@ -1,28 +1,34 @@
-import $, {PuerComponent} from '../../puer.js'
+import $            from '../../index.js'
+import DataListItem from './class.DataListItem.js'
 
-import DataListItem from 'class.DataListItem.js'
 
-
-export default class DataList extends PuerComponent {
+export default class DataList extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('dataSet', this)
+		this.props.require('dataSet')
 
 		this._dataSet = null
 
-		this.items        = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
-		this.itemRenderer = DataListItem
+		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
+		this.itemRenderer  = 'DataListItem'
+		this.listComponent = this // may be set manually in child class
 
 		this.state.itemListId = null
 		this.state.filterMap  = null
 		this.state.sortMap    = null
 
-		this.dataSet = this.props.dataSet
+		this.on($.Event.LIST_ITEM_SELECT, this.onItemSelect)
+		this.on($.Event.DATASET_AVAILABLE, (event) => {
+			if (event.detail.name === this.props.dataSet) {
+				this.dataSet = this.props.dataSet
+				this.onDataSetAvailable(event.detail)
+			}
+		})
 	}
 
 	_addItem(item) {
 		const itemComponent = $[this.itemRenderer]({data: item})
-		this.element.append(itemComponent)
+		this.listComponent.append(itemComponent)
 		this.items[item.dataId] = itemComponent
 	}
 
@@ -53,9 +59,12 @@ export default class DataList extends PuerComponent {
 		this.state.setById( 'sortMap',    this.dataSet.sortMapId   )
 
 		this._removeItems()
-
 		const items = $.DataStore.get(this._dataSet.getIds())
 		this._addItems(items)
+	}
+
+	get dataSet() {
+		return this._dataSet
 	}
 
 	onStateItemListIdChange(ids) {
@@ -88,7 +97,7 @@ export default class DataList extends PuerComponent {
 	onStateSortMapChange(sortMap) {
 		console.log('onStateSortMapChange', sortMap)
 
-		const element = []
+		const elements = []
 		for (const itemId in this.items) {
 			elements.push(this.items[itemId].element)
 		}
@@ -122,9 +131,23 @@ export default class DataList extends PuerComponent {
 			this.items[itemId].show()
 		}
 	}
+
+	onItemSelect(event) {
+		for (const itemId in this.items) {
+			const item = this.items[itemId]
+			if (event.detail.targetComponent === item) {
+				item.select()
+			} else {
+				item.deselect()
+			}
+		}
+	}
+
+	onDataSetAvailable(dataSet) {}
+
+	render() {
+		return $.ul(this.children)
+	}
 }
 
-
-
-
-
+$.define(DataList)

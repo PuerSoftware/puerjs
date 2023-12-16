@@ -1,7 +1,7 @@
-import $, {PuerComponent} from '../../puer.js'
+import $ from '../../index.js'
 
 
-class InputButton extends PuerComponent {
+class InputButton extends $.Component {
 	constructor( ... args ) {
 		super( ... args )
 		this.props.default('tagName', 'input')

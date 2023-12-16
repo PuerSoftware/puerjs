@@ -1,4 +1,5 @@
-import $ from './core/class.Puer.js'
+import $       from './core/class.Puer.js'
+import PuerApp from './core/class.PuerApp.js'
 
 (() => {
 	const tags = (
@@ -74,7 +75,10 @@ import $ from './core/class.Puer.js'
 	$.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
 })()
 
-export { default as PuerComponent } from './core/class.PuerComponent.js'
-export { default as PuerApp       } from './core/class.PuerApp.js'
+
+$.App = PuerApp
+
+$.Events.define('LIST_ITEM_SELECT')
+$.Events.define('DATASET_AVAILABLE')
 
 export default $

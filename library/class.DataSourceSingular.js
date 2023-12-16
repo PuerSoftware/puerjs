@@ -2,22 +2,15 @@ import DataSource from './class.DataSource.js'
 
 
 export default class DataSourceSingular extends DataSource {
-	static define(name, url, onLoad) {
-		if (DataSource.hasOwnProperty(name)) {
-			throw `DataSource class already has property "${name}"`
-		}
-		const dataSource = new DataSourceSingular(name, url, onLoad)
-		Object.defineProperty(DataSource, name, {
-			get: function() {
-				return dataSource
-			}
-		})
-		return dataSource
+	constructor(url, onLoad) {
+		super(url, onLoad)
 	}
 
-	constructor(name, url, onLoad) {
-		super(name, url, onLoad)
-		this.itemId = null
+	_loadFromUrl(onLoad) {
+		DataSource.PUER.Request.get(this.url, (item) => {
+			this.addItem(item)
+			onLoad()
+		})
 	}
 
 	_addItemToDb(item) {
@@ -25,7 +18,7 @@ export default class DataSourceSingular extends DataSource {
 	}
 
 	_addItemToStore(item) {
-		this.itemId = DataSource.PUER.DataStore.set(null, item)
-		item.dataId = this.itemId
+		this.dataId = DataSource.PUER.DataStore.set(null, item)
+		item.dataId = this.dataId
 	}
 }

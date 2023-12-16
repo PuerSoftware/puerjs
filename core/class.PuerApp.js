@@ -1,8 +1,7 @@
-import $             from './class.Puer.js'
-import PuerComponent from './class.PuerComponent.js'
+import $ from './class.Puer.js'
 
 
-class PuerApp extends PuerComponent {
+class PuerApp extends $.Component {
     constructor(props, children) {
     	super(props, children)
     	this.__render()

@@ -1,40 +1,20 @@
-import Form        from './js/class.Form.js'
-import FormField   from './js/class.FormField.js'
-import FormInput   from './js/class.FormInput.js'
-import Link        from './js/class.Link.js'
-import LinkSet     from './js/class.LinkSet.js'
-import Box         from './js/class.Box.js'
-import Columns     from './js/class.Columns.js'
-import Rows        from './js/class.Rows.js'
-import Align       from './js/class.Align.js'
-import Pagination  from './js/class.Pagination.js'
-import Modal       from './js/class.Modal.js'
-import InputSelect from './js/class.InputSelect.js'
-import InputText   from './js/class.InputText.js'
-import InputNumber from './js/class.InputNumber.js'
-import InputButton from './js/class.InputButton.js'
-import InputHidden from './js/class.InputHidden.js'
-import InputToggle from './js/class.InputToggle.js'
-import Button      from './js/class.Button.js'
-
-
-export {
-	Form,
-	FormField,
-	FormInput,
-	Link,
-	LinkSet,
-	Box,
-	Columns,
-	Rows,
-	Align,
-	Pagination,
-	Modal,
-	InputSelect,
-	InputText,
-	InputNumber,
-	InputButton,
-	InputHidden,
-	InputToggle,
-	Button,
-}
+export { default as Form         } from './js/class.Form.js'
+export { default as FormField    } from './js/class.FormField.js'
+export { default as FormInput    } from './js/class.FormInput.js'
+export { default as Link         } from './js/class.Link.js'
+export { default as LinkSet      } from './js/class.LinkSet.js'
+export { default as Box          } from './js/class.Box.js'
+export { default as Columns      } from './js/class.Columns.js'
+export { default as Rows         } from './js/class.Rows.js'
+export { default as Align        } from './js/class.Align.js'
+export { default as Pagination   } from './js/class.Pagination.js'
+export { default as Modal        } from './js/class.Modal.js'
+export { default as InputSelect  } from './js/class.InputSelect.js'
+export { default as InputText    } from './js/class.InputText.js'
+export { default as InputNumber  } from './js/class.InputNumber.js'
+export { default as InputButton  } from './js/class.InputButton.js'
+export { default as InputHidden  } from './js/class.InputHidden.js'
+export { default as InputToggle  } from './js/class.InputToggle.js'
+export { default as Button       } from './js/class.Button.js'
+export { default as DataList     } from './js/class.DataList.js'
+export { default as DataListItem } from './js/class.DataListItem.js'
