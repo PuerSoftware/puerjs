@@ -1,100 +1,78 @@
 export default class DataSet {
-	static define(name, itemIds) {
+	
+	/**************************************************************/
+
+	static define(name, searchConfig=null) {
 		if (DataSet.hasOwnProperty(name)) {
 			throw `DataSet already has property "${name}"`
 		}
-		const dataSet = new DataSet(name, itemIds)
+		const dataSet = new DataSet(name, searchConfig)
 		Object.defineProperty(DataSet, name, {
 			get: function() {
 				return dataSet
 			}
 		})
-		DataSet.PUER.Events.trigger(
-			DataSet.PUER.Event.DATASET_AVAILABLE,
-			dataSet
-		)
 		return dataSet
 	}
 
 	static PUER = null // set in puer
 
-	constructor(name, itemListId) {
-		this.name        = name
-		this.itemListId  = itemListId
-		this.itemIds     = this.getIds()
-		this.filterMapId = null
-		this.sortMapId   = null
-
-		this._lastFilter = null
-		this._lastSort   = null
-
-		DataSet.PUER.DataStore.addOwner(itemListId, 'itemListId', this, '_onItemsChange')
-	}
-
-	_onItemsChange(prop) {
-		const ids = this.getIds()
-		if (ids.length > this.itemIds.length) {
-			this._lastFilter && this.filter (this._lastFilter)
-			this._lastSort   && this.sort   (this._lastSort)
-		}
-	}
-
 	/**************************************************************/
 
-	getIds() {
-		return DataSet.PUER.DataStore.get(this.itemListId)
+	constructor(name, searchConfig=null) {
+		this.name          = name
+		this.itemIds       = []
+		this.searchConfig  = searchConfig
+		this.isInitialized = false
 	}
 
-	filter(f) {
-		const items = DataSet.PUER.DataStore.get(this.itemIds)
-		const map   = {}
+	init(ids) {
+		console.log('init dataset', this.name, ids)
+		this.itemIds = ids
 
-		this.filterMapId && DataSet.PUER.DataStore.unset(this.filterMapId)
-
-		items.forEach((item, index) => {
-			map[index] = f(item)
-		})
-
-		this._lastFilter = f
-		this.filterMapId = DataSet.PUER.DataStore.set(null, map)
-
-		return map
-	}
-
-	sort(f)   {
-		const items   = DataSet.PUER.DataStore.get(this.itemIds)
-		const map     = {}
-		const indices = items.map((_, index) => index)
-
-		this.sortMapId && DataSet.PUER.DataStore.unset(this.sortMapId)
-		
-		indices.sort((a, b) => f(items[a], items[b]))
-		indices.forEach((sortedIndex, originalIndex) => {
-			map[sortedIndex] = originalIndex
-		})
-
-		this._lastSort = f
-		this.sortMapId = DataSet.PUER.DataStore.set(null, map)
-
-		return map
+		this._lastFilter && this.filter(this._lastFilter)
+		this._lastSort   && this.sort(this._lastSort)
+		this.onInit()
 	}
 
 	get items() {
-		if (DataSet.PUER.isReferencing) {
-			return DataSet.PUER.reference(this.itemIds)
-		}
 		return DataSet.PUER.DataStore.get(this.itemIds)
 	}
 
-	get itemDisplayMap() {
-		if (DataSet.PUER.isReferencing) {
-			// TODO:
+	filter(f) {
+		if (this.isInitialized) {
+			const items = this.items
+			const map   = {}
+
+			items.forEach((item, index) => {
+				map[index] = f(item)
+			})
+
+			this._lastFilter = f
+			this.onFilter(map)
 		}
 	}
 
-	get itemOrderMap() {
-		if (DataSet.PUER.isReferencing) {
-			// TODO:
+	sort(f) {
+		if (this.isInitialized) {
+			const items   = this.items
+			const map     = {}
+			const indices = items.map((_, index) => index)
+
+			indices.sort((a, b) => f(items[a], items[b]))
+			indices.forEach((sortedIndex, originalIndex) => {
+				map[sortedIndex] = originalIndex
+			})
+
+			this._lastSort = f
+			this.onSort(map)
 		}
 	}
+
+	onInit       ()       {}
+	onAddItem    (item)   {}
+	onRemoveItem (itemId) {}
+	onSort       (map)    {}
+	onFilter     (map)    {}
+
 }

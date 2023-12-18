@@ -5,37 +5,50 @@ import DataListItem from './class.DataListItem.js'
 export default class DataList extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('dataSet')
-
-		this._dataSet = null
+		this.props.require('dataSource')
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = 'DataListItem'
-		this.listComponent = this // may be set manually in child class
+		this.itemContainer = this // may be set manually in child class
+		this.isInitialized = false
+		this.selectedId    = null
 
-		this.state.itemListId = null
-		this.state.filterMap  = null
-		this.state.sortMap    = null
+		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
 
-		this.on($.Event.LIST_ITEM_SELECT, this.onItemSelect)
-		this.on($.Event.DATASET_AVAILABLE, (event) => {
-			if (event.detail.name === this.props.dataSet) {
-				this.dataSet = this.props.dataSet
-				this.onDataSetAvailable(event.detail)
+		this._dataSet = null
+	}
+
+	_onItemSelect(event) {
+		for (const itemId in this.items) {
+			const item = this.items[itemId]
+			if (event.detail.targetComponent === item) {
+				item.select()
+			} else {
+				item.deselect()
 			}
-		})
+		}
+	}
+
+	_selectFirstItem() {
+		for (const itemId in this.items) {
+			this.items[itemId]._select()
+			break
+		}
+	}
+
+	_init() {
+		if (!this.selectedId) {
+			this._selectFirstItem()
+		}
+		this.removeCssClass('loader')
+		this.isInitialized = true
 	}
 
 	_addItem(item) {
+		console.log(item)
 		const itemComponent = $[this.itemRenderer]({data: item})
-		this.listComponent.append(itemComponent)
+		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
-	}
-
-	_addItems(items) {
-		for (const item of items) {
-			this._addItem(item)
-		}
 	}
 
 	_removeItem(id) {
@@ -43,48 +56,7 @@ export default class DataList extends $.Component {
 		delete this.items[id]
 	}
 
-	_removeItems() {
-		for (const itemId of Object.keys(this.items)) {
-			this._removeItem(itemId)
-		}
-	}
-
-	/**************************************************************/
-
-	set dataSet(name) {
-		this._dataSet = $.DataSet[this.props.dataSet]
-
-		this.state.setById( 'itemListId', this.dataSet.itemListId  )
-		this.state.setById( 'filterMap',  this.dataSet.filterMapId )
-		this.state.setById( 'sortMap',    this.dataSet.sortMapId   )
-
-		this._removeItems()
-		const items = $.DataStore.get(this._dataSet.getIds())
-		this._addItems(items)
-	}
-
-	get dataSet() {
-		return this._dataSet
-	}
-
-	onStateItemListIdChange(ids) {
-		console.log('onStateItemListIdChange', ids)
-		const deleted = Object.assign({}, this.items)
-
-		for (const id of ids) {
-			if (this.items.hasOwnProperty(id)) {
-				delete deleted[id]
-			} else {
-				this._addItem($.DataStore.get(id))
-			}
-		}
-
-		for (const id in deleted) {
-			this._removeItem(id)
-		}
-	}
-
-	onStateFilterMapChange(filterMap) {
+	_filter(filterMap) {
 		console.log('onStateFilterMapChange', filterMap)
 
 		for (const itemId in this.items) {
@@ -94,9 +66,9 @@ export default class DataList extends $.Component {
 		}
 	}
 
-	onStateSortMapChange(sortMap) {
+	_sort(sortMap) {
 		console.log('onStateSortMapChange', sortMap)
-
+		// TODO: make it sort not elements, but items
 		const elements = []
 		for (const itemId in this.items) {
 			elements.push(this.items[itemId].element)
@@ -126,28 +98,40 @@ export default class DataList extends $.Component {
 		})
 	}
 
-	resetFilter() {
+	/**************************************************************/
+
+	set dataSource(name) {
+		this.props.dataSource = name
+		this._dataSet = $.DataSource[this.props.dataSource].defineDataSet('test')
+
+		this.clear()
+
+		this._dataSet.onInit       = this._init.bind(this)
+		this._dataSet.onSort       = this._sort.bind(this)
+		this._dataSet.onFilter     = this._filter.bind(this)
+		this._dataSet.onAddItem    = this._addItem.bind(this)
+		this._dataSet.onRemoveItem = this._removeItem.bind(this)
+	}
+
+	clear() {
+		for (const id of Object.keys(this.items)) {
+			this._removeItem(id)
+		}
+	}
+
+	reset() {
 		for (const itemId in this.items) {
 			this.items[itemId].show()
 		}
 	}
 
-	onItemSelect(event) {
-		for (const itemId in this.items) {
-			const item = this.items[itemId]
-			if (event.detail.targetComponent === item) {
-				item.select()
-			} else {
-				item.deselect()
-			}
-		}
+	onReady() {
+		this.dataSource = this.props.dataSource
 	}
-
-	onDataSetAvailable(dataSet) {}
 
 	render() {
 		return $.ul(this.children)
 	}
 }
 
-$.define(DataList)
+$.define(DataList, import.meta.url)

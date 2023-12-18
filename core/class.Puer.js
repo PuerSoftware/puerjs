@@ -14,8 +14,6 @@ import Request            from '../library/class.Request.js'
 import DataSet            from '../library/class.DataSet.js'
 import DataStore          from '../library/class.DataStore.js'
 import DataSource         from '../library/class.DataSource.js'
-import DataSourcePlural   from '../library/class.DataSourcePlural.js'
-import DataSourceSingular from '../library/class.DataSourceSingular.js'
 import Reference          from '../library/class.Reference.js'
 import RouteRoot          from '../library/class.Route.js'
 
@@ -293,8 +291,6 @@ $.Request            = Request
 $.DataSet            = DataSet
 $.DataStore          = DataStore
 $.DataSource         = DataSource
-$.DataSourcePlural   = DataSourcePlural
-$.DataSourceSingular = DataSourceSingular
 
 $.Reference          = Reference
 

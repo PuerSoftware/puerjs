@@ -1,8 +1,6 @@
 export { default as DataBase           } from './class.DataBase.js'
 export { default as DataSet            } from './class.DataSet.js'
 export { default as DataSource         } from './class.DataSource.js'
-export { default as DataSourcePlural   } from './class.DataSourcePlural.js'
-export { default as DataSourceSingular } from './class.DataSourceSingular.js'
 export { default as DataStore          } from './class.DataStore.js'
 
 export { default as DateMethods        } from './class.DateMethods.js'

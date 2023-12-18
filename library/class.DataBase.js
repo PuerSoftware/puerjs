@@ -65,6 +65,7 @@ export default class DataBase {
 		}
 		if (request) {
 			request.onsuccess = (request, event) => {
+				console.log('Why???', request.result)
 				onSuccess && onSuccess(request.result)
 			}
 			request.onerror = (request, event) => {
