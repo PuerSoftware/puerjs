@@ -1,5 +1,5 @@
-import $ from './class.Puer.js'
-
+import $              from './class.Puer.js'
+import {WaitingQueue} from '../library/index.js'
 
 class PuerEvents extends EventTarget {
 	static instance = null
@@ -8,58 +8,16 @@ class PuerEvents extends EventTarget {
 		if (!PuerEvents.instance) {
 			super()
 			this.socket            = null
-			this.outerCache        = [] // cashes events, that are waiting socket connection
-			this.innerCache        = [] // cashes events, that are waiting end of routing
+			this.outerQueue        = new WaitingQueue(() => { return this.isConnected }) // cashes events, that are waiting socket connection
+			this.innerQueue        = new WaitingQueue(() => { return !$.isRouting     }) // cashes events, that are waiting end of routing
 			this.isConnecting      = false
 			this.isConnected       = false
-			this.isAwaitingRouting = false
 			this._listenerMap      = new WeakMap()
 			PuerEvents.instance    = this
 			puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
 
 		}
 		return PuerEvents.instance
-	}
-
-	/********************** PRIVATE **********************/
-
-	_outerCache(name, data) {
-		this.outerCache.push({
-			name : name,
-			data : data
-		})
-	}
-
-	_outerUncache() {
-		this.outerCache.forEach((event) => {
-			this.send(event.name, event.data)
-		})
-		this.outerCache = []
-	}
-	_innerCache(name, data) {
-		this.innerCache.push({
-			name : name,
-			data : data
-		})
-	}
-
-	_innerUncache() {
-		this.innerCache.forEach((event) => {
-			this.trigger(event.name, event.data)
-		})
-		this.innerCache = []
-	}
-
-	_awaitEndOfRouting() {
-		if ($.isRouting) {
-			if (!this.isAwaitingRouting) {
-				this.isAwaitingRouting = true
-				setTimeout(this._awaitEndOfRouting.bind(this), 10)
-			}
-		} else {
-			this.isAwaitingRouting = false
-			this._innerUncache()
-		}
 	}
 
 	/*********************** PUBLIC ***********************/
@@ -71,7 +29,6 @@ class PuerEvents extends EventTarget {
 		this.socket.onopen = () => {
 			this.isConnected  = true
 			this.isConnecting = false
-			this._outerUncache()
 		}
 
 		this.socket.onmessage = (event) => {
@@ -110,8 +67,7 @@ class PuerEvents extends EventTarget {
 
 	trigger(name, data) {
 		if ($.isRouting) {
-			this._innerCache(name, data)
-			this._awaitEndOfRouting()
+			this.innerQueue.enqueue(this.trigger, this, [name, data]).start()
 		} else {
 			this.dispatchEvent(new CustomEvent(name, { detail: data }))
 		}
@@ -119,8 +75,9 @@ class PuerEvents extends EventTarget {
 
 	send(name, data) {
 		if (!this.isConnected) {
-			if (this.connecting) {
-				this._outerCache(name, data)
+			if (this.isConnecting) {
+				// this._outerCache(name, data)
+				this.outerQueue.enqueue(this.send, this, [name, data]).start()
 			} else {
 				throw new $.Error('$.Events.connect() must be called prior to sending events', this, 'send')
 			}

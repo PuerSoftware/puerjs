@@ -11,7 +11,6 @@ export default class DataSource {
 		}
 
 		const dataSource = new cls(url, isSingular, onLoad)
-		// console.log('define DataSource', cls.name)
 		Object.defineProperty(DataSource, cls.name, {
 			get: function() {
 				return dataSource
@@ -34,7 +33,6 @@ export default class DataSource {
 		this.isLoaded   = false
 
 		this.load((itemIds) => {
-			// console.log('loading')
 			this._initDataSets()
 			this.isLoaded = true
 			onLoad && onLoad()
@@ -49,9 +47,7 @@ export default class DataSource {
 
 	_connect(callback) {
 		const _this = this
-		console.log('connect', this.constructor.name)
 		DataBase.connect(this.constructor.name, db => {
-			console.log('connected')
 			_this.db = db
 			callback(db)
 		})
@@ -71,7 +67,6 @@ export default class DataSource {
 		const _this = this
 
 		this.db.readItems(0, _this.count, (items) => {
-			// console.log('items from db', items)
 			for (const item of items) {
 				_this._addItemToStore(item)
 				for (const dataSetName in _this.dataSets) {
@@ -132,9 +127,7 @@ export default class DataSource {
 		const _this = this
 
 		this._connect(db => {
-			console.log('connected to db', db)
 			db.getCount(count => {
-				// console.log('count', count)
 				if (count > 0) {
 					_this.count = count
 					_this._loadFromDb(onLoad)
@@ -147,7 +140,6 @@ export default class DataSource {
 
 	defineDataSet(name) {
 		const ds = DataSet.define(name)
-		// console.log('define DataSet', name)
 		if (this.isLoaded) {
 			ds.init(this.itemIds)
 		}

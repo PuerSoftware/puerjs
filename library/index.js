@@ -15,6 +15,7 @@ export { default as ReferenceOwner  } from './class.ReferenceOwner.js'
 export { default as RouteRoot       } from './class.Route.js'
 
 export { default as WaitingQueue    } from './class.WaitingQueue.js'
+export { default as Queue           } from './class.Queue.js'
 
 
 

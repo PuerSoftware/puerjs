@@ -25,7 +25,7 @@ export default class DataList extends $.Component {
 	_onItemSelect(event) {
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
-			if (event.detail.name === item) {
+			if (event.detail.targetComponent === item) {
 				item.select()
 			} else {
 				item.deselect()
@@ -42,8 +42,10 @@ export default class DataList extends $.Component {
 
 	_selectFirstItem() {
 		for (const itemId in this.items) {
-			this.items[itemId]._select()
-			break
+			if (!this.items[itemId].isHidden) {
+				this.items[itemId]._select()
+				break
+			}
 		}
 	}
 
@@ -73,6 +75,7 @@ export default class DataList extends $.Component {
 			}
 			this.items[itemId].highlight(this._searchQuery)
 		}
+		// this._selectFirstItem()
 	}
 
 	_sort(sortMap) {
