@@ -20,11 +20,13 @@ class BasePuerComponent extends PuerObject {
 
 		this.isCustom  = false
 		this._isActive = true
+		this._isHidden = false
 
 		this.elementCopy       = null
 		this.parentElementCopy = null
 
 		this._listenerMap = new WeakMap()
+		this._eventTarget = this
 
 		$.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
@@ -97,7 +99,14 @@ class BasePuerComponent extends PuerObject {
 		this._cascade('__routeChange', [])
 	}
 
+	__init() {
+		// __render, __init
+		this._cascade('__init')
+		this.onInit && this.onInit()
+	}
+
 	__ready() {
+		// __render, __init, __ready
 		this._cascade('__ready')
 		this.onReady && this.onReady()
 	}
@@ -221,7 +230,7 @@ class BasePuerComponent extends PuerObject {
 				const cssProp = $.String.camelToLower(prop.replace(/^css/, ''))
 				this.css(cssProp, value)
 			} else if (prop === 'text') {
-				const textElement = this.getTextElement()
+				const textElement = this.getTextElements()
 				if (textElement) {
 					textElement.nodeValue = value
 				} else {
@@ -244,15 +253,15 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, options) {
-		if (!this._listenerMap.has(f)) {
+		if (!this._eventTarget._listenerMap.has(f)) {
 			const targetComponent = this
 			let _f = function (event) {
 				event.targetComponent = targetComponent
 				return f.call(this, event)
 			}
 			_f = _f.bind(this.owner)
-			this._listenerMap.set(f, _f)
-			this.element.addEventListener(name, _f, options)
+			this._eventTarget._listenerMap.set(f, _f)
+			this._eventTarget.element.addEventListener(name, _f, options)
 		}
 	}
 
@@ -285,6 +294,10 @@ class BasePuerComponent extends PuerObject {
 			return false
 		}
 		return this.parent ? this.parent.isActive : true
+	}
+
+	get isHidden() {
+		return this._isHidden
 	}
 
 	hasDescendant(component) {
@@ -398,7 +411,7 @@ class BasePuerComponent extends PuerObject {
 	// 	return this.element.querySelector(selector)
 	// }
 
-	getTextElement() {
+	getTextElements() {
 		return Array.from(this.element.childNodes).find(child => child.nodeType === 3)
 	}
 
@@ -510,15 +523,25 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	hide() {
+		this._isHidden = true
 		this.css({display: 'none'})
 	}
 
 	show(display='block') {
+		this._isHidden = false
 		this.css({display: display}) // TODO: restore previous display value
 	}
 
 	toggle(visible) {
 		visible ? this.show() : this.hide()
+	}
+
+	highlight(query) {
+		this._cascade('highlight', [query])
+	}
+
+	unhighlight() {
+		this._cascade('unhighlight')
 	}
 }
 

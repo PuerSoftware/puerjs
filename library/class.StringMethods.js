@@ -50,7 +50,31 @@ class StringMethods {
     static decodeHtmlEntities(s) {
         const el = document.createElement('div')
         el.innerHTML = s
-        return el.textContent
+        return el.textContent || el.innerText  || ''
+    }
+
+    static stripTags(s) {
+        return StringMethods.decodeHtmlEntities(s)
+    }
+
+    static splitWithDelimitersPreserved(str, delimiter) {
+        const regex = new RegExp(delimiter, 'gi')
+        const a            = str.split(regex)
+        const result       = []
+        let [len, dlen, s] = [0, delimiter.length, '']
+
+        for (let n = 0; n < a.length * 2 - 1; n++) {
+            if (n % 2) { // delimiter
+                result.push(str.substring(len, len + dlen))
+                len += dlen
+            } else {
+                s = a[Math.floor(n) / 2]
+                len += s.length
+                result.push(s)
+            }
+        }
+
+        return result
     }
 }
 

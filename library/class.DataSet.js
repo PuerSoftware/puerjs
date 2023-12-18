@@ -24,14 +24,40 @@ export default class DataSet {
 		this.itemIds       = []
 		this.searchConfig  = searchConfig
 		this.isInitialized = false
+		this.index         = new Map()
 	}
 
+	/**************************************************************/
+
+	_indexItem(item, id, prefix='') {
+		for (let key in item) {
+			if (item.hasOwnProperty(key)) {
+				let value = item[key]
+				if (value && typeof value === 'object') {
+					this._indexItem(value, id, prefix + key + '.')
+				} else if (!this.searchConfig || this.searchConfig[prefix + key]) {
+					if (value) {
+						const valueString = value.toString().toLowerCase()
+						if (!this.index.has(valueString)) {
+							this.index.set(valueString, new Set())
+						}
+						this.index.get(valueString).add(id)
+					}
+				}
+			}
+		}
+	}
+
+	/**************************************************************/
+
 	init(ids) {
-		console.log('init dataset', this.name, ids)
-		this.itemIds = ids
+		// console.log('init dataset', this.name, ids)
+		this.itemIds       = ids
+		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
 		this._lastSort   && this.sort(this._lastSort)
+
 		this.onInit()
 	}
 
@@ -45,7 +71,7 @@ export default class DataSet {
 			const map   = {}
 
 			items.forEach((item, index) => {
-				map[index] = f(item)
+				map[item.dataId] = f(item)
 			})
 
 			this._lastFilter = f
@@ -67,6 +93,28 @@ export default class DataSet {
 			this._lastSort = f
 			this.onSort(map)
 		}
+	}
+
+	search(query) {
+		query = query.toLowerCase()
+		const resultSet = new Set()
+
+		this.index.forEach((indexes, valueString) => {
+			if (valueString.includes(query)) {
+				indexes.forEach(id => resultSet.add(id))
+			}
+		})
+
+		return this.filter(item => resultSet.has(item.dataId))
+	}
+
+	addItem(item) {
+		this._indexItem(item, item.dataId)
+		this.onAddItem(item)
+	}
+	removeItem (itemId) {
+
+		this.onRemoveItem(itemId)
 	}
 
 	onInit       ()       {}

@@ -21,6 +21,18 @@ export default class DataListItem extends $.Component {
 		this.removeCssClass('selected')
 	}
 
+	highlight(query) {
+		if (!this.isHidden) {
+			super.highlight(query)
+		}
+	}
+
+	unhighlight() {
+		if (!this.isHidden) {
+			super.unhighlight()
+		}
+	}
+
 	onReady() {
 		this.element.addEventListener('click', this._select.bind(this))
 	}
@@ -30,4 +42,4 @@ export default class DataListItem extends $.Component {
 	}
 }
 
-$.define(DataListItem)
+$.define(DataListItem, import.meta.url)

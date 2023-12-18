@@ -1,3 +1,4 @@
+import $               from './class.Puer.js'
 import PuerHtmlElement from './class.PuerHtmlElement.js'
 import PuerProps       from './class.PuerProps.js'
 
@@ -6,7 +7,8 @@ class PuerTextElement extends PuerHtmlElement {
 
 	constructor(text) {
 		super({text: text}, [])
-		this.tagName = 'text'
+		this.tagName      = 'text'
+		this.highlightSet = []
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -30,6 +32,39 @@ class PuerTextElement extends PuerHtmlElement {
 		return document.createTextNode($.dereference(this.props['text']))
 	}
 
+	highlight(query) {
+		this.unhighlight()
+		const texts = $.String.splitWithDelimitersPreserved(this.element.nodeValue, query)
+
+		if (texts.length > 1) {
+			this.highlightSet = []
+			for (const n in texts) {
+				if (n % 2) {
+					const highlightElement     = document.createElement('span')
+					highlightElement.className = 'highlight'
+					highlightElement.innerText = texts[n]
+					this.highlightSet.push(highlightElement)
+					this.element.parentNode.insertBefore(highlightElement, this.element)
+				} else {
+					const textNode = document.createTextNode(texts[n])
+					this.highlightSet.push(textNode)
+					this.element.parentNode.insertBefore(textNode, this.element)
+				}
+			}
+
+			this.element.remove()
+		}
+	}
+
+	unhighlight() {
+		if (this.highlightSet.length > 0) {
+			this.highlightSet[0].parentNode.insertBefore(this.element, this.highlightSet[0])
+			for (const el of this.highlightSet) {
+				el.remove()
+			}
+			this.highlightSet = []
+		}
+	}
 }
 
 export default PuerTextElement

@@ -191,10 +191,12 @@ class PuerConstructor {
 		return ['string', 'number', 'boolean'].includes(this.type(o))
 	}
 
-	application(cls, importUrl) {
+	application(cls, importUrl, init) {
 		this._defineComponent(cls, importUrl)
 		this.app    = this[cls.name]()
 		this.Router = new PuerRouter(this.app)
+		init()
+		this.app.__init()
 		return $
 	}
 

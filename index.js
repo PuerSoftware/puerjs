@@ -79,6 +79,5 @@ import PuerApp from './core/class.PuerApp.js'
 $.App = PuerApp
 
 $.Events.define('LIST_ITEM_SELECT')
-$.Events.define('DATASET_AVAILABLE')
-
+$.Events.define('SEARCH')
 export default $

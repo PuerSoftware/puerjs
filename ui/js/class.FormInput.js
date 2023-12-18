@@ -65,7 +65,7 @@ class FormInput extends $.Component {
 
 	render() {
 		this.input = $[this.props.tagName]({ ... this.props })
-		
+		this._eventTarget = this.input
 		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
 

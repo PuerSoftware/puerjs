@@ -53,26 +53,28 @@ export default class DataBase {
 			case 'delete':
 				request = store.delete(items)
 				break
-			case 'read':
-				const range = IDBKeyRange.bound(items.from, items.from + items.max - 1)
-				request = store.getAll(range)
+			case 'readAll':
+				// const range = IDBKeyRange.bound(items.from, items.from + items.max - 1)
+				request = store.getAll()
 				break
 			case 'count':
 				request = store.count()
+				break
+			case 'clear':
+				request = store.clear()
 				break
 			default:
 				onError('Invalid operation')
 		}
 		if (request) {
 			request.onsuccess = (request, event) => {
-				console.log('Why???', request.result)
-				onSuccess && onSuccess(request.result)
+				onSuccess && onSuccess(request.target.result)
 			}
 			request.onerror = (request, event) => {
 				if (onError) {
-					onError(request.error)
+					onError(request.target.error)
 				} else {
-					throw request.error
+					throw request.target.error
 				}
 			}
 		}
@@ -90,8 +92,12 @@ export default class DataBase {
 		this._executeTransaction('delete', key, onSuccess, onError)
 	}
 
+	clear(onSuccess, onError) {
+		this._executeTransaction('clear', null, onSuccess, onError)
+	}
+
 	readItems(from, max, onSuccess, onError) {
-		this._executeTransaction('read', {from, max}, onSuccess, onError, 'readonly')
+		this._executeTransaction('readAll', {from, max}, onSuccess, onError, 'readonly')
 	}
 
 	getCount(onSuccess, onError) {

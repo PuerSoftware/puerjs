@@ -11,7 +11,7 @@ export default class DataSource {
 		}
 
 		const dataSource = new cls(url, isSingular, onLoad)
-		console.log('define DataSource', cls.name)
+		// console.log('define DataSource', cls.name)
 		Object.defineProperty(DataSource, cls.name, {
 			get: function() {
 				return dataSource
@@ -34,7 +34,7 @@ export default class DataSource {
 		this.isLoaded   = false
 
 		this.load((itemIds) => {
-			console.log('loading')
+			// console.log('loading')
 			this._initDataSets()
 			this.isLoaded = true
 			onLoad && onLoad()
@@ -58,6 +58,7 @@ export default class DataSource {
 	_loadFromUrl(onLoad) {
 		console.log('loading from URL')
 		DataSource.PUER.Request.get(this.url, (items) => {
+			this.db.clear()
 			this.addItems(items)
 			onLoad()
 		})
@@ -66,9 +67,14 @@ export default class DataSource {
 	_loadFromDb(onLoad) {
 		console.log('loading from DB')
 		const _this = this
+
 		this.db.readItems(0, _this.count, (items) => {
+			// console.log('items from db', items)
 			for (const item of items) {
 				_this._addItemToStore(item)
+				for (const dataSetName in _this.dataSets) {
+					_this.dataSets[dataSetName].addItem(item)
+				}
 			}
 			onLoad()
 		})
@@ -93,7 +99,7 @@ export default class DataSource {
 		this._addItemToStore(item)
 
 		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].onAddItem(item)
+			this.dataSets[dataSetName].addItem(item)
 		}
 	}
 
@@ -111,7 +117,7 @@ export default class DataSource {
 
 	removeItem(item) {
 		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].onRemoveItem(item)
+			this.dataSets[dataSetName].removeItem(item.dataId)
 		}
 	}
 
@@ -125,7 +131,7 @@ export default class DataSource {
 
 		this._connect(db => {
 			db.getCount(count => {
-				console.log('count', count)
+				// console.log('count', count)
 				if (count > 0) {
 					_this.count = count
 					_this._loadFromDb(onLoad)
@@ -138,7 +144,7 @@ export default class DataSource {
 
 	defineDataSet(name) {
 		const ds = DataSet.define(name)
-		console.log('define DataSet', name)
+		// console.log('define DataSet', name)
 		if (this.isLoaded) {
 			ds.init(this.itemIds)
 		}

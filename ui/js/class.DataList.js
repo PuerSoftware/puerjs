@@ -6,6 +6,7 @@ export default class DataList extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('dataSource')
+		this.props.default('searchName', null) // if not set search is inactive
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = 'DataListItem'
@@ -14,8 +15,10 @@ export default class DataList extends $.Component {
 		this.selectedId    = null
 
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
+		this.on($.Event.SEARCH,           this._onSearch)
 
-		this._dataSet = null
+		this._dataSet     = null
+		this._searchQuery = ''
 	}
 
 	_onItemSelect(event) {
@@ -26,6 +29,13 @@ export default class DataList extends $.Component {
 			} else {
 				item.deselect()
 			}
+		}
+	}
+
+	_onSearch(event) {
+		if (this.props.searchName === event.detail.searchName) {
+			this._searchQuery = event.detail.value
+			this._dataSet.search(this._searchQuery)
 		}
 	}
 
@@ -45,7 +55,6 @@ export default class DataList extends $.Component {
 	}
 
 	_addItem(item) {
-		console.log(item)
 		const itemComponent = $[this.itemRenderer]({data: item})
 		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
@@ -57,12 +66,11 @@ export default class DataList extends $.Component {
 	}
 
 	_filter(filterMap) {
-		console.log('onStateFilterMapChange', filterMap)
-
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
 				this.items[itemId].toggle(filterMap[itemId])
 			}
+			this.items[itemId].highlight(this._searchQuery)
 		}
 	}
 
@@ -113,6 +121,14 @@ export default class DataList extends $.Component {
 		this._dataSet.onRemoveItem = this._removeItem.bind(this)
 	}
 
+	set searchName(name) {
+		this.props.searchName = name
+	}
+
+	get searchName() {
+		return this.props.searchName
+	}
+
 	clear() {
 		for (const id of Object.keys(this.items)) {
 			this._removeItem(id)
@@ -125,7 +141,7 @@ export default class DataList extends $.Component {
 		}
 	}
 
-	onReady() {
+	onInit() {
 		this.dataSource = this.props.dataSource
 	}
 

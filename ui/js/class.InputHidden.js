@@ -4,7 +4,7 @@ import FormInput from './class.FormInput.js'
 class InputHidden extends FormInput {
 	constructor( ... args) {
 		super( ... args)
-		this.isHidden = true
+		this._isHidden = true
 	}
 
 	validate() {}
