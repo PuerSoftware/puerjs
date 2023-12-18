@@ -5,10 +5,14 @@ export default class DataListItem extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('data')
+		this.props.require('name')
 	}
 
 	_select(event) {
-		this.trigger($.Event.LIST_ITEM_SELECT, this.props.data)
+		this.trigger($.Event.LIST_ITEM_SELECT, {
+			data: this.props.data,
+			name: this.props.name
+		})
 	}
 
 	/**********************************************************/

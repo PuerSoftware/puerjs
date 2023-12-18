@@ -6,15 +6,43 @@ export default class DataBase {
 	}
 
 	constructor(name, onConnect, onError) {
+		console.log('constructor', name)
 		this.name = name
 		this.isNewTable = false
-		this._connect(onConnect, onError)
+		this._checkAndUpgradeDatabase(onConnect, onError)
 	}
 
-	_connect(onConnect, onError) {
-		const request = indexedDB.open(DataBase.DB_NAME, 1)
+	_checkAndUpgradeDatabase(onConnect, onError) {
+		const openRequest = indexedDB.open(DataBase.DB_NAME)
+
+		openRequest.onsuccess = (event) => {
+			const db = event.target.result
+			const currentVersion = db.version
+
+			db.close()
+
+			if (!db.objectStoreNames.contains(this.name)) {
+				console.log('not found', this.name)
+				// If store doesn't exist, open with a new version to create it
+				this._connect(currentVersion + 1, onConnect, onError)
+			} else {
+				console.log('found', this.name)
+				// If store exists, just open normally
+				this._connect(currentVersion, onConnect, onError)
+			}
+		}
+
+		openRequest.onerror = (event) => {
+			console.error('IndexedDB error:', event.target.errorCode)
+			onError && onError(event.target.errorCode)
+		}
+	}
+
+	_connect(version, onConnect, onError) {
+		const request = indexedDB.open(DataBase.DB_NAME, version)
 
 		request.onupgradeneeded = (event) => {
+			console.log('creating', this.name)
 			this.db = event.target.result
 			if (!this.db.objectStoreNames.contains(this.name)) {
 				this.db.createObjectStore(this.name, {autoIncrement: true})
@@ -38,6 +66,7 @@ export default class DataBase {
 	}
 
 	_executeTransaction(operation, items, onSuccess, onError, rights='readwrite') {
+		console.log(operation, this, this.name, rights)
 		const transaction = this.db.transaction([this.name], rights)
 		const store = transaction.objectStore(this.name)
 	

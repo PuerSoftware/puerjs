@@ -5,6 +5,7 @@ import DataListItem from './class.DataListItem.js'
 export default class DataList extends $.Component {
 	constructor(props, children) {
 		super(props, children)
+		this.props.require('name')
 		this.props.require('dataSource')
 		this.props.default('searchName', null) // if not set search is inactive
 
@@ -24,7 +25,7 @@ export default class DataList extends $.Component {
 	_onItemSelect(event) {
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
-			if (event.detail.targetComponent === item) {
+			if (event.detail.name === item) {
 				item.select()
 			} else {
 				item.deselect()
@@ -55,7 +56,7 @@ export default class DataList extends $.Component {
 	}
 
 	_addItem(item) {
-		const itemComponent = $[this.itemRenderer]({data: item})
+		const itemComponent = $[this.itemRenderer]({ data: item, name: this.props.name })
 		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
 	}
@@ -110,7 +111,7 @@ export default class DataList extends $.Component {
 
 	set dataSource(name) {
 		this.props.dataSource = name
-		this._dataSet = $.DataSource[this.props.dataSource].defineDataSet('test')
+		this._dataSet = $.DataSource[this.props.dataSource].defineDataSet(this.props.name)
 
 		this.clear()
 

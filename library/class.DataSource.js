@@ -49,7 +49,9 @@ export default class DataSource {
 
 	_connect(callback) {
 		const _this = this
+		console.log('connect', this.constructor.name)
 		DataBase.connect(this.constructor.name, db => {
+			console.log('connected')
 			_this.db = db
 			callback(db)
 		})
@@ -130,6 +132,7 @@ export default class DataSource {
 		const _this = this
 
 		this._connect(db => {
+			console.log('connected to db', db)
 			db.getCount(count => {
 				// console.log('count', count)
 				if (count > 0) {
