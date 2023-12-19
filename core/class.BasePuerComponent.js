@@ -431,7 +431,7 @@ class BasePuerComponent extends PuerObject {
 				: 'remove'
 		}
 		for (const c of arguments) {
-			this.element.classList[methodName](c)
+			c && this.element.classList[methodName](c)
 		}
 	}
 

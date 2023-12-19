@@ -173,7 +173,7 @@ class RouteSet {
 		for (const value in this.routes) {
 			const route = this.routes[value]
 			if (route.isDefault) {
-				if (defaultRoute) {
+				if (defaultRoute === true) {
 					throw `More than one default is registered for RouteSet "${this.name}"`
 				} else {
 					defaultRoute = route

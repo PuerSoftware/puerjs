@@ -80,4 +80,6 @@ $.App = PuerApp
 
 $.Events.define('LIST_ITEM_SELECT')
 $.Events.define('SEARCH')
+$.Events.define('PAGINATE')
+
 export default $

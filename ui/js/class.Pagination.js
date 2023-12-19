@@ -5,7 +5,6 @@ class Pagination extends $.Component {
 		super(props, children)
 		this.state.page    = 1
 		this.state.display = 'none' 
-		// this.props.require('hash', this)
 	}
 
 	setPage(page) {
@@ -25,7 +24,7 @@ class Pagination extends $.Component {
 		}
 	}
 
-	onUpdate() {
+	updateDisplay() {
 		this.state.display = this.props.pages > 1
 			? 'block'
 			: 'none'
@@ -44,6 +43,5 @@ class Pagination extends $.Component {
 	}
 }
 
-$.Events.define(['PAGINATE'])
 $.define(Pagination, import.meta.url)
 export default Pagination

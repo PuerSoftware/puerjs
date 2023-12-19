@@ -35,7 +35,6 @@ class PuerProxy {
 				}
 			},
 			set: (target, prop, value) => {
-				console.log('setter', prop, value)
 				target.setProp(prop, value)
 				return true
 			},
@@ -65,8 +64,6 @@ class PuerProxy {
 	setProp(prop, value) {
 		let id
 		let reference = this.references[prop]
-
-		console.log(prop, value)
 
 		if (value && value.isReference) {
 			this.references[prop] = value

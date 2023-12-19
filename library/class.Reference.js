@@ -15,8 +15,10 @@ class Reference {
 						return target[prop]
 					}
 				} else if (typeof prop == 'string') {
+					// console.log('ORIGINAL', prop, target._accessors)
 					const refClone = target.clone()
 					refClone._accessors.push(prop)
+					// console.log('CLONE', prop, refClone._accessors)
 					return refClone
 				}
 				return proxy
@@ -50,17 +52,36 @@ class Reference {
 		this._accessors = []
 	}
 
-	dereference() { // value
+	// dereference() { // value
+	//
+	// 	if (this._accessors.length > 1) {
+	// 		console.log(this._accessors)
+	// 		// debugger
+	// 	}
+	// 	let value = this.rootValue
+	// 	for (const accessor of this._accessors) {
+	// 		value = value[accessor]
+	// 	}
+	// 	return value
+	// }
+	dereference() {
 		let value = this.rootValue
 		for (const accessor of this._accessors) {
+			if (!value) {
+				break
+			}
 			value = value[accessor]
 		}
-		return value
+		return value || ''
 	}
 
 	clone() {
 		const ref =  new Reference(this.id)
-		ref._accessors = [...this._accessors]
+		// console.log('clone BEFORE', this._accessors)
+		for (const accessor of this._accessors) {
+			ref._accessors.push(accessor)
+		}
+		// console.log('clone AFTER', ref._accessors)
 		return ref
 	}
 
