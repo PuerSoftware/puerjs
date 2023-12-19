@@ -35,6 +35,7 @@ class PuerProxy {
 				}
 			},
 			set: (target, prop, value) => {
+				console.log('setter', prop, value)
 				target.setProp(prop, value)
 				return true
 			},
@@ -65,14 +66,17 @@ class PuerProxy {
 		let id
 		let reference = this.references[prop]
 
+		console.log(prop, value)
+
 		if (value && value.isReference) {
 			this.references[prop] = value
 			id = value.id
 		} else {
-			id = $.DataStore.set(null, value)
 			if (reference) {
-				reference.reuse(id)
+				$.DataStore.set(reference.id, value)
+				// reference.reuse(id) TODO: figure out why this was here
 			} else {
+				id = $.DataStore.set(null, value)
 				reference = new Reference(id)
 			}
 
