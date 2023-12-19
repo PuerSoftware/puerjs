@@ -5,12 +5,12 @@ export default class DataSource {
 	
 	/**************************************************************/
 
-	static define(cls, url, isSingular=false, onLoad) {
+	static define(cls, url, isSingular=false, isCacheable=true) {
 		if (DataSource.hasOwnProperty(cls.name)) {
 			throw `DataSource class already has property "${cls.name}"`
 		}
 
-		const dataSource = new cls(url, isSingular, onLoad)
+		const dataSource = new cls(url, isSingular, isCacheable)
 		Object.defineProperty(DataSource, cls.name, {
 			get: function() {
 				return dataSource
@@ -23,19 +23,20 @@ export default class DataSource {
 
 	/**************************************************************/
 
-	constructor(url, isSingular, onLoad) {
-		this.itemIds    = []
-		this.url        = url
-		this.count      = null
-		this.db         = null
-		this.dataSets   = {}
-		this.isSingular = isSingular
-		this.isLoaded   = false
+	constructor(url, isSingular, isCacheable) {
+		this.itemIds     = []
+		this.url         = url
+		this.count       = null
+		this.db          = null
+		this.dataSets    = {}
+		this.listeners   = {}
+		this.isSingular  = isSingular
+		this.isCacheable = isCacheable
+		this.isLoaded    = false
 
-		this.load((itemIds) => {
+		this._load((itemIds) => {
 			this._initDataSets()
 			this.isLoaded = true
-			onLoad && onLoad()
 		})
 	}
 
@@ -53,10 +54,29 @@ export default class DataSource {
 		})
 	}
 
+	_load(onLoad, invalidate=false) {
+		const _this = this
+
+		if (this.isCacheable) {
+			this._connect(db => {
+				db.getCount(count => {
+					if (count > 0) {
+						_this.count = count
+						_this._loadFromDb(onLoad)
+					} else {
+						_this._loadFromUrl(onLoad)
+					}
+				})
+			})
+		} else {
+			this._loadFromUrl(onLoad)
+		}
+	}
+
 	_loadFromUrl(onLoad) {
 		console.log('loading from URL')
 		DataSource.PUER.Request.get(this.url, (items) => {
-			this.db.clear()
+			this.isCacheable && this.db.clear()
 			this.addItems(items)
 			onLoad()
 		})
@@ -78,7 +98,7 @@ export default class DataSource {
 	}
 
 	_addItemToDb(item) {
-		this.db.addItem(item)
+		this.isCacheable && this.db.addItem(item)
 	}
 	
 	_addItemToStore(item) {
@@ -89,10 +109,34 @@ export default class DataSource {
 
 	/******************************************************************/
 
+	on(name, f, options) {
+		this.listeners[name] = (...args) => {
+			if (this.isActive) {
+				f.bind(this)(...args)
+			}
+		}
+		$.Events.on(name, this.listeners[name], options)
+	}
+
+	once(name, f, options) {
+		$.Events.once(name, f.bind(this), options)
+	}
+
+	off(name) {
+		this.listeners[name] && $.Events.off(name, this.listeners[name])
+	}
+
+	trigger(name, data) {
+		data.targetComponent = this
+		$.Events.trigger(name, data)
+	}
+
+	/******************************************************************/
+
 	addItem(item) {
 		item = this.adaptItem(item)
 
-		this._addItemToDb(item)
+		this.isCacheable && this._addItemToDb(item)
 		this._addItemToStore(item)
 
 		for (const dataSetName in this.dataSets) {
@@ -122,21 +166,6 @@ export default class DataSource {
 
 	adaptItems (items) { return items }
 	adaptItem  (item)  { return item  }
-
-	load(onLoad, invalidate=false) {
-		const _this = this
-
-		this._connect(db => {
-			db.getCount(count => {
-				if (count > 0) {
-					_this.count = count
-					_this._loadFromDb(onLoad)
-				} else {
-					_this._loadFromUrl(onLoad)
-				}
-			})
-		})
-	}
 
 	defineDataSet(name) {
 		const ds = DataSet.define(name)
