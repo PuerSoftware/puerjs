@@ -524,20 +524,20 @@ class BasePuerComponent extends PuerObject {
 
 	hide() {
 		this._isHidden = true
-		this.css({display: 'none'})
+		this.addCssClass('hidden')
 	}
 
-	show(display='block') {
+	show(display='auto') {
 		this._isHidden = false
-		this.css({display: display}) // TODO: restore previous display value
+		this.removeCssClass('hidden')
 	}
 
 	toggle(visible) {
 		visible ? this.show() : this.hide()
 	}
 
-	highlight(query) {
-		this._cascade('highlight', [query])
+	highlight(words) {
+		this._cascade('highlight', [words])
 	}
 
 	unhighlight() {

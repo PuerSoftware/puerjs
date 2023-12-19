@@ -9,12 +9,11 @@ class PuerChainableSet extends Array {
 		super(... items)
 
 		let operator = null
-		let _this    = this
 
 		return new Proxy(this, {
 			get: function(target, prop, receiver) {
-				if (typeof _this[prop] == 'function') {
-					return _this[prop].bind(_this)
+				if ($.isFunction(target[prop])) {
+					return target[prop].bind(target)
 				}
 				if (operators) {
 					if (operator) {
@@ -45,7 +44,7 @@ class PuerChainableSet extends Array {
 
 			deleteProperty: function(target, prop, receiver) {
 				if ($.String.isNumeric(prop)) {
-					_this.splice(parseInt(prop), 1)
+					target.splice(parseInt(prop), 1)
 					return true
 				}
 				return false

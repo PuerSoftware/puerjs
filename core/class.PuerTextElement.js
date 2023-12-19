@@ -32,27 +32,28 @@ class PuerTextElement extends PuerHtmlElement {
 		return document.createTextNode($.dereference(this.props['text']))
 	}
 
-	highlight(query) {
+	highlight(words) {
 		this.unhighlight()
-		const texts = $.String.splitWithDelimitersPreserved(this.element.nodeValue, query)
+		if (words && words.length) {
+			const texts = $.String.splitCaseSafe(this.element.nodeValue, words)
 
-		if (texts.length > 1) {
-			this.highlightSet = []
-			for (const n in texts) {
-				if (n % 2) {
-					const highlightElement     = document.createElement('span')
-					highlightElement.className = 'highlight'
-					highlightElement.innerText = texts[n]
-					this.highlightSet.push(highlightElement)
-					this.element.parentNode.insertBefore(highlightElement, this.element)
-				} else {
-					const textNode = document.createTextNode(texts[n])
-					this.highlightSet.push(textNode)
-					this.element.parentNode.insertBefore(textNode, this.element)
+			if (texts.length > 1) {
+				this.highlightSet = []
+				for (const text of texts) {
+					if (text.isMatch) {
+						const highlightElement     = document.createElement('span')
+						highlightElement.className = 'highlight'
+						highlightElement.innerText = text.value
+						this.highlightSet.push(highlightElement)
+						this.element.parentNode.insertBefore(highlightElement, this.element)
+					} else {
+						const textNode = document.createTextNode(text.value)
+						this.highlightSet.push(textNode)
+						this.element.parentNode.insertBefore(textNode, this.element)
+					}
 				}
+				this.element.remove()
 			}
-
-			this.element.remove()
 		}
 	}
 

@@ -1,6 +1,7 @@
 import $         from '../../index.js'
 import InputText from './class.InputText.js'
 
+
 const KEY_ESCAPE = 27
 
 export default class Search extends $.Component {
@@ -11,8 +12,8 @@ export default class Search extends $.Component {
 		this.input     = null
 	}
 
-	_onFocus(event) { this.isFocused = true }
-	_onBlur(event) { this.isFocused = false }
+	_onFocus(event) { this.isFocused = true  }
+	_onBlur(event)  { this.isFocused = false }
 
 	_onKeyUp(event) {
 		if (event.keyCode === KEY_ESCAPE) {
@@ -26,10 +27,11 @@ export default class Search extends $.Component {
 
 	render() {
 		this.input = $.InputText('confined', {
-			name    : this.props.name,
-			onfocus : this._onFocus,
-			onblur  : this._onBlur,
-			onkeyup : this._onKeyUp,
+			placeholder : 'Search ...',
+			name        : this.props.name,
+			onfocus     : this._onFocus,
+			onblur      : this._onBlur,
+			onkeyup     : this._onKeyUp,
 		})
 		return $.div([this.input])
 	}

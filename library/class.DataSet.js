@@ -96,16 +96,18 @@ export default class DataSet {
 	}
 
 	search(query) {
-		query = query.toLowerCase()
-		const resultSet = new Set()
+		const words  = query.toLowerCase().trim().split(/\s+/g)
+		const result = new Set()
 
-		this.index.forEach((indexes, valueString) => {
-			if (valueString.includes(query)) {
-				indexes.forEach(id => resultSet.add(id))
-			}
+		words.forEach((word) => {
+			this.index.forEach((indexes, valueString) => {
+				if (valueString.includes(word)) {
+					indexes.forEach(id => result.add(id))
+				}
+			})
 		})
 
-		return this.filter(item => resultSet.has(item.dataId))
+		return this.filter(item => result.has(item.dataId))
 	}
 
 	addItem(item) {

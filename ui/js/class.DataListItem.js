@@ -25,9 +25,9 @@ export default class DataListItem extends $.Component {
 		this.removeCssClass('selected')
 	}
 
-	highlight(query) {
+	highlight(words) {
 		if (!this.isHidden) {
-			super.highlight(query)
+			super.highlight(words)
 		}
 	}
 

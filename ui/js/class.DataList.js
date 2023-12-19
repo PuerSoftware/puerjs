@@ -20,6 +20,8 @@ export default class DataList extends $.Component {
 
 		this._dataSet     = null
 		this._searchQuery = ''
+		this._filterMap   = null
+		this._sortMap     = null
 	}
 
 	_onItemSelect(event) {
@@ -41,11 +43,12 @@ export default class DataList extends $.Component {
 	}
 
 	_selectFirstItem() {
-		for (const itemId in this.items) {
-			if (!this.items[itemId].isHidden) {
-				this.items[itemId]._select()
-				break
+		if (this.length) {
+			let item = Object.values(this.items)[0]
+			if (this._filterMap) {
+				item = this.items[Object.keys(this._filterMap).find(id => this._filterMap[id])]
 			}
+			item && item._select()
 		}
 	}
 
@@ -69,16 +72,18 @@ export default class DataList extends $.Component {
 	}
 
 	_filter(filterMap) {
+		this._filterMap = filterMap
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
 				this.items[itemId].toggle(filterMap[itemId])
 			}
-			this.items[itemId].highlight(this._searchQuery)
+			this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
 		}
-		// this._selectFirstItem()
+		this._selectFirstItem()
 	}
 
 	_sort(sortMap) {
+		this._sortMap = sortMap
 		console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
 		const elements = []
@@ -131,6 +136,10 @@ export default class DataList extends $.Component {
 
 	get searchName() {
 		return this.props.searchName
+	}
+
+	get length() {
+		return Object.values(this.items).length
 	}
 
 	clear() {
