@@ -1,4 +1,3 @@
-// import PuerApp            from './class.PuerApp.js'
 import PuerComponent      from './class.PuerComponent.js'
 import PuerRouter         from './class.PuerRouter.js'
 import PuerEvents         from './class.PuerEvents.js'

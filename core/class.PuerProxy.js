@@ -23,14 +23,15 @@ class PuerProxy {
 						}
 					}
 				}
+				if (prop in target) {
+					return typeof target[prop] === 'function'
+						? target[prop].bind(target)
+						: target[prop]
+				}
 				if (prop in target.references) {
 					return $.isReferencing
 						? target.references[prop]
 						: target.references[prop].dereference()
-				} else if (prop in target) {
-					return typeof target[prop] === 'function'
-						? target[prop].bind(target)
-						: target[prop]
 				}
 			},
 			set: (target, prop, value) => {

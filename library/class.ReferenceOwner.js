@@ -1,4 +1,6 @@
 class ReferenceOwner {
+
+
 	constructor(owner, prop, updateMethod) {
 		this.owner        = owner
 		this.prop         = prop
@@ -6,7 +8,9 @@ class ReferenceOwner {
 	}
 
 	update() {
-		this.owner[this.updateMethod](this.prop)
+		setTimeout(
+			() => { this.owner[this.updateMethod](this.prop) }, 1
+		)
 	}
 }
 

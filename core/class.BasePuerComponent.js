@@ -464,40 +464,52 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	append(component) {
-		component.__render()
-		component.__ready()
-		component._applyProps()
+		if ($.isArray(component)) {
+			for (const c of component) {
+				this.append(c)
+			}
+		} else {
+			component.__render()
+			component.__ready()
+			component._applyProps()
 
 
-		const root = this.isCustom
-			? this.root
-			: this
+			const root = this.isCustom
+				? this.root
+				: this
 
-		component.parent = root
-		component.owner  = this.owner
-		root.children.push(component)
+			component.parent = root
+			component.owner  = this.owner
+			root.children.push(component)
 
-		this.element.appendChild(component.element)
+			this.element.appendChild(component.element)
+		}
 	}
 
 	prepend(component) {
-		component.__render()
-		component.__ready()
-		component._applyProps()
-
-
-		const root = this.isCustom
-			? this.root
-			: this
-
-		component.parent = root
-		component.owner  = this.owner
-		root.children.unshift(component)
-
-		if (this.element.firstChild) {
-			this.element.insertBefore(component.element, this.element.firstChild)
+		if ($.isArray(component)) {
+			for (const c of component) {
+				this.prepend(c)
+			}
 		} else {
-			this.element.appendChild(component.element)
+			component.__render()
+			component.__ready()
+			component._applyProps()
+
+
+			const root = this.isCustom
+				? this.root
+				: this
+
+			component.parent = root
+			component.owner = this.owner
+			root.children.unshift(component)
+
+			if (this.element.firstChild) {
+				this.element.insertBefore(component.element, this.element.firstChild)
+			} else {
+				this.element.appendChild(component.element)
+			}
 		}
 	}
 	

@@ -6,6 +6,8 @@ export default class DataListItem extends $.Component {
 		super(props, children)
 		this.props.require('data')
 		this.props.require('name')
+
+		this._isClickSubscribed = false
 	}
 
 	_select(event) {
@@ -38,7 +40,10 @@ export default class DataListItem extends $.Component {
 	}
 
 	onReady() {
-		this.element.addEventListener('click', this._select.bind(this))
+		if (!this._isClickSubscribed) {
+			this.element.addEventListener('click', this._select.bind(this))
+			this._isClickSubscribed = true
+		}
 	}
 
 	render() {

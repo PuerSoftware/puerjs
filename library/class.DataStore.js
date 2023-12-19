@@ -61,6 +61,8 @@ export default class DataStore {
 		if (!DataStore.owners.hasOwnProperty(id)) {
 			DataStore.owners[id] = []
 		}
-		DataStore.owners[id].push(new ReferenceOwner(owner, prop, updateMethod))
+		const referenceOwner = new ReferenceOwner(owner, prop, updateMethod)
+		DataStore.owners[id].push(referenceOwner)
+		referenceOwner.update()
 	}
 }
