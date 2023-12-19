@@ -1,4 +1,8 @@
 .data-list-item .highlight {
-    background-color : yellow;
-    color            : black;
+    background-color : #FFFFFF;
+    color            : #F73308;
+    display          : inline-block;
+    border-radius    : 1px;
+    padding          : 0 5px;
+    font-weight      : bold;
 }

@@ -111,9 +111,7 @@ export default class DataSource {
 
 	on(name, f, options) {
 		this.listeners[name] = (...args) => {
-			if (this.isActive) {
-				f.bind(this)(...args)
-			}
+			f.bind(this)(...args)
 		}
 		$.Events.on(name, this.listeners[name], options)
 	}

@@ -22,17 +22,32 @@ export default class DataList extends $.Component {
 		this._searchQuery = ''
 		this._filterMap   = null
 		this._sortMap     = null
+		this._selectedId  = null
 	}
 
 	_onItemSelect(event) {
-		for (const itemId in this.items) {
-			const item = this.items[itemId]
-			if (event.detail.targetComponent === item) {
-				item.select()
-			} else {
-				item.deselect()
+		if (this.hasDescendant(event.detail.targetComponent)) {
+			for (const itemId in this.items) {
+				const item = this.items[itemId]
+				if (event.detail.targetComponent === item) {
+					this._selectedId = itemId
+					item.select()
+				} else {
+					item.deselect()
+				}
 			}
 		}
+	}
+
+	_isSelectedDisplayed() {
+		if (this._selectedId) {
+			if (this._filterMap) {
+				return this._filterMap[this._selectedId]
+			} else {
+				return true
+			}
+		}
+		return false
 	}
 
 	_onSearch(event) {
@@ -43,7 +58,7 @@ export default class DataList extends $.Component {
 	}
 
 	_selectFirstItem() {
-		if (this.length) {
+		if (this.length && !this._isSelectedDisplayed()) {
 			let item = Object.values(this.items)[0]
 			if (this._filterMap) {
 				item = this.items[Object.keys(this._filterMap).find(id => this._filterMap[id])]
@@ -77,7 +92,11 @@ export default class DataList extends $.Component {
 			if (filterMap.hasOwnProperty(itemId)) {
 				this.items[itemId].toggle(filterMap[itemId])
 			}
-			this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
+			if (this._searchQuery) {
+				this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
+			} else {
+				this.items[itemId].unhighlight()
+			}
 		}
 		this._selectFirstItem()
 	}
