@@ -62,7 +62,8 @@ class PuerComponent extends BasePuerComponent {
 
 	on(name, f, options) {
 		this.listeners[name] = (...args) => {
-			if (this.isActive) {
+			if (this.isActive && args[0].detail.targetComponent.isActive) {
+				// console.log('ON', name, this.className, )
 				f.bind(this)(...args)
 			}
 		}
@@ -78,8 +79,11 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	trigger(name, data) {
-		data.targetComponent = this
-		$.Events.trigger(name, data)
+		if (this.isActive) {
+			// console.log('TRIGGER', name, this.className)
+			data.targetComponent = this
+			$.Events.trigger(name, data)
+		}
 	}
 }
 

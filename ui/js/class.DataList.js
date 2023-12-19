@@ -26,15 +26,13 @@ export default class DataList extends $.Component {
 	}
 
 	_onItemSelect(event) {
-		if (this.hasDescendant(event.detail.targetComponent)) {
-			for (const itemId in this.items) {
-				const item = this.items[itemId]
-				if (event.detail.targetComponent === item) {
-					this._selectedId = itemId
-					item.select()
-				} else {
-					item.deselect()
-				}
+		for (const itemId in this.items) {
+			const item = this.items[itemId]
+			if (event.detail.targetComponent === item) {
+				this._selectedId = itemId
+				item.select()
+			} else {
+				item.deselect()
 			}
 		}
 	}
@@ -175,6 +173,10 @@ export default class DataList extends $.Component {
 
 	onInit() {
 		this.dataSource = this.props.dataSource
+	}
+
+	onActivate() {
+		this._selectFirstItem()
 	}
 
 	render() {

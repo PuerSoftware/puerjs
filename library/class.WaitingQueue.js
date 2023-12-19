@@ -2,14 +2,13 @@
 export default class WaitingQueue {
 	constructor(isDone=null) {
 		this.isDone     = isDone
-		this.timeout    = 1000
+		this.timeout    = 50
 		this.q          = []
 		this._isDone    = false
 		this._isStarted = false
 	}
 
 	_poll() {
-		console.log('poll')
 		setTimeout(() => {
 			if (!this._checkDone()) {
 				this._poll()
