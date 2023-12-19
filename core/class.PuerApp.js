@@ -5,13 +5,13 @@ class PuerApp extends $.Component {
     constructor(props, children) {
     	super(props, children)
     	this.__render()
-    	this.hide()
+    	this.css('display', 'none')
 	}
 
 	__ready() {
 		super.__ready()
 		$.Router.start()
-		this.show() // Display after css has loaded
+		this.css('display', 'block') // Display after css has loaded
 	}
 
 	__render() {
