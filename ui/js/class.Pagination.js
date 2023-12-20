@@ -3,24 +3,24 @@ import $ from '../../index.js'
 class Pagination extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.state.page    = 1
-		this.state.display = 'none' 
+		this.props.default('page', 1)
+		this.state.display = 'none'
 	}
 
 	setPage(page) {
-		this.state.page = page
-		this.trigger($.Event.PAGINATE, {page: this.state.page})
+		this.props.page = page
+		this.trigger($.Event.PAGINATE, {page: this.props.page})
 	}
 
 	prev(event) {
-		if (this.state.page > 1) {
-			this.setPage(this.state.page - 1)
+		if (this.props.page > 1) {
+			this.setPage(this.props.page - 1)
 		}
 	}
 
 	next(event) {
-		if (this.state.page < this.props.pages) {
-			this.setPage(this.state.page + 1)
+		if (this.props.page < this.props.pages) {
+			this.setPage(this.props.page + 1)
 		}
 	}
 
@@ -34,7 +34,7 @@ class Pagination extends $.Component {
 		return $.div({cssDisplay: this.state.display}, [
 			$.a ({text : '&laquo; previous', onClick: this.prev}),
 			$.span('pages', [
-				$.span({'text': this.state.page}),
+				$.span({'text': this.props.page}),
 				$.span({'text': 'of'}),
 				$.span({'text': this.props.pages})
 			]),
