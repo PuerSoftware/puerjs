@@ -24,25 +24,30 @@ export default class DataSource {
 	/**************************************************************/
 
 	constructor(url, isSingular, isCacheable) {
-		this.itemIds     = []
-		this.url         = url
-		this.count       = null
-		this.db          = null
-		this.dataSets    = {}
-		this.listeners   = {}
-		this.isSingular  = isSingular
-		this.isCacheable = isCacheable
-		this.isLoaded    = false
+		this.itemIds       = []
+		this.url           = url
+		this.count         = null
+		this.db            = null
+		this.dataSets      = {}
+		this.listeners     = {}
+		this.isSingular    = isSingular
+		this.isCacheable   = isCacheable
+		this.isInitialized = false
+	}
 
-		this._load((itemIds) => {
-			this._initDataSets()
-			this.isLoaded = true
-		})
+	_onLoad() {
+		this._initDataSets()
+		this.isInitialized = true
+		for (const dataSetName in this.dataSets) {
+			this.dataSets[dataSetName].data()
+		}
 	}
 
 	_initDataSets() {
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].init(this.itemIds)
+		if (!this.isInitialized) {
+			for (const dataSetName in this.dataSets) {
+				this.dataSets[dataSetName].init(this.itemIds)
+			}
 		}
 	}
 
@@ -54,35 +59,22 @@ export default class DataSource {
 		})
 	}
 
-	_load(onLoad, invalidate=false) {
-		const _this = this
-
-		if (this.isCacheable) {
-			this._connect(db => {
-				db.getCount(count => {
-					if (count > 0) {
-						_this.count = count
-						_this._loadFromDb(onLoad)
-					} else {
-						_this._loadFromUrl(onLoad)
-					}
-				})
-			})
-		} else {
-			this._loadFromUrl(onLoad)
-		}
+	_loadFromUrl(method='GET', params=null) {
+		console.log('loading from URL', this.url, method)
+		DataSource.PUER.Request.request(
+			this.url,
+			method,
+			params,
+			null,
+			(items) => {
+				this.isCacheable && this.db.clear()
+				this.addItems(items)
+				this._onLoad()
+			}
+		)
 	}
 
-	_loadFromUrl(onLoad) {
-		console.log('loading from URL')
-		DataSource.PUER.Request.get(this.url, (items) => {
-			this.isCacheable && this.db.clear()
-			this.addItems(items)
-			onLoad()
-		})
-	}
-
-	_loadFromDb(onLoad) {
+	_loadFromDb() {
 		console.log('loading from DB')
 		const _this = this
 
@@ -93,7 +85,7 @@ export default class DataSource {
 					_this.dataSets[dataSetName].addItem(item)
 				}
 			}
-			onLoad()
+			this._onLoad()
 		})
 	}
 
@@ -165,9 +157,28 @@ export default class DataSource {
 	adaptItems (items) { return items }
 	adaptItem  (item)  { return item  }
 
+	load(method=null, params=null) {
+		const _this = this
+
+		if (!method && this.isCacheable) {
+			this._connect(db => {
+				db.getCount(count => {
+					if (count > 0) {
+						_this.count = count
+						_this._loadFromDb()
+					} else {
+						_this._loadFromUrl(method, params)
+					}
+				})
+			})
+		} else {
+			this._loadFromUrl(method, params)
+		}
+	}
+
 	defineDataSet(name) {
 		const ds = DataSet.define(name)
-		if (this.isLoaded) {
+		if (this.isInitialized) {
 			ds.init(this.itemIds)
 		}
 		this.dataSets[name] = ds

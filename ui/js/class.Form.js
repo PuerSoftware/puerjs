@@ -11,8 +11,34 @@ class Form extends $.Component {
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
+
+		this.props.require('dataSource')
+
 		this.state.error = ''
 		this.isSaving    = false
+		this._dataSet    = null
+		this._dataSource = null
+	}
+
+	_onData(items) {
+		for (const item of items) {
+			const input = this.getInput(item.name)
+			if (input) {
+				input.value = item
+			}
+		}
+	}
+
+	set dataSource(name) {
+		this.props.dataSource = name
+		this._dataSource = $.DataSource[this.props.dataSource]
+		this._dataSet    = this._dataSource.defineDataSet(this.props.name)
+
+		this._dataSet.onData = this._onData.bind(this)
+	}
+
+	get dataSource() {
+		return this._dataSource
 	}
 
 	getInput(name) {
@@ -24,24 +50,24 @@ class Form extends $.Component {
 	}
 
 	
-	setData(data) {
-		for (const name in data) {
-			const input = this.getInput(name)
-			if (input) {
-				input.value = data[name]
-			}
-		}
-	}
-
-	getData() {
-		let data = {}
-		for (const input of this.inputs) {
-			if (!input.props.isHeader) {
-				data[input.props.name] = input.value
-			}
-		}
-		return data
-	}
+	// setData(data) {
+	// 	for (const name in data) {
+	// 		const input = this.getInput(name)
+	// 		if (input) {
+	// 			input.value = data[name]
+	// 		}
+	// 	}
+	// }
+	//
+	// getData() {
+	// 	let data = {}
+	// 	for (const input of this.inputs) {
+	// 		if (!input.props.isHeader) {
+	// 			data[input.props.name] = input.value
+	// 		}
+	// 	}
+	// 	return data
+	// }
 
 	getHeaders() {
 		let headers = {}
@@ -55,6 +81,10 @@ class Form extends $.Component {
 
 	onReady() {
 		this.inputs = this.$$.FormInput.toArray()
+	}
+
+	onInit() {
+		this.dataSource = this.props.dataSource
 	}
 
 	onValidate(data) {

@@ -13,6 +13,7 @@ import Request            from '../library/class.Request.js'
 import DataSet            from '../library/class.DataSet.js'
 import DataStore          from '../library/class.DataStore.js'
 import DataSource         from '../library/class.DataSource.js'
+import FormDataSource     from '../library/class.FormDataSource.js'
 import Reference          from '../library/class.Reference.js'
 import RouteRoot          from '../library/class.Route.js'
 
@@ -292,6 +293,7 @@ $.Request            = Request
 $.DataSet            = DataSet
 $.DataStore          = DataStore
 $.DataSource         = DataSource
+$.FormDataSource     = FormDataSource
 
 $.Reference          = Reference
 

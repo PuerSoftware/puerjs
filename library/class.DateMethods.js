@@ -8,7 +8,8 @@ const monthNames = [
 
 class DateMethods {
 	static _dateToMilliSeconds(timestamp) {
-		timestamp = Number(timestamp)
+		const date = new Date(timestamp)
+		timestamp = date.getTime()
 		if (timestamp <= 9999999999) {
 			timestamp *= 1000
 		}
