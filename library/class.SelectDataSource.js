@@ -3,7 +3,7 @@ import DataSource from './class.DataSource.js'
 
 export default class FormDataSource extends DataSource {
 	constructor(url) {
-		super(url, false, false)
+		super(url, true, false)
 	}
 
 	adaptItems(items) {

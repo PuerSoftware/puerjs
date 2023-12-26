@@ -119,7 +119,6 @@ export default class DataSet {
 		this.onAddItem(item)
 	}
 	removeItem (itemId) {
-
 		this.onRemoveItem(itemId)
 	}
 

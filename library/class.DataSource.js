@@ -59,13 +59,13 @@ export default class DataSource {
 		})
 	}
 
-	_loadFromUrl(method='GET', params=null) {
+	_loadFromUrl(method='GET', params=null, headers=null) {
 		console.log('loading from URL', this.url, method)
 		DataSource.PUER.Request.request(
 			this.url,
 			method,
 			params,
-			null,
+			headers,
 			(items) => {
 				this.isCacheable && this.db.clear()
 				this.addItems(items)
@@ -117,7 +117,8 @@ export default class DataSource {
 	}
 
 	trigger(name, data) {
-		data.targetComponent = this
+		data.targetComponent          = this
+		data.targetComponent.isActive = true
 		$.Events.trigger(name, data)
 	}
 
@@ -157,7 +158,7 @@ export default class DataSource {
 	adaptItems (items) { return items }
 	adaptItem  (item)  { return item  }
 
-	load(method=null, params=null) {
+	load(method=null, params=null, headers=null) {
 		const _this = this
 
 		if (!method && this.isCacheable) {
@@ -167,12 +168,12 @@ export default class DataSource {
 						_this.count = count
 						_this._loadFromDb()
 					} else {
-						_this._loadFromUrl(method, params)
+						_this._loadFromUrl(method, params, headers)
 					}
 				})
 			})
 		} else {
-			this._loadFromUrl(method, params)
+			this._loadFromUrl(method, params, headers)
 		}
 	}
 

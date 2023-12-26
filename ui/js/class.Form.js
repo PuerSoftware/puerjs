@@ -14,20 +14,35 @@ class Form extends $.Component {
 
 		this.props.require('dataSource')
 
-		this.state.error = ''
-		this.isSaving    = false
-		this._dataSet    = null
-		this._dataSource = null
+		this.state.error     = ''
+		this.isSaving        = false
+		this._dataSet        = null
+		this._dataSource     = null
+		this._errorComponent = null
+		this.inputs          = null
+
+		this.on($.Event.FORM_ERROR, this._onError)
 	}
 
-	_onData(items) {
-		for (const item of items) {
-			const input = this.getInput(item.name)
+	_onData(data) {
+		for (const item of data) {
+			const input = this.getInput(item.field)
 			if (input) {
-				input.value = item
+				input.value = item.value
 			}
 		}
 	}
+
+	_onError(event) {
+		this.state.error = event.detail.error
+		this._errorComponent.toggle(this.state.error)
+		for (const input of this.inputs) {
+			if (input.field) {
+				input.field.error = event.detail.errors[input.props.name]
+			}
+		}
+	}
+
 
 	set dataSource(name) {
 		this.props.dataSource = name
@@ -58,16 +73,16 @@ class Form extends $.Component {
 	// 		}
 	// 	}
 	// }
-	//
-	// getData() {
-	// 	let data = {}
-	// 	for (const input of this.inputs) {
-	// 		if (!input.props.isHeader) {
-	// 			data[input.props.name] = input.value
-	// 		}
-	// 	}
-	// 	return data
-	// }
+
+	getData() {
+		let data = {}
+		for (const input of this.inputs) {
+			if (!input.props.isHeader) {
+				data[input.props.name] = input.value
+			}
+		}
+		return data
+	}
 
 	getHeaders() {
 		let headers = {}
@@ -79,39 +94,33 @@ class Form extends $.Component {
 		return headers
 	}
 
-	onReady() {
-		this.inputs = this.$$.FormInput.toArray()
-	}
-
 	onInit() {
+		this.inputs     = this.$$.FormInput.toArray()
 		this.dataSource = this.props.dataSource
 	}
 
-	onValidate(data) {
-		this.state.error = data.error || ''
-		for (const input of this.inputs) {
-			if (input.field) {
-				if (data.error && (input.props.name in data.fields)) {
-					input.field.error = data.fields[input.props.name]
-				} else {
-					input.field.error = ''
-				}
-			}
-		}
-		const isSubmitSuccessful = !data.error
-		if (isSubmitSuccessful && this.isSaving) {
-			this.reset()
-		}
-		this.isSaving = false
-	}
+	// onValidate(data) {
+	// 	this.state.error = data.error || ''
+	// 	for (const input of this.inputs) {
+	// 		if (input.field) {
+	// 			if (data.error && (input.props.name in data.fields)) {
+	// 				input.field.error = data.fields[input.props.name]
+	// 			} else {
+	// 				input.field.error = ''
+	// 			}
+	// 		}
+	// 	}
+	// 	const isSubmitSuccessful = !data.error
+	// 	if (isSubmitSuccessful && this.isSaving) {
+	// 		this.reset()
+	// 	}
+	// 	this.isSaving = false
+	// }
 
-	validate(url) {
-		url = url || this.props.action
+	validate() {
 		const formData = this.getData()
 		const headers  = this.getHeaders()
-		if (this.props.action) {
-			$.Request.post(url, this.onValidate.bind(this), formData, headers)
-		}
+		this._dataSource.validate(formData, headers)
 	}
 
 	reset() {
@@ -123,15 +132,18 @@ class Form extends $.Component {
 	}
 
 	submit() {	
-		this.validate(this.props.action + '1')
+		const formData = this.getData()
+		const headers  = this.getHeaders()
+		this._dataSource.submit(formData, headers)
 	}
 
 	render() {
+		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		return (
 			$.div([
 				$.h1 ({text: this.props.title}),
 				$.p  ({text: this.props.subtitle}),
-				$.p  ({text: this.state.error, class: 'error form-error'}),
+				this._errorComponent,
 				$.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
