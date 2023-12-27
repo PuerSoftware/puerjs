@@ -4,7 +4,7 @@ import $ from '../../index.js'
 class Modal extends $.Component {
 
 	render() {
-		return $.div({cssDisplay: 'none'}, [
+		return $.div('hidden', [
 			$.div('content', this.children),
 			$.button('close-btn', {text: 'x', onclick: this.hide})
 		])

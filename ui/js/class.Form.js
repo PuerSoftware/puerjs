@@ -1,4 +1,6 @@
-import $ from '../../index.js'
+import $              from '../../index.js'
+import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
+
 
 
 class Form extends $.Component {
@@ -11,24 +13,30 @@ class Form extends $.Component {
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
-		this.state.error = ''
-		this.isSaving    = false
+
+
+		this.state.error     = ''
+		this.isSaving        = false
+		this._errorComponent = null
+		this.inputs          = null
+
+		this.on($.Event.FORM_ERROR, this._onError)
+	}
+
+	_onError(event) {
+		this.state.error = event.detail.error
+		this._errorComponent.toggle(this.state.error)
+		for (const input of this.inputs) {
+			if (input.field) {
+				input.field.error = event.detail.errors[input.props.name]
+			}
+		}
 	}
 
 	getInput(name) {
 		for (const input of this.inputs) {
 			if (input.props.name === name) {
 				return input
-			}
-		}
-	}
-
-	
-	setData(data) {
-		for (const name in data) {
-			const input = this.getInput(name)
-			if (input) {
-				input.value = data[name]
 			}
 		}
 	}
@@ -53,37 +61,6 @@ class Form extends $.Component {
 		return headers
 	}
 
-	onReady() {
-		this.inputs = this.$$.FormInput.toArray()
-	}
-
-	onValidate(data) {
-		this.state.error = data.error || ''
-		for (const input of this.inputs) {
-			if (input.field) {
-				if (data.error && (input.props.name in data.fields)) {
-					input.field.error = data.fields[input.props.name]
-				} else {
-					input.field.error = ''
-				}
-			}
-		}
-		const isSubmitSuccessful = !data.error
-		if (isSubmitSuccessful && this.isSaving) {
-			this.reset()
-		}
-		this.isSaving = false
-	}
-
-	validate(url) {
-		url = url || this.props.action
-		const formData = this.getData()
-		const headers  = this.getHeaders()
-		if (this.props.action) {
-			$.Request.post(url, this.onValidate.bind(this), formData, headers)
-		}
-	}
-
 	reset() {
 		for (const input of this.inputs) {
 			if (!input.isHidden) {
@@ -92,16 +69,33 @@ class Form extends $.Component {
 		}
 	}
 
-	submit() {	
-		this.validate(this.props.action + '1')
+	submit(save=true) {
+		const formData = this.getData()
+		const headers  = this.getHeaders()
+		this._dataSource.submit(formData, save, headers)
+	}
+
+	onInit() {
+		this.inputs = this.$$.FormInput.toArray()
+		this.mixin(DataOwnerMixin)
+	}
+
+	onDataChange(data) {
+		for (const item of data) {
+			const input = this.getInput(item.field)
+			if (input) {
+				input.value = item.value
+			}
+		}
 	}
 
 	render() {
+		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		return (
 			$.div([
 				$.h1 ({text: this.props.title}),
 				$.p  ({text: this.props.subtitle}),
-				$.p  ({text: this.state.error, class: 'error form-error'}),
+				this._errorComponent,
 				$.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,

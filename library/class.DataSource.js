@@ -1,17 +1,19 @@
 import DataBase from './class.DataBase.js'
 import DataSet  from './class.DataSet.js'
 
+
 export default class DataSource {
 	
 	/**************************************************************/
 
-	static define(cls, url, isSingular=false, isCacheable=true) {
-		if (DataSource.hasOwnProperty(cls.name)) {
-			throw `DataSource class already has property "${cls.name}"`
+	static define(name, cls, url, isSingular=false, isCacheable=true) {
+		cls = cls || DataSource
+		if (DataSource.hasOwnProperty(name)) {
+			throw `DataSource class already has property "${name}"`
 		}
 
 		const dataSource = new cls(url, isSingular, isCacheable)
-		Object.defineProperty(DataSource, cls.name, {
+		Object.defineProperty(DataSource, name, {
 			get: function() {
 				return dataSource
 			}
@@ -24,25 +26,30 @@ export default class DataSource {
 	/**************************************************************/
 
 	constructor(url, isSingular, isCacheable) {
-		this.itemIds     = []
-		this.url         = url
-		this.count       = null
-		this.db          = null
-		this.dataSets    = {}
-		this.listeners   = {}
-		this.isSingular  = isSingular
-		this.isCacheable = isCacheable
-		this.isLoaded    = false
+		this.itemIds       = []
+		this.url           = url
+		this.count         = null
+		this.db            = null
+		this.dataSets      = {}
+		this.listeners     = {}
+		this.isSingular    = isSingular
+		this.isCacheable   = isCacheable
+		this.isInitialized = false
+	}
 
-		this._load((itemIds) => {
-			this._initDataSets()
-			this.isLoaded = true
-		})
+	_onLoad() {
+		this._initDataSets()
+		this.isInitialized = true
+		for (const dataSetName in this.dataSets) {
+			this.dataSets[dataSetName].data()
+		}
 	}
 
 	_initDataSets() {
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].init(this.itemIds)
+		if (!this.isInitialized) {
+			for (const dataSetName in this.dataSets) {
+				this.dataSets[dataSetName].init(this.itemIds)
+			}
 		}
 	}
 
@@ -54,35 +61,43 @@ export default class DataSource {
 		})
 	}
 
-	_load(onLoad, invalidate=false) {
+	_load(method=null, params=null, headers=null) {
 		const _this = this
 
-		if (this.isCacheable) {
+		if (!method && this.isCacheable) {
 			this._connect(db => {
 				db.getCount(count => {
 					if (count > 0) {
 						_this.count = count
-						_this._loadFromDb(onLoad)
+						_this._loadFromDb()
 					} else {
-						_this._loadFromUrl(onLoad)
+						_this._loadFromUrl(method, params, headers)
 					}
 				})
 			})
 		} else {
-			this._loadFromUrl(onLoad)
+			this._loadFromUrl(method, params, headers)
 		}
 	}
 
-	_loadFromUrl(onLoad) {
-		console.log('loading from URL')
-		DataSource.PUER.Request.get(this.url, (items) => {
-			this.isCacheable && this.db.clear()
-			this.addItems(items)
-			onLoad()
-		})
+
+	_loadFromUrl(method=null, params=null, headers=null) {
+		method = method || 'GET'
+		console.log('loading from URL', this.url, method)
+		DataSource.PUER.Request.request(
+			this.url,
+			method,
+			params,
+			headers,
+			(items) => {
+				this.isCacheable && this.db.clear()
+				this.addItems(items)
+				this._onLoad()
+			}
+		)
 	}
 
-	_loadFromDb(onLoad) {
+	_loadFromDb() {
 		console.log('loading from DB')
 		const _this = this
 
@@ -93,7 +108,7 @@ export default class DataSource {
 					_this.dataSets[dataSetName].addItem(item)
 				}
 			}
-			onLoad()
+			this._onLoad()
 		})
 	}
 
@@ -125,11 +140,17 @@ export default class DataSource {
 	}
 
 	trigger(name, data) {
-		data.targetComponent = this
+		data.targetComponent          = this
+		data.targetComponent.isActive = true
 		$.Events.trigger(name, data)
 	}
 
 	/******************************************************************/
+
+	load(method=null, params=null, headers=null) {
+		DataSource.PUER.defer(this._load, arguments, this)
+		// this._load(method, params,  headers)
+	}
 
 	addItem(item) {
 		item = this.adaptItem(item)
@@ -167,7 +188,7 @@ export default class DataSource {
 
 	defineDataSet(name) {
 		const ds = DataSet.define(name)
-		if (this.isLoaded) {
+		if (this.isInitialized) {
 			ds.init(this.itemIds)
 		}
 		this.dataSets[name] = ds

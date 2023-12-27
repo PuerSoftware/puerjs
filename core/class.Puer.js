@@ -1,4 +1,5 @@
 import PuerComponent      from './class.PuerComponent.js'
+import PuerComponentMixin from './class.PuerComponentMixin.js'
 import PuerRouter         from './class.PuerRouter.js'
 import PuerEvents         from './class.PuerEvents.js'
 import PuerError          from './class.PuerError.js'
@@ -13,6 +14,7 @@ import Request            from '../library/class.Request.js'
 import DataSet            from '../library/class.DataSet.js'
 import DataStore          from '../library/class.DataStore.js'
 import DataSource         from '../library/class.DataSource.js'
+import FormDataSource     from '../library/class.FormDataSource.js'
 import Reference          from '../library/class.Reference.js'
 import RouteRoot          from '../library/class.Route.js'
 
@@ -213,8 +215,14 @@ class PuerConstructor {
 			: value
 	}
 
-	defer(f, timeout=1) {
-		setTimeout(f, timeout)
+	defer(f, args, context, timeout=1) {
+		setTimeout(() => {
+			if (context) {
+				f.apply(context, args)
+			} else {
+				f(...args)
+			}
+		}, timeout)
 	}
 
 	sync(asyncFunc) {
@@ -282,6 +290,7 @@ class PuerConstructor {
 const $ = new PuerConstructor()
 
 $.Component          = PuerComponent
+$.ComponentMixin     = PuerComponentMixin
 
 $.String             = StringMethods
 $.Object             = ObjectMethods
@@ -292,6 +301,7 @@ $.Request            = Request
 $.DataSet            = DataSet
 $.DataStore          = DataStore
 $.DataSource         = DataSource
+$.FormDataSource     = FormDataSource
 
 $.Reference          = Reference
 

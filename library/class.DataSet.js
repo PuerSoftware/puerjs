@@ -50,6 +50,10 @@ export default class DataSet {
 
 	/**************************************************************/
 
+	get items() {
+		return DataSet.PUER.DataStore.get(this.itemIds)
+	}
+
 	init(ids) {
 		// console.log('init dataset', this.name, ids)
 		this.itemIds       = ids
@@ -61,8 +65,8 @@ export default class DataSet {
 		this.onInit()
 	}
 
-	get items() {
-		return DataSet.PUER.DataStore.get(this.itemIds)
+	data() {
+		this.onData(this.items)
 	}
 
 	filter(f) {
@@ -115,11 +119,11 @@ export default class DataSet {
 		this.onAddItem(item)
 	}
 	removeItem (itemId) {
-
 		this.onRemoveItem(itemId)
 	}
 
 	onInit       ()       {}
+	onData       (data)   {}
 	onAddItem    (item)   {}
 	onRemoveItem (itemId) {}
 	onSort       (map)    {}

@@ -39,7 +39,7 @@ export default class DataListItem extends $.Component {
 		}
 	}
 
-	onReady() {
+	onInit() {
 		if (!this._isClickSubscribed) {
 			this.element.addEventListener('click', this._select.bind(this))
 			this._isClickSubscribed = true
