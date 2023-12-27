@@ -1,12 +1,12 @@
-import $            from '../../index.js'
-import DataListItem from './class.DataListItem.js'
+import $              from '../../index.js'
+import DataListItem   from './class.DataListItem.js'
+import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 
 
 export default class DataList extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
-		this.props.require('dataSource')
 		this.props.default('searchName', null) // if not set search is inactive
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
@@ -18,7 +18,6 @@ export default class DataList extends $.Component {
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
 		this.on($.Event.SEARCH,           this._onSearch)
 
-		this._dataSet     = null
 		this._searchQuery = ''
 		this._filterMap   = null
 		this._sortMap     = null
@@ -65,7 +64,7 @@ export default class DataList extends $.Component {
 		}
 	}
 
-	_init() {
+	onDataInit() {
 		if (!this.selectedId) {
 			this._selectFirstItem()
 		}
@@ -73,18 +72,18 @@ export default class DataList extends $.Component {
 		this.isInitialized = true
 	}
 
-	_addItem(item) {
+	onDataAddItem(item) {
 		const itemComponent = $[this.itemRenderer]({ data: item, name: this.props.name })
 		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
 	}
 
-	_removeItem(id) {
+	onDataRemoveItem(id) {
 		this.items[id].remove()
 		delete this.items[id]
 	}
 
-	_filter(filterMap) {
+	onDataFilter(filterMap) {
 		this._filterMap = filterMap
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
@@ -99,7 +98,7 @@ export default class DataList extends $.Component {
 		this._selectFirstItem()
 	}
 
-	_sort(sortMap) {
+	onDataSort(sortMap) {
 		this._sortMap = sortMap
 		console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
@@ -133,20 +132,6 @@ export default class DataList extends $.Component {
 	}
 
 	/**************************************************************/
-
-	set dataSource(name) {
-		this.props.dataSource = name
-		this._dataSet = $.DataSource[this.props.dataSource].defineDataSet(this.props.name)
-
-		this.clear()
-
-		this._dataSet.onInit       = this._init.bind(this)
-		this._dataSet.onSort       = this._sort.bind(this)
-		this._dataSet.onFilter     = this._filter.bind(this)
-		this._dataSet.onAddItem    = this._addItem.bind(this)
-		this._dataSet.onRemoveItem = this._removeItem.bind(this)
-	}
-
 	set searchName(name) {
 		this.props.searchName = name
 	}
@@ -161,7 +146,7 @@ export default class DataList extends $.Component {
 
 	clear() {
 		for (const id of Object.keys(this.items)) {
-			this._removeItem(id)
+			this.onDataRemoveItem(id)
 		}
 	}
 
@@ -172,7 +157,7 @@ export default class DataList extends $.Component {
 	}
 
 	onInit() {
-		this.dataSource = this.props.dataSource
+		this.mixin(DataOwnerMixin)
 	}
 
 	onActivate() {

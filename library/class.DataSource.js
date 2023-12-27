@@ -1,17 +1,19 @@
 import DataBase from './class.DataBase.js'
 import DataSet  from './class.DataSet.js'
 
+
 export default class DataSource {
 	
 	/**************************************************************/
 
-	static define(cls, url, isSingular=false, isCacheable=true) {
-		if (DataSource.hasOwnProperty(cls.name)) {
-			throw `DataSource class already has property "${cls.name}"`
+	static define(name, cls, url, isSingular=false, isCacheable=true) {
+		cls = cls || DataSource
+		if (DataSource.hasOwnProperty(name)) {
+			throw `DataSource class already has property "${name}"`
 		}
 
 		const dataSource = new cls(url, isSingular, isCacheable)
-		Object.defineProperty(DataSource, cls.name, {
+		Object.defineProperty(DataSource, name, {
 			get: function() {
 				return dataSource
 			}
@@ -59,7 +61,28 @@ export default class DataSource {
 		})
 	}
 
-	_loadFromUrl(method='GET', params=null, headers=null) {
+	_load(method=null, params=null, headers=null) {
+		const _this = this
+
+		if (!method && this.isCacheable) {
+			this._connect(db => {
+				db.getCount(count => {
+					if (count > 0) {
+						_this.count = count
+						_this._loadFromDb()
+					} else {
+						_this._loadFromUrl(method, params, headers)
+					}
+				})
+			})
+		} else {
+			this._loadFromUrl(method, params, headers)
+		}
+	}
+
+
+	_loadFromUrl(method=null, params=null, headers=null) {
+		method = method || 'GET'
 		console.log('loading from URL', this.url, method)
 		DataSource.PUER.Request.request(
 			this.url,
@@ -124,6 +147,11 @@ export default class DataSource {
 
 	/******************************************************************/
 
+	load(method=null, params=null, headers=null) {
+		DataSource.PUER.defer(this._load, arguments, this)
+		// this._load(method, params,  headers)
+	}
+
 	addItem(item) {
 		item = this.adaptItem(item)
 
@@ -157,25 +185,6 @@ export default class DataSource {
 
 	adaptItems (items) { return items }
 	adaptItem  (item)  { return item  }
-
-	load(method=null, params=null, headers=null) {
-		const _this = this
-
-		if (!method && this.isCacheable) {
-			this._connect(db => {
-				db.getCount(count => {
-					if (count > 0) {
-						_this.count = count
-						_this._loadFromDb()
-					} else {
-						_this._loadFromUrl(method, params, headers)
-					}
-				})
-			})
-		} else {
-			this._loadFromUrl(method, params, headers)
-		}
-	}
 
 	defineDataSet(name) {
 		const ds = DataSet.define(name)

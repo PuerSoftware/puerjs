@@ -1,4 +1,5 @@
 import PuerComponent      from './class.PuerComponent.js'
+import PuerComponentMixin from './class.PuerComponentMixin.js'
 import PuerRouter         from './class.PuerRouter.js'
 import PuerEvents         from './class.PuerEvents.js'
 import PuerError          from './class.PuerError.js'
@@ -214,8 +215,14 @@ class PuerConstructor {
 			: value
 	}
 
-	defer(f, timeout=1) {
-		setTimeout(f, timeout)
+	defer(f, args, context, timeout=1) {
+		setTimeout(() => {
+			if (context) {
+				f.apply(context, args)
+			} else {
+				f(...args)
+			}
+		}, timeout)
 	}
 
 	sync(asyncFunc) {
@@ -283,6 +290,7 @@ class PuerConstructor {
 const $ = new PuerConstructor()
 
 $.Component          = PuerComponent
+$.ComponentMixin     = PuerComponentMixin
 
 $.String             = StringMethods
 $.Object             = ObjectMethods

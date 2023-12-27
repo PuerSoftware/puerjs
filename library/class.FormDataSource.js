@@ -21,12 +21,8 @@ export default class FormDataSource extends DataSource {
 		return item
 	}
 
-	submit(params, headers) {
-		params.submit = true
-		this.load('POST', params, headers)
-	}
-
-	validate(params, headers) {
+	submit(params, save=true, headers=null) {
+		params.save = save
 		this.load('POST', params, headers)
 	}
 }

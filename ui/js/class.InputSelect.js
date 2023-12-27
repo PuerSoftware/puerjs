@@ -1,5 +1,6 @@
-import $         from '../../index.js'
-import FormInput from './class.FormInput.js'
+import $              from '../../index.js'
+import FormInput      from './class.FormInput.js'
+import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 
 
 class InputSelect extends FormInput {
@@ -7,30 +8,35 @@ class InputSelect extends FormInput {
 		super(props, children)
 		this.props.default('tagName', 'select')
 		this.props.default('allowEmpty', true)
-		this.hasData = false
-	}
 
+		this.hasData     = false
+	}
 	onUrlChange(value) {
 		// value && $.DataSet.load(value, this.onData.bind(this))
 	}
 
-	onSelectedChange(value) {
+	onPropSelectedChange(value) {
 		if (this.hasData) {
 			this.value = value
 		}
 	}
 
-	onData(dataSet) {
-		this.events.load && this.events.load(dataSet)
-		let data = dataSet.data
-		if (this.props.filter) {
-			data = dataSet.filter(this.props.filter)
-		}
+	onDataChange(data) {
+		console.log('OnDataChange', this.props.dataSource)
 		this.input.removeChildren()
+		// console.log(this.props.dataSource, this.input.children)
 		this.addOptions(data)
 		this.hasData = true
-		this.onSelectedChange(this.props.selected)
-		this.events.change && this.events.change(event)
+		// this.events.load && this.events.load(dataSet)
+		// let data = dataSet.data
+		// if (this.props.filter) {
+		// 	data = dataSet.filter(this.props.filter)
+		// }
+		// this.input.removeChildren()
+		// this.addOptions(data)
+		// this.hasData = true
+		// this.onSelectedChange(this.props.selected)
+		this.events.change && this.events.change()
 	}
 
 	addOptions(data) {
@@ -41,7 +47,7 @@ class InputSelect extends FormInput {
 			this.addOption(
 				item.value,
 				item.text,
-				this.props.selected && this.props.selected == item.value
+				this.props.selected && (this.props.selected === item.value)
 			)
 		}
 	}
@@ -67,6 +73,15 @@ class InputSelect extends FormInput {
 				this.value = null
 			}
 		}
+	}
+
+	load(query) {
+		this.dataSource.load('GET', query)
+	}
+
+	onInit() {
+		super.onInit()
+		this.mixin(DataOwnerMixin)
 	}
 }
 

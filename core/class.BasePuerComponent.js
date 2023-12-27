@@ -266,12 +266,20 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_off(name, f, options) {
-		if (this._listenerMap.has(f)) {
-			const _f = this._listenerMap.get(f)
-			this.element.removeEventListener(name, _f, options)
-			this._listenerMap.delete(f)
+		if (this._eventTarget._listenerMap.has(f)) {
+			const _f = this._eventTarget._listenerMap.get(f)
+			this._eventTarget.element.removeEventListener(name, _f, options)
+			this._eventTarget._listenerMap.delete(f)
 		}
 	}
+
+	// _trigger(name) {
+	// 	const f = this.events[name]
+	// 	if (this._eventTarget._listenerMap.has(f)) {
+	// 		const _f = this._eventTarget._listenerMap.get(f)
+	// 		this._eventTarget.element.
+	// 	}
+	// }
 
 	_cascade(methodName, args=[]) {
 		if (this.isCustom) {
@@ -399,6 +407,21 @@ class BasePuerComponent extends PuerObject {
 			}
 		}
 		return new Proxy(this, handler)
+	}
+
+	mixin(mixinClass) {
+        const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
+        for (let key in methods) {
+            if (key !== 'constructor') {
+                const descriptor = methods[key]
+                if (typeof descriptor.value === 'function') {
+                    this[key] = descriptor.value.bind(this)
+                } else {
+                    Object.defineProperty(this, key, descriptor)
+                }
+            }
+        }
+		mixinClass.init(this)
 	}
 
 	/********************* DOM METHODS *********************/

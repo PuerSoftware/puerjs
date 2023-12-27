@@ -31,8 +31,11 @@ class FormInput extends $.Component {
 	}
 
 	set value(value) {
+		const oldValue = this.input.element.value
 		this.input.element.value = value
-		this.events.change && this.events.change(event)
+		if (this.events.change && oldValue !== value) {
+			this.events.change()
+		}
 	}
 
 	get value() {
@@ -51,7 +54,7 @@ class FormInput extends $.Component {
 		this.value = ''
 	}
 
-	onReady() {
+	onInit() {
 		this.input.element.addEventListener('change', this.validate.bind(this))
 		this.form  = this.$$$.Form[0]
 		this.field = this.$$$.FormField[0]
@@ -60,7 +63,7 @@ class FormInput extends $.Component {
 	}
 
 	validate() {
-		this.form && this.form.validate()
+		this.form && this.form.submit(false)
 	}
 
 	render() {

@@ -1,4 +1,6 @@
-import $ from '../../index.js'
+import $              from '../../index.js'
+import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
+
 
 
 class Form extends $.Component {
@@ -12,25 +14,13 @@ class Form extends $.Component {
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
 
-		this.props.require('dataSource')
 
 		this.state.error     = ''
 		this.isSaving        = false
-		this._dataSet        = null
-		this._dataSource     = null
 		this._errorComponent = null
 		this.inputs          = null
 
 		this.on($.Event.FORM_ERROR, this._onError)
-	}
-
-	_onData(data) {
-		for (const item of data) {
-			const input = this.getInput(item.field)
-			if (input) {
-				input.value = item.value
-			}
-		}
 	}
 
 	_onError(event) {
@@ -43,19 +33,6 @@ class Form extends $.Component {
 		}
 	}
 
-
-	set dataSource(name) {
-		this.props.dataSource = name
-		this._dataSource = $.DataSource[this.props.dataSource]
-		this._dataSet    = this._dataSource.defineDataSet(this.props.name)
-
-		this._dataSet.onData = this._onData.bind(this)
-	}
-
-	get dataSource() {
-		return this._dataSource
-	}
-
 	getInput(name) {
 		for (const input of this.inputs) {
 			if (input.props.name === name) {
@@ -63,16 +40,6 @@ class Form extends $.Component {
 			}
 		}
 	}
-
-	
-	// setData(data) {
-	// 	for (const name in data) {
-	// 		const input = this.getInput(name)
-	// 		if (input) {
-	// 			input.value = data[name]
-	// 		}
-	// 	}
-	// }
 
 	getData() {
 		let data = {}
@@ -94,35 +61,6 @@ class Form extends $.Component {
 		return headers
 	}
 
-	onInit() {
-		this.inputs     = this.$$.FormInput.toArray()
-		this.dataSource = this.props.dataSource
-	}
-
-	// onValidate(data) {
-	// 	this.state.error = data.error || ''
-	// 	for (const input of this.inputs) {
-	// 		if (input.field) {
-	// 			if (data.error && (input.props.name in data.fields)) {
-	// 				input.field.error = data.fields[input.props.name]
-	// 			} else {
-	// 				input.field.error = ''
-	// 			}
-	// 		}
-	// 	}
-	// 	const isSubmitSuccessful = !data.error
-	// 	if (isSubmitSuccessful && this.isSaving) {
-	// 		this.reset()
-	// 	}
-	// 	this.isSaving = false
-	// }
-
-	validate() {
-		const formData = this.getData()
-		const headers  = this.getHeaders()
-		this._dataSource.validate(formData, headers)
-	}
-
 	reset() {
 		for (const input of this.inputs) {
 			if (!input.isHidden) {
@@ -131,10 +69,24 @@ class Form extends $.Component {
 		}
 	}
 
-	submit() {	
+	submit(save=true) {
 		const formData = this.getData()
 		const headers  = this.getHeaders()
-		this._dataSource.submit(formData, headers)
+		this._dataSource.submit(formData, save, headers)
+	}
+
+	onInit() {
+		this.inputs = this.$$.FormInput.toArray()
+		this.mixin(DataOwnerMixin)
+	}
+
+	onDataChange(data) {
+		for (const item of data) {
+			const input = this.getInput(item.field)
+			if (input) {
+				input.value = item.value
+			}
+		}
 	}
 
 	render() {
