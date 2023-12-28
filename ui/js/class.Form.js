@@ -33,6 +33,10 @@ class Form extends $.Component {
 		}
 	}
 
+	_onSubmit() {
+		this.submit(true)
+	}
+
 	getInput(name) {
 		for (const input of this.inputs) {
 			if (input.props.name === name) {
@@ -80,8 +84,10 @@ class Form extends $.Component {
 		this.mixin(DataOwnerMixin)
 	}
 
-	onDataChange(data) {
-		for (const item of data) {
+	onDataChange() {
+		const items = this._dataSet.items
+		console.log('Items length', items.length)
+		for (const item of items) {
 			const input = this.getInput(item.field)
 			if (input) {
 				input.value = item.value
@@ -106,7 +112,7 @@ class Form extends $.Component {
 					$.div ('button-panel', [
 						$.InputButton ({
 							type    : 'button',
-							onclick : this.submit,
+							onclick : this._onSubmit,
 							text    : this.props.buttonCaption,
 							value   : this.props.buttonCaption
 						})

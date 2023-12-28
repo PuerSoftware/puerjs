@@ -41,13 +41,13 @@ export default class DataListItem extends $.Component {
 
 	onInit() {
 		if (!this._isClickSubscribed) {
-			this.element.addEventListener('click', this._select.bind(this))
+			this._on('click', this._select)
 			this._isClickSubscribed = true
 		}
 	}
 
 	render() {
-		return $.li({text: this.props.data.dataId, onclick: this._select})
+		return $.li({ text: this.props.data.dataId })
 	}
 }
 

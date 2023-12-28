@@ -100,13 +100,11 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	__init() {
-		// __render, __init
 		this._cascade('__init')
 		this.onInit && this.onInit()
 	}
 
 	__ready() {
-		// __render, __init, __ready
 		this._cascade('__ready')
 		this.onReady && this.onReady()
 	}
@@ -170,17 +168,6 @@ class BasePuerComponent extends PuerObject {
 			? []
 			: item.parent.getChainAncestor(chainName, false)
 	}
-	//
-	// getCustomParent() {
-	// 	if (this.isCustom) {
-	// 		return this
-	// 	} else {
-	// 		if (this.parent) {
-	// 			return this.parent.getCustomParent()
-	// 		}
-	// 		return null
-	// 	}
-	// }
 
 	get $   () { return new PuerComponentSet([this]).$   }
 	get $$  () { return new PuerComponentSet([this]).$$  }
@@ -214,7 +201,6 @@ class BasePuerComponent extends PuerObject {
 			component.__render()
 			this.element.appendChild(component.element)
 		}
-		// $.isReferencing = false // TODO
 	}
 
 	_applyProps() {
@@ -252,34 +238,36 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	_on(name, f, options) {
+	_on(name, f, extraDetail) {
 		if (!this._eventTarget._listenerMap.has(f)) {
 			const targetComponent = this
 			let _f = function (event) {
 				event.targetComponent = targetComponent
-				return f.call(this, event)
+				event.extraDetail     = extraDetail
+				return f.call(targetComponent, event)
 			}
 			_f = _f.bind(this.owner)
 			this._eventTarget._listenerMap.set(f, _f)
-			this._eventTarget.element.addEventListener(name, _f, options)
+			this._eventTarget.element.addEventListener(name, _f)
 		}
 	}
 
-	_off(name, f, options) {
+	_off(name, f) {
 		if (this._eventTarget._listenerMap.has(f)) {
 			const _f = this._eventTarget._listenerMap.get(f)
-			this._eventTarget.element.removeEventListener(name, _f, options)
+			this._eventTarget.element.removeEventListener(name, _f)
 			this._eventTarget._listenerMap.delete(f)
 		}
 	}
 
-	// _trigger(name) {
-	// 	const f = this.events[name]
-	// 	if (this._eventTarget._listenerMap.has(f)) {
-	// 		const _f = this._eventTarget._listenerMap.get(f)
-	// 		this._eventTarget.element.
-	// 	}
-	// }
+	_trigger(name) {
+		const f = this.events[name]
+		if (this._eventTarget._listenerMap.has(f)) {
+			const _f    = this._eventTarget._listenerMap.get(f)
+			const event = new CustomEvent(name, { detail: data })
+			_f = _f.bind(this.owner)
+		}
+	}
 
 	_cascade(methodName, args=[]) {
 		if (this.isCustom) {
@@ -493,17 +481,18 @@ class BasePuerComponent extends PuerObject {
 			}
 		} else {
 			component.__render()
+			component.__init()
 			component.__ready()
 			component._applyProps()
 
 
-			const root = this.isCustom
-				? this.root
-				: this
+			// const root = this.isCustom
+			// 	? this.root
+			// 	: this
 
-			component.parent = root
+			component.parent = this.root
 			component.owner  = this.owner
-			root.children.push(component)
+			this.root.children.push(component)
 
 			this.element.appendChild(component.element)
 		}
@@ -516,17 +505,18 @@ class BasePuerComponent extends PuerObject {
 			}
 		} else {
 			component.__render()
+			component.__init()
 			component.__ready()
 			component._applyProps()
 
 
-			const root = this.isCustom
-				? this.root
-				: this
+			// const root = this.isCustom
+			// 	? this.root
+			// 	: this
 
-			component.parent = root
+			component.parent = this.root
 			component.owner = this.owner
-			root.children.unshift(component)
+			this.root.children.unshift(component)
 
 			if (this.element.firstChild) {
 				this.element.insertBefore(component.element, this.element.firstChild)

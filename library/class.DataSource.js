@@ -64,22 +64,41 @@ export default class DataSource {
 	_load(method=null, params=null, headers=null) {
 		const _this = this
 
-		if (!method && this.isCacheable) {
-			this._connect(db => {
-				db.getCount(count => {
-					if (count > 0) {
-						_this.count = count
-						_this._loadFromDb()
-					} else {
-						_this._loadFromUrl(method, params, headers)
-					}
+		this._clear(() => {
+			if (!method && this.isCacheable) {
+				this._connect(db => {
+					db.getCount(count => {
+						if (count > 0) {
+							_this.count = count
+							_this._loadFromDb()
+						} else {
+							_this._loadFromUrl(method, params, headers)
+						}
+					})
 				})
-			})
-		} else {
-			this._loadFromUrl(method, params, headers)
-		}
+			} else {
+				this._loadFromUrl(method, params, headers)
+			}
+		})
 	}
 
+	_clear(callback) {
+		for (const id in this.itemIds) {
+			DataSource.PUER.DataStore.unset(id)
+		}
+		
+		this.itemIds       = []
+		this.listeners     = {}
+		this.isInitialized = false
+
+		if (this.db) {
+			this.db.clear(() => {
+				callback()
+			})
+		} else {
+			callback()
+		}
+	}
 
 	_loadFromUrl(method=null, params=null, headers=null) {
 		method = method || 'GET'
