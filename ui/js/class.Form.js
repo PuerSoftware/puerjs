@@ -16,14 +16,13 @@ class Form extends $.Component {
 
 
 		this.state.error     = ''
-		this.isSaving        = false
 		this._errorComponent = null
 		this.inputs          = null
 
-		this.on($.Event.FORM_ERROR, this._onError)
+		this.on($.Event.FORM_RESPONSE, this._onResponse)
 	}
 
-	_onError(event) {
+	_onResponse(event) {
 		this.state.error = event.detail.error
 		this._errorComponent.toggle(this.state.error)
 		for (const input of this.inputs) {
@@ -86,10 +85,12 @@ class Form extends $.Component {
 
 	onDataChange() {
 		const items = this._dataSet.items
-		console.log('Items length', items.length)
 		for (const item of items) {
 			const input = this.getInput(item.field)
 			if (input) {
+				// if (input.name === 'flag') {
+				// 	debugger
+				// }
 				input.value = item.value
 			}
 		}

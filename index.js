@@ -81,7 +81,7 @@ $.App = PuerApp
 $.Events.define('LIST_ITEM_SELECT')
 $.Events.define('SEARCH')
 $.Events.define('PAGINATE')
-$.Events.define('FORM_ERROR')
+$.Events.define('FORM_RESPONSE')
 $.Events.define('FORM_FIELD_ERROR')
 
 export default $

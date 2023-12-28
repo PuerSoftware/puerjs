@@ -11,9 +11,6 @@ class InputSelect extends FormInput {
 
 		this.hasData     = false
 	}
-	onUrlChange(value) {
-		// value && $.DataSet.load(value, this.onData.bind(this))
-	}
 
 	onPropSelectedChange(value) {
 		if (this.hasData) {
@@ -22,20 +19,9 @@ class InputSelect extends FormInput {
 	}
 
 	onDataChange(data) {
-		console.log('OnDataChange', this.props.dataSource)
 		this.input.removeChildren()
-		// console.log(this.props.dataSource, this.input.children)
 		this.addOptions(data)
 		this.hasData = true
-		// this.events.load && this.events.load(dataSet)
-		// let data = dataSet.data
-		// if (this.props.filter) {
-		// 	data = dataSet.filter(this.props.filter)
-		// }
-		// this.input.removeChildren()
-		// this.addOptions(data)
-		// this.hasData = true
-		// this.onSelectedChange(this.props.selected)
 		this.events.change && this.events.change()
 	}
 

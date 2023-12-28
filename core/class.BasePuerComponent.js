@@ -260,13 +260,12 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	_trigger(name) {
-		const f = this.events[name]
-		if (this._eventTarget._listenerMap.has(f)) {
-			const _f    = this._eventTarget._listenerMap.get(f)
-			const event = new CustomEvent(name, { detail: data })
-			_f = _f.bind(this.owner)
+	_trigger(name, data) {
+		const event = new CustomEvent(name, { detail: data })
+		if (this.name === 'flag') {
+			console.log('_trigger', event)
 		}
+		this.element.dispatchEvent(event)
 	}
 
 	_cascade(methodName, args=[]) {

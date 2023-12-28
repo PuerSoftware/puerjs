@@ -64,7 +64,7 @@ export default class DataSource {
 	_load(method=null, params=null, headers=null) {
 		const _this = this
 
-		this._clear(() => {
+		this.clear(() => {
 			if (!method && this.isCacheable) {
 				this._connect(db => {
 					db.getCount(count => {
@@ -80,24 +80,6 @@ export default class DataSource {
 				this._loadFromUrl(method, params, headers)
 			}
 		})
-	}
-
-	_clear(callback) {
-		for (const id in this.itemIds) {
-			DataSource.PUER.DataStore.unset(id)
-		}
-		
-		this.itemIds       = []
-		this.listeners     = {}
-		this.isInitialized = false
-
-		if (this.db) {
-			this.db.clear(() => {
-				callback()
-			})
-		} else {
-			callback()
-		}
 	}
 
 	_loadFromUrl(method=null, params=null, headers=null) {
@@ -169,6 +151,24 @@ export default class DataSource {
 	load(method=null, params=null, headers=null) {
 		DataSource.PUER.defer(this._load, arguments, this)
 		// this._load(method, params,  headers)
+	}
+
+	clear(callback) {
+		for (const id in this.itemIds) {
+			DataSource.PUER.DataStore.unset(id)
+		}
+
+		this.itemIds       = []
+		this.listeners     = {}
+		this.isInitialized = false
+
+		if (this.db) {
+			this.db.clear(() => {
+				callback()
+			})
+		} else {
+			callback()
+		}
 	}
 
 	addItem(item) {

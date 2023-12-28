@@ -31,10 +31,11 @@ class FormInput extends $.Component {
 	}
 
 	set value(value) {
-		const oldValue = this.input.element.value
+		value = value || ''
+		const oldValue           = this.input.element.value
 		this.input.element.value = value
-		if (this.events.change && oldValue !== value) {
-			this.events.change()
+		if (oldValue != value) { // Must be "!=" because oldValue and value can be different types, example: "0" != 1
+			this._trigger('change', {value: value})
 		}
 	}
 
@@ -43,6 +44,8 @@ class FormInput extends $.Component {
 			? this.input.element.value
 			: null
 	}
+
+	get name() { return this.props.name }
 
 	reset() {
 		if (!this.disabledByDefault) {
@@ -55,7 +58,7 @@ class FormInput extends $.Component {
 	}
 
 	onInit() {
-		this.input.element.addEventListener('change', this.validate.bind(this))
+		this._on('change', this.validate)
 		this.form  = this.$$$.Form[0]
 		this.field = this.$$$.FormField[0]
 		
