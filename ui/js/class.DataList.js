@@ -25,7 +25,6 @@ export default class DataList extends $.Component {
 	}
 
 	_onItemSelect(event) {
-		debugger
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
 			if (event.detail.targetComponent === item) {
