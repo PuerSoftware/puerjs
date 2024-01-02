@@ -42,7 +42,8 @@ export default class DataStore {
 	}
 
 	static unset(id) {
-		delete DataStore.values[id]
+ 		delete DataStore.values[id]
+		delete DataStore.references[id]
 	}
 
 	static has(id) {

@@ -90,9 +90,9 @@ export default class DataSource {
 			method,
 			params,
 			headers,
-			(items, responseHeaders) => {
+			(items) => {
 				this.isCacheable && this.db.clear()
-				this.addItems(items, responseHeaders)
+				this.addItems(items)
 				this._onLoad()
 			}
 		)
@@ -150,11 +150,10 @@ export default class DataSource {
 
 	load(method=null, params=null, headers=null) {
 		DataSource.PUER.defer(this._load, arguments, this)
-		// this._load(method, params,  headers)
 	}
 
 	clear(callback) {
-		for (const id in this.itemIds) {
+		for (const id of this.itemIds) {
 			DataSource.PUER.DataStore.unset(id)
 		}
 
@@ -162,7 +161,7 @@ export default class DataSource {
 		this.listeners     = {}
 		this.isInitialized = false
 
-		if (this.db) {
+		if (this.isCacheable && this.db) {
 			this.db.clear(() => {
 				callback()
 			})
@@ -184,7 +183,6 @@ export default class DataSource {
 
 	addItems(items, headers) {
 		items = this.adaptItems(items, headers)
-
 		if (this.isSingular) {
 			this.addItem(items)
 		} else {
@@ -202,7 +200,7 @@ export default class DataSource {
 
 	/******************************************************************/
 
-	adaptItems (items) { return items }
+	adaptItems (items, headers) { return items }
 	adaptItem  (item)  { return item  }
 
 	defineDataSet(name) {
