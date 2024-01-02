@@ -25,13 +25,15 @@ export default class DataList extends $.Component {
 	}
 
 	_onItemSelect(event) {
+		debugger
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
 			if (event.detail.targetComponent === item) {
 				this._selectedId = itemId
 				item.select()
 			} else {
-				item.deselect()
+				// Its mean, that this item is owned by this list
+				event.detail.name === this.props.name && item.deselect()
 			}
 		}
 	}
