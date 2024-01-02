@@ -27,7 +27,7 @@ class InputSelect extends FormInput {
 
 	addOptions(data) {
 		if (this.props.allowEmpty) {
-			this.addOption('0', ' - ', !this.props.selected)
+			this.addOption('', ' - ', !this.props.selected)
 		}
 		for (let item of data) {
 			this.addOption(

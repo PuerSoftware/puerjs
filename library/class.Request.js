@@ -12,10 +12,18 @@ class Request {
 			}
 		}
 		fetch(url, conf)
-			.then(response => response.json())
-			.then(responseData => {
+			.then(response => {
+				const headers = {}
+				response.headers.forEach((value, key) => {
+                    headers[key] = value;
+                })
+				return response.json().then(data => {
+					return {data, headers}
+				})
+			})
+			.then(({data, headers}) => {
 				if (callback && typeof callback === 'function') {
-					callback(responseData)
+					callback(data, headers)
 				}
 			})
 			.catch(error => {

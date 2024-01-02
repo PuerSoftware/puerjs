@@ -15,9 +15,10 @@ class Form extends $.Component {
 		this.props.default('autocomplete',  'off')
 
 
-		this.state.error     = ''
-		this._errorComponent = null
-		this.inputs          = null
+		this.state.error        = ''
+		this._errorComponent    = null
+		this._isValidateEnabled = true
+		this.inputs             = null
 
 		this.on($.Event.FORM_RESPONSE, this._onResponse)
 	}
@@ -29,6 +30,9 @@ class Form extends $.Component {
 			if (input.field) {
 				input.field.error = event.detail.errors[input.props.name]
 			}
+		}
+		if (event.detail.isSaved) {
+			this._trigger('save')
 		}
 	}
 
@@ -72,10 +76,12 @@ class Form extends $.Component {
 		}
 	}
 
-	submit(save=true) {
-		const formData = this.getData()
-		const headers  = this.getHeaders()
-		this._dataSource.submit(formData, save, headers)
+	submit(save) {
+		if (this._isValidateEnabled) {
+			const formData = this.getData()
+			const headers  = this.getHeaders()
+			this._dataSource.submit(formData, save, headers)
+		}
 	}
 
 	onInit() {
@@ -84,16 +90,15 @@ class Form extends $.Component {
 	}
 
 	onDataChange() {
+		this._isValidateEnabled = false
 		const items = this._dataSet.items
 		for (const item of items) {
 			const input = this.getInput(item.field)
 			if (input) {
-				// if (input.name === 'flag') {
-				// 	debugger
-				// }
 				input.value = item.value
 			}
 		}
+		this._isValidateEnabled = true
 	}
 
 	render() {
@@ -107,7 +112,7 @@ class Form extends $.Component {
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
 					method       : this.props.method,
-					enctype      : this.props.enctype
+					enctype      : this.props.enctype,
 				}, [
 					... this.children,
 					$.div ('button-panel', [

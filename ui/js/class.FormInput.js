@@ -31,10 +31,10 @@ class FormInput extends $.Component {
 	}
 
 	set value(value) {
-		value = value || ''
-		const oldValue           = this.input.element.value
+		value          = value || ''
+		const oldValue = this.input.element.value
 		this.input.element.value = value
-		if (oldValue != value) { // Must be "!=" because oldValue and value can be different types, example: "0" != 1
+		if (String(oldValue) !== String(value)) { // Must be "!=" because oldValue and value can be different types, example: "0" != 1
 			this._trigger('change', {value: value})
 		}
 	}

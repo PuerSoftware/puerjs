@@ -7,7 +7,7 @@ export default class FormDataSource extends DataSource {
 		this.isSaving = false
 	}
 
-	adaptItems(items) {
+	adaptItems(items, headers) {
 		// items.error is sent from back-end
 		const isSaved      = this.isSaving && !items.error
 		const adaptedItems = []
@@ -16,7 +16,6 @@ export default class FormDataSource extends DataSource {
 			errors  : items.errors,
 			isSaved : isSaved
 		})
-
 		if (isSaved) {
 			this.clear(() => {
 				for (const field in items.data) {
@@ -35,9 +34,10 @@ export default class FormDataSource extends DataSource {
 		return item
 	}
 
-	submit(params, isSaving=true, headers=null) {
-		params.isSaving = isSaving
-		this.isSaving   = isSaving
+	submit(params, isSaving, headers=null) {
+		headers          = headers || {}
+		headers.isSaving = isSaving ? 1 : 0
+		this.isSaving    = isSaving
 		this.load('POST', params, headers)
 	}
 }

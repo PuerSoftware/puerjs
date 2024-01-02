@@ -261,11 +261,12 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_trigger(name, data) {
+		data = data || {}
 		const event = new CustomEvent(name, { detail: data })
 		if (this.name === 'flag') {
 			console.log('_trigger', event)
 		}
-		this.element.dispatchEvent(event)
+		this._eventTarget.element.dispatchEvent(event)
 	}
 
 	_cascade(methodName, args=[]) {

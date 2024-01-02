@@ -59,7 +59,7 @@ import PuerApp from './core/class.PuerApp.js'
 		'rejectionhandled,storage,unhandledrejection,vrdisplayactivate,vrdisplayblur,vrdisplayconnect,'     +
 		'vrdisplaydeactivate,vrdisplaydisconnect,vrdisplayfocus,vrdisplaypointerrestricted,'                +
 		'vrdisplaypointerunrestricted,vrdisplaypresentchange,timeout,inputsourceschange,selectend,'         +
-		'selectstart,squeezeend,squeezestart,squeeze' 
+		'selectstart,squeezeend,squeezestart,squeeze,save'
 	).split(',')
 
 	for (const tag of tags) {

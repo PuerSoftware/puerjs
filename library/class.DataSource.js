@@ -90,9 +90,10 @@ export default class DataSource {
 			method,
 			params,
 			headers,
-			(items) => {
+			(items, responseHeaders) => {
+				console.log('RECEIVED FROM BACK-END', items)
 				this.isCacheable && this.db.clear()
-				this.addItems(items)
+				this.addItems(items, responseHeaders)
 				this._onLoad()
 			}
 		)
@@ -182,8 +183,8 @@ export default class DataSource {
 		}
 	}
 
-	addItems(items) {
-		items = this.adaptItems(items)
+	addItems(items, headers) {
+		items = this.adaptItems(items, headers)
 
 		if (this.isSingular) {
 			this.addItem(items)
