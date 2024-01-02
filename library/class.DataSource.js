@@ -91,7 +91,6 @@ export default class DataSource {
 			params,
 			headers,
 			(items, responseHeaders) => {
-				console.log('RECEIVED FROM BACK-END', items)
 				this.isCacheable && this.db.clear()
 				this.addItems(items, responseHeaders)
 				this._onLoad()

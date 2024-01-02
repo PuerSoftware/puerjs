@@ -22,6 +22,7 @@ export default class FormDataSource extends DataSource {
 					adaptedItems.push({field: field, value: null})
 				}
 			})
+			this.isSaving = false
 		} else {
 			for (const field in items.data) {
 				adaptedItems.push({field: field, value: items.data[field]})
