@@ -1,8 +1,17 @@
-.data-list-item .highlight {
-    background-color : #FFFFFF;
-    color            : #F73308;
-    display          : inline-block;
-    border-radius    : 1px;
-    padding          : 0 5px;
-    font-weight      : bold;
-}
+.data-list-item {
+    padding       : 10px 10px 8px 0;
+    box-sizing    : border-box;
+    border-bottom : 1px solid #CCC;
+}   
+    .data-list-item .highlight {
+        background-color : #FFFFFF;
+        color            : #F73308;
+        display          : inline-block;
+        border-radius    : 1px;
+        padding          : 0 5px;
+        font-weight      : bold;
+    }
+
+    .data-list-item.selected {
+        background-color : #CCC;
+    }
