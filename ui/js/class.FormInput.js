@@ -15,7 +15,11 @@ class FormInput extends $.Component {
 
 		this.disabledByDefault = this.props.disabled
 	}
-	
+
+	_onChange(event) {
+		this.validate()
+	}
+
 	set disabled(value) {
 		this.field && this.field.toggleCssClass('disabled', value)
 		if (value) {
@@ -58,7 +62,7 @@ class FormInput extends $.Component {
 	}
 
 	onInit() {
-		this._on('change', this.validate)
+		this._on('change', this._onChange)
 		this.form  = this.$$$.Form[0]
 		this.field = this.$$$.FormField[0]
 		
@@ -68,6 +72,7 @@ class FormInput extends $.Component {
 	validate() {
 		this.form && this.form.submit(false)
 	}
+
 
 	render() {
 		this.input = $[this.props.tagName]({ ... this.props })

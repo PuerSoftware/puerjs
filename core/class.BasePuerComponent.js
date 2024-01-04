@@ -42,6 +42,7 @@ class BasePuerComponent extends PuerObject {
 		this.addCssClass(... this.classes.map(c => $.dereference(c)))
 		this._addEvents()
 		this.onRender && this.onRender()
+		return this.root
 	}
 
 	__rendered() {
@@ -66,14 +67,12 @@ class BasePuerComponent extends PuerObject {
 					hasMatch = true
 					if (routeValue === path.value) {
 						activation = this._isActive ? 0 : 1
-						this.onActivate
-							? this.onActivate()
-							: this.activate()
-
+						this.activate()
+						this.onActivate && this.onActivate()
 						this._cascade('__route', [path.routes, activation])
 					} else {
 						activation = !this._isActive ? 0 : -1
-						this.onDeactivate
+						this.onDeactivate // TODO: check if need to do like onActivate
 							? this.onDeactivate()
 							: this.deactivate()
 

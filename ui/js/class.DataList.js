@@ -16,6 +16,7 @@ export default class DataList extends $.Component {
 		this.selectedId    = null
 
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
+		this.on($.Event.PROVOKE_EVENT,    this._onProvokeEvent)
 		this.on($.Event.SEARCH,           this._onSearch)
 
 		this._searchQuery = ''
@@ -26,12 +27,12 @@ export default class DataList extends $.Component {
 
 	_onItemSelect(event) {
 		// Its mean, that these items is owned by this list
-		if (event.detail.name === this.props.name ) {
+		if (event.detail.name === this.props.name) {
 			for (const itemId in this.items) {
 				const item = this.items[itemId]
 				if (event.detail.targetComponent === item) {
 					this._selectedId = itemId
-					item.select()
+						item.select()
 				} else {
 					item.deselect()
 				}
@@ -39,6 +40,17 @@ export default class DataList extends $.Component {
 		}
 	}
 
+	_onProvokeEvent(event) {
+		if (event.detail.name === this.props.name) {
+			if (event.detail.type === $.Event.LIST_ITEM_SELECT) {
+				if (this._selectedId) {
+					this.items[this._selectedId]._select()
+				}
+			}
+		}
+	}
+
+/*
 	_isSelectedDisplayed() {
 		if (this._selectedId) {
 			if (this._filterMap) {
@@ -49,6 +61,7 @@ export default class DataList extends $.Component {
 		}
 		return false
 	}
+*/
 
 	_onSearch(event) {
 		if (this.props.searchName === event.detail.searchName) {
@@ -58,12 +71,16 @@ export default class DataList extends $.Component {
 	}
 
 	_selectFirstItem() {
-		if (this.length && !this._isSelectedDisplayed()) {
-			let item = Object.values(this.items)[0]
-			if (this._filterMap) {
-				item = this.items[Object.keys(this._filterMap).find(id => this._filterMap[id])]
+		if (this.length) {
+			if(this._selectedId && !this._searchQuery) {
+				this.items[this._selectedId]._select()
+			} else {
+				let item = Object.values(this.items)[0]
+				if (this._filterMap) {
+					item = this.items[Object.keys(this._filterMap).find(id => this._filterMap[id])]
+				}
+				item && item._select()
 			}
-			item && item._select()
 		}
 	}
 

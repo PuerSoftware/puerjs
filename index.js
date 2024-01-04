@@ -79,6 +79,8 @@ import PuerApp from './core/class.PuerApp.js'
 $.App = PuerApp
 
 $.Events.define('LIST_ITEM_SELECT')
+$.Events.define('PROVOKE_EVENT')
+$.Events.define('LIST_ITEM_CHECK')
 $.Events.define('SEARCH')
 $.Events.define('PAGINATE')
 $.Events.define('FORM_RESPONSE')

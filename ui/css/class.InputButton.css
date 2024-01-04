@@ -10,6 +10,7 @@
 	border           : none;
 	border-radius    : 2px;
 	padding          : 8px 20px;
+	height           : 35px;
 }
 	.input-button:focus {
 		outline: none;

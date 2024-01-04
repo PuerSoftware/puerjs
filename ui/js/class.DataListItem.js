@@ -10,7 +10,7 @@ export default class DataListItem extends $.Component {
 		this._isClickSubscribed = false
 	}
 
-	_select(event) {
+	_select() {
 		this.trigger($.Event.LIST_ITEM_SELECT, {
 			data: this.props.data,
 			name: this.props.name
