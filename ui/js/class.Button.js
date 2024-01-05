@@ -4,13 +4,30 @@ import $ from '../../index.js'
 class Button extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.button = null
 
 		this.PRIMARY   = 'primary'
 		this.SECONDARY = 'secondary'
 		this.NEUTRAL   = 'neutral'
 
 		this.props.default('disabled', false)
+		this.props.default('state',    '')
+		this.props.default('states',   {})
+
+		this._addedClasses = []
+	}
+
+	onPropStateChange(value) {
+		if (value !== undefined) {
+			const state = this.props.states[value]
+			if (state) {
+				this.props.text = state.label
+				this._addedClasses.length && this.removeCssClass(... this._addedClasses)
+				if (state.classes) {
+					this._addedClasses = state.classes.split(' ')
+					this.addCssClass(... this._addedClasses)
+				}
+			}
+		}
 	}
 
 	set disabled(value) {
@@ -28,7 +45,7 @@ class Button extends $.Component {
 	}
 
 	render() {
-		return $.a({...this.props.disabled})
+		return $.a({... this.props.disabled})
 	}
 }
 

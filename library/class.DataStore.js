@@ -23,7 +23,7 @@ export default class DataStore {
 			if (DataStore.PUER.isReferencing) {
 				return DataStore.references[id] || null
 			}
-			return DataStore.values[id] || null
+			return DataStore.values[id]
 		}
 	}
 

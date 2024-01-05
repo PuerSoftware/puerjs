@@ -25,6 +25,15 @@ class PuerRouter {
 
 	/********************** PRIVATE ***********************/
 
+	_flattenPath(path, flatPath=null) {
+		flatPath = flatPath || {}
+		for (const route of path) {
+			flatPath[route.name] = route.value
+			this._flattenPath(route.routes, flatPath)
+		}
+		return flatPath
+	}
+
 	_getHash() {
 		let hash = window.location.hash.split('#')[1]
 		return hash ? decodeURIComponent(hash) : hash
@@ -32,8 +41,9 @@ class PuerRouter {
 
 	_route(hash) {
 		this.path = this.routeRoot.getPath(hash)
+
 		$.isRouting = true
-		this.app.__route(this.path)
+		this.app.__route(this._flattenPath(this.path))
 		$.isRouting = false
 		this.app.__routeChange()
 	}
