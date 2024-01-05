@@ -63,7 +63,6 @@ class BasePuerComponent extends PuerObject {
 			for (const path of paths) {
 
 				if (routeName === path.name) {
-
 					hasMatch = true
 					if (routeValue === path.value) {
 						activation = this._isActive ? 0 : 1
