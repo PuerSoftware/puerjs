@@ -104,15 +104,18 @@ export default class DataList extends $.Component {
 	}
 
 	onDataFilter(filterMap) {
+		const hasSearch = Boolean(this.props.searchName)
 		this._filterMap = filterMap
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
 				this.items[itemId].toggle(filterMap[itemId])
 			}
-			if (this._searchQuery) {
-				this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
-			} else {
-				this.items[itemId].unhighlight()
+			if (hasSearch) {
+				if (this._searchQuery) {
+					this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
+				} else {
+					this.items[itemId].unhighlight()
+				}
 			}
 		}
 		this._selectFirstItem()

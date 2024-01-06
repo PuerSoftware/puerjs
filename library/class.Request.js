@@ -59,15 +59,22 @@ class Request {
 
 
 	constructor(url, method) {
-		this.url    = url
-		this.method = method
+		this.url        = url
+		this.method     = method
+		this._listeners = []
 	}
 
 	send(data, headers) {
-		Request.request(this.url, this.method, data, headers, this.onResponse)
+		Request.request(this.url, this.method, data, headers, (data, headers) => {
+			for (const f of this._listeners) {
+				f(data, headers)
+			}
+		})
 	}
 
-	onResponse(data, headers) {}
+	set onResponse(f) {
+		this._listeners.push(f)
+	}
 }
 
 

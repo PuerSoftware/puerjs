@@ -12,7 +12,7 @@ export default class DataSource {
 			throw `DataSource class already has property "${name}"`
 		}
 
-		const dataSource = new cls(url, isSingular, isCacheable)
+		const dataSource = new cls(name, url, isSingular, isCacheable)
 		Object.defineProperty(DataSource, name, {
 			get: function() {
 				return dataSource
@@ -25,7 +25,8 @@ export default class DataSource {
 
 	/**************************************************************/
 
-	constructor(url, isSingular, isCacheable) {
+	constructor(name, url, isSingular, isCacheable) {
+		this.name          = name
 		this.itemIds       = []
 		this.url           = url
 		this.count         = null
@@ -203,7 +204,8 @@ export default class DataSource {
 	adaptItems (items, headers) { return items }
 	adaptItem  (item)  { return item  }
 
-	defineDataSet(name) {
+	defineDataSet(name=null) {
+		name = name || this.name + Object.entries(this.dataSets).length
 		const ds = DataSet.define(name)
 		if (this.isInitialized) {
 			ds.init(this.itemIds)

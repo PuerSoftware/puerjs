@@ -7,8 +7,7 @@ export default class DataOwnerMixin extends $.ComponentMixin {
 
 		component._dataSet    = null
 		component._dataSource = null
-
-		component.dataSource = component.props.dataSource
+		component.dataSource  = component.props.dataSource
 	}
 
 	set dataSource(name) {
@@ -19,7 +18,7 @@ export default class DataOwnerMixin extends $.ComponentMixin {
 		}
 		this.props.dataSource = name
 		this._dataSource      = $.DataSource[this.props.dataSource]
-		this._dataSet         = this._dataSource.defineDataSet(name)
+		this._dataSet         = this._dataSource.defineDataSet()
 
 		const nop = () => {}
 
