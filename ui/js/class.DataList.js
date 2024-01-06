@@ -11,6 +11,7 @@ export default class DataList extends $.Component {
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = 'DataListItem'
+		// this.itemProps     = {}
 		this.itemContainer = this // may be set manually in child class
 		this.isInitialized = false
 		this.selectedId    = null
@@ -77,7 +78,11 @@ export default class DataList extends $.Component {
 			} else {
 				let item = Object.values(this.items)[0]
 				if (this._filterMap) {
-					item = this.items[Object.keys(this._filterMap).find(id => this._filterMap[id])]
+					item = this.items[
+						Object
+							.keys(this._filterMap)
+							.find(id => this._filterMap[id])
+					]
 				}
 				item && item._select()
 			}
@@ -93,7 +98,7 @@ export default class DataList extends $.Component {
 	}
 
 	onDataAddItem(item) {
-		const itemComponent = $[this.itemRenderer]({ data: item, name: this.props.name })
+		const itemComponent = this.renderItem(item)
 		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
 	}
@@ -112,7 +117,9 @@ export default class DataList extends $.Component {
 			}
 			if (hasSearch) {
 				if (this._searchQuery) {
-					this.items[itemId].highlight(this._searchQuery.toLowerCase().trim().split(/\s+/g))
+					this.items[itemId].highlight(
+						this._searchQuery.toLowerCase().trim().split(/\s+/g)
+					)
 				} else {
 					this.items[itemId].unhighlight()
 				}
@@ -185,6 +192,13 @@ export default class DataList extends $.Component {
 
 	onActivate() {
 		this._selectFirstItem()
+	}
+
+	renderItem(item) {
+		return $[this.itemRenderer]({
+			data: item,
+			name: this.props.name
+		})
 	}
 
 	render() {
