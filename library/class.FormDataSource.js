@@ -2,8 +2,8 @@ import DataSource from './class.DataSource.js'
 
 
 export default class FormDataSource extends DataSource {
-	constructor(url) {
-		super(url, false, false)
+	constructor(name, url) {
+		super(name, url, false, false)
 		this.isSaving = false
 	}
 
