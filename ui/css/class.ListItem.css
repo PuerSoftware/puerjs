@@ -1,9 +1,9 @@
-.data-list-item {
+.list-item {
     padding       : 10px 10px 8px 8px;
     box-sizing    : border-box;
     border-bottom : 1px solid #CCC;
 }   
-    .data-list-item .highlight {
+    .list-item .highlight {
         background-color : #FFFFFF;
         color            : #F73308;
         display          : inline-block;
@@ -12,7 +12,7 @@
         font-weight      : bold;
     }
 
-    .data-list-item.selected {
+    .list-item.selected {
         /* background-color : #CCC;
         color            : #333; */
     }
