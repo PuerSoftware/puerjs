@@ -85,7 +85,7 @@ export default class DataSource {
 
 	_loadFromUrl(method=null, params=null, headers=null) {
 		method = method || 'GET'
-		console.log('loading from URL', this.url, method)
+		// console.log('loading from URL', this.url, method)
 		DataSource.PUER.Request.request(
 			this.url,
 			method,
@@ -100,7 +100,7 @@ export default class DataSource {
 	}
 
 	_loadFromDb() {
-		console.log('loading from DB')
+		// console.log('loading from DB')
 		const _this = this
 
 		this.db.readItems(0, _this.count, (items) => {

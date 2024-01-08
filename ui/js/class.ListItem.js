@@ -1,7 +1,7 @@
 import $ from '../../index.js'
 
 
-export default class DataListItem extends $.Component {
+export default class ListItem extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
@@ -46,4 +46,4 @@ export default class DataListItem extends $.Component {
 	}
 }
 
-$.define(DataListItem, import.meta.url)
+$.define(ListItem, import.meta.url)
