@@ -70,6 +70,26 @@ export default class List extends $.Component {
 		})
 	}
 
+	/*****************************************************************/
+	/*
+	TODO: check if need create no-dataSource mixin for List.
+	If need, mixin must implements methods for working with this.items.
+	Example: addItem, removeItem, clearItems, sortItems, filterItems etc.
+	In this mixin case item will be components.
+	*/
+	addItem(item) {
+		const itemComponent = this.renderItem(item)
+		this.itemContainer.append(itemComponent)
+		this.items[itemComponent.id] = itemComponent
+	}
+
+	removeItem(itemId) {}
+
+	clearItems() {
+		this.itemContainer.removeChildren()
+		this.items = {}
+	}
+	/*****************************************************************/
 	render() {
 		return $.ul(this.children)
 	}

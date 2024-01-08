@@ -9,6 +9,9 @@ export default class CheckListItem extends ListItem {
 		this.checkbox = null
 	}
 
+	get checked() {
+		return this.checkbox.value
+	}
 
 	render() {
 		this.checkbox = $.InputCheckbox({name: this.props.name})
