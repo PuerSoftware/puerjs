@@ -1,5 +1,5 @@
 .data-list-item {
-    padding       : 10px 10px 8px 0;
+    padding       : 10px 10px 8px 8px;
     box-sizing    : border-box;
     border-bottom : 1px solid #CCC;
 }   
@@ -13,6 +13,6 @@
     }
 
     .data-list-item.selected {
-        background-color : #CCC;
-        color            : #333;
+        /* background-color : #CCC;
+        color            : #333; */
     }

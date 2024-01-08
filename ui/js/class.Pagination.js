@@ -32,13 +32,13 @@ class Pagination extends $.Component {
 
 	render() {
 		return $.div({cssDisplay: this.state.display}, [
-			$.a ({text : '&laquo; previous', onClick: this.prev}),
+			$.a ('prev' , {text : '', onClick: this.prev}),
 			$.span('pages', [
-				$.span({'text': this.props.page}),
-				$.span({'text': 'of'}),
-				$.span({'text': this.props.pages})
+				$.span('current', {'text': this.props.page}),
+				$.span('divider'),
+				$.span('total', {'text': this.props.pages})
 			]),
-			$.a ({text : 'next &raquo;', onClick: this.next})
+			$.a ('next', {text : '', onClick: this.next})
 		])
 	}
 }
