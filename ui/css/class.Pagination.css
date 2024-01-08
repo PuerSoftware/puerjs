@@ -1,0 +1,52 @@
+.pagination {
+    flex       : none;
+    align-self : flex-end;
+}
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination > .prev {
+        margin-right: 20px;
+    }
+
+        .pagination > .prev::after {
+            content: '⟵';
+            color: var(--pagination-color-lo);
+        }
+
+    .pagination > .pages {
+        font-family : var(--font-text);
+        font-size   : 14px;
+        display     : inline-flex;
+        align-items : center;
+        gap         : 6px;
+    }
+        .pagination > .pages > .current {
+            color : #FFF;
+        }
+
+        .pagination > .pages > .divider {
+            display       : inline-block;
+            width         : 3px;
+            height        : 3px;
+            border-radius : 50%;
+        }
+        
+        .pagination > .pages > .divider {
+            background-color : var(--pagination-color-lo);
+        }
+
+        .pagination > .pages > .total {
+            color : var(--pagination-color-lo);
+        }
+
+    .pagination > .next {
+        margin-left : 20px;
+    }
+        
+        .pagination > .next::after {
+            content : '⟶';
+            color   : var(--pagination-color-hi);
+        }

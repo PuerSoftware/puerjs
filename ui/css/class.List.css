@@ -1,7 +1,6 @@
 .list {
     overflow-x : hidden;
     overflow-y : auto;
-    margin     : 0 0 0 10px;
 }
     .list ul {
         list-style : none;

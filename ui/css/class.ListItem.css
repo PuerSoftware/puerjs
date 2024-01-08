@@ -1,7 +1,5 @@
 .list-item {
-    padding       : 10px 10px 8px 0;
-    box-sizing    : border-box;
-    border-bottom : 1px solid #CCC;
+    padding       : 10px 10px 8px 8px;
 }   
     .list-item .highlight {
         background-color : #FFFFFF;
@@ -13,6 +11,6 @@
     }
 
     .list-item.selected {
-        background-color : #CCC;
-        color            : #333;
+        /* background-color : #CCC;
+        color            : #333; */
     }
