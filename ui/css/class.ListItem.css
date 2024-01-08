@@ -11,6 +11,6 @@
     }
 
     .list-item.selected {
-        /* background-color : #CCC;
-        color            : #333; */
+        background-color : #CCC;
+        color            : #333;
     }

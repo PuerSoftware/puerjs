@@ -10,12 +10,9 @@ export default class List extends $.Component {
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = 'ListItem'
-		// this.itemProps     = {}
 		this.itemContainer = this // may be set manually in child class
 
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
-		// this.on($.Event.PROVOKE_EVENT,    this._onProvokeEvent)
-
 
 		this._selectedId  = null
 	}
@@ -34,16 +31,6 @@ export default class List extends $.Component {
 			}
 		}
 	}
-
-	// _onProvokeEvent(event) {
-	// 	if (event.detail.name === this.props.name) {
-	// 		if (event.detail.type === $.Event.LIST_ITEM_SELECT) {
-	// 			if (this._selectedId) {
-	// 				this.items[this._selectedId]._select()
-	// 			}
-	// 		}
-	// 	}
-	// }
 
 	_ensureSelection() {
 		if (this.length) {

@@ -36,8 +36,8 @@ export default class CheckList extends List {
 		}
 	}
 
-	_checkHeader(check) {
-		if (this._headerCheckbox) {
+    _checkHeader(check) {
+          if (this._headerCheckbox) {
 			this._headerCheckbox.input.element.checked = check
 		}
 	}
@@ -48,6 +48,19 @@ export default class CheckList extends List {
 			item.checkbox.value = check
 		}
 	}
+  
+  getCheckedItems() {
+    let checkedItems = []
+    if (this._headerCheckbox && this._headerCheckbox.input.checked) {
+      console.log('checked')
+      checkedItems = this.itemContainer.children
+    } else {
+
+    }
+    for (const item of this.itemContainer.children) {
+      console.log(item)
+    }
+  }
 
 	render() {
 		this.itemContainer = $.ul('body')

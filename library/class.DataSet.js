@@ -55,8 +55,6 @@ export default class DataSet {
 	}
 
 	init(ids) {
-		debugger
-		console.log('init dataset', this.name, ids)
 		this.itemIds       = ids
 		this.isInitialized = true
 
