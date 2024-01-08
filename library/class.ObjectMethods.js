@@ -3,7 +3,7 @@ class ObjectMethods {
 		return o1 === o2 || JSON.stringify(o1) === JSON.stringify(o2)
 	}
 
-	static deepCopyPrimitive(o) {
+	static deepCopy(o) {
 		return JSON.parse(JSON.stringify(o))
 	}
 }

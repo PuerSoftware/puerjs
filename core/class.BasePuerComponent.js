@@ -50,7 +50,8 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
-	__route(paths, activation) {
+
+	__route(flatPath, activation) {
 		/*
 		*  activation can be: -1 0 1
 		*  ------ -1  - route patent deactivated
@@ -60,23 +61,22 @@ class BasePuerComponent extends PuerObject {
 		let hasMatch = false
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
-			for (const path of paths) {
+			for (const name in flatPath) {
 
-				if (routeName === path.name) {
-
+				if (routeName === name) {
 					hasMatch = true
-					if (routeValue === path.value) {
+					if (routeValue === flatPath[name]) {
 						activation = this._isActive ? 0 : 1
 						this.activate()
 						this.onActivate && this.onActivate()
-						this._cascade('__route', [path.routes, activation])
+						this._cascade('__route', [flatPath, activation])
 					} else {
 						activation = !this._isActive ? 0 : -1
 						this.onDeactivate // TODO: check if need to do like onActivate
 							? this.onDeactivate()
 							: this.deactivate()
 
-						this._cascade('__route', [path.routes, activation])
+						this._cascade('__route', [flatPath, activation])
 					}
 				}
 			}
@@ -89,7 +89,7 @@ class BasePuerComponent extends PuerObject {
 		}
 		if (!hasMatch) {
 			this.activate()
-			this._cascade('__route', [paths, activation])
+			this._cascade('__route', [flatPath, activation])
 		}
 	}
 

@@ -1,14 +1,14 @@
-import $ from '../core/class.Puer.js'
+import $                  from '../core/class.Puer.js'
+import PuerComponentMixin from '../core/class.PuerComponentMixin.js'
 
 
-export default class DataOwnerMixin extends $.ComponentMixin {
+export default class DataOwnerMixin extends PuerComponentMixin {
 	static init(component) {
 		component.props.require('dataSource')
 
 		component._dataSet    = null
 		component._dataSource = null
-
-		component.dataSource = component.props.dataSource
+		component.dataSource  = component.props.dataSource
 	}
 
 	set dataSource(name) {
@@ -19,7 +19,7 @@ export default class DataOwnerMixin extends $.ComponentMixin {
 		}
 		this.props.dataSource = name
 		this._dataSource      = $.DataSource[this.props.dataSource]
-		this._dataSet         = this._dataSource.defineDataSet(name)
+		this._dataSet         = this._dataSource.defineDataSet()
 
 		const nop = () => {}
 

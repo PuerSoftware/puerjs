@@ -72,7 +72,7 @@ class Reference {
 			}
 			value = value[accessor]
 		}
-		return value || ''
+		return value
 	}
 
 	clone() {

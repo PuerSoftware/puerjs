@@ -1,4 +1,19 @@
 class Request {
+
+	static define(name, url, method) {
+		if (Request.hasOwnProperty(name)) {
+			throw `Request class already has property "${name}"`
+		}
+
+		const request = new Request(url, method)
+		Object.defineProperty(Request, name, {
+			get: function() {
+				return request
+			}
+		})
+		return request
+	}
+
 	static request(url, method = null, data = null, headers = null, callback) {
 		const conf = {
 			method  : method ? method.toUpperCase() : 'GET',
@@ -40,6 +55,25 @@ class Request {
 
 	static post(url, callback, data=null, headers=null) {
 		Request.request(url, 'POST', data, headers, callback)
+	}
+
+
+	constructor(url, method) {
+		this.url        = url
+		this.method     = method
+		this._listeners = []
+	}
+
+	send(data, headers) {
+		Request.request(this.url, this.method, data, headers, (data, headers) => {
+			for (const f of this._listeners) {
+				f(data, headers)
+			}
+		})
+	}
+
+	set onResponse(f) {
+		this._listeners.push(f)
 	}
 }
 

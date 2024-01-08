@@ -3,6 +3,9 @@ export { default as DataSet    		} from './class.DataSet.js'
 export { default as DataSource 		} from './class.DataSource.js'
 export { default as DataStore  		} from './class.DataStore.js'
 
+export { default as DataOwnerMixin  } from './class.DataOwnerMixin.js'
+export { default as DataListMixin   } from './class.DataListMixin.js'
+
 export { default as DateMethods     } from './class.DateMethods.js'
 export { default as ObjectMethods   } from './class.ObjectMethods.js'
 export { default as SetMethods      } from './class.SetMethods.js'

@@ -1,14 +1,14 @@
 import $             from '../../index.js'
-import DataList      from './class.DataList.js'
+import List          from './class.List.js'
 import InputCheckbox from './class.InputCheckbox.js'
 
-export default class CheckList extends DataList {
+export default class CheckList extends List {
 	constructor(... args) {
 		super(... args)
 		this.props.default('header', true)
 
 		this.itemContainer = null
-		this.itemRenderer  = 'SelectableDataListItem'
+		this.itemRenderer  = 'CheckListItem'
 
 		this._checkedCount   = 0
 		this._headerCheckbox = null

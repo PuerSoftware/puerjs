@@ -1,11 +1,11 @@
 import $ from '../../index.js'
 
 
-export default class DataListItem extends $.Component {
+export default class ListItem extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.props.require('data')
 		this.props.require('name')
+		this.props.require('data')
 
 		this._isClickSubscribed = false
 	}
@@ -19,13 +19,8 @@ export default class DataListItem extends $.Component {
 
 	/**********************************************************/
 
-	select() {
-		this.addCssClass('selected')
-	}
-
-	deselect() {
-		this.removeCssClass('selected')
-	}
+	select   () { this.addCssClass    ('selected') }
+	deselect () { this.removeCssClass ('selected') }
 
 	highlight(words) {
 		if (!this.isHidden) {
@@ -51,4 +46,4 @@ export default class DataListItem extends $.Component {
 	}
 }
 
-$.define(DataListItem, import.meta.url)
+$.define(ListItem, import.meta.url)

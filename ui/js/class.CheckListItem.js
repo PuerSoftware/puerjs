@@ -1,9 +1,9 @@
 import $             from '../../index.js'
-import DataListItem  from './class.DataListItem.js'
+import ListItem  from './class.ListItem.js'
 import InputCheckbox from './class.InputCheckbox.js'
 
 
-export default class CheckListItem extends DataListItem {
+export default class CheckListItem extends ListItem {
 	constructor(... args) {
 		super(... args)
 		this.checkbox = null
