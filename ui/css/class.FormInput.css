@@ -1,6 +1,7 @@
 .form-input {
-	display     : flex;
-	align-items : center;
+	display       : flex;
+	align-items   : center;
+	border-bottom : 1px solid #2F4155;
 }
 	.form-input:focus-within {
 		border-color : #6EA7E0;
