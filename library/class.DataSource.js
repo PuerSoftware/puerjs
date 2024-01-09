@@ -36,6 +36,8 @@ export default class DataSource {
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
 		this.isInitialized = false
+
+		this._lastLoad = null
 	}
 
 	_onLoad() {
@@ -63,6 +65,11 @@ export default class DataSource {
 	}
 
 	_load(method=null, params=null, headers=null) {
+		this._lastLoad = {
+			method  : method,
+			params  : params,
+			headers : headers
+		}
 		const _this = this
 
 		this.clear(() => {
@@ -151,6 +158,12 @@ export default class DataSource {
 
 	load(method=null, params=null, headers=null) {
 		DataSource.PUER.defer(this._load, arguments, this)
+	}
+
+	reload() {
+		if (this._lastLoad) {
+			this._load(this._lastLoad.method, this._lastLoad.headers, this._lastLoad.params)
+		}
 	}
 
 	clear(callback) {

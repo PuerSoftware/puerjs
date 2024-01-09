@@ -59,7 +59,7 @@ export default class List extends $.Component {
 		return Object.values(this.items)[0]
 	}
 
-	onActivate() {
+	onRoute() {
 		this._ensureSelection()
 	}
 
@@ -83,7 +83,13 @@ export default class List extends $.Component {
 		this.items[itemComponent.id] = itemComponent
 	}
 
-	removeItem(itemId) {}
+	removeItem(itemId) {
+		const itemComponent = this.items[itemId]
+		if (itemComponent) {
+			itemComponent.remove()
+			delete this.items[itemId]
+		}
+	}
 
 	clearItems() {
 		this.itemContainer.removeChildren()

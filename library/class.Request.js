@@ -61,19 +61,19 @@ class Request {
 	constructor(url, method) {
 		this.url        = url
 		this.method     = method
-		this._listeners = []
+		this._listeners = new Set()
 	}
 
 	send(data, headers) {
 		Request.request(this.url, this.method, data, headers, (data, headers) => {
-			for (const f of this._listeners) {
+			for (const f of this._listeners.values()) {
 				f(data, headers)
 			}
 		})
 	}
 
 	set onResponse(f) {
-		this._listeners.push(f)
+		this._listeners.add(f)
 	}
 }
 
