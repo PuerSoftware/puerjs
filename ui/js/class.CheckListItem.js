@@ -13,8 +13,15 @@ export default class CheckListItem extends ListItem {
 		return this.checkbox.value
 	}
 
+	set checked(check) {
+		this.checkbox.value = check
+	}
+
 	render() {
-		this.checkbox = $.InputCheckbox({name: this.props.name})
+		this.checkbox = $.InputCheckbox({
+			name : this.props.name,
+			data : this.props.data
+		})
 		return $.li([
 			$.Columns([
 				$.Box('left', [

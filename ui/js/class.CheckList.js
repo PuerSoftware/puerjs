@@ -59,6 +59,10 @@ export default class CheckList extends List {
 		return checkedItems
 	}
 
+	onRoute() {
+		super.onRoute() // TODO: create method _ensureChecking, like a _ensureSelection
+	}
+
 	render() {
 		this.itemContainer = $.ul('body')
 		const checkboxes = []
