@@ -49,8 +49,10 @@
 		}
 
 .form-input.confined {
-	margin-top : 7px;
-	border     : 1px solid #2F4155;
+	margin-top    : 7px;
+	border        : 1px solid #2F4155;
+	border-radius : 2px;
+
 }
 	.form-input.confined:focus-within {
 		border-color : #6EA7E0;
