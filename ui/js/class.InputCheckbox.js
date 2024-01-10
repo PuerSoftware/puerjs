@@ -12,6 +12,10 @@ export default class InputCheckbox extends FormInput {
 	}
 
 	_onChange(event) {
+		this.sendCheckEvent()
+	}
+
+	sendCheckEvent() {
 		this.trigger($.Event.LIST_ITEM_CHECK, {
 			name       : this.props.name,
 			isChecked  : this.value,

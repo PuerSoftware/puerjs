@@ -162,7 +162,7 @@ export default class DataSource {
 
 	reload() {
 		if (this._lastLoad) {
-			this._load(this._lastLoad.method, this._lastLoad.headers, this._lastLoad.params)
+			this._load(this._lastLoad.method, this._lastLoad.params, this._lastLoad.headers)
 		}
 	}
 

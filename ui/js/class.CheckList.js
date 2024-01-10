@@ -42,6 +42,13 @@ export default class CheckList extends List {
 		}
 	}
 
+	_resendCheckEvent() {
+		for (const id in this.items) {
+			const item = this.items[id]
+			item.checkbox.sendCheckEvent()
+		}
+	}
+
 	checkAll(check) {
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
@@ -60,7 +67,8 @@ export default class CheckList extends List {
 	}
 
 	onRoute() {
-		super.onRoute() // TODO: create method _ensureChecking, like a _ensureSelection
+		super.onRoute()
+		this._resendCheckEvent()
 	}
 
 	render() {

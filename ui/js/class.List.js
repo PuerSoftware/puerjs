@@ -7,6 +7,7 @@ export default class List extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
+		this.props.default('ensureSelection', true)
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = 'ListItem'
@@ -60,7 +61,7 @@ export default class List extends $.Component {
 	}
 
 	onRoute() {
-		this._ensureSelection()
+		this.props.ensureSelection && this._ensureSelection()
 	}
 
 	renderItem(item) {
