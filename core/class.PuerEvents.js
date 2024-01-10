@@ -20,6 +20,21 @@ class PuerEvents extends EventTarget {
 		return PuerEvents.instance
 	}
 
+	/*********************** PRIVATE ***********************/
+
+	_validateEventDetail(name, detail) {
+		const requiredProps = $.EventProps[name]
+		const props         = Object.keys(detail)
+		const missingProps  = requiredProps.filter(x => !props.includes(x))
+		if (missingProps.length > 0) {
+			throw `Event detail ${name} is missing props: "${missingProps.join(', ')}"`
+		}
+		const extraProps =  props.filter(x => !requiredProps.includes(x))
+		if (extraProps.length > 0) {
+			throw `Props "${extraProps.join(', ')}" are not defined in event details of "${name}"`
+		}
+	}
+
 	/*********************** PUBLIC ***********************/
 
 	connect(endpoint) {
@@ -65,11 +80,12 @@ class PuerEvents extends EventTarget {
 		this.removeEventListener(name, _f)
 	}
 
-	trigger(name, data) {
+	trigger(name, detail) {
 		if ($.isRouting) {
-			this.innerQueue.enqueue(this.trigger, this, [name, data]).start()
+			this.innerQueue.enqueue(this.trigger, this, [name, detail]).start()
 		} else {
-			this.dispatchEvent(new CustomEvent(name, { detail: data }))
+			this._validateEventDetail(name, detail)
+			this.dispatchEvent(new CustomEvent(name, { detail: detail }))
 		}
 	}
 
@@ -87,14 +103,9 @@ class PuerEvents extends EventTarget {
 		}
 	}
 
-	define(events) {
-		if ($.isArray(events)) {
-			for (const event of events) {
-				$.Event[event] = event
-			}
-		} else {
-			$.Event[events] = events
-		}
+	define(name, props=null) {
+		$.Event[name]      = name
+		$.EventProps[name] = props || []
 	}
 }
 

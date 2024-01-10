@@ -50,9 +50,10 @@ class PuerConstructor {
 				const typeName = name.toLowerCase()
 				this._classToType['[object ' + name + ']'] = typeName
 			})
-		this.Error  = PuerError
-		this.Event  = {}
-		this.Events = new PuerEvents(this)
+		this.Error      = PuerError
+		this.Event      = {}
+		this.EventProps = {}
+		this.Events     = new PuerEvents(this)
 	}
 
 	_setTimezoneCookie() {
