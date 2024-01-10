@@ -18,7 +18,7 @@ export default class CheckList extends List {
 	}
 
 	_onItemCheck(event) {
-		if (event.detail.name === this.props.name) {
+		if (event.detail.name === this.props.name && !event.detail.isResend) {
 			if (event.detail.targetComponent === this._headerCheckbox) {
 				this.checkAll(!Boolean(this._checkedCount))
 			} else {
@@ -51,7 +51,7 @@ export default class CheckList extends List {
 	_resendCheckEvent() {
 		for (const id in this.items) {
 			const item = this.items[id]
-			item.checkbox.sendCheckEvent()
+			item.checkbox.sendCheckEvent(true)
 		}
 	}
 

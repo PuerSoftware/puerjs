@@ -15,11 +15,12 @@ export default class InputCheckbox extends FormInput {
 		this.sendCheckEvent()
 	}
 
-	sendCheckEvent() {
+	sendCheckEvent(isResend=false) {
 		this.trigger($.Event.LIST_ITEM_CHECK, {
 			name       : this.props.name,
+			data       : this.props.data,
 			isChecked  : this.value,
-			data       : this.props.data
+			isResend   : isResend
 		})
 	}
 
