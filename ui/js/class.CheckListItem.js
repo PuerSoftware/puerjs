@@ -1,5 +1,5 @@
 import $             from '../../index.js'
-import ListItem  from './class.ListItem.js'
+import ListItem      from './class.ListItem.js'
 import InputCheckbox from './class.InputCheckbox.js'
 
 

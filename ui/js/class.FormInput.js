@@ -73,7 +73,6 @@ class FormInput extends $.Component {
 		this.form && this.form.submit(false)
 	}
 
-
 	render() {
 		this.input = $[this.props.tagName]({ ... this.props })
 		this._eventTarget = this.input

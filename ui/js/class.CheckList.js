@@ -12,6 +12,7 @@ export default class CheckList extends List {
 
 		this._checkedCount   = 0
 		this._headerCheckbox = null
+		this._isCheckingAll  = false
 
 		this.on($.Event.LIST_ITEM_CHECK, this._onItemCheck)
 	}
@@ -23,22 +24,27 @@ export default class CheckList extends List {
 			} else {
 				if (event.detail.isChecked) {
 					this._checkedCount ++
-					if (this._checkedCount >= 0) {
-						this._checkHeader(true)
-					}
 				} else {
 					this._checkedCount --
-					if (this._checkedCount <= 0) {
-						this._checkHeader(false)
-					}
 				}
+				this._updateHeaderCheckbox()
 			}
 		}
 	}
 
-	_checkHeader(check) {
+	_updateHeaderCheckbox() {
 		if (this._headerCheckbox) {
-			this._headerCheckbox.input.element.checked = check
+			if (this._checkedCount > 0) {
+				this._headerCheckbox.props.label = 'Unselect all'
+				if (!this._isCheckingAll) {
+					this._headerCheckbox.input.element.checked = true // check without triggering an event
+				}
+			} else if (this._checkedCount == 0) {
+				this._headerCheckbox.props.label = 'Select all'
+				if (!this._isCheckingAll) {
+					this._headerCheckbox.input.element.checked = false // check without triggering an event
+				}
+			}
 		}
 	}
 
@@ -50,10 +56,12 @@ export default class CheckList extends List {
 	}
 
 	checkAll(check) {
+		this._isCheckingAll = true
 		for (const itemId in this.items) {
 			const item = this.items[itemId]
-			item.checkbox.value = check
+			item.checked = check
 		}
+		this._isCheckingAll = false
 	}
 
 	getCheckedItems() {
@@ -75,7 +83,10 @@ export default class CheckList extends List {
 		this.itemContainer = $.ul('body')
 		const checkboxes = []
 		if (this.props.header) {
-			this._headerCheckbox = $.InputCheckbox({label: 'Select All', name: this.props.name})
+			this._headerCheckbox = $.InputCheckbox({
+				label : 'Select all',
+				name  : this.props.name
+			})
 			checkboxes.push(this._headerCheckbox)
 		}
 
