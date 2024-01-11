@@ -1,6 +1,6 @@
 .list-item {
-    padding    : 10px 10px 8px 8px;
-    box-sizing : border-box;
+    padding       : 10px 10px 8px 8px;
+    border-radius : 2px;
 }   
     .list-item .highlight {
         background-color : #FFFFFF;
