@@ -2,11 +2,11 @@ export default class DataSet {
 	
 	/**************************************************************/
 
-	static define(name, searchConfig=null) {
+	static define(name, searchConfig=null, filter=null) {
 		if (DataSet.hasOwnProperty(name)) {
 			throw `DataSet already has property "${name}"`
 		}
-		const dataSet = new DataSet(name, searchConfig)
+		const dataSet = new DataSet(name, searchConfig, filter)
 		Object.defineProperty(DataSet, name, {
 			get: function() {
 				return dataSet
@@ -19,12 +19,13 @@ export default class DataSet {
 
 	/**************************************************************/
 
-	constructor(name, searchConfig=null) {
+	constructor(name, searchConfig=null,  filter=null) {
 		this.name          = name
 		this.itemIds       = []
 		this.searchConfig  = searchConfig
 		this.isInitialized = false
 		this.index         = new Map()
+		this._entryFilter  = filter
 	}
 
 	/**************************************************************/
@@ -48,6 +49,14 @@ export default class DataSet {
 		}
 	}
 
+	_applyEntryFilter(ids) {
+		if (this._entryFilter) {
+			const items = DataSet.PUER.DataStore.get(ids)
+			ids = items.filter(this._entryFilter).map((_, id) => id)
+		}
+		return ids
+	}
+
 	/**************************************************************/
 
 	get items() {
@@ -55,17 +64,13 @@ export default class DataSet {
 	}
 
 	init(ids) {
-		this.itemIds       = ids
+		this.itemIds       = this._applyEntryFilter(ids)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
 		this._lastSort   && this.sort(this._lastSort)
 
 		this.onInit()
-	}
-
-	data() {
-		this.onData(this.items)
 	}
 
 	filter(f) {
@@ -113,9 +118,16 @@ export default class DataSet {
 		return this.filter(item => result.has(item.dataId))
 	}
 
+	data() {
+		this.onData(this.items)
+	}
+
 	addItem(item) {
-		this._indexItem(item, item.dataId)
-		this.onAddItem(item)
+		const ids = this._applyEntryFilter([item.dataId])
+		if (ids.length) {
+			this._indexItem(item, item.dataId)
+			this.onAddItem(item)
+		}
 	}
 	removeItem (itemId) {
 		this.onRemoveItem(itemId)

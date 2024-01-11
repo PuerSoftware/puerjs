@@ -12,6 +12,10 @@ export default class DataStore {
 		return DataStore._id ++
 	}
 
+	static get size() {
+		return Math.round(JSON.stringify(DataStore.values).length / 1024) + ' kb'
+	}
+
 	static get(id) {
 		if (DataStore.PUER.isArray(id)) {
 			const items = []

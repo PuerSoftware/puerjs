@@ -127,7 +127,7 @@ export default class DataSource {
 	
 	_addItemToStore(item) {
 		const itemId = DataSource.PUER.DataStore.set(null, item)
-		item.dataId = itemId
+		item.dataId  = itemId
 		this.itemIds.push(itemId)
 	}
 
@@ -217,11 +217,11 @@ export default class DataSource {
 	adaptItems (items, headers) { return items }
 	adaptItem  (item)  { return item  }
 
-	defineDataSet(name=null) {
+	defineDataSet(name=null, filter) {
 		name = name || this.name + Object.entries(this.dataSets).length
-		const ds = DataSet.define(name)
+		const ds = DataSet.define(name, null, filter)
 		if (this.isInitialized) {
-			ds.init(this.itemIds)
+			ds.init(this.itemIds) // TODO: call ds.data() ???
 		}
 		this.dataSets[name] = ds
 		return ds
