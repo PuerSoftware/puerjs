@@ -3,7 +3,7 @@
     margin : 12px 12px 10px 12px;
 }
     .search .form-input.confined {
-        margin-top    : 1px;
+        margin-top    : 2px;
         border        : 1px solid transparent;
         border-bottom : 1px solid transparent;
         background    : var(--bg-search);
