@@ -1,8 +1,8 @@
 class Reference {
 	static PUER = null // set in Puer
 
-	constructor(id) {
-		this.id          = id
+	constructor(dataId) {
+		this.dataId      = dataId
 		this.isReference = true
 		this._accessors  = []
 
@@ -40,30 +40,18 @@ class Reference {
 	}
 
 	get rootValue() { // root value
-		return Reference.PUER.DataStore.get(this.id)
+		return Reference.PUER.DataStore.get(this.dataId)
 	}
 
 	set rootValue(value) { // root value
-		Reference.PUER.DataStore.set(this.id, value)
+		Reference.PUER.DataStore.set(this.dataId, value)
 	}
 
 	reuse(id) {
-		this.id = id
+		this.dataId = id
 		this._accessors = []
 	}
 
-	// dereference() { // value
-	//
-	// 	if (this._accessors.length > 1) {
-	// 		console.log(this._accessors)
-	// 		// debugger
-	// 	}
-	// 	let value = this.rootValue
-	// 	for (const accessor of this._accessors) {
-	// 		value = value[accessor]
-	// 	}
-	// 	return value
-	// }
 	dereference() {
 		let value = this.rootValue
 		for (const accessor of this._accessors) {
@@ -76,18 +64,27 @@ class Reference {
 	}
 
 	clone() {
-		const ref =  new Reference(this.id)
-		// console.log('clone BEFORE', this._accessors)
+		const ref =  new Reference(this.dataId)
 		for (const accessor of this._accessors) {
 			ref._accessors.push(accessor)
 		}
-		// console.log('clone AFTER', ref._accessors)
 		return ref
 	}
 
+	// merge(reference) { // TODO: use if will implemented proxy Single Source of Truth
+	// 	const owners = Reference.PUER.DataStore.owners
+	//
+	// 	for (const owner of owners[reference.dataId]) {
+	// 		if (!owners[this.dataId].includes(owner)) {
+	// 			owners[this.dataId].push(owner)
+	// 		}
+	// 	}
+	// 	Reference.PUER.DataStore.unset(reference.dataId)
+	// }
+
 	toString() {
 		return JSON.stringify({
-			reference : '#' + this.id,
+			reference : '#' + this.dataId,
 			value     : this.rootValue
 		})
 	}

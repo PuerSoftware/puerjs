@@ -39,9 +39,9 @@ export default class DataListMixin {
 		this.items[item.dataId] = itemComponent
 	}
 
-	onDataRemoveItem(id) {
-		this.items[id].remove()
-		delete this.items[id]
+	onDataRemoveItem(dataId) {
+		this.items[dataId].remove()
+		delete this.items[dataId]
 	}
 
 	onDataFilter(filterMap) {

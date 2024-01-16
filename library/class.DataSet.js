@@ -30,22 +30,30 @@ export default class DataSet {
 
 	/**************************************************************/
 
-	_indexItem(item, id, prefix='') {
+	_indexItem(item, dataId, prefix='') {
 		for (let key in item) {
 			if (item.hasOwnProperty(key)) {
 				let value = item[key]
 				if (value && typeof value === 'object') {
-					this._indexItem(value, id, prefix + key + '.')
+					this._indexItem(value, dataId, prefix + key + '.')
 				} else if (!this.searchConfig || this.searchConfig[prefix + key]) {
 					if (value) {
 						const valueString = value.toString().toLowerCase()
 						if (!this.index.has(valueString)) {
 							this.index.set(valueString, new Set())
 						}
-						this.index.get(valueString).add(id)
+						this.index.get(valueString).add(dataId)
 					}
 				}
 			}
+		}
+	}
+
+	_reindexItems() {
+		 this.index = new Map()
+
+		for (const item of this.items) {
+			this._indexItem(item, item.dataId)
 		}
 	}
 
@@ -129,14 +137,21 @@ export default class DataSet {
 			this.onAddItem(item)
 		}
 	}
-	removeItem (itemId) {
-		this.onRemoveItem(itemId)
+
+	changeItem(item) {
+		this._reindexItems()
+		this.onChangeItem(item)
+	}
+
+	removeItem (dataId) {
+		this.onRemoveItem(dataId)
 	}
 
 	onInit       ()       {}
 	onData       (data)   {}
 	onAddItem    (item)   {}
-	onRemoveItem (itemId) {}
+	onChangeItem (item)   {}
+	onRemoveItem (dataId) {}
 	onSort       (map)    {}
 	onFilter     (map)    {}
 

@@ -51,6 +51,9 @@ export default class DataBase {
 				items.forEach((item) => store.add(item))
 				onSuccess && onSuccess() // call success after all items added
 				break
+			case 'update':
+				request = store.update(items)
+				break
 			case 'delete':
 				request = store.delete(items)
 				break
@@ -87,6 +90,10 @@ export default class DataBase {
 
 	addItems(items, onSuccess, onError) {
 		this._executeTransaction('addAll', items, onSuccess, onError)
+	}
+
+	udpateItem(item, onSuccess, onError) {
+		this._executeTransaction('update', item, onSuccess, onError)
 	}
 
 	deleteItem(key, onSuccess, onError) {

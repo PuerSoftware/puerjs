@@ -55,6 +55,15 @@ export default class CheckList extends List {
 		}
 	}
 
+	removeItem(itemId) {
+		const itemComponent = this.items[itemId]
+		if (itemComponent) {
+			itemComponent.checked = false
+			itemComponent.remove()
+			delete this.items[itemId]
+		}
+	}
+
 	checkAll(check) {
 		this._isCheckingAll = true
 		for (const itemId in this.items) {

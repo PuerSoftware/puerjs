@@ -125,10 +125,18 @@ export default class DataSource {
 		this.isCacheable && this.db.addItem(item)
 	}
 	
+	_changeItemInDb(item) {
+		this.isCacheable && this.db.updateItem(item)
+	}
+
 	_addItemToStore(item) {
-		const itemId = DataSource.PUER.DataStore.set(null, item)
-		item.dataId  = itemId
-		this.itemIds.push(itemId)
+		const dataId = DataSource.PUER.DataStore.set(null, item)
+		item.dataId  = dataId
+		this.itemIds.push(dataId)
+	}
+
+	_changeItemInStore(item) {
+		DataSource.PUER.DataStore.set(item.dataId, item, true)
 	}
 
 	/******************************************************************/
@@ -167,8 +175,8 @@ export default class DataSource {
 	}
 
 	clear(callback) {
-		for (const id of this.itemIds) {
-			DataSource.PUER.DataStore.unset(id)
+		for (const dataId of this.itemIds) {
+			DataSource.PUER.DataStore.unset(dataId)
 		}
 
 		this.itemIds       = []
@@ -203,6 +211,19 @@ export default class DataSource {
 			for (const item of items) {
 				this.addItem(item)
 			}
+		}
+	}
+
+	changeItem(item) {
+		if (!item.dataId) {
+			throw `Changed item must have dataId`
+		}
+
+		this.isCacheable && this._changeItemInDb(item)
+		this._changeItemInStore(item)
+
+		for (const dataSetName in this.dataSets) {
+			this.dataSets[dataSetName].changeItem(item)
 		}
 	}
 

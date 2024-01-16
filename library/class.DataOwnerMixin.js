@@ -28,6 +28,7 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		this._dataSet.onSort       = this.onDataSort       ? this.onDataSort.bind(this)       : nop
 		this._dataSet.onFilter     = this.onDataFilter     ? this.onDataFilter.bind(this)     : nop
 		this._dataSet.onAddItem    = this.onDataAddItem    ? this.onDataAddItem.bind(this)    : nop
+		this._dataSet.onChangeItem = this.onDataChangeItem ? this.onDataChangeItem.bind(this) : nop
 		this._dataSet.onRemoveItem = this.onDataRemoveItem ? this.onDataRemoveItem.bind(this) : nop
 	}
 

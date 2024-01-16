@@ -62,34 +62,48 @@ class PuerProxy {
 	}
 
 	setProp(prop, value) {
-		let id
+		let dataId
 		let reference = this.references[prop]
 
 		if (value && value.isReference) {
 			this.references[prop] = value
-			id = value.id
+			dataId = value.dataId
 		} else {
 			if (reference) {
-				$.DataStore.set(reference.id, value)
-				// reference.reuse(id) TODO: figure out why this was here
+				// if (value && value.dataId) { // TODO: use if will implemented proxy Single Source of Truth
+				// 	dataId             = value.dataId
+				// 	const newReference = new Reference(dataId)
+				// 	newReference.merge(reference)
+				// 	$.DataStore.set(dataId, value)
+				// 	reference = newReference
+				// } else {
+					$.DataStore.set(reference.dataId, value)
+					dataId = reference.dataId
+				// }
 			} else {
-				id = $.DataStore.set(null, value)
-				reference = new Reference(id)
-			}
+				// if (value && value.dataId) { // TODO: use if will implemented proxy Single Source of Truth
+				// 	dataId = value.dataId
+				// 	$.DataStore.set(dataId, value)
+				// } else {
+					dataId = $.DataStore.set(null, value)
+					reference = new Reference(dataId)
+				}
+				// reference = new Reference(dataId)
+			//}
 
 			this.references[prop] = reference
 		}
 
-		$.DataStore.addOwner(id, prop, this.owner, this.onChangeMethod)
+		$.DataStore.addOwner(dataId, prop, this.owner, this.onChangeMethod)
 	}
 
-	setById(prop, id) {
-		this.references[prop] = new Reference(id)
+	setById(prop, dataId) {
+		this.references[prop] = new Reference(dataId)
 	}
 
 	forEach(callback) {
 		for (const prop in this.references) {
-			const value = $.DataStore.values[this.references[prop].id]
+			const value = $.DataStore.values[this.references[prop].dataId]
 			callback(value, prop, this.references)
 		}
 	}
