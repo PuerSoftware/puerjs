@@ -22,6 +22,7 @@ export default class CheckListItem extends ListItem {
 			name : this.props.name,
 			data : this.props.data
 		})
+		
 		return $.li([
 			$.Columns([
 				$.Box('left', [
