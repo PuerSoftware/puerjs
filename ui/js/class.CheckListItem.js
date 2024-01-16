@@ -1,7 +1,6 @@
 import $             from '../../index.js'
 import ListItem      from './class.ListItem.js'
 import InputCheckbox from './class.InputCheckbox.js'
-import UserMenu      from './class.UserMenu.js'
 
 
 export default class CheckListItem extends ListItem {
@@ -30,7 +29,11 @@ export default class CheckListItem extends ListItem {
 					this.checkbox
 				]),
 				$.Box('middle', [
-					$.UserMenu(),
+					$.Rows('user-menu', [
+				            $.div(),
+				            $.div(),
+				            $.div()
+				        ])
 				]),
 				$.Box('right', this.children)
 			])
