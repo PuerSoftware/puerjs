@@ -1,7 +1,7 @@
 import $             from '../../index.js'
 import ListItem      from './class.ListItem.js'
 import InputCheckbox from './class.InputCheckbox.js'
-import UserMenu from './class.UserMenu.js'
+import UserMenu      from './class.UserMenu.js'
 
 
 export default class CheckListItem extends ListItem {
