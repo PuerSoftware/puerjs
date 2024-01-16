@@ -28,13 +28,6 @@ export default class CheckListItem extends ListItem {
 				$.Box('left', [
 					this.checkbox
 				]),
-				$.Box('middle', [
-					$.Rows('user-menu', [
-				            $.div(),
-				            $.div(),
-				            $.div()
-				        ])
-				]),
 				$.Box('right', this.children)
 			])
 		])
