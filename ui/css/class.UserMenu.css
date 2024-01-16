@@ -1,0 +1,18 @@
+.user-menu {
+    height          : 24px;
+    padding         : 2px 4px;
+    align-self      : center;
+    justify-content : space-between;
+    cursor          : pointer;
+}
+    .user-menu div {
+        width            : 4px;
+        height           : 4px;
+        border-radius    : 2px;
+        background-color : #A9A9A9;
+        flex             : none;
+    }
+
+    .user-menu:hover div {
+        background-color : #5798D4;
+    }
