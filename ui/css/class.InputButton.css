@@ -4,14 +4,19 @@
 	font-family      : Inter, sans-serif;
 	font-size        : 14px;
 	font-weight      : 500;
-	line-height      : 17px;
+	line-height      : normal;
 	letter-spacing   : 0em;
 	text-align       : center;
 	border           : none;
 	border-radius    : 2px;
 	padding          : 8px 20px;
-	height           : 35px;
+	height           : 33px;
 }
 	.input-button:focus {
 		outline: none;
+	}
+
+	.input-button.btn-share {
+		padding    : 8px 8px 8px 29px;
+		background : var(--svg-share-icon) 8px center no-repeat, #07569E;
 	}
