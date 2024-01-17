@@ -8,6 +8,7 @@ export default class Search extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
+		this.props.default('placeholder', 'Search ...')
 		this.isFocused = false
 		this.input     = null
 	}
@@ -27,7 +28,7 @@ export default class Search extends $.Component {
 
 	render() {
 		this.input = $.InputText('confined', {
-			placeholder : 'Search ...',
+			placeholder : this.props.placeholder,
 			name        : this.props.name,
 			onfocus     : this._onFocus,
 			onblur      : this._onBlur,

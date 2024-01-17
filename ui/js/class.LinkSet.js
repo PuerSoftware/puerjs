@@ -1,18 +1,18 @@
 import $ from '../../index.js'
 
 
-class LinkSet extends $.Component {
-	constructor(props, children) {
-		super(props, children)
-		this.selected = null
+export default class LinkSet extends $.Component {
+	constructor(... args) {
+		super(... args)
+		this._selectedLink = null
 	}
 
 	select(selected) {
 		for (const link of this.$$.Link) {
-			link.removeCssClass('selected')
+			link.selected = false
 		}
-		this.selected = selected
-		this.selected.addCssClass('selected')
+		this._selectedLink          = selected
+		this._selectedLink.selected = true
 	}
 
 	render() {
@@ -21,4 +21,3 @@ class LinkSet extends $.Component {
 }
 
 $.define(LinkSet, import.meta.url)
-export default LinkSet
