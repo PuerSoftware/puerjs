@@ -1,6 +1,5 @@
-.component-page {
-	padding : 20px 40px;
-}
-	.component-page .body {
-		padding: 40px;
+.components-page {}
+
+	.components-page .body {
+		padding: 40px 60px;
 	}
