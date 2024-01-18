@@ -28,3 +28,10 @@ html, body {
         .app .page h3 {
             color : #aa7355;
         }
+
+.app .sidebar {
+    padding          : 10px 20px;
+    background-color : #CCC;
+    width            : 100px;
+    flex             : none;
+}
