@@ -1,3 +1,6 @@
+import StringMethods from './class.StringMethods.js'
+
+
 const monthNames = [
 	'Jan', 'Feb',
 	'Mar', 'Apr',  'May',
@@ -16,6 +19,11 @@ class DateMethods {
 		return timestamp
 	}
 
+	static intlMonth(date, code='en-US') {
+		const m = date.toLocaleString(code, { month: 'long' })
+		return StringMethods.capitalize(m)
+	}
+
     static format(date) {
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)
@@ -32,6 +40,15 @@ class DateMethods {
 		const minutes = date.getMinutes().toString()
 
 		return `${hours}:${minutes}`
+	}
+
+	static intlMonthYear(date, code='en-US') { // TODO: rename this method
+		date = DateMethods._dateToMilliSeconds(date)
+		date = new Date(date)
+		const m = DateMethods.intlMonth(date, code)
+		const y = date.getFullYear().toString()
+
+		return `${m} ${y}`
 	}
 
 	static internationalFormat(dateFrom, dateTo=null) {

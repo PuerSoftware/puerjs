@@ -20,7 +20,7 @@ class Link extends $.Component {
 	_pathToHash(path) {
 		const hashes = []
 		for (const p of path) {
-			let hash = `${p.name}:${p.value}`
+			let hash         = `${p.name}:${p.value}`
 			let childrenHash = this._pathToHash(p.routes)
 
 			if (childrenHash) {
@@ -29,7 +29,7 @@ class Link extends $.Component {
 
 			hashes.push(hash)
 		}
-		return  hashes.join(',')
+		return hashes.join(',')
 	}
 
 	set selected(select) {

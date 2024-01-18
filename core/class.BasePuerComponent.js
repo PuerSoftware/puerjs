@@ -426,8 +426,8 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.add(... arguments)
 	}
 
-	removeCssClass() {
-		this.element.classList.remove(... arguments)
+	removeCssClass(... args) {
+		this.element.classList.remove(... args)
 	}
 
 	toggleCssClass(...args) {
