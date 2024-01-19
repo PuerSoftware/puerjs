@@ -83,5 +83,7 @@ $.Events.define('LIST_ITEM_CHECK',  ['targetComponent', 'data', 'name', 'isCheck
 $.Events.define('SEARCH',           ['targetComponent', 'searchName',  'value'])
 $.Events.define('PAGINATE',         ['targetComponent', 'page'])
 $.Events.define('FORM_RESPONSE',    ['targetComponent', 'error', 'errors', 'isSaved'])
+$.Events.define('TAG_CLOSE',        ['targetComponent', 'label'])
+$.Events.define('TAG_CLICK',        ['targetComponent', 'label'])
 
 export default $

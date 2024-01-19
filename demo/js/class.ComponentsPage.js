@@ -11,6 +11,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Checkbox',     hash: 'cmp:checkbox' }),
 				$.Link({label: 'Flag',         hash: 'cmp:flag' }),
 				$.Link({label: 'SearchSelect', hash: 'cmp:checkbox' }),
+				$.Link({label: 'Tag',          hash: 'cmp:tag' }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -47,6 +48,15 @@ export default class ComponentsPage extends $.Component {
 					$.Flag({code: 'AE'}),
 					$.br(),
 					$.Flag({code: 'TR'})
+				]),
+				$.Box({route: 'cmp:tag'}, [
+					$.Tag({'label': 'Tag with close button'}),
+					$.br(),
+					$.Tag([
+						$.Flag({code: 'UA', label: 'Tag with child component'})
+					]),
+					$.br(),
+					$.Tag({isRemovable: false, label: 'No close button'})
 				])
 			])
 		])
