@@ -19,6 +19,7 @@ class InputSearchSelect extends FormInput {
 	}
 
 	onDataChange(data) {
+		console.log(data)
 		this.input.removeChildren()
 		this.addOptions(data)
 		this.hasData = true
@@ -67,7 +68,7 @@ class InputSearchSelect extends FormInput {
 
 	onInit() {
 		super.onInit()
-		// this.mixin(DataOwnerMixin)
+		this.mixin(DataOwnerMixin)
 	}
 }
 

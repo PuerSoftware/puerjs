@@ -6,7 +6,7 @@ export default class DataSource {
 	
 	/**************************************************************/
 
-	static define(name, cls, url, isSingular=false, isCacheable=true) {
+	static define(name, cls, url, isSingular=false, isCacheable=false) {
 		cls = cls || DataSource
 		if (DataSource.hasOwnProperty(name)) {
 			throw `DataSource class already has property "${name}"`

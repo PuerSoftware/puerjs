@@ -2,7 +2,7 @@ import $       from '../../index.js'
 import * as ui from '../../ui/index.js'
 
 import IndexPage       from './class.IndexPage.js'
-import ComponentsPage   from './class.ComponentsPage.js'
+import ComponentsPage  from './class.ComponentsPage.js'
 import MenuHeader      from './class.MenuHeader.js'
 
 $.application(
@@ -23,5 +23,12 @@ $.application(
 			])
 		}
 	}, import.meta.url,
-	() => {}
+	() => {
+		$.DataSource.define('Ports').fill([
+			{port: 'Port1', countryCode: 'UA', countryName: 'Ukraine'},
+			{port: 'Port2', countryCode: 'UA', countryName: 'Ukraine'},
+			{port: 'Port3', countryCode: 'UA', countryName: 'Ukraine'},
+			{port: 'Port4', countryCode: 'UA', countryName: 'Ukraine'},
+		])
+	}
 )

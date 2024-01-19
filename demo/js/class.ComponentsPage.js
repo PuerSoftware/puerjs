@@ -6,12 +6,12 @@ export default class ComponentsPage extends $.Component {
 	render() {
 		return $.Columns([
 			$.Rows('sidebar', [
-				$.Link({label: 'Button',       hash: 'cmp:button'   }),
-				$.Link({label: 'Calendar',     hash: 'cmp:calendar' }),
-				$.Link({label: 'Checkbox',     hash: 'cmp:checkbox' }),
-				$.Link({label: 'Flag',         hash: 'cmp:flag' }),
-				$.Link({label: 'SearchSelect', hash: 'cmp:checkbox' }),
-				$.Link({label: 'Tag',          hash: 'cmp:tag' }),
+				$.Link({label: 'Button',       hash: 'cmp:button'       }),
+				$.Link({label: 'Calendar',     hash: 'cmp:calendar'     }),
+				$.Link({label: 'Checkbox',     hash: 'cmp:checkbox'     }),
+				$.Link({label: 'Flag',         hash: 'cmp:flag'         }),
+				$.Link({label: 'SearchSelect', hash: 'cmp:searchselect' }),
+				$.Link({label: 'Tag',          hash: 'cmp:tag'          }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -24,7 +24,10 @@ export default class ComponentsPage extends $.Component {
 				]),
 				$.Box({route: 'cmp:checkbox'}),
 				$.Box({route: 'cmp:searchselect'}, [
-					$.InputSearchSelect({name: 'test'})
+					$.InputSearchSelect({
+						name       : 'test',
+						dataSource : 'Ports'
+					})
 				]),
 				$.Box({route: 'cmp:flag'}, [
 					$.h3({text: 'Square'}),
