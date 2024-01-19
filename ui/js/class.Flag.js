@@ -15,7 +15,6 @@ class Flag extends $.Component {
 	set code(code) {
 		this.props.code   = code.toLowerCase()
 		this.state.imgUrl = `url(${this._imgUrl}${this._imgSize}${this.props.code}.svg)`
-		console.log(this.state.imgUrl)
 	}
 
 	get code() {
