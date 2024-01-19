@@ -26,6 +26,7 @@ export default class ComponentsPage extends $.Component {
 					$.InputSearchSelect({name: 'test'})
 				]),
 				$.Box({route: 'cmp:flag'}, [
+					$.h3({text: 'Square'}),
 					$.Flag({code: 'US', square: true}),
 					$.br(),
 					$.Flag({code: 'UA', square: true}),
@@ -36,7 +37,7 @@ export default class ComponentsPage extends $.Component {
 					$.br(),
 					$.Flag({code: 'TR', square: true}),
 					$.br(),
-					$.br(),
+					$.h3({text: 'Default'}),
 					$.Flag({code: 'US'}),
 					$.br(),
 					$.Flag({code: 'UA'}),

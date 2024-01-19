@@ -7,7 +7,7 @@ export default class MenuHeader extends $.Component {
 		return $.div([
 			$.Link({label: 'Home',       hash: 'page:index' }),
 			$.span({text: ' | '}),
-			$.Link({label: 'Component',  hash: 'page:component'}),
+			$.Link({label: 'Components', hash: 'page:component'}),
 		])
 	}
 }
