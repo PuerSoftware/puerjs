@@ -79,6 +79,51 @@ class DateMethods {
 		}
 
 	}
+
+	static normalizeDate(y, m, d) {
+		y += Math.floor(m / 12)
+		m = Math.abs((m + 12) % 12)
+
+		let daysInMonth = DateMethods.getDaysInMonth(y, m)
+		if (d > daysInMonth) {
+			console.log('if', y, m, '|',  daysInMonth)
+			m ++
+			d -= daysInMonth
+		} else if (d < 1) {
+			m --
+			[y, m] = DateMethods.normalizeDate(y, m, 1)
+			daysInMonth = DateMethods.getDaysInMonth(y, m)
+			console.log('else if', y, m, '|',  daysInMonth)
+			d += daysInMonth
+		} else {
+			return [y, m, d]
+		}
+		return DateMethods.normalizeDate(y, m, d)
+	}
+
+	static getDaysInMonth(y, m) {
+		const monthDays = {}
+		for (let n = 0; n < 12; n ++) {
+			if (n === 1) { // February
+				monthDays[n] = DateMethods.isLeapYear(y)
+						? 29
+						: 28
+			} else if (n < 7) { // before August
+				monthDays[n] = n % 2 === 0
+					? 31
+					: 30
+			} else {
+				monthDays[n] = n % 2 !== 0
+					? 31
+					: 30
+			}
+		}
+		return monthDays[m]
+	}
+
+	static isLeapYear(y) {
+		return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)
+	}
 }
 
 export default DateMethods

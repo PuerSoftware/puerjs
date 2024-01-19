@@ -8,11 +8,13 @@ class InputCalendar extends FormInput {
 		super( ... args )
 		this.props.default('tagName', 'input')
 		this.props.default('type',    'text')
+		this.props.default('isRange',   false)
 
-		this.isShown     = false
-		this._date       = null
-		this._totalWeeks = 6
-		this._monthInc   = 0
+		this.isShown        = false
+		this._date          = null
+		this._selectedDates = []
+		this._totalWeeks    = 6
+		this._monthInc      = 0
 
 		this._week = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 		this._days = Array.from(
@@ -42,7 +44,74 @@ class InputCalendar extends FormInput {
 		this._update()
 	}
 
+	_onDayClick(event) {
+		const dayCmp = event.targetComponent
+		const date   = new Date(dayCmp.props.year, dayCmp.props.month, dayCmp.props.text)
+		dayCmp.addCssClass('selected')
+		if (this.props.range) {
+
+		} else {
+			this._selectedDates = []
+			this._selectedDates.push(date)
+		}
+
+		this._updateValue()
+	}
+
 	/************************************************/
+
+	_update() {
+		let [year, month, day] = $.Date.normalizeDate(
+			this._date.getFullYear(),
+			this._date.getMonth() + this._monthInc,
+			this._date.getDate()
+		)
+		const date                  = new Date(year, month, day)
+		this._dateString.props.text = $.Date.intlMonthYear(date.getTime())
+		this._fillCalendar(date)
+	}
+
+	_updateValue() {
+		this._selectedDates.sort()
+		this.value = $.Date.internationalFormat(...this._selectedDates)
+	}
+
+	_fillCalendar(date) {
+		const year  = date.getFullYear()
+		const month = date.getMonth()
+
+		const todayYear  = this._date.getFullYear()
+		const todayMonth = this._date.getMonth()
+		const todayDay   = this._date.getDate() // day of week
+
+		const [prevYear, prevMonth] = $.Date.normalizeDate(year, month - 1)
+		const currMonthLen          = $.Date.getDaysInMonth(year, month)
+		const currMonthStart        = new Date(year, month, 0).getDay()
+		const prevMonthLen          = $.Date.getDaysInMonth(prevYear, prevMonth)
+
+		let cls
+		let dayCount = -currMonthStart + 1
+		for (let y=0; y<this._totalWeeks; y++) {
+			for (let x=0; x<this._week.length; x++) {
+				cls = []
+				let [valueY, valueM, valueD] = $.Date.normalizeDate(year, month, dayCount)
+				if (valueD === todayDay && valueM === todayMonth && valueY === todayYear) {
+					console.log('today', valueD, valueM, valueY)
+					cls.push('today')
+				}
+
+				const cmp = this._days[y][x]
+				cmp.removeCssClass('prev-month', 'next-month', 'today')
+				cls.length && cmp.addCssClass(cls)
+
+				cmp.props.text  = valueD
+				cmp.props.month = valueM
+				cmp.props.year  = valueY
+				dayCount ++
+			}
+		}
+
+	}
 
 	_renderHeader() {
 		return $.Columns('head', [
@@ -70,91 +139,11 @@ class InputCalendar extends FormInput {
 			table.append(tr = $.tr())
 
 			for (let d = 0; d < this._week.length; d++) {
-				td = $.td('day', {text: d.toString()})
+				td = $.td('day', {onclick: this._onDayClick.bind(this)})
 				this._days[w][d] = td
 				tr.append(td)
 			}
 		}
-	}
-
-	_update() {
-		let month = this._date.getMonth() + this._monthInc
-		let year  = this._date.getFullYear()
-		let day   = this._date.getDate()
-		if (month < 0) {
-			month = 12 + month
-			year --
-		}
-		const date = new Date(year, month, day)
-		this._dateString.props.text = $.Date.intlMonthYear(date.getTime())
-		this._fillCalendar(date)
-	}
-
-	_fillCalendar(date) {
-		const year  = date.getFullYear()
-		const month = date.getMonth()
-
-		const todayYear  = this._date.getFullYear()
-		const todayMonth = this._date.getMonth()
-		const todayDay   = this._date.getDate()
-
-		console.log(year, month)
-		let prevMonth = month - 1
-		let prevYear = year
-		if (prevMonth < 0) {
-			prevYear --
-			prevMonth = 12
-		}
-
-		console.log('prevMonth', prevMonth)
-
-		const currMonthLen   = new Date(year, month, 0).getDate()
-		const currMonthStart = new Date(year, month, 0).getDay()
-		const prevMonthLen   = new Date(prevYear, prevMonth, 0).getDate()
-
-		console.log('currMonthLen',   currMonthLen)
-		console.log('currMonthStart', currMonthStart)
-		console.log('prevMonthLen',   prevMonthLen)
-
-		let startDayPrevMonth = prevMonthLen - currMonthStart + 1
-		let dayCount = startDayPrevMonth
-		let day
-		let cls
-
-		console.log('startDayPrevMonth', startDayPrevMonth)
-
-		for (let y=0; y<this._totalWeeks; y++) {
-			for (let x=0; x<this._week.length; x++) {
-				cls = []
-
-				if (day == todayDay - 1 && month == todayMonth && year == todayYear) {
-					console.log('today', day, month, year)
-					cls.push('today')
-				}
-
-				if (y === 0 && x < currMonthStart) {
-					day = dayCount
-					cls.push('prev-month')
-				} else if (dayCount > prevMonthLen) {
-					if (dayCount - prevMonthLen > currMonthLen) {
-						day = dayCount - prevMonthLen - currMonthLen
-						cls.push('next-month')
-					} else {
-						day = dayCount - prevMonthLen
-					}
-				} else {
-					day = dayCount
-				}
-
-				const cmp = this._days[y][x]
-				cmp.removeCssClass(['prev-month', 'next-month', 'today'])
-				cls.length && cmp.addCssClass(cls)
-				cmp.props.text = day
-				
-				dayCount ++
-			}
-		}
-
 	}
 
 	/************************************************/
