@@ -1,0 +1,15 @@
+.flag {
+	background-size     : contain;
+	background-position : 50%;
+	background-repeat   : no-repeat;
+	display             : inline-block;
+	position: relative;
+  	width: 1.333333em;
+  	line-height: 1em;
+}
+	.flag:before {
+		content: ' ';
+	}
+	.flag.square {
+		width: 1em;
+	}

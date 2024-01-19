@@ -3,3 +3,6 @@
 	.components-page .body {
 		padding: 40px 60px;
 	}
+	.components-page .body > * {
+		display: block;
+	}

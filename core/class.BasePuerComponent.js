@@ -394,17 +394,17 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	mixin(mixinClass) {
-        const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
-        for (let key in methods) {
-            if (key !== 'constructor') {
-                const descriptor = methods[key]
-                if (typeof descriptor.value === 'function') {
-                    this[key] = descriptor.value.bind(this)
-                } else {
-                    Object.defineProperty(this, key, descriptor)
-                }
-            }
-        }
+		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
+		for (let key in methods) {
+			if (key !== 'constructor') {
+				const descriptor = methods[key]
+				if (typeof descriptor.value === 'function') {
+					this[key] = descriptor.value.bind(this)
+				} else {
+					Object.defineProperty(this, key, descriptor)
+				}
+			}
+		}
 		mixinClass.init(this)
 	}
 
@@ -426,8 +426,8 @@ class BasePuerComponent extends PuerObject {
 		this.element.classList.add(... arguments)
 	}
 
-	removeCssClass(... args) {
-		this.element.classList.remove(... args)
+	removeCssClass() {
+		this.element.classList.remove(... arguments)
 	}
 
 	toggleCssClass(...args) {
@@ -450,12 +450,10 @@ class BasePuerComponent extends PuerObject {
 		let styles = {}
 		if (value) {
 			styles[prop] = value
-		} else {
-			styles = prop
+			for (let [property, value] of Object.entries(styles)) {
+				this.element.style[property] = value
+			}
 		}
-		for (let [property, value] of Object.entries(styles)) {
-            this.element.style[property] = value
-        }
 	}
 
 	setAttribute    (name, value) { return this.element.setAttribute(name, value) }

@@ -35,3 +35,6 @@ html, body {
     width            : 100px;
     flex             : none;
 }
+    .app .sidebar > * {
+        flex: none;
+    }
