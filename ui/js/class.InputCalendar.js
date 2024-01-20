@@ -2,8 +2,158 @@ import $ from '../../index.js'
 
 import FormInput from './class.FormInput.js'
 
+/************************************************************************************************/
 
-class InputCalendar extends FormInput {
+class _Day extends $.Component {
+	set date(ymd) {
+		const oldDate = this.date
+
+		this.props.year  = ymd[0]
+		this.props.month = ymd[1]
+		this.props.text  = ymd[2]
+
+		if (!$.Date.eq(...oldDate, ...this.date)) {
+			this.selected = false
+		}
+	}
+
+	get date() {
+		return [
+			this.props.year,
+			this.props.month,
+			this.props.text,
+		]
+	}
+
+	get Date() {
+		return new Date(...this.date)
+	}
+
+	set selected(select) {
+		select
+			? this.addCssClass('selected')
+			: this.removeCssClass('selected')
+	}
+
+	clearCss() {
+		this.removeCssClass('prev-month', 'next-month', 'today')
+	}
+
+	render() {
+		return $.td('day', {... this.props})
+	}
+}
+
+/************************************************************************************************/
+
+class _DatesRange extends Array {
+	constructor(... args) {
+		super(... args)
+		this._rangeStart = null
+		this._rangeEnd   = null
+		this._cmpStart   = null
+		this._cmpEnd     = null
+
+		this._isIntervalRegistered = false
+	}
+
+	/************************************************/
+
+	_intervalRegistrationRequired() {
+		if (!this._isIntervalRegistered) {
+			throw 'Range interval must be registered, when this method is called'
+		}
+	}
+
+	_sort() {
+		this.sort((a, b) => {
+			return a.Date - b.Date
+		})
+	}
+
+
+	_isStart(d) { return this._rangeStart && $.Date.eq(this._rangeStart, d) }
+	_isEnd(d) { return this._rangeEnd && $.Date.eq(this._rangeEnd, d) }
+
+	/************************************************/
+
+	get rangeString() {
+		// Range start and range end must be registered at this moment
+		return Array.from(this.rangeInterval)
+			.map(date => $.Date.intlNumericFormat(date))
+			.join(' - ')
+	}
+
+	get rangeInterval() {
+		// Range start and range end must be registered at this moment
+		if (this.length) {
+			if (this._rangeEnd && !$.Date.eq(this._rangeStart, this._rangeEnd)) {
+				return [this._rangeStart, this._rangeEnd]
+			}
+			return [this._rangeStart]
+		}
+		return []
+	}
+
+	/************************************************/
+
+	clearSelection() {
+		for (const cmp of this) {
+			cmp.selected = false
+		}
+		this._rangeStart = null
+		this._rangeEnd   = null
+		this.splice(0, 2)
+	}
+
+	ensureSelection() {
+		// Range start and range end must be registered at this moment
+		for (const cmp of this) {
+			if (this._isStart(cmp.Date) || this._isEnd(cmp.Date)) {
+				cmp.selected = true
+			} else {
+				cmp.selected = false
+			}
+		}
+	}
+
+	replaceDateComponents(... components) {
+		// Range start and range end must be registered at this moment
+		for (const cmp of components) {
+			console.log('OUT', cmp.Date)
+			if (this._isStart(cmp.Date)) {
+				this[0] = cmp
+			}
+			if (this._isEnd(cmp.Date)) {
+				this[1] = cmp
+			}
+		}
+	}
+
+	registerRangeInterval() {
+		if (this.length) {
+			if (this._rangeStart) {
+				this._sort()
+				if (this[1]) {
+					this._rangeEnd = this[1].Date
+				}
+			} else {
+				this._rangeStart = this[0].Date
+			}
+		}
+	}
+
+	isInRange(date) {
+		// Range start and range end must be registered at this moment
+		if (this._rangeStart && this._rangeEnd) {
+			return $.Date.gt(date, this._rangeStart) && $.Date.lt(date, this._rangeEnd)
+		}
+	}
+}
+
+/************************************************************************************************/
+
+export default class InputCalendar extends FormInput {
 	constructor( ... args ) {
 		super( ... args )
 		this.props.default('tagName', 'input')
@@ -12,7 +162,7 @@ class InputCalendar extends FormInput {
 
 		this.isShown        = false
 		this._date          = null
-		this._selectedDates = []
+		this._selectedDates = new _DatesRange()
 		this._totalWeeks    = 6
 		this._monthInc      = 0
 
@@ -45,72 +195,95 @@ class InputCalendar extends FormInput {
 	}
 
 	_onDayClick(event) {
-		const dayCmp = event.targetComponent
-		const date   = new Date(dayCmp.props.year, dayCmp.props.month, dayCmp.props.text)
-		dayCmp.addCssClass('selected')
-		if (this.props.range) {
-
+		if (this.props.isRange) {
+			if (this._selectedDates.length === 2) {
+				this._selectedDates.clearSelection()
+			}
 		} else {
-			this._selectedDates = []
-			this._selectedDates.push(date)
+			this._selectedDates.clearSelection()
 		}
 
-		this._updateValue()
+		this._selectedDates.push(event.targetComponent)
+		this._selectedDates.registerRangeInterval()
+		this._selectedDates.ensureSelection()
+		this.value = this._selectedDates.rangeString
+		this.props.isRange && this._fillRange()
+	}
+
+	/************************************************/
+
+	_walk(f) {
+		for (let y=0; y<this._totalWeeks; y++) {
+			for (let x = 0; x < this._week.length; x++) {
+				f.bind(this)(this._days[y][x])
+			}
+		}
+	}
+
+	_getDaysByDates(dates) {
+		const found = []
+		this._walk(cell => {
+			for (const date of dates) {
+				if ($.Date.eq(date, cell.Date)) {
+					found.push(cell)
+				}
+			}
+		})
+		return found
 	}
 
 	/************************************************/
 
 	_update() {
-		let [year, month, day] = $.Date.normalizeDate(
-			this._date.getFullYear(),
-			this._date.getMonth() + this._monthInc,
-			this._date.getDate()
-		)
-		const date                  = new Date(year, month, day)
-		this._dateString.props.text = $.Date.intlMonthYear(date.getTime())
-		this._fillCalendar(date)
+		this._dateString.props.text = $.Date.intlMonthYear(this.normalDate.getTime())
+		this._fillCalendar(this.normalDate)
+
+		const cellToReplace = this._getDaysByDates(this._selectedDates.rangeInterval)
+
+		this._selectedDates.replaceDateComponents(...cellToReplace)
+		this._selectedDates.ensureSelection()
+		this.props.isRange && this._fillRange()
 	}
 
-	_updateValue() {
-		this._selectedDates.sort()
-		this.value = $.Date.internationalFormat(...this._selectedDates)
+	_fillRange() {
+		this._walk(cell => {
+			if (this._selectedDates.isInRange(cell.Date)) {
+				cell.addCssClass('selected-range')
+			} else {
+				cell.removeCssClass('selected-range')
+			}
+		})
 	}
 
 	_fillCalendar(date) {
 		const year  = date.getFullYear()
 		const month = date.getMonth()
 
-		const todayYear  = this._date.getFullYear()
-		const todayMonth = this._date.getMonth()
-		const todayDay   = this._date.getDate() // day of week
-
-		const [prevYear, prevMonth] = $.Date.normalizeDate(year, month - 1)
-		const currMonthLen          = $.Date.getDaysInMonth(year, month)
-		const currMonthStart        = new Date(year, month, 0).getDay()
-		const prevMonthLen          = $.Date.getDaysInMonth(prevYear, prevMonth)
+		const currMonthLen   = $.Date.getDaysInMonth(year, month)
+		const currMonthStart = new Date(year, month, 0).getDay()
 
 		let cls
 		let dayCount = -currMonthStart + 1
-		for (let y=0; y<this._totalWeeks; y++) {
-			for (let x=0; x<this._week.length; x++) {
+
+		this._walk(cell => {
 				cls = []
-				let [valueY, valueM, valueD] = $.Date.normalizeDate(year, month, dayCount)
-				if (valueD === todayDay && valueM === todayMonth && valueY === todayYear) {
-					console.log('today', valueD, valueM, valueY)
+				const normalDate = $.Date.normalizeDate(year, month, dayCount)
+
+				if ($.Date.eq(new Date(...normalDate), this._date)) {
 					cls.push('today')
 				}
+				if (dayCount < 1) {
+					cls.push('prev-month')
+				}
+				if (dayCount > currMonthLen) {
+					cls.push('next-month')
+				}
 
-				const cmp = this._days[y][x]
-				cmp.removeCssClass('prev-month', 'next-month', 'today')
-				cls.length && cmp.addCssClass(cls)
-
-				cmp.props.text  = valueD
-				cmp.props.month = valueM
-				cmp.props.year  = valueY
+				cell.clearCss()
+				cls.length && cell.addCssClass(cls)
+				cell.date  = normalDate
 				dayCount ++
-			}
-		}
-
+		})
 	}
 
 	_renderHeader() {
@@ -139,7 +312,7 @@ class InputCalendar extends FormInput {
 			table.append(tr = $.tr())
 
 			for (let d = 0; d < this._week.length; d++) {
-				td = $.td('day', {onclick: this._onDayClick.bind(this)})
+				td = $._Day({onclick: this._onDayClick.bind(this)})
 				this._days[w][d] = td
 				tr.append(td)
 			}
@@ -150,11 +323,22 @@ class InputCalendar extends FormInput {
 
 	set date(timestamp) {
 		this._date = new Date(timestamp)
+		this._date.setHours(0, 0 ,0 ,0)
 		this._update()
 	}
 
 	get date() {
 		return this._date
+	}
+
+	get normalDate() {
+		return new Date(
+			... $.Date.normalizeDate(
+				this._date.getFullYear(),
+				this._date.getMonth() + this._monthInc,
+				this._date.getDate()
+			)
+		)
 	}
 
 	onRender() {
@@ -174,5 +358,5 @@ class InputCalendar extends FormInput {
 	}
 }
 
+$.define(_Day)
 $.define(InputCalendar, import.meta.url)
-export default InputCalendar

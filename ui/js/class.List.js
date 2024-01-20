@@ -7,26 +7,27 @@ export default class List extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
-		this.props.default('ensureSelection', true)
+		this.props.default('isSelectable',    true)
+		this.props.default('ensureSelection', this.props.isSelectable)
 		this.props.default('itemRenderer', 'ListItem')
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = this.props.itemRenderer
 		this.itemContainer = this // may be set manually in child class
 
-		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
+		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect, this.name)
 
 		this._selectedId = null
 	}
 
 	_onItemSelect(event) {
 		// Its mean, that these items is owned by this list
-		if (event.detail.name === this.props.name) {
+		if (this.props.isSelectable) {
 			for (const itemId in this.items) {
 				const item = this.items[itemId]
 				if (event.detail.targetComponent === item) {
 					this._selectedId = itemId
-						item.select()
+					item.select()
 				} else {
 					item.deselect()
 				}

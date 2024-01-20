@@ -6,17 +6,18 @@ import PuerError          from './class.PuerError.js'
 import PuerHtmlElement    from './class.PuerHtmlElement.js'
 import PuerTextElement    from './class.PuerTextElement.js'
 
-import StringMethods      from '../library/class.StringMethods.js'
-import ObjectMethods      from '../library/class.ObjectMethods.js'
-import DateMethods        from '../library/class.DateMethods.js'
-import SetMethods         from '../library/class.SetMethods.js'
-import Request            from '../library/class.Request.js'
-import DataSet            from '../library/class.DataSet.js'
-import DataStore          from '../library/class.DataStore.js'
-import DataSource         from '../library/class.DataSource.js'
-import FormDataSource     from '../library/class.FormDataSource.js'
-import Reference          from '../library/class.Reference.js'
-import RouteRoot          from '../library/class.Route.js'
+// import StringMethods      from '../library/class.StringMethods.js'
+// import ObjectMethods      from '../library/class.ObjectMethods.js'
+// import DateMethods        from '../library/class.DateMethods.js'
+// import SetMethods         from '../library/class.SetMethods.js'
+// import Request            from '../library/class.Request.js'
+// import DataSet            from '../library/class.DataSet.js'
+// import DataStore          from '../library/class.DataStore.js'
+// import DataSource         from '../library/class.DataSource.js'
+// import FormDataSource     from '../library/class.FormDataSource.js'
+// import Reference          from '../library/class.Reference.js'
+// import RouteRoot          from '../library/class.Route.js'
+import * as library from '../library/index.js'
 
 
 class PuerConstructor {
@@ -136,10 +137,10 @@ class PuerConstructor {
 	}
 
 	_defineTag(name) {
-		let className = 'PuerTag' + StringMethods.capitalize(name)
+		let className = 'PuerTag' + library.StringMethods.capitalize(name)
 		eval(
 			`class ${className} extends PuerHtmlElement {};` +
-			`window.${className} = ${className}`
+			`window.${className} = ${className}` // TODO: why window?
 		)
 		Object.defineProperty(window[className], 'name', { value: className })
 		window[className].prototype.chainName = name
@@ -174,6 +175,10 @@ class PuerConstructor {
 			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, $, 'define')
 		}
 		return this._defineComponent(cls, importUrl)
+	}
+
+	defineClass(cls, defineAs=null) {
+		this[defineAs || cls.name] = cls
 	}
 
 	/*********************** PUBLIC ***********************/
@@ -294,20 +299,20 @@ const $ = new PuerConstructor()
 $.Component          = PuerComponent
 $.ComponentMixin     = PuerComponentMixin
 
-$.String             = StringMethods
-$.Object             = ObjectMethods
-$.Date               = DateMethods
-$.Set                = SetMethods
-$.Request            = Request
+$.String             = library.StringMethods
+$.Object             = library.ObjectMethods
+$.Date               = library.DateMethods
+$.Set                = library.SetMethods
+$.Request            = library.Request
 
-$.DataSet            = DataSet
-$.DataStore          = DataStore
-$.DataSource         = DataSource
-$.FormDataSource     = FormDataSource
+$.DataSet            = library.DataSet
+$.DataStore          = library.DataStore
+$.DataSource         = library.DataSource
+$.FormDataSource     = library.FormDataSource
 
-$.Reference          = Reference
+$.Reference          = library.Reference
 
-$.RouteRoot          = RouteRoot
+$.RouteRoot          = library.RouteRoot
 
 $.Reference.PUER  = $
 $.DataSource.PUER = $
@@ -315,4 +320,5 @@ $.DataSet.PUER    = $
 $.DataStore.PUER  = $
 
 window.$ = $
+
 export default $

@@ -9,7 +9,22 @@ const monthNames = [
 	'Dec'
 ]
 
+function _normalizeCompareArgs(...args) {
+	if (args.length === 6) {
+		return [new Date(...args.slice(0, 3)), new Date(...args.slice(3))]
+	}
+	if (args.length === 2) {
+		return args
+	}
+	throw 'Args must have len 6 (y1, m1, d, y2, m2, d2) or 2 (Date, Date)'
+}
+
+function normalCompareArgs(f) {
+	return (... args) => f(... _normalizeCompareArgs(... args))
+}
+
 class DateMethods {
+
 	static _dateToMilliSeconds(timestamp) {
 		const date = new Date(timestamp)
 		timestamp = date.getTime()
@@ -51,6 +66,10 @@ class DateMethods {
 		return `${m} ${y}`
 	}
 
+	static intlNumericFormat(date) {
+		return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+	}
+
 	static internationalFormat(dateFrom, dateTo=null) {
 		if (!dateFrom && !dateTo) { return null }
 		dateFrom = DateMethods._dateToMilliSeconds(dateFrom)
@@ -86,14 +105,12 @@ class DateMethods {
 
 		let daysInMonth = DateMethods.getDaysInMonth(y, m)
 		if (d > daysInMonth) {
-			console.log('if', y, m, '|',  daysInMonth)
 			m ++
 			d -= daysInMonth
 		} else if (d < 1) {
 			m --
 			[y, m] = DateMethods.normalizeDate(y, m, 1)
 			daysInMonth = DateMethods.getDaysInMonth(y, m)
-			console.log('else if', y, m, '|',  daysInMonth)
 			d += daysInMonth
 		} else {
 			return [y, m, d]
@@ -124,6 +141,15 @@ class DateMethods {
 	static isLeapYear(y) {
 		return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)
 	}
+
+	static eq(dateA, dateB) { return dateA.getTime() === dateB.getTime() }
+	static gt(dateA, dateB) { return dateA.getTime() > dateB.getTime() }
+	static lt(dateA, dateB) { return dateA.getTime() < dateB.getTime() }
 }
+
+
+DateMethods.eq = normalCompareArgs(DateMethods.eq)
+DateMethods.gt = normalCompareArgs(DateMethods.gt)
+DateMethods.lt = normalCompareArgs(DateMethods.lt)
 
 export default DateMethods

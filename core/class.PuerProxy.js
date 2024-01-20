@@ -70,30 +70,14 @@ class PuerProxy {
 			dataId = value.dataId
 		} else {
 			if (reference) {
-				// if (value && value.dataId) { // TODO: use if will implemented proxy Single Source of Truth
-				// 	dataId             = value.dataId
-				// 	const newReference = new Reference(dataId)
-				// 	newReference.merge(reference)
-				// 	$.DataStore.set(dataId, value)
-				// 	reference = newReference
-				// } else {
-					$.DataStore.set(reference.dataId, value)
-					dataId = reference.dataId
-				// }
+				$.DataStore.set(reference.dataId, value)
+				dataId = reference.dataId
 			} else {
-				// if (value && value.dataId) { // TODO: use if will implemented proxy Single Source of Truth
-				// 	dataId = value.dataId
-				// 	$.DataStore.set(dataId, value)
-				// } else {
-					dataId = $.DataStore.set(null, value)
-					reference = new Reference(dataId)
-				}
-				// reference = new Reference(dataId)
-			//}
-
+				dataId = $.DataStore.set(null, value)
+				reference = new Reference(dataId)
+			}
 			this.references[prop] = reference
 		}
-
 		$.DataStore.addOwner(dataId, prop, this.owner, this.onChangeMethod)
 	}
 
