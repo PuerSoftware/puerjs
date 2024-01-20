@@ -83,6 +83,7 @@ class PuerComponent extends BasePuerComponent {
 	trigger(name, data) {
 		if (this.isActive) {
 			data.targetComponent = this
+			data.targetName      = this.props.name || null
 			$.Events.trigger(name, data)
 		}
 	}

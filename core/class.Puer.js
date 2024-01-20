@@ -221,6 +221,7 @@ class PuerConstructor {
 			if (context) {
 				f.apply(context, args)
 			} else {
+				args = args || []
 				f(...args)
 			}
 		}, timeout)

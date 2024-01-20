@@ -29,7 +29,6 @@
 		font-family      : Inter, sans-serif;
 		font-size        : 14px;
 		font-weight      : 400;
-		color            : #333;
 	}
 		.form-input > input:focus,
 		.form-input > select:focus,

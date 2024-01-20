@@ -100,6 +100,11 @@ class BasePuerComponent extends PuerObject {
 
 	__init() {
 		this._cascade('__init')
+		if (this.props.mixins) {
+			for (const mixin of this.props.mixins) {
+				this.mixin(mixin)
+			}
+		}
 		this.onInit && this.onInit()
 	}
 
@@ -168,9 +173,10 @@ class BasePuerComponent extends PuerObject {
 			: item.parent.getChainAncestor(chainName, false)
 	}
 
-	get $   () { return new PuerComponentSet([this]).$   }
-	get $$  () { return new PuerComponentSet([this]).$$  }
-	get $$$ () { return new PuerComponentSet([this]).$$$ }
+	get $    () { return new PuerComponentSet([this]).$   }
+	get $$   () { return new PuerComponentSet([this]).$$  }
+	get $$$  () { return new PuerComponentSet([this]).$$$ }
+	get name () { return this.props.name || null          }
 
 
 	/*********************** PRIVATE ***********************/
@@ -242,6 +248,7 @@ class BasePuerComponent extends PuerObject {
 			const targetComponent = this
 			let _f = function (event) {
 				event.targetComponent = targetComponent
+				event.targetName      = targetComponent.props.name || null
 				event.extraDetail     = extraDetail
 				return f.call(targetComponent, event)
 			}
@@ -552,6 +559,9 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	toggle(visible) {
+		if (visible === undefined) {
+			visible = this.hasCssClass('hidden')
+		}
 		visible ? this.show() : this.hide()
 	}
 

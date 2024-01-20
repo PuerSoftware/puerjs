@@ -1,5 +1,5 @@
 import $              from '../../index.js'
-import ListItem   from './class.ListItem.js'
+import ListItem       from './class.ListItem.js'
 import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 
 
@@ -8,14 +8,15 @@ export default class List extends $.Component {
 		super(props, children)
 		this.props.require('name')
 		this.props.default('ensureSelection', true)
+		this.props.default('itemRenderer', 'ListItem')
 
 		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
-		this.itemRenderer  = 'ListItem'
+		this.itemRenderer  = this.props.itemRenderer
 		this.itemContainer = this // may be set manually in child class
 
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect)
 
-		this._selectedId  = null
+		this._selectedId = null
 	}
 
 	_onItemSelect(event) {
@@ -44,10 +45,8 @@ export default class List extends $.Component {
 	}
 
 	_selectFirstItem() {
-		if (this.length) {
-			const item = this.firstItem
-			item && item._select()
-		}
+		const item = this.firstItem
+		item && this.props.ensureSelection && item._select()
 	}
 
 	/**************************************************************/
@@ -57,7 +56,8 @@ export default class List extends $.Component {
 	}
 
 	get firstItem() {
-		return Object.values(this.items)[0]
+		const items = Object.values(this.items)
+		return items.length ? items[0] : null
 	}
 
 	onRoute() {

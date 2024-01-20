@@ -165,8 +165,10 @@ export default class DataSource {
 	/******************************************************************/
 
 	fill(items) {
-		this.addItems(items)
-		this._onLoad()
+		DataSource.PUER.defer(() => {
+			this.addItems(items)
+			this._onLoad()
+		})
 	}
 
 	load(method=null, params=null, headers=null) {

@@ -78,12 +78,12 @@ import PuerApp from './core/class.PuerApp.js'
 
 $.App = PuerApp
 
-$.Events.define('LIST_ITEM_SELECT', ['targetComponent', 'data', 'name'])
-$.Events.define('LIST_ITEM_CHECK',  ['targetComponent', 'data', 'name', 'isChecked', 'isResend'])
-$.Events.define('SEARCH',           ['targetComponent', 'searchName',  'value'])
-$.Events.define('PAGINATE',         ['targetComponent', 'page'])
-$.Events.define('FORM_RESPONSE',    ['targetComponent', 'error', 'errors', 'isSaved'])
-$.Events.define('TAG_CLOSE',        ['targetComponent', 'label'])
-$.Events.define('TAG_CLICK',        ['targetComponent', 'label'])
+$.Events.define('LIST_ITEM_SELECT', ['data', 'name'])
+$.Events.define('LIST_ITEM_CHECK',  ['data', 'name', 'isChecked', 'isResend'])
+$.Events.define('SEARCH',           ['searchName',  'value'])
+$.Events.define('PAGINATE',         ['page'])
+$.Events.define('FORM_RESPONSE',    ['error', 'errors', 'isSaved'])
+$.Events.define('TAG_CLOSE',        ['label'])
+$.Events.define('TAG_CLICK',        ['label'])
 
 export default $

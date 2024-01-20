@@ -23,9 +23,10 @@ class PuerEvents extends EventTarget {
 	/*********************** PRIVATE ***********************/
 
 	_validateEventDetail(name, detail) {
-		const requiredProps = $.EventProps[name]
+		const requiredProps = $.EventProps[name].concat(['targetName', 'targetComponent'])
 		const props         = Object.keys(detail)
 		const missingProps  = requiredProps.filter(x => !props.includes(x))
+
 		if (missingProps.length > 0) {
 			throw `Event detail ${name} is missing props: "${missingProps.join(', ')}"`
 		}
