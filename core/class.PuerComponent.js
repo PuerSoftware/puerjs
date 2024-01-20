@@ -63,17 +63,24 @@ class PuerComponent extends BasePuerComponent {
 		return $.div()
 	}
 
-	on(name, f, options) {
+	on(name, f, matchTarget=null) { // matchTarget can be either targetComponent or targetName
 		this.listeners[name] = (...args) => {
-			if (this.isActive && args[0].detail.targetComponent.isActive) {
-				f.bind(this)(...args)
+			const d = args[0].detail
+			if (this.isActive && d.targetComponent.isActive) {
+				if (matchTarget) {
+					if ([d.targetName, d.targetComponent].includes(matchTarget)) {
+						f.bind(this)(...args)
+					}
+				} else {
+					f.bind(this)(...args)
+				}
 			}
 		}
-		$.Events.on(name, this.listeners[name], options)
+		$.Events.on(name, this.listeners[name])
 	}
 
-	once(name, f, options) {
-		$.Events.once(name, f.bind(this), options)
+	once(name, f) {
+		$.Events.once(name, f.bind(this))
 	}
 
 	off(name) {

@@ -1,5 +1,8 @@
 .input-search-select {
 	position: relative;
+	flex-direction: column;
+	justify-content: left;
+	align-items: flex-start;
 }
 	.input-search-select > .menu {
 		margin: 0;
@@ -10,4 +13,15 @@
 		border: 1px solid black;
 		min-height: 100px;
 		width: 100%;
+		flex-grow: 0;
+	}
+	.input-search-select > .tags {
+		display: block;
+		flex: none;
+		flex-grow: 0;
+		height: 0;
+	}
+	.input-search-select > .search {
+		display: block;
+		flex: none;
 	}

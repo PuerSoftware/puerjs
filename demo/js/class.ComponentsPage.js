@@ -25,8 +25,8 @@ export default class ComponentsPage extends $.Component {
 				$.Box({route: 'cmp:checkbox'}),
 				$.Box({route: 'cmp:searchselect'}, [
 					$.InputSearchSelect({
-						name       : 'test',
-						dataSource : 'Ports'
+						name         : 'ports',
+						dataSource   : 'Ports'
 					})
 				]),
 				$.Box({route: 'cmp:flag'}, [

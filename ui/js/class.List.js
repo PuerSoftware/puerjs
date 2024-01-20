@@ -65,7 +65,11 @@ export default class List extends $.Component {
 	}
 
 	renderItem(item) {
-		return $[this.itemRenderer]({
+		let renderer = this.itemRenderer
+		if ($.isString(this.itemRenderer)) {
+			renderer = $[this.itemRenderer]
+		}
+		return renderer({
 			data: item,
 			name: this.props.name
 		})

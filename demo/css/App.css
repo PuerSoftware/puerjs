@@ -32,7 +32,6 @@ html, body {
 .app .sidebar {
     padding          : 10px 20px;
     background-color : #CCC;
-    width            : 100px;
     flex             : none;
 }
     .app .sidebar > * {

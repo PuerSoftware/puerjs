@@ -7,11 +7,11 @@ class Link extends $.Component {
 		this._linkSet = null
 	}
 
-	navigate() {
+	_navigate() {
 		if (this._linkSet) {
 			this._linkSet.select(this)
 		}
-		this.route(this.props.hash)
+		this.props.hash && this.route(this.props.hash)
 		if (this.props.f) {
 			this.props.callback(this)
 		}
@@ -50,7 +50,7 @@ class Link extends $.Component {
 	}
 
 	render() {
-		return $.div({onclick : this.navigate}, [
+		return $.div({onclick : this._navigate}, [
 			$.a ({text : this.props.label})
 		])
 	}

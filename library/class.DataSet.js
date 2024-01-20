@@ -19,13 +19,14 @@ export default class DataSet {
 
 	/**************************************************************/
 
-	constructor(name, searchConfig=null,  filter=null) {
+	constructor(name, searchConfig=null, filter=null) {
 		this.name          = name
 		this.itemIds       = []
 		this.searchConfig  = searchConfig
 		this.isInitialized = false
 		this.index         = new Map()
-		this._entryFilter  = filter
+		this._entryFilter  = filter    // To get a subset of datasource data
+		this._excluded     = new Set() // To exclude items dynamically
 	}
 
 	/**************************************************************/
@@ -87,7 +88,11 @@ export default class DataSet {
 			const map   = {}
 
 			items.forEach((item, index) => {
-				map[item.dataId] = f(item)
+				if (this._excluded.has(item.dataId)) {
+					map[item.dataId] = false
+				} else {
+					map[item.dataId] = f(item)
+				}
 			})
 
 			this._lastFilter = f
@@ -123,7 +128,15 @@ export default class DataSet {
 			})
 		})
 
-		return this.filter(item => result.has(item.dataId))
+		return this.filter(item => result.has(item.dataId) && !this._excluded.has(item.dataId))
+	}
+
+	exclude(id) {
+		this._excluded.add(id)
+	}
+
+	include(id) {
+		this._excluded.delete(id)
 	}
 
 	data() {

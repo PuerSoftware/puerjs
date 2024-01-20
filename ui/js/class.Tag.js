@@ -6,17 +6,22 @@ export default class Tag extends $.Component {
 		super(... args)
 		this.props.default('label', '')
 		this.props.default('isRemovable', true)
+		this.props.default('data',        null)
 
 		this._closeButton = null
 	}
 
 	_onClose() {
-		this.trigger($.Event.TAG_CLOSE, {label: this.props.label})
+		this.trigger($.Event.TAG_REMOVE, {label: this.props.label})
 		this.remove()
 	}
 
 	_onClick() {
 		this.trigger($.Event.TAG_CLICK, {label: this.props.label})
+	}
+
+	get data() {
+		return this.props.data
 	}
 
 	render() {

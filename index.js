@@ -80,10 +80,10 @@ $.App = PuerApp
 
 $.Events.define('LIST_ITEM_SELECT', ['data', 'name'])
 $.Events.define('LIST_ITEM_CHECK',  ['data', 'name', 'isChecked', 'isResend'])
-$.Events.define('SEARCH',           ['searchName',  'value'])
+$.Events.define('SEARCH',           ['value'])
 $.Events.define('PAGINATE',         ['page'])
 $.Events.define('FORM_RESPONSE',    ['error', 'errors', 'isSaved'])
-$.Events.define('TAG_CLOSE',        ['label'])
+$.Events.define('TAG_REMOVE',       ['label'])
 $.Events.define('TAG_CLICK',        ['label'])
 
 export default $

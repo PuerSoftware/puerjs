@@ -14,15 +14,12 @@ export default class DataListMixin {
 		component._filterMap    = null
 		component._sortMap      = null
 
-		component.on($.Event.SEARCH, component._onSearch)
+		component.on($.Event.SEARCH, component._onSearch, component.props.searchName)
 	}
 
-
 	_onSearch(event) {
-		if (this.props.searchName === event.detail.searchName) {
-			this._searchQuery = event.detail.value
-			this._dataSet.search(this._searchQuery)
-		}
+		this._searchQuery = event.detail.value
+		this._dataSet.search(this._searchQuery)
 	}
 
 	/**************************************************************/
