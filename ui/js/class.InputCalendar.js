@@ -33,9 +33,11 @@ class _Day extends $.Component {
 			this.removeCssClass('selected', 'start-range', 'end-range', 'mid-range')
 			if ($.Date.eq(start, this.date)) {
 				this.addCssClass('selected', 'start-range')
-			} else if ($.Date.eq(end, this.date)) {
+			}
+			if ($.Date.eq(end, this.date)) {
 				this.addCssClass('selected', 'end-range')
-			} else if ($.Date.gt(this.date, start) && $.Date.lt(this.date, end)) {
+			}
+			if ($.Date.gt(this.date, start) && $.Date.lt(this.date, end)) {
 				this.addCssClass('selected', 'mid-range')
 			}
 		}
