@@ -30,11 +30,13 @@ class _Day extends $.Component {
 		if (range.length) {
 			const start = range[0]
 			const end   = range[1] || start
-			this.removeCssClass('selected', 'selected-range')
-			if ($.Date.eq(start, this.date) || $.Date.eq(end, this.date)) {
-				this.addCssClass('selected')
+			this.removeCssClass('selected', 'start-range', 'end-range', 'mid-range')
+			if ($.Date.eq(start, this.date)) {
+				this.addCssClass('selected', 'start-range')
+			} else if ($.Date.eq(end, this.date)) {
+				this.addCssClass('selected', 'end-range')
 			} else if ($.Date.gt(this.date, start) && $.Date.lt(this.date, end)) {
-				this.addCssClass('selected-range')
+				this.addCssClass('selected', 'mid-range')
 			}
 		}
 	}
