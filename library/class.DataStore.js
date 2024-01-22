@@ -2,11 +2,12 @@ import ReferenceOwner from './class.ReferenceOwner.js'
 
 
 export default class DataStore {
-	static PUER       = null // set in puer
 	static values     = {}
 	static references = {}
 	static owners     = {}
 	static _id        = 0
+
+	static $($) { window.$ = $ }
 
 	static _nextId() {
 		return DataStore._id ++
@@ -17,14 +18,14 @@ export default class DataStore {
 	}
 
 	static get(dataId) {
-		if (DataStore.PUER.isArray(dataId)) {
+		if ($.isArray(dataId)) {
 			const items = []
 			for (const _id of dataId) {
 				items.push(DataStore.get(_id))
 			}
 			return items
 		} else {
-			if (DataStore.PUER.isReferencing) {
+			if ($.isReferencing) {
 				return DataStore.references[dataId] || null
 			}
 			return DataStore.values[dataId]
@@ -38,7 +39,7 @@ export default class DataStore {
 		isChanged = isChanged || !dataId || (DataStore.values[dataId] !== value)
 		dataId = dataId || DataStore._nextId()
 		DataStore.values[dataId]     = value
-		DataStore.references[dataId] = DataStore.PUER.reference(dataId)
+		DataStore.references[dataId] = $.reference(dataId)
 		if (isChanged) {
 			DataStore.updateOwners(dataId)
 		}

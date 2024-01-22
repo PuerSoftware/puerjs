@@ -7,6 +7,7 @@ export { default as DataOwnerMixin  } from './class.DataOwnerMixin.js'
 export { default as DataListMixin   } from './class.DataListMixin.js'
 
 export { default as DateMethods     } from './class.DateMethods.js'
+export { default as Html            } from './class.Html.js'
 export { default as ObjectMethods   } from './class.ObjectMethods.js'
 export { default as SetMethods      } from './class.SetMethods.js'
 export { default as StringMethods   } from './class.StringMethods.js'

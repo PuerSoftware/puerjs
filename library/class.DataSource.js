@@ -3,6 +3,7 @@ import DataSet  from './class.DataSet.js'
 
 
 export default class DataSource {
+	static $($) { window.$ = $ }
 	
 	/**************************************************************/
 
@@ -20,8 +21,6 @@ export default class DataSource {
 		})
 		return dataSource
 	}
-
-	static PUER = null // set in puer
 
 	/**************************************************************/
 
@@ -93,7 +92,7 @@ export default class DataSource {
 	_loadFromUrl(method=null, params=null, headers=null) {
 		method = method || 'GET'
 		// console.log('loading from URL', this.url, method)
-		DataSource.PUER.Request.request(
+		$.Request.request(
 			this.url,
 			method,
 			params,
@@ -130,13 +129,13 @@ export default class DataSource {
 	}
 
 	_addItemToStore(item) {
-		const dataId = DataSource.PUER.DataStore.set(null, item)
+		const dataId = $.DataStore.set(null, item)
 		item.dataId  = dataId
 		this.itemIds.push(dataId)
 	}
 
 	_changeItemInStore(item) {
-		DataSource.PUER.DataStore.set(item.dataId, item, true)
+		$.DataStore.set(item.dataId, item, true)
 	}
 
 	/******************************************************************/
@@ -165,14 +164,14 @@ export default class DataSource {
 	/******************************************************************/
 
 	fill(items) {
-		DataSource.PUER.defer(() => {
+		$.defer(() => {
 			this.addItems(items)
 			this._onLoad()
 		})
 	}
 
 	load(method=null, params=null, headers=null) {
-		DataSource.PUER.defer(this._load, arguments, this)
+		$.defer(this._load, arguments, this)
 	}
 
 	reload() {
@@ -183,7 +182,7 @@ export default class DataSource {
 
 	clear(callback) {
 		for (const dataId of this.itemIds) {
-			DataSource.PUER.DataStore.unset(dataId)
+			$.DataStore.unset(dataId)
 		}
 
 		this.itemIds       = []
