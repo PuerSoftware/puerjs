@@ -4,7 +4,7 @@ import Reference from '../library/class.Reference.js'
 
 class PuerProxy {
 	constructor(props={}, onChangeMethod, owner, handlerExtension={}) {
-		this.references     = {}
+		this.references     = {} // { prop: Reference }
 		this.owner          = owner
 		this.onChangeMethod = onChangeMethod
 
@@ -65,18 +65,19 @@ class PuerProxy {
 		let dataId
 		let reference = this.references[prop]
 
-		if (value && value.isReference) {
+		if (value && value.isReference) { // cp id, accesors, merge unique ownners
 			this.references[prop] = value
 			dataId = value.dataId
 		} else {
-			if (reference) {
-				$.DataStore.set(reference.dataId, value)
-				dataId = reference.dataId
+			if (reference) { // del ref, mk ref, copy owners
+				dataId                = reference.dataId
+				reference             = new Reference(dataId)
+				this.references[prop] = reference
+				$.DataStore.set(dataId, value)
 			} else {
 				dataId = $.DataStore.set(null, value)
-				reference = new Reference(dataId)
+				this.references[prop] = new Reference(dataId)
 			}
-			this.references[prop] = reference
 		}
 		$.DataStore.addOwner(dataId, prop, this.owner, this.onChangeMethod)
 	}

@@ -244,7 +244,6 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_on(name, f, extraDetail) {
-		if (this.hasCssClass('test')) {debugger}
 		if (!this._eventTarget._listenerMap.has(f)) {
 			const targetComponent = this
 			let _f = function (event) {

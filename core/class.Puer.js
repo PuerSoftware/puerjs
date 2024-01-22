@@ -185,9 +185,9 @@ class Puer {
 		return this.Router.define(getRoutes)
 	}
 	
-	reference(id) {
-		return new this.Reference(id)
-	}
+	// reference(id) {
+	// 	return new this.Reference(id)
+	// }
 
 	dereference(value) {
 		return value && value.isReference 
@@ -297,6 +297,7 @@ $.DataSource     = Library.DataSource
 $.FormDataSource = Library.FormDataSource
 
 $.Reference      = Library.Reference
+$.ReferenceOwner = Library.ReferenceOwner
 $.RouteRoot      = Library.RouteRoot
 
 $.Reference.$($)
