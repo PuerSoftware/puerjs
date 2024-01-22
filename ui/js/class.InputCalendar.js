@@ -12,142 +12,31 @@ class _Day extends $.Component {
 		this.props.month = ymd[1]
 		this.props.text  = ymd[2]
 
-		if (!$.Date.eq(...oldDate, ...this.date)) {
-			this.selected = false
-		}
 	}
 
 	get date() {
-		return [
-			this.props.year,
-			this.props.month,
-			this.props.text,
-		]
-	}
-
-	get Date() {
-		return new Date(...this.date)
-	}
-
-	set selected(select) {
-		select
-			? this.addCssClass('selected')
-			: this.removeCssClass('selected')
+		return new Date(this.props.year, this.props.month, this.props.text)
 	}
 
 	clearCss() {
 		this.removeCssClass('prev-month', 'next-month', 'today')
 	}
 
+	highlightRange(range) {
+		if (range.length) {
+			const start = range[0]
+			const end   = range[1] || start
+			this.removeCssClass('selected', 'selected-range')
+			if ($.Date.eq(start, this.date) || $.Date.eq(end, this.date)) {
+				this.addCssClass('selected')
+			} else if ($.Date.gt(this.date, start) && $.Date.lt(this.date, end)) {
+				this.addCssClass('selected-range')
+			}
+		}
+	}
+
 	render() {
 		return $.td('day', {... this.props})
-	}
-}
-
-/************************************************************************************************/
-
-class _DatesRange extends Array {
-	constructor(... args) {
-		super(... args)
-		this._rangeStart = null
-		this._rangeEnd   = null
-		this._cmpStart   = null
-		this._cmpEnd     = null
-
-		this._isIntervalRegistered = false
-	}
-
-	/************************************************/
-
-	_intervalRegistrationRequired() {
-		if (!this._isIntervalRegistered) {
-			throw 'Range interval must be registered, when this method is called'
-		}
-	}
-
-	_sort() {
-		this.sort((a, b) => {
-			return a.Date - b.Date
-		})
-	}
-
-
-	_isStart(d) { return this._rangeStart && $.Date.eq(this._rangeStart, d) }
-	_isEnd(d) { return this._rangeEnd && $.Date.eq(this._rangeEnd, d) }
-
-	/************************************************/
-
-	get rangeString() {
-		// Range start and range end must be registered at this moment
-		return Array.from(this.rangeInterval)
-			.map(date => $.Date.intlNumericFormat(date))
-			.join(' - ')
-	}
-
-	get rangeInterval() {
-		// Range start and range end must be registered at this moment
-		if (this.length) {
-			if (this._rangeEnd && !$.Date.eq(this._rangeStart, this._rangeEnd)) {
-				return [this._rangeStart, this._rangeEnd]
-			}
-			return [this._rangeStart]
-		}
-		return []
-	}
-
-	/************************************************/
-
-	clearSelection() {
-		for (const cmp of this) {
-			cmp.selected = false
-		}
-		this._rangeStart = null
-		this._rangeEnd   = null
-		this.splice(0, 2)
-	}
-
-	ensureSelection() {
-		// Range start and range end must be registered at this moment
-		for (const cmp of this) {
-			if (this._isStart(cmp.Date) || this._isEnd(cmp.Date)) {
-				cmp.selected = true
-			} else {
-				cmp.selected = false
-			}
-		}
-	}
-
-	replaceDateComponents(... components) {
-		// Range start and range end must be registered at this moment
-		for (const cmp of components) {
-			console.log('OUT', cmp.Date)
-			if (this._isStart(cmp.Date)) {
-				this[0] = cmp
-			}
-			if (this._isEnd(cmp.Date)) {
-				this[1] = cmp
-			}
-		}
-	}
-
-	registerRangeInterval() {
-		if (this.length) {
-			if (this._rangeStart) {
-				this._sort()
-				if (this[1]) {
-					this._rangeEnd = this[1].Date
-				}
-			} else {
-				this._rangeStart = this[0].Date
-			}
-		}
-	}
-
-	isInRange(date) {
-		// Range start and range end must be registered at this moment
-		if (this._rangeStart && this._rangeEnd) {
-			return $.Date.gt(date, this._rangeStart) && $.Date.lt(date, this._rangeEnd)
-		}
 	}
 }
 
@@ -160,9 +49,8 @@ export default class InputCalendar extends FormInput {
 		this.props.default('type',    'text')
 		this.props.default('isRange',   false)
 
-		this.isShown        = false
 		this._date          = null
-		this._selectedDates = new _DatesRange()
+		this._range         = []
 		this._totalWeeks    = 6
 		this._monthInc      = 0
 
@@ -179,9 +67,8 @@ export default class InputCalendar extends FormInput {
 
 	/************************************************/
 
-	_onClick() {
-		this.isShown = !this.isShown
-		this._calendar.toggle(this.isShown)
+	_toggle() {
+		this._calendar.toggle()
 	}
 
 	_onPrevious() {
@@ -196,18 +83,16 @@ export default class InputCalendar extends FormInput {
 
 	_onDayClick(event) {
 		if (this.props.isRange) {
-			if (this._selectedDates.length === 2) {
-				this._selectedDates.clearSelection()
+			if (this._range.length === 2) {
+				this._range = []
 			}
 		} else {
-			this._selectedDates.clearSelection()
+			this._range = []
 		}
-
-		this._selectedDates.push(event.targetComponent)
-		this._selectedDates.registerRangeInterval()
-		this._selectedDates.ensureSelection()
-		this.value = this._selectedDates.rangeString
-		this.props.isRange && this._fillRange()
+		this._range.push(event.targetComponent.date)
+		this._range.sort((a, b) => a - b )
+		this._highlightRange()
+		this.value = this._getRangeString()
 	}
 
 	/************************************************/
@@ -220,39 +105,24 @@ export default class InputCalendar extends FormInput {
 		}
 	}
 
-	_getDaysByDates(dates) {
-		const found = []
-		this._walk(cell => {
-			for (const date of dates) {
-				if ($.Date.eq(date, cell.Date)) {
-					found.push(cell)
-				}
-			}
-		})
-		return found
+	_getRangeString() {
+		return Array.from(this._range)
+			.map(date => $.Date.format(date, $.Date.FORMAT_SLASHES))
+			.join(' - ')
 	}
 
 	/************************************************/
 
+	_highlightRange() {
+		this._walk(cell => {
+			cell.highlightRange(this._range)
+		})
+	}
+
 	_update() {
 		this._dateString.props.text = $.Date.intlMonthYear(this.normalDate.getTime())
 		this._fillCalendar(this.normalDate)
-
-		const cellToReplace = this._getDaysByDates(this._selectedDates.rangeInterval)
-
-		this._selectedDates.replaceDateComponents(...cellToReplace)
-		this._selectedDates.ensureSelection()
-		this.props.isRange && this._fillRange()
-	}
-
-	_fillRange() {
-		this._walk(cell => {
-			if (this._selectedDates.isInRange(cell.Date)) {
-				cell.addCssClass('selected-range')
-			} else {
-				cell.removeCssClass('selected-range')
-			}
-		})
+		this._highlightRange()
 	}
 
 	_fillCalendar(date) {
@@ -289,8 +159,13 @@ export default class InputCalendar extends FormInput {
 	_renderHeader() {
 		return $.Columns('head', [
 			this._dateString = $.div(),
-			$.div({ text: '<', onclick: this._onPrevious.bind(this) }),
-			$.div({ text: '>', onclick: this._onNext.bind(this)     })
+			$.div([
+				$.div({ text: '<', onclick: this._onPrevious.bind(this) }),
+				$.div({ text: '>', onclick: this._onNext.bind(this)     }),
+			]),
+			$.div([
+				$.div('test', {text: 'x', onclick: this._toggle.bind(this)})
+			])
 		])
 	}
 
@@ -347,7 +222,7 @@ export default class InputCalendar extends FormInput {
 
 	onInit() {
 		super.onInit()
-		this._on('click', this._onClick)
+		this._on('click', this._toggle)
 		this.date = Date.now()
 	}
 

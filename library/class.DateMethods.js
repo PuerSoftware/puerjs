@@ -1,29 +1,11 @@
 import StringMethods from './class.StringMethods.js'
 
 
-const monthNames = [
-	'Jan', 'Feb',
-	'Mar', 'Apr',  'May',
-	'Jun', 'Jul',  'Aug',
-	'Sep', 'Oct',  'Nov',
-	'Dec'
-]
-
-function _normalizeCompareArgs(...args) {
-	if (args.length === 6) {
-		return [new Date(...args.slice(0, 3)), new Date(...args.slice(3))]
-	}
-	if (args.length === 2) {
-		return args
-	}
-	throw 'Args must have len 6 (y1, m1, d, y2, m2, d2) or 2 (Date, Date)'
-}
-
-function normalCompareArgs(f) {
-	return (... args) => f(... _normalizeCompareArgs(... args))
-}
-
 class DateMethods {
+
+	static FORMAT_SLASHES = 1
+	static FORMAT_DOTS    = 2
+
 
 	static _dateToMilliSeconds(timestamp) {
 		const date = new Date(timestamp)
@@ -39,13 +21,18 @@ class DateMethods {
 		return StringMethods.capitalize(m)
 	}
 
-    static format(date) {
+    static format(date, format=DateMethods.FORMAT_DOTS) {
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)
 		const day   = date.getDate().toString().padStart(2, '0')
 		const month = (date.getMonth() + 1).toString().padStart(2, '0') // Add 1 because months are zero-indexed
 		const year  = date.getFullYear().toString().substr(-2)          // Get the last two digits of the year
-		return `${day}.${month}.${year}`
+	    switch (format) {
+		    case DateMethods.FORMAT_DOTS:
+				return `${day}.${month}.${year}`
+		    case DateMethods.FORMAT_SLASHES:
+				return `${day}/${month}/${year}`
+	    }
 	}
 
 	static formatTime(date) { // TODO: rename this method
@@ -66,38 +53,34 @@ class DateMethods {
 		return `${m} ${y}`
 	}
 
-	static intlNumericFormat(date) {
-		return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
-	}
-
-	static internationalFormat(dateFrom, dateTo=null) {
-		if (!dateFrom && !dateTo) { return null }
-		dateFrom = DateMethods._dateToMilliSeconds(dateFrom)
-		dateFrom = new Date(dateFrom)
-
-		const yearFrom  = dateFrom.getFullYear()
-		const monthFrom = dateFrom.getMonth()
-		const dayFrom   = dateFrom.getDay()
-
-		if (dateTo) {
-			dateTo = DateMethods._dateToMilliSeconds(dateTo)
-			dateTo = new Date(dateTo)
-
-			const yearTo  = dateTo.getFullYear()
-			const monthTo = dateTo.getMonth()
-			const dayTo   = dateTo.getDay()
-
-			if (monthFrom === monthTo) {
-				return `${monthNames[monthFrom]} ${dayFrom}-${dayTo}, ${yearFrom}`
-			} else {
-				return `${monthNames[monthFrom]} ${dayFrom} - ${monthNames[monthTo]} ${dayTo}, ${yearFrom}`
-			}
-
-		} else {
-			return `${monthNames[monthFrom]} ${dayFrom}, ${yearFrom}`
-		}
-
-	}
+	// static internationalFormat(dateFrom, dateTo=null) {
+	// 	if (!dateFrom && !dateTo) { return null }
+	// 	dateFrom = DateMethods._dateToMilliSeconds(dateFrom)
+	// 	dateFrom = new Date(dateFrom)
+	//
+	// 	const yearFrom  = dateFrom.getFullYear()
+	// 	const monthFrom = dateFrom.getMonth()
+	// 	const dayFrom   = dateFrom.getDay()
+	//
+	// 	if (dateTo) {
+	// 		dateTo = DateMethods._dateToMilliSeconds(dateTo)
+	// 		dateTo = new Date(dateTo)
+	//
+	// 		const yearTo  = dateTo.getFullYear()
+	// 		const monthTo = dateTo.getMonth()
+	// 		const dayTo   = dateTo.getDay()
+	//
+	// 		if (monthFrom === monthTo) {
+	// 			return `${monthNames[monthFrom]} ${dayFrom}-${dayTo}, ${yearFrom}`
+	// 		} else {
+	// 			return `${monthNames[monthFrom]} ${dayFrom} - ${monthNames[monthTo]} ${dayTo}, ${yearFrom}`
+	// 		}
+	//
+	// 	} else {
+	// 		return `${monthNames[monthFrom]} ${dayFrom}, ${yearFrom}`
+	// 	}
+	//
+	// }
 
 	static normalizeDate(y, m, d) {
 		y += Math.floor(m / 12)
@@ -146,10 +129,5 @@ class DateMethods {
 	static gt(dateA, dateB) { return dateA.getTime() > dateB.getTime() }
 	static lt(dateA, dateB) { return dateA.getTime() < dateB.getTime() }
 }
-
-
-DateMethods.eq = normalCompareArgs(DateMethods.eq)
-DateMethods.gt = normalCompareArgs(DateMethods.gt)
-DateMethods.lt = normalCompareArgs(DateMethods.lt)
 
 export default DateMethods
