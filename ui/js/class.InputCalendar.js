@@ -5,17 +5,21 @@ import FormInput from './class.FormInput.js'
 /************************************************************************************************/
 
 class _Day extends $.Component {
-	set date(ymd) {
-		const oldDate = this.date
+	constructor(... args) {
+		super(... args)
+		this.props.default('day'  , 0)
+		this.props.default('month', 0)
+		this.props.default('year' , 0)
+	}
 
+	setDate(ymd) {
 		this.props.year  = ymd[0]
 		this.props.month = ymd[1]
-		this.props.text  = ymd[2]
-
+		this.props.day   = ymd[2]
 	}
 
 	get date() {
-		return new Date(this.props.year, this.props.month, this.props.text)
+		return new Date(this.props.year, this.props.month, this.props.day)
 	}
 
 	clearCss() {
@@ -36,7 +40,9 @@ class _Day extends $.Component {
 	}
 
 	render() {
-		return $.td('day', {... this.props})
+		return $.td('day', [
+			$.span({text: this.props.day})
+		])
 	}
 }
 
@@ -151,7 +157,7 @@ export default class InputCalendar extends FormInput {
 
 				cell.clearCss()
 				cls.length && cell.addCssClass(cls)
-				cell.date  = normalDate
+				cell.setDate(normalDate)
 				dayCount ++
 		})
 	}
