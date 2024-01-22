@@ -1,11 +1,8 @@
-import ReferenceOwner from './class.ReferenceOwner.js'
-
-
 export default class DataStore {
-	static values     = {}
-	static references = {}
-	static owners     = {}
-	static _id        = 0
+	static values         = {} // { dataId: value }
+	static references     = {} // { dataId: { accessorString: Reference }
+	static owners         = {} // { dataId: { ownerId: owner } }
+	static _id            = 0
 
 	static $($) { window.$ = $ }
 
@@ -26,20 +23,55 @@ export default class DataStore {
 			return items
 		} else {
 			if ($.isReferencing) {
-				return DataStore.references[dataId] || null
+				return DataStore.rootReferences[dataId] || null
 			}
 			return DataStore.values[dataId]
 		}
 	}
 
+	// static get(dataId) {
+	// 	if ($.isArray(dataId)) {
+	// 		const items = []
+	// 		for (const _id of dataId) {
+	// 			items.push(DataStore.get(_id))
+	// 		}
+	// 		return items
+	// 	} else {
+	// 		if ($.isReferencing) {
+	// 			return DataStore.references[dataId] || null
+	// 		}
+	// 		return DataStore.values[dataId]
+	// 	}
+	// }
+
+	// static set(dataId, value, isChanged=false) {
+	// 	if (value && value.isReference) {
+	// 		return value.dataId
+	// 	}
+	// 	isChanged = isChanged || !dataId || (DataStore.values[dataId] !== value)
+	// 	dataId = dataId || DataStore._nextId()
+	// 	DataStore.values[dataId]     = value
+	// 	DataStore.references[dataId] = $.reference(dataId)
+	// 	if (isChanged) {
+	// 		DataStore.updateOwners(dataId)
+	// 	}
+	// 	return dataId
+	// }
+
 	static set(dataId, value, isChanged=false) {
 		if (value && value.isReference) {
-			return value.dataId
+			throw 'Reference to reference error'
 		}
+
 		isChanged = isChanged || !dataId || (DataStore.values[dataId] !== value)
 		dataId = dataId || DataStore._nextId()
-		DataStore.values[dataId]     = value
-		DataStore.references[dataId] = $.reference(dataId)
+
+		DataStore.values[dataId] = value
+		if (!DataStore.references[dataId]) {
+			DataStore.references[dataId] = {}
+		}
+		DataStore.references[dataId][''] = new $.Reference(dataId)
+
 		if (isChanged) {
 			DataStore.updateOwners(dataId)
 		}
@@ -58,18 +90,29 @@ export default class DataStore {
 
 	static updateOwners(dataId) {
 		if (DataStore.owners.hasOwnProperty(dataId)) {
-			for (const owner of DataStore.owners[dataId]) {
-				owner.update()
+			for (const ownerId in DataStore.owners[dataId]) {
+				DataStore.owners[dataId][ownerId].update()
 			}
 		}
 	}
 
 	static addOwner(dataId, prop, owner, updateMethod) {
 		if (!DataStore.owners.hasOwnProperty(dataId)) {
-			DataStore.owners[dataId] = []
+			DataStore.owners[dataId] = {}
 		}
-		const referenceOwner = new ReferenceOwner(owner, prop, updateMethod)
-		DataStore.owners[dataId].push(referenceOwner)
+		const referenceOwner = new $.ReferenceOwner(owner, prop, updateMethod)
+		DataStore.owners[dataId][owner.id] = referenceOwner
 		referenceOwner.update()
+	}
+
+	static mergeOwners(dataId, referenceOwners) {
+		for (const ownerId in referenceOwners) {
+			const owner = referenceOwners[ownerId]
+			DataStore.addOwner(dataId, owner.prop, owner.owner, owner.updateMethod)
+		}
+	}
+
+	static cloneOwners(dataId) {
+		return Object.assign({}, $.DataStore.owners[dataId])
 	}
 }

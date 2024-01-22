@@ -5,10 +5,10 @@
 	position : relative;
 }
 	.input-calendar > .calendar {
-		top      : 40px;
+		top      : 100%;
 		left     : 0;
+		width    : 100%;
 		border   : 1px solid black;
-		display  : inline-block;
 		position : absolute;
 	}
 	.input-calendar > .calendar .today {

@@ -157,6 +157,7 @@ export default class DataSource {
 
 	trigger(name, data) {
 		data.targetComponent          = this
+		data.targetName               = this.name
 		data.targetComponent.isActive = true
 		$.Events.trigger(name, data)
 	}

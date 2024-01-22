@@ -1,25 +1,26 @@
 class Reference {
 	static $($) { window.$ = $ }
 
-	constructor(dataId) {
+	constructor(dataId, accessors=null) {
+		accessors = accessors || []
+
 		this.dataId      = dataId
 		this.isReference = true
-		this._accessors  = []
+		this._accessors  = accessors
+
+		const reference = $.DataStore.references[dataId][this.accessorKey]
+		if (reference) {
+			return reference
+		}
 
 		const proxy = new Proxy(this, {
 			get(target, prop) {
 				if (target[prop]) {
-					if (typeof target[prop] === 'function') {
-						return target[prop].bind(target)
-					} else {
-						return target[prop]
-					}
-				} else if (typeof prop == 'string') {
-					// console.log('ORIGINAL', prop, target._accessors)
-					const refClone = target.clone()
-					refClone._accessors.push(prop)
-					// console.log('CLONE', prop, refClone._accessors)
-					return refClone
+					return $.isFunction(target[prop])
+						? target[prop].bind(target)
+						: target[prop]
+				} else if ($.isString(prop)) {
+					return target.clone(prop)
 				}
 				return proxy
 			},
@@ -43,13 +44,8 @@ class Reference {
 		return $.DataStore.get(this.dataId)
 	}
 
-	set rootValue(value) { // root value
-		$.DataStore.set(this.dataId, value)
-	}
-
-	reuse(id) {
-		this.dataId = id
-		this._accessors = []
+	get accessorKey() {
+		return this._accessors.join('.')
 	}
 
 	dereference() {
@@ -63,24 +59,10 @@ class Reference {
 		return value
 	}
 
-	clone() {
-		const ref =  new Reference(this.dataId)
-		for (const accessor of this._accessors) {
-			ref._accessors.push(accessor)
-		}
-		return ref
+	clone(extraAccessor) {
+		const accessors = this._accessors.concat([extraAccessor])
+		return new Reference(this.dataId, accessors)
 	}
-
-	// merge(reference) { // TODO: use if will implemented proxy Single Source of Truth
-	// 	const owners = $.DataStore.owners
-	//
-	// 	for (const owner of owners[reference.dataId]) {
-	// 		if (!owners[this.dataId].includes(owner)) {
-	// 			owners[this.dataId].push(owner)
-	// 		}
-	// 	}
-	// 	$.DataStore.unset(reference.dataId)
-	// }
 
 	toString() {
 		return JSON.stringify({
