@@ -2,17 +2,55 @@ import $ from '../../index.js'
 
 import FormInput from './class.FormInput.js'
 
+/************************************************************************************************/
 
-class InputCalendar extends FormInput {
+class _Day extends $.Component {
+	set date(ymd) {
+		const oldDate = this.date
+
+		this.props.year  = ymd[0]
+		this.props.month = ymd[1]
+		this.props.text  = ymd[2]
+
+	}
+
+	get date() {
+		return new Date(this.props.year, this.props.month, this.props.text)
+	}
+
+	clearCss() {
+		this.removeCssClass('prev-month', 'next-month', 'today')
+	}
+
+	highlightRange(range) {
+		if (range.length) {
+			const start = range[0]
+			const end   = range[1] || start
+			this.removeCssClass('selected', 'selected-range')
+			if ($.Date.eq(start, this.date) || $.Date.eq(end, this.date)) {
+				this.addCssClass('selected')
+			} else if ($.Date.gt(this.date, start) && $.Date.lt(this.date, end)) {
+				this.addCssClass('selected-range')
+			}
+		}
+	}
+
+	render() {
+		return $.td('day', {... this.props})
+	}
+}
+
+/************************************************************************************************/
+
+export default class InputCalendar extends FormInput {
 	constructor( ... args ) {
 		super( ... args )
 		this.props.default('tagName', 'input')
 		this.props.default('type',    'text')
 		this.props.default('isRange',   false)
 
-		this.isShown        = false
 		this._date          = null
-		this._selectedDates = []
+		this._range         = []
 		this._totalWeeks    = 6
 		this._monthInc      = 0
 
@@ -29,9 +67,8 @@ class InputCalendar extends FormInput {
 
 	/************************************************/
 
-	_onClick() {
-		this.isShown = !this.isShown
-		this._calendar.toggle(this.isShown)
+	_toggle() {
+		this._calendar.toggle()
 	}
 
 	_onPrevious() {
@@ -45,79 +82,90 @@ class InputCalendar extends FormInput {
 	}
 
 	_onDayClick(event) {
-		const dayCmp = event.targetComponent
-		const date   = new Date(dayCmp.props.year, dayCmp.props.month, dayCmp.props.text)
-		dayCmp.addCssClass('selected')
-		if (this.props.range) {
-
+		if (this.props.isRange) {
+			if (this._range.length === 2) {
+				this._range = []
+			}
 		} else {
-			this._selectedDates = []
-			this._selectedDates.push(date)
+			this._range = []
 		}
-
-		this._updateValue()
+		this._range.push(event.targetComponent.date)
+		this._range.sort((a, b) => a - b )
+		this._highlightRange()
+		this.value = this._getRangeString()
 	}
 
 	/************************************************/
 
-	_update() {
-		let [year, month, day] = $.Date.normalizeDate(
-			this._date.getFullYear(),
-			this._date.getMonth() + this._monthInc,
-			this._date.getDate()
-		)
-		const date                  = new Date(year, month, day)
-		this._dateString.props.text = $.Date.intlMonthYear(date.getTime())
-		this._fillCalendar(date)
+	_walk(f) {
+		for (let y=0; y<this._totalWeeks; y++) {
+			for (let x = 0; x < this._week.length; x++) {
+				f.bind(this)(this._days[y][x])
+			}
+		}
 	}
 
-	_updateValue() {
-		this._selectedDates.sort()
-		this.value = $.Date.internationalFormat(...this._selectedDates)
+	_getRangeString() {
+		return Array.from(this._range)
+			.map(date => $.Date.format(date, $.Date.FORMAT_SLASHES))
+			.join(' - ')
+	}
+
+	/************************************************/
+
+	_highlightRange() {
+		this._walk(cell => {
+			cell.highlightRange(this._range)
+		})
+	}
+
+	_update() {
+		this._dateString.props.text = $.Date.intlMonthYear(this.normalDate.getTime())
+		this._fillCalendar(this.normalDate)
+		this._highlightRange()
 	}
 
 	_fillCalendar(date) {
 		const year  = date.getFullYear()
 		const month = date.getMonth()
 
-		const todayYear  = this._date.getFullYear()
-		const todayMonth = this._date.getMonth()
-		const todayDay   = this._date.getDate() // day of week
-
-		const [prevYear, prevMonth] = $.Date.normalizeDate(year, month - 1)
-		const currMonthLen          = $.Date.getDaysInMonth(year, month)
-		const currMonthStart        = new Date(year, month, 0).getDay()
-		const prevMonthLen          = $.Date.getDaysInMonth(prevYear, prevMonth)
+		const currMonthLen   = $.Date.getDaysInMonth(year, month)
+		const currMonthStart = new Date(year, month, 0).getDay()
 
 		let cls
 		let dayCount = -currMonthStart + 1
-		for (let y=0; y<this._totalWeeks; y++) {
-			for (let x=0; x<this._week.length; x++) {
+
+		this._walk(cell => {
 				cls = []
-				let [valueY, valueM, valueD] = $.Date.normalizeDate(year, month, dayCount)
-				if (valueD === todayDay && valueM === todayMonth && valueY === todayYear) {
-					console.log('today', valueD, valueM, valueY)
+				const normalDate = $.Date.normalizeDate(year, month, dayCount)
+
+				if ($.Date.eq(new Date(...normalDate), this._date)) {
 					cls.push('today')
 				}
+				if (dayCount < 1) {
+					cls.push('prev-month')
+				}
+				if (dayCount > currMonthLen) {
+					cls.push('next-month')
+				}
 
-				const cmp = this._days[y][x]
-				cmp.removeCssClass('prev-month', 'next-month', 'today')
-				cls.length && cmp.addCssClass(cls)
-
-				cmp.props.text  = valueD
-				cmp.props.month = valueM
-				cmp.props.year  = valueY
+				cell.clearCss()
+				cls.length && cell.addCssClass(cls)
+				cell.date  = normalDate
 				dayCount ++
-			}
-		}
-
+		})
 	}
 
 	_renderHeader() {
 		return $.Columns('head', [
 			this._dateString = $.div(),
-			$.div({ text: '<', onclick: this._onPrevious.bind(this) }),
-			$.div({ text: '>', onclick: this._onNext.bind(this)     })
+			$.div([
+				$.div({ text: '<', onclick: this._onPrevious.bind(this) }),
+				$.div({ text: '>', onclick: this._onNext.bind(this)     }),
+			]),
+			$.div([
+				$.div('test', {text: 'x', onclick: this._toggle.bind(this)})
+			])
 		])
 	}
 
@@ -139,7 +187,7 @@ class InputCalendar extends FormInput {
 			table.append(tr = $.tr())
 
 			for (let d = 0; d < this._week.length; d++) {
-				td = $.td('day', {onclick: this._onDayClick.bind(this)})
+				td = $._Day({onclick: this._onDayClick.bind(this)})
 				this._days[w][d] = td
 				tr.append(td)
 			}
@@ -150,11 +198,22 @@ class InputCalendar extends FormInput {
 
 	set date(timestamp) {
 		this._date = new Date(timestamp)
+		this._date.setHours(0, 0 ,0 ,0)
 		this._update()
 	}
 
 	get date() {
 		return this._date
+	}
+
+	get normalDate() {
+		return new Date(
+			... $.Date.normalizeDate(
+				this._date.getFullYear(),
+				this._date.getMonth() + this._monthInc,
+				this._date.getDate()
+			)
+		)
 	}
 
 	onRender() {
@@ -163,7 +222,7 @@ class InputCalendar extends FormInput {
 
 	onInit() {
 		super.onInit()
-		this._on('click', this._onClick)
+		this._on('click', this._toggle)
 		this.date = Date.now()
 	}
 
@@ -174,5 +233,5 @@ class InputCalendar extends FormInput {
 	}
 }
 
+$.define(_Day)
 $.define(InputCalendar, import.meta.url)
-export default InputCalendar

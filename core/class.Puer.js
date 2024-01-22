@@ -151,6 +151,10 @@ class Puer {
 		return this._defineComponent(cls, importUrl)
 	}
 
+	defineClass(cls, defineAs=null) {
+		this[defineAs || cls.name] = cls
+	}
+
 	/*********************** PUBLIC ***********************/
 
 	isFunction(o) { return this.type(o) === 'function' }

@@ -1,15 +1,12 @@
 import StringMethods from './class.StringMethods.js'
 
 
-const monthNames = [
-	'Jan', 'Feb',
-	'Mar', 'Apr',  'May',
-	'Jun', 'Jul',  'Aug',
-	'Sep', 'Oct',  'Nov',
-	'Dec'
-]
-
 class DateMethods {
+
+	static FORMAT_SLASHES = 1
+	static FORMAT_DOTS    = 2
+
+
 	static _dateToMilliSeconds(timestamp) {
 		const date = new Date(timestamp)
 		timestamp = date.getTime()
@@ -24,13 +21,18 @@ class DateMethods {
 		return StringMethods.capitalize(m)
 	}
 
-    static format(date) {
+    static format(date, format=DateMethods.FORMAT_DOTS) {
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)
 		const day   = date.getDate().toString().padStart(2, '0')
 		const month = (date.getMonth() + 1).toString().padStart(2, '0') // Add 1 because months are zero-indexed
 		const year  = date.getFullYear().toString().substr(-2)          // Get the last two digits of the year
-		return `${day}.${month}.${year}`
+	    switch (format) {
+		    case DateMethods.FORMAT_DOTS:
+				return `${day}.${month}.${year}`
+		    case DateMethods.FORMAT_SLASHES:
+				return `${day}/${month}/${year}`
+	    }
 	}
 
 	static formatTime(date) { // TODO: rename this method
@@ -51,34 +53,34 @@ class DateMethods {
 		return `${m} ${y}`
 	}
 
-	static internationalFormat(dateFrom, dateTo=null) {
-		if (!dateFrom && !dateTo) { return null }
-		dateFrom = DateMethods._dateToMilliSeconds(dateFrom)
-		dateFrom = new Date(dateFrom)
-
-		const yearFrom  = dateFrom.getFullYear()
-		const monthFrom = dateFrom.getMonth()
-		const dayFrom   = dateFrom.getDay()
-
-		if (dateTo) {
-			dateTo = DateMethods._dateToMilliSeconds(dateTo)
-			dateTo = new Date(dateTo)
-
-			const yearTo  = dateTo.getFullYear()
-			const monthTo = dateTo.getMonth()
-			const dayTo   = dateTo.getDay()
-
-			if (monthFrom === monthTo) {
-				return `${monthNames[monthFrom]} ${dayFrom}-${dayTo}, ${yearFrom}`
-			} else {
-				return `${monthNames[monthFrom]} ${dayFrom} - ${monthNames[monthTo]} ${dayTo}, ${yearFrom}`
-			}
-
-		} else {
-			return `${monthNames[monthFrom]} ${dayFrom}, ${yearFrom}`
-		}
-
-	}
+	// static internationalFormat(dateFrom, dateTo=null) {
+	// 	if (!dateFrom && !dateTo) { return null }
+	// 	dateFrom = DateMethods._dateToMilliSeconds(dateFrom)
+	// 	dateFrom = new Date(dateFrom)
+	//
+	// 	const yearFrom  = dateFrom.getFullYear()
+	// 	const monthFrom = dateFrom.getMonth()
+	// 	const dayFrom   = dateFrom.getDay()
+	//
+	// 	if (dateTo) {
+	// 		dateTo = DateMethods._dateToMilliSeconds(dateTo)
+	// 		dateTo = new Date(dateTo)
+	//
+	// 		const yearTo  = dateTo.getFullYear()
+	// 		const monthTo = dateTo.getMonth()
+	// 		const dayTo   = dateTo.getDay()
+	//
+	// 		if (monthFrom === monthTo) {
+	// 			return `${monthNames[monthFrom]} ${dayFrom}-${dayTo}, ${yearFrom}`
+	// 		} else {
+	// 			return `${monthNames[monthFrom]} ${dayFrom} - ${monthNames[monthTo]} ${dayTo}, ${yearFrom}`
+	// 		}
+	//
+	// 	} else {
+	// 		return `${monthNames[monthFrom]} ${dayFrom}, ${yearFrom}`
+	// 	}
+	//
+	// }
 
 	static normalizeDate(y, m, d) {
 		y += Math.floor(m / 12)
@@ -86,14 +88,12 @@ class DateMethods {
 
 		let daysInMonth = DateMethods.getDaysInMonth(y, m)
 		if (d > daysInMonth) {
-			console.log('if', y, m, '|',  daysInMonth)
 			m ++
 			d -= daysInMonth
 		} else if (d < 1) {
 			m --
 			[y, m] = DateMethods.normalizeDate(y, m, 1)
 			daysInMonth = DateMethods.getDaysInMonth(y, m)
-			console.log('else if', y, m, '|',  daysInMonth)
 			d += daysInMonth
 		} else {
 			return [y, m, d]
@@ -124,6 +124,10 @@ class DateMethods {
 	static isLeapYear(y) {
 		return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)
 	}
+
+	static eq(dateA, dateB) { return dateA.getTime() === dateB.getTime() }
+	static gt(dateA, dateB) { return dateA.getTime() > dateB.getTime() }
+	static lt(dateA, dateB) { return dateA.getTime() < dateB.getTime() }
 }
 
 export default DateMethods

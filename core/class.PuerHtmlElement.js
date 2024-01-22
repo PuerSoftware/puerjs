@@ -23,12 +23,7 @@ class PuerHtmlElement extends BasePuerComponent {
 
 	_setupElement() {
 		this.element = this._renderElement()
-		// console.log(this.id, $.components.hasOwnProperty(this.id))
-		// if (!$.components.hasOwnProperty(this.id)) {
-			this.element.setAttribute('id', $.dereference(this.id))
-		// } else {
-			// console.warn(`Id "${this.id}" has already been used`)
-		// }
+		this.element.setAttribute('id', $.dereference(this.id))
 		for (const child of this.children) {
 			child.parent = this
 			this.element.appendChild(child.element)

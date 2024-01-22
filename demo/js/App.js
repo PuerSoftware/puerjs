@@ -25,10 +25,10 @@ $.application(
 	}, import.meta.url,
 	() => {
 		$.DataSource.define('Ports').fill([
-			{ value: '1', port: 'Port1', countryCode: 'UA', countryName: 'Ukraine'},
-			{ value: '2', port: 'Port2', countryCode: 'UA', countryName: 'Ukraine'},
-			{ value: '3', port: 'Port3', countryCode: 'UA', countryName: 'Ukraine'},
-			{ value: '4', port: 'Port4', countryCode: 'UA', countryName: 'Ukraine'},
+			{ value: '1', port: 'Port1', code: 'UA', country: 'Ukraine'},
+			{ value: '2', port: 'Port2', code: 'UA', country: 'Ukraine'},
+			{ value: '3', port: 'Port3', code: 'UA', country: 'Ukraine'},
+			{ value: '4', port: 'Port4', code: 'UA', country: 'Ukraine'},
 		])
 	}
 )

@@ -78,6 +78,9 @@ import PuerApp from './core/class.PuerApp.js'
 
 $.App = PuerApp
 
+$.Events.define('APP_CLICK',        ['event'])
+$.Events.define('APP_KEYUP',        ['event'])
+$.Events.define('APP_ESCAPE',       ['event'])
 $.Events.define('LIST_ITEM_SELECT', ['data', 'name'])
 $.Events.define('LIST_ITEM_CHECK',  ['data', 'name', 'isChecked', 'isResend'])
 $.Events.define('SEARCH',           ['value'])
@@ -85,5 +88,6 @@ $.Events.define('PAGINATE',         ['page'])
 $.Events.define('FORM_RESPONSE',    ['error', 'errors', 'isSaved'])
 $.Events.define('TAG_REMOVE',       ['label'])
 $.Events.define('TAG_CLICK',        ['label'])
+
 
 export default $

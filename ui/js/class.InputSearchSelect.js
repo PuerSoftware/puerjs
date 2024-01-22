@@ -6,9 +6,10 @@ import DataListMixin from '../../library/class.DataListMixin.js'
 class InputSearchSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
-		this.props.default('tagName',   'input')
-		this.props.default('type',      'hidden')
-		this.props.default('renderTag', this.renderTag)
+		this.props.default('tagName',      'input')
+		this.props.default('type',         'hidden')
+		this.props.default('renderTag',    this.renderTag)
+		this.props.default('itemRenderer', 'ListItem')
 
 		this._tags     = null
 		this._search   = null
@@ -16,9 +17,21 @@ class InputSearchSelect extends FormInput {
 		this._menuName = $.String.random(6)
 		this._valueSet = new Set()
 
+		this.on($.Event.APP_CLICK,        this._onAppClick)
+		this.on($.Event.APP_ESCAPE,       this._onAppEscape)
 		this.on($.Event.LIST_ITEM_SELECT, this._onSelect, this._menuName)
 		this.on($.Event.TAG_REMOVE,       this._onUnselect)
 	}
+
+	_onAppClick(event) {
+		const targetElement = event.detail.event.target
+
+		if (!this.element.contains(targetElement)) {
+			this._menu.hide()
+		}
+	}
+
+	_onAppEscape(event) { this._menu.hide() }
 
 	_onClick() {
 		this._menu.toggle()
@@ -63,8 +76,9 @@ class InputSearchSelect extends FormInput {
 			name            : this._menuName,
 			searchName      : this.searchName,
 			dataSource      : this.props.dataSource,
+			itemRenderer    : this.props.itemRenderer,
 			mixins          : [DataListMixin],
-			ensureSelection : false
+			isSelectable    : false
 		})
 		this.children.push(this._tags)
 		this.children.push($.br())

@@ -15,3 +15,19 @@
 		font-weight : bold;
 		color       : green;
 	}
+
+	.input-calendar > .calendar .selected {
+		background-color: #ED980C !important;
+	}
+
+	.input-calendar > .calendar .selected-range {
+		background-color: #FFC77F;
+	}
+
+	.input-calendar > .calendar .prev-month {
+		color: #8683E1;
+	}
+
+	.input-calendar > .calendar .next-month {
+		color: #9C1A1C;
+	}

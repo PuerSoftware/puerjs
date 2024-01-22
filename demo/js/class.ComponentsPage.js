@@ -1,6 +1,7 @@
 import $       from '../../index.js'
 import * as ui from '../../ui/index.js'
 
+import PortListItem from './class.PortListItem.js'
 
 export default class ComponentsPage extends $.Component {
 	render() {
@@ -20,47 +21,48 @@ export default class ComponentsPage extends $.Component {
 					$.Button('disabled',  { text: 'Disabled Button'  })
 				]),
 				$.Box({route: 'cmp:calendar'}, [
-					$.InputCalendar({name: 'test'})
+					$.InputCalendar({name: 'test', isRange: true})
 				]),
 				$.Box({route: 'cmp:checkbox'}),
 				$.Box({route: 'cmp:searchselect'}, [
 					$.InputSearchSelect({
 						name         : 'ports',
-						dataSource   : 'Ports'
+						dataSource   : 'Ports',
+						itemRenderer : 'PortListItem'
 					})
 				]),
-				$.Box({route: 'cmp:flag'}, [
-					$.h3({text: 'Square'}),
-					$.Flag({code: 'US', square: true}),
-					$.br(),
-					$.Flag({code: 'UA', square: true}),
-					$.br(),
-					$.Flag({code: 'GB', square: true}),
-					$.br(),
-					$.Flag({code: 'AE', square: true}),
-					$.br(),
-					$.Flag({code: 'TR', square: true}),
-					$.br(),
-					$.h3({text: 'Default'}),
-					$.Flag({code: 'US'}),
-					$.br(),
-					$.Flag({code: 'UA'}),
-					$.br(),
-					$.Flag({code: 'GB'}),
-					$.br(),
-					$.Flag({code: 'AE'}),
-					$.br(),
-					$.Flag({code: 'TR'})
-				]),
-				$.Box({route: 'cmp:tag'}, [
-					$.Tag({'label': 'Tag with close button'}),
-					$.br(),
-					$.Tag([
-						$.Flag({code: 'UA', label: 'Tag with child component'})
-					]),
-					$.br(),
-					$.Tag({isRemovable: false, label: 'No close button'})
-				])
+				// $.Box({route: 'cmp:flag'}, [
+				// 	$.h3({text: 'Square'}),
+				// 	$.Flag({code: 'US', square: true}),
+				// 	$.br(),
+				// 	$.Flag({code: 'UA', square: true}),
+				// 	$.br(),
+				// 	$.Flag({code: 'GB', square: true}),
+				// 	$.br(),
+				// 	$.Flag({code: 'AE', square: true}),
+				// 	$.br(),
+				// 	$.Flag({code: 'TR', square: true}),
+				// 	$.br(),
+				// 	$.h3({text: 'Default'}),
+				// 	$.Flag({code: 'US'}),
+				// 	$.br(),
+				// 	$.Flag({code: 'UA'}),
+				// 	$.br(),
+				// 	$.Flag({code: 'GB'}),
+				// 	$.br(),
+				// 	$.Flag({code: 'AE'}),
+				// 	$.br(),
+				// 	$.Flag({code: 'TR'})
+				// ]),
+				// $.Box({route: 'cmp:tag'}, [
+				// 	$.Tag({'label': 'Tag with close button'}),
+				// 	$.br(),
+				// 	$.Tag([
+				// 		$.Flag({code: 'UA', label: 'Tag with child component'})
+				// 	]),
+				// 	$.br(),
+				// 	$.Tag({isRemovable: false, label: 'No close button'})
+				// ])
 			])
 		])
 	}

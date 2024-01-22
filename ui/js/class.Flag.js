@@ -16,6 +16,7 @@ class Flag extends $.Component {
 
 	set code(code) {
 		this.props.code   = code.toLowerCase()
+		const c = this.props.code
 		this.state.imgUrl = `url(${this._imgUrl}${this._imgSize}${this.props.code}.svg)`
 		this.props.square && this.addCssClass('square')
 	}

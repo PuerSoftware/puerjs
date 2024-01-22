@@ -8,6 +8,17 @@ class PuerApp extends $.Component {
     	this.css('display', 'none')
 	}
 
+	_onAppClick(event) {
+		this.trigger($.Event.APP_CLICK, {event: event})
+	}
+
+	_onAppKeyUp(event) {
+		this.trigger($.Event.APP_KEYUP, {event: event})
+		if (event.keyCode === 27) {
+			this.trigger($.Event.APP_ESCAPE, {event: event})
+		}
+	}
+
 	__ready() {
 		super.__ready()
 		$.Router.start()
@@ -18,6 +29,9 @@ class PuerApp extends $.Component {
 		super.__render()
 		document.body.appendChild(this.element)
 		this.__rendered()
+
+		this._on('click', this._onAppClick)
+		this._on('keyup', this._onAppKeyUp)
 		return this.element
 	}
 
