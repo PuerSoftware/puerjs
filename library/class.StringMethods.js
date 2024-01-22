@@ -57,6 +57,11 @@ class StringMethods {
 		return StringMethods.decodeHtmlEntities(s)
 	}
 
+	static ext(s) {
+		const path = s.split(/[#?]/)[0]
+		return path.match(/\.([0-9a-z]+)$/i)?.[1].toLowerCase()
+	}
+
 	static splitCaseSafe(str, delimiters, index=0) {
 		if (index >= delimiters.length) {
 			return str ? [{

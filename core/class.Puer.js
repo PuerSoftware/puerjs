@@ -1,30 +1,8 @@
-import PuerComponent      from './class.PuerComponent.js'
-import PuerComponentMixin from './class.PuerComponentMixin.js'
-import PuerRouter         from './class.PuerRouter.js'
-import PuerEvents         from './class.PuerEvents.js'
-import PuerError          from './class.PuerError.js'
-import PuerHtmlElement    from './class.PuerHtmlElement.js'
-import PuerTextElement    from './class.PuerTextElement.js'
-
-// import StringMethods      from '../library/class.StringMethods.js'
-// import ObjectMethods      from '../library/class.ObjectMethods.js'
-// import DateMethods        from '../library/class.DateMethods.js'
-// import SetMethods         from '../library/class.SetMethods.js'
-// import Request            from '../library/class.Request.js'
-// import DataSet            from '../library/class.DataSet.js'
-// import DataStore          from '../library/class.DataStore.js'
-// import DataSource         from '../library/class.DataSource.js'
-// import FormDataSource     from '../library/class.FormDataSource.js'
-// import Reference          from '../library/class.Reference.js'
-// import RouteRoot          from '../library/class.Route.js'
-import * as library from '../library/index.js'
-
-
-class PuerConstructor {
+class Puer {
 	static instance = null
 
 	constructor() {
-		if (!PuerConstructor.instance) {
+		if (!Puer.instance) {
 			this.app
 			this.owner
 			this.path
@@ -34,16 +12,14 @@ class PuerConstructor {
 			this._cssUrls  = new Set()
 			this._cssCount = 0
 			this.components = {}
-			PuerConstructor.instance = this
-
-			this._init()
+			Puer.instance = this
 		}
-		return PuerConstructor.instance
+		return Puer.instance
 	}
 
 	/********************** PRIVATE **********************/
 
-	_init() {
+	init() {
 		this._setTimezoneCookie()
 		this._classToType = {}
 		'Boolean Number String Function Array Date RegExp Object Error Symbol'.split(' ')
@@ -51,10 +27,10 @@ class PuerConstructor {
 				const typeName = name.toLowerCase()
 				this._classToType['[object ' + name + ']'] = typeName
 			})
-		this.Error      = PuerError
+
 		this.Event      = {}
 		this.EventProps = {}
-		this.Events     = new PuerEvents(this)
+		this.Events     = new this.PuerEvents(this)
 	}
 
 	_setTimezoneCookie() {
@@ -76,13 +52,11 @@ class PuerConstructor {
 				: componentUrl.replace(/\bjs\b/g, 'css')
 
 			if (!this._cssUrls.has(cssUrl)) {
-				let styleElement = document.createElement('link')
-				styleElement.setAttribute('type', 'text/css')
-				styleElement.setAttribute('rel', 'stylesheet')
-				styleElement.setAttribute('href', cssUrl)
-				styleElement.addEventListener('load',  this._onCssLoad.bind(this), false)
-				styleElement.addEventListener('error', this._onCssLoad.bind(this), false)
-				document.head.appendChild(styleElement)
+				let styleElement = this.Html.load(
+					cssUrl,
+					this._onCssLoad.bind(this),
+					this._onCssLoad.bind(this)
+				)
 				this._cssUrls.add(cssUrl)
 				this._cssCount ++
 			}
@@ -128,19 +102,19 @@ class PuerConstructor {
 
 	_defineText() {
 		let className = 'PuerTagText'
-		Object.defineProperty(PuerTextElement, 'name', { value: className })
-		PuerTextElement.prototype.chainName = 'text'
+		Object.defineProperty(this.TextElement, 'name', { value: className })
+		this.TextElement.prototype.chainName = 'text'
 
 		this._defineGetter('text', (text) => {
-			return new PuerTextElement(text)
+			return new this.TextElement(text)
 		})
 	}
 
 	_defineTag(name) {
-		let className = 'PuerTag' + library.StringMethods.capitalize(name)
+		let className = 'PuerTag' + this.String.capitalize(name)
 		eval(
-			`class ${className} extends PuerHtmlElement {};` +
-			`window.${className} = ${className}` // TODO: why window?
+			`class ${className} extends this.HtmlElement {};` +
+			`window.${className} = ${className}`
 		)
 		Object.defineProperty(window[className], 'name', { value: className })
 		window[className].prototype.chainName = name
@@ -200,8 +174,8 @@ class PuerConstructor {
 
 	application(cls, importUrl, init) {
 		this._defineComponent(cls, importUrl)
-		this.app    = this[cls.name]()
-		this.Router = new PuerRouter(this.app)
+		this.app        = this[cls.name]()
+		this.Router     = new this.PuerRouter(this.app)
 		init()
 		this.app.__init()
 		return $
@@ -291,34 +265,43 @@ class PuerConstructor {
 		}
 		console.log( ... newArgs )
 	}
-
 }
 
-const $ = new PuerConstructor()
-
-$.Component          = PuerComponent
-$.ComponentMixin     = PuerComponentMixin
-
-$.String             = library.StringMethods
-$.Object             = library.ObjectMethods
-$.Date               = library.DateMethods
-$.Set                = library.SetMethods
-$.Request            = library.Request
-
-$.DataSet            = library.DataSet
-$.DataStore          = library.DataStore
-$.DataSource         = library.DataSource
-$.FormDataSource     = library.FormDataSource
-
-$.Reference          = library.Reference
-
-$.RouteRoot          = library.RouteRoot
-
-$.Reference.PUER  = $
-$.DataSource.PUER = $
-$.DataSet.PUER    = $
-$.DataStore.PUER  = $
-
+const $ = new Puer()
 window.$ = $
+
+import * as Core from './index.js'
+
+$.Component      = Core.PuerComponent
+$.ComponentMixin = Core.PuerComponentMixin
+$.PuerRouter     = Core.PuerRouter     
+$.PuerEvents     = Core.PuerEvents
+$.Error          = Core.PuerError      
+$.HtmlElement    = Core.PuerHtmlElement
+$.TextElement    = Core.PuerTextElement
+
+$.init()
+
+import * as Library from '../library/index.js'
+
+$.String         = Library.StringMethods
+$.Object         = Library.ObjectMethods
+$.Date           = Library.DateMethods
+$.Set            = Library.SetMethods
+$.Request        = Library.Request
+$.Html           = Library.Html
+
+$.DataSet        = Library.DataSet
+$.DataStore      = Library.DataStore
+$.DataSource     = Library.DataSource
+$.FormDataSource = Library.FormDataSource
+
+$.Reference      = Library.Reference
+$.RouteRoot      = Library.RouteRoot
+
+$.Reference.$($)
+$.DataSource.$($)
+$.DataSet.$($)
+$.DataStore.$($)
 
 export default $

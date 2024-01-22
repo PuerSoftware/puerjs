@@ -1,5 +1,5 @@
 class Reference {
-	static PUER = null // set in Puer
+	static $($) { window.$ = $ }
 
 	constructor(dataId) {
 		this.dataId      = dataId
@@ -40,11 +40,11 @@ class Reference {
 	}
 
 	get rootValue() { // root value
-		return Reference.PUER.DataStore.get(this.dataId)
+		return $.DataStore.get(this.dataId)
 	}
 
 	set rootValue(value) { // root value
-		Reference.PUER.DataStore.set(this.dataId, value)
+		$.DataStore.set(this.dataId, value)
 	}
 
 	reuse(id) {
@@ -72,14 +72,14 @@ class Reference {
 	}
 
 	// merge(reference) { // TODO: use if will implemented proxy Single Source of Truth
-	// 	const owners = Reference.PUER.DataStore.owners
+	// 	const owners = $.DataStore.owners
 	//
 	// 	for (const owner of owners[reference.dataId]) {
 	// 		if (!owners[this.dataId].includes(owner)) {
 	// 			owners[this.dataId].push(owner)
 	// 		}
 	// 	}
-	// 	Reference.PUER.DataStore.unset(reference.dataId)
+	// 	$.DataStore.unset(reference.dataId)
 	// }
 
 	toString() {

@@ -1,4 +1,5 @@
 export default class DataSet {
+	static $($) { window.$ = $ }
 	
 	/**************************************************************/
 
@@ -14,8 +15,6 @@ export default class DataSet {
 		})
 		return dataSet
 	}
-
-	static PUER = null // set in puer
 
 	/**************************************************************/
 
@@ -60,7 +59,7 @@ export default class DataSet {
 
 	_applyEntryFilter(ids) {
 		if (this._entryFilter) {
-			const items = DataSet.PUER.DataStore.get(ids)
+			const items = $.DataStore.get(ids)
 			ids = items.filter(this._entryFilter).map((_, id) => id)
 		}
 		return ids
@@ -69,7 +68,7 @@ export default class DataSet {
 	/**************************************************************/
 
 	get items() {
-		return DataSet.PUER.DataStore.get(this.itemIds)
+		return $.DataStore.get(this.itemIds)
 	}
 
 	init(ids) {
