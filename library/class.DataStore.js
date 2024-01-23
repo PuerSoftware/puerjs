@@ -23,7 +23,7 @@ export default class DataStore {
 			return items
 		} else {
 			if ($.isReferencing) {
-				return DataStore.rootReferences[dataId] || null
+				return DataStore.references[dataId][''] || null
 			}
 			return DataStore.values[dataId]
 		}

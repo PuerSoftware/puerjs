@@ -16,6 +16,7 @@ class PuerProxy {
 
 		const handler = Object.assign({
 			get: (target, prop) => {
+				// if (prop === 'code') { debugger }
 				if (prop === Symbol.iterator) {
 					return function*() {
 						for (let _prop in target.references) {
@@ -35,6 +36,7 @@ class PuerProxy {
 				}
 			},
 			set: (target, prop, value) => {
+				// if (prop === 'code') { debugger }
 				target.setProp(prop, value)
 				return true
 			},
@@ -63,23 +65,24 @@ class PuerProxy {
 
 	setProp(prop, value) {
 		let dataId
-		let reference = this.references[prop]
 
 		if (value && value.isReference) { // cp id, accesors, merge unique ownners
-			this.references[prop] = value
+			this.references[prop] = value.truncate()
 			dataId = value.dataId
 		} else {
-			if (reference) { // del ref, mk ref, copy owners
-				dataId                = reference.dataId
-				reference             = new Reference(dataId)
-				this.references[prop] = reference
-				$.DataStore.set(dataId, value)
+			if (this.references[prop]) { // del ref, mk ref, copy owners
+				dataId = this.references[prop].dataId
+				this.references[prop].setValue(value)
 			} else {
 				dataId = $.DataStore.set(null, value)
 				this.references[prop] = new Reference(dataId)
 			}
 		}
-		$.DataStore.addOwner(dataId, prop, this.owner, this.onChangeMethod)
+		$.DataStore.addOwner(
+			dataId,
+			prop,
+			this.owner,
+			this.onChangeMethod)
 	}
 
 	setById(prop, dataId) {
