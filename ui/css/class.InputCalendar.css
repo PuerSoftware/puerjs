@@ -16,7 +16,7 @@
 		left             : 0;
 		height           : auto;
 		width            : 100%;
-		padding          : 12px 12px 9px 12px;
+		padding          : 12px 6px 9px 6px;
 		color            : var(--text-color-hi);
 		border-radius    : 2px;
 		border           : 1px solid var(--border-color);
@@ -27,9 +27,11 @@
 			font-size     : var(--font-size-hi);
 			align-items   : center;
 			margin-bottom : 8px;
+			padding       : 0 6px;
 		}
 			.input-calendar > .calendar > .head > div:first-child {
-				white-space  : nowrap;
+				white-space : nowrap;
+				user-select : none;
 			}
 
 			.input-calendar > .calendar > .head > div:nth-child(2) {
@@ -38,15 +40,14 @@
 				align-items : center;
 			}
 				.input-calendar > .calendar > .head > div:nth-child(2) > div {
-					display          : flex;
-					justify-content  : center;
-					align-items      : center;
-					width            : 20px;
-					height           : 15px;
-					cursor           : pointer;
-					flex             : none;
-					border-radius    : 1px;
-					color            : transparent;	
+					display         : flex;
+					justify-content : center;
+					align-items     : center;
+					width           : 20px;
+					height          : 15px;
+					cursor          : pointer;
+					flex            : none;
+					border-radius   : 1px;
 				}
 					.input-calendar > .calendar > .head > div:nth-child(2) > div:first-child {
 						margin-right : 8px;
@@ -58,38 +59,60 @@
 					}
 
 			.input-calendar > .calendar > .head > div:nth-child(3) {
-				display          : flex;
-				justify-content  : center;
-				align-items      : center;
-				width            : 17px;
-				height           : 15px;
-				margin-left      : 19px;
-				cursor           : pointer;
-				flex             : none;
-				border-radius    : 1px;
-				background       : var(--svg-btn-close-sm) center no-repeat, var(--bg-color-dark);
+				display         : flex;
+				justify-content : center;
+				align-items     : center;
+				width           : 17px;
+				height          : 15px;
+				margin-left     : 19px;
+				cursor          : pointer;
+				flex            : none;
+				border-radius   : 1px;
+				background      : var(--svg-btn-close-sm) center no-repeat, var(--bg-color-dark);
 			}
-				.input-calendar > .calendar > .head > div:nth-child(3) .test {
-					display : none;
-				}
-
-		.input-calendar > .calendar > div > table {
-			table-layout    : fixed;
-			border-collapse : separate;
-			border-spacing  : 0 0;
-			font-size       : var(--font-size-lo);
-			width           : 100%;
+				
+		.input-calendar > .calendar > .content {
+			position : relative;
 		}
-			.input-calendar > .calendar > div > table > tr > th {
-				font-weight : 600;
-				color       : var(--text-color-th);
-				height      : 23px;
+			.input-calendar > .calendar > .content::before,
+			.input-calendar > .calendar > .content::after {
+				content          : '';
+				position         : absolute;
+				top              : 18px;
+				height           : 90%;
+				width            : 7px;
+				background-color : var(--bg-color-lo);
+				z-index          : 5;
+			}	
+
+			.input-calendar > .calendar > .content::before {
+				left : 0;
 			}
 
-			.input-calendar > .calendar > div > table > tr > td {
-				height : 22px;
-				cursor : pointer;
+			.input-calendar > .calendar > .content::after {
+				right : 0;
+			}	
+
+			.input-calendar > .calendar > .content > table {
+				table-layout    : fixed;
+				border-collapse : separate;
+				border-spacing  : 0 0;
+				font-size       : var(--font-size-lo);
+				width           : 100%;
 			}
+				.input-calendar > .calendar > .content > table > tr > th {
+					font-weight : 600;
+					color       : var(--text-color-th);
+					height      : 23px;
+				}
+					.input-calendar > .calendar > .content > table > tr > th:first-child {
+						padding-left : 4px;
+					}
+
+				.input-calendar > .calendar > .content > table > tr > td {
+					height : 22px;
+					cursor : pointer;
+				}
 
 		.input-calendar > .calendar ._day {
 			text-align : center;

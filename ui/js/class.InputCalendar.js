@@ -170,11 +170,11 @@ export default class InputCalendar extends FormInput {
 		return $.Columns('head', [
 			this._dateString = $.div(),
 			$.div([
-				$.div({ text: '<', onclick: this._onPrevious.bind(this) }),
-				$.div({ text: '>', onclick: this._onNext.bind(this)     }),
+				$.div({onclick: this._onPrevious.bind(this) }),
+				$.div({onclick: this._onNext.bind(this)     }),
 			]),
 			$.div([
-				$.div('test', {text: 'x', onclick: this._toggle.bind(this)})
+				$.div('test', {onclick: this._toggle.bind(this)})
 			])
 		])
 	}
@@ -183,7 +183,7 @@ export default class InputCalendar extends FormInput {
 		const table = $.table()
 
 		this._header = this._renderHeader()
-		this._calendar.append([this._header, $.div([table])])
+		this._calendar.append([this._header, $.div('content', [table])])
 
 		let tr = $.tr()
 		let td
