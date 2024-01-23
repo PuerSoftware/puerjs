@@ -1,33 +1,158 @@
 .input-calendar {
-	border   : 1px solid black;
-	display  : block;
-	height   : 40px;
-	position : relative;
+	font-family : var(--font-label);
+	width       : 252px;
+	height      : 24px;
+	position    : relative;
 }
+	.input-calendar > .after {
+		width      : 17px;
+		height     : 16px;
+		background : var(--svg-calendar-icon) no-repeat;
+	}
+
 	.input-calendar > .calendar {
-		top      : 100%;
-		left     : 0;
-		width    : 100%;
-		border   : 1px solid black;
-		position : absolute;
+		position         : absolute;
+		top              : 100%;
+		left             : 0;
+		height           : auto;
+		width            : 100%;
+		padding          : 12px 12px 9px 12px;
+		color            : var(--text-color-hi);
+		border-radius    : 2px;
+		border           : 1px solid var(--border-color);
+		background-color : var(--bg-color-lo);
+		box-shadow       : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
 	}
-	.input-calendar > .calendar .today {
-		font-weight : bold;
-		color       : green;
-	}
+		.input-calendar > .calendar > .head {
+			font-size     : var(--font-size-hi);
+			align-items   : center;
+			margin-bottom : 8px;
+		}
+			.input-calendar > .calendar > .head > div:first-child {
+				white-space  : nowrap;
+			}
 
-	.input-calendar > .calendar .selected {
-		background-color: #ED980C !important;
-	}
+			.input-calendar > .calendar > .head > div:nth-child(2) {
+				flex        : none;
+				display     : flex;
+				align-items : center;
+			}
+				.input-calendar > .calendar > .head > div:nth-child(2) > div {
+					display          : flex;
+					justify-content  : center;
+					align-items      : center;
+					width            : 20px;
+					height           : 15px;
+					cursor           : pointer;
+					flex             : none;
+					border-radius    : 1px;
+					color            : transparent;	
+				}
+					.input-calendar > .calendar > .head > div:nth-child(2) > div:first-child {
+						margin-right : 8px;
+						background   : var(--svg-arrow-prev) center no-repeat, var(--bg-color-dark);
+					}
 
-	.input-calendar > .calendar .selected-range {
-		background-color: #FFC77F;
-	}
+					.input-calendar > .calendar > .head > div:nth-child(2) > div:last-child {
+						background : var(--svg-arrow-next) center no-repeat, var(--bg-color-dark);
+					}
 
-	.input-calendar > .calendar .prev-month {
-		color: #8683E1;
-	}
+			.input-calendar > .calendar > .head > div:nth-child(3) {
+				display          : flex;
+				justify-content  : center;
+				align-items      : center;
+				width            : 17px;
+				height           : 15px;
+				margin-left      : 19px;
+				cursor           : pointer;
+				flex             : none;
+				border-radius    : 1px;
+				background       : var(--svg-btn-close-sm) center no-repeat, var(--bg-color-dark);
+			}
+				.input-calendar > .calendar > .head > div:nth-child(3) .test {
+					display : none;
+				}
 
-	.input-calendar > .calendar .next-month {
-		color: #9C1A1C;
-	}
+		.input-calendar > .calendar > div > table {
+			table-layout    : fixed;
+			border-collapse : separate;
+			border-spacing  : 0 0;
+			font-size       : var(--font-size-lo);
+			width           : 100%;
+		}
+			.input-calendar > .calendar > div > table > tr > th {
+				font-weight : 600;
+				color       : var(--text-color-th);
+				height      : 23px;
+			}
+
+			.input-calendar > .calendar > div > table > tr > td {
+				height : 22px;
+				cursor : pointer;
+			}
+
+		.input-calendar > .calendar ._day {
+			text-align : center;
+			position   : relative;
+		}
+			.input-calendar > .calendar ._day > span {
+				display          : inline-flex;
+				justify-content  : center;
+				align-items      : center;
+				width            : 20px;
+				height           : 20px;
+				border-radius    : 2px;
+				background-color : transparent;
+				position         : relative;
+				z-index          : 5;
+			}
+				.input-calendar > .calendar ._day::before {
+					position         : absolute;
+					height           : 20px;
+					left             : 0;
+					right            : 0;
+					z-index          : 4;
+					content          : "";
+					background-color : transparent;
+					transition       : background-color .1s linear;
+				}
+
+		.input-calendar > .calendar .today > span {
+			font-weight      : 700;
+			color            : var(--text-color-today);
+			background-color : var(--bg-color-light);
+		}
+			.input-calendar > .calendar .today.mid-range > span {
+				color            : var(--text-color-hi);
+				background-color : var(--bg-color-muted);
+			}
+
+		.input-calendar > .calendar .start-range > span,
+		.input-calendar > .calendar .end-range > span {
+			color            :var(--text-color-hi);
+			background-color : var(--bg-color-selected);
+		}
+
+			.input-calendar > .calendar .selected.start-range.end-range::before {
+				background-color : transparent;	
+			}
+
+			.input-calendar > .calendar .selected.start-range::before {
+				left             : 50%;
+				right            : 0;
+				background-color : var(--bg-color-range);
+			}
+			.input-calendar > .calendar .selected.end-range::before {
+				left             : 0;
+				right            : 50%;
+				background-color : var(--bg-color-range);
+			}
+
+		.input-calendar > .calendar .mid-range::before {
+			background-color : var(--bg-color-range);
+		}
+
+		.input-calendar > .calendar .prev-month,
+		.input-calendar > .calendar .next-month {
+			color : var(--text-color-muted);
+		}
