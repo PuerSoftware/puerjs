@@ -12,11 +12,23 @@
     --svg-arrow-prev    : url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNSIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgNSA5IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNNCAxLjAwMDk4TDEuMjc4OTEgNC4xNzU1OEMxLjExODQxIDQuMzYyODMgMS4xMTg0MiA0LjYzOTEzIDEuMjc4OTEgNC44MjYzN0w0IDguMDAwOTgiIHN0cm9rZT0iI0U3RTdFNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=');
     --svg-arrow-next    : url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNSIgaGVpZ2h0PSI5IiB2aWV3Qm94PSIwIDAgNSA5IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMSA4LjAwMDk4TDMuNzIxMDkgNC44MjYzN0MzLjg4MTU5IDQuNjM5MTMgMy44ODE1OSA0LjM2MjgzIDMuNzIxMDkgNC4xNzU1OEwxIDEuMDAwOTgiIHN0cm9rZT0iI0U3RTdFNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=');
 
-    --bg-color-lo   : #1B2734;
-    --bg-color-dark : #131A23;
-    --border-color  : #000;
+    --bg-color-lo       : #1B2734;
+    --bg-color-dark     : #131A23;
+    --bg-color-range    : rgba(28, 115, 196, 0.27);
+    --bg-color-selected : #0861B3;
+    --bg-color-light    : #FFF;
+    --bg-color-muted    : rgba(255, 255, 255, 0.07);
+    --border-color      : #000;
 
-    --text-color-hi : #E7E7E7;
+    --text-color-hi    : #E7E7E7;
+    --text-color-muted : #676F76;
+    --text-color-th    : #6583A4;
+    --text-color-today : #0E6EC6;
+
+    --font-label   : 'Inter',  sans-serif;
+	--font-text    : 'Roboto', sans-serif;
+    --font-size-hi : 14px;
+    --font-size-lo : 12px;
 }
 /************************************************************************************/
 .hidden { display: none !important; }
