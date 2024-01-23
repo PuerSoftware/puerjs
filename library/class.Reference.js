@@ -1,13 +1,14 @@
 class Reference {
 	static $($) { window.$ = $ }
 
-	constructor(dataId, accessors=null) {
-		accessors = accessors || []
+	constructor(dataId, accessors=null, rootAccessors=null) {
+		accessors     = accessors     || []
+		rootAccessors = rootAccessors || []
 
 		this.dataId         = dataId
 		this.isReference    = true
 		this._accessors     = accessors
-		this._rootAccessors = []
+		this._rootAccessors = rootAccessors
 
 		let reference = $.DataStore.references[dataId][this.accessorKey]
 		if (!reference) {
@@ -50,7 +51,7 @@ class Reference {
 	}
 
 	get accessorKey() {
-		return this._accessors.join('.')
+		return this._rootAccessors.join('.') + '..' + this._accessors.join('.')
 	}
 
 	setValue(value) {
@@ -85,11 +86,7 @@ class Reference {
 	}
 
 	truncate() {
-		const reference = this.clone()
-		for (const accessor of this._accessors) {
-			reference._rootAccessors.push(accessor)
-		}
-		return reference
+		return new Reference(this.dataId, null, this._accessors.slice())
 	}
 
 	clone(extraAccessor) {

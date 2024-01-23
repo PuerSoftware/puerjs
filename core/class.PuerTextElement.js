@@ -24,12 +24,15 @@ class PuerTextElement extends PuerHtmlElement {
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop) {
-		// console.log('onPropChange', this.className, prop)
-		this.element.nodeValue = $.dereference(this.props['text'])
+		if ($.isObject($.dereference(this.props.text))) {
+			debugger
+		}
+
+		this.element.nodeValue = $.dereference(this.props.text)
 	}
 
 	_renderElement() {
-		return document.createTextNode($.dereference(this.props['text']))
+		return document.createTextNode($.dereference(this.props.text))
 	}
 
 	highlight(words) {

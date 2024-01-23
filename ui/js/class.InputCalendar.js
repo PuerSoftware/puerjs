@@ -77,7 +77,8 @@ export default class InputCalendar extends FormInput {
 
 	/************************************************/
 
-	_toggle() {
+	_toggle(event) {
+		console.log('toggle', event)
 		this._calendar.toggle()
 	}
 
@@ -173,9 +174,7 @@ export default class InputCalendar extends FormInput {
 				$.div({onclick: this._onPrevious.bind(this) }),
 				$.div({onclick: this._onNext.bind(this)     }),
 			]),
-			$.div([
-				$.div('test', {onclick: this._toggle.bind(this)})
-			])
+			$.div({onclick: this._toggle.bind(this)})
 		])
 	}
 
