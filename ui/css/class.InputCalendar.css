@@ -1,5 +1,5 @@
 .input-calendar {
-	font-family : 'Inter';
+	font-family : var(--font-label);
 	width       : 252px;
 	height      : 24px;
 	position    : relative;
@@ -24,7 +24,7 @@
 		box-shadow       : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
 	}
 		.input-calendar > .calendar > .head {
-			font-size     : 14px;
+			font-size     : var(--font-size-hi);
 			align-items   : center;
 			margin-bottom : 8px;
 		}
@@ -77,12 +77,12 @@
 			table-layout    : fixed;
 			border-collapse : separate;
 			border-spacing  : 0 0;
-			font-size       : 12px;
+			font-size       : var(--font-size-lo);
 			width           : 100%;
 		}
 			.input-calendar > .calendar > div > table > tr > th {
 				font-weight : 600;
-				color       : #6583A4;
+				color       : var(--text-color-th);
 				height      : 23px;
 			}
 
@@ -119,19 +119,18 @@
 
 		.input-calendar > .calendar .today > span {
 			font-weight      : 700;
-			color            : #0E6EC6;
-			background-color : #FFF;
+			color            : var(--text-color-today);
+			background-color : var(--bg-color-light);
 		}
 			.input-calendar > .calendar .today.mid-range > span {
 				color            : var(--text-color-hi);
-				background-color : rgba(255, 255, 255, 0.07);
+				background-color : var(--bg-color-muted);
 			}
 
 		.input-calendar > .calendar .start-range > span,
 		.input-calendar > .calendar .end-range > span {
 			color            :var(--text-color-hi);
-			background-color : #0861B3;
-			background-color : #0E6EC6;
+			background-color : var(--bg-color-selected);
 		}
 
 			.input-calendar > .calendar .selected.start-range.end-range::before {
@@ -141,19 +140,19 @@
 			.input-calendar > .calendar .selected.start-range::before {
 				left             : 50%;
 				right            : 0;
-				background-color : rgba(28, 115, 196, 0.27);
+				background-color : var(--bg-color-range);
 			}
 			.input-calendar > .calendar .selected.end-range::before {
 				left             : 0;
 				right            : 50%;
-				background-color : rgba(28, 115, 196, 0.27);
+				background-color : var(--bg-color-range);
 			}
 
 		.input-calendar > .calendar .mid-range::before {
-			background-color : rgba(28, 115, 196, 0.27);
+			background-color : var(--bg-color-range);
 		}
 
 		.input-calendar > .calendar .prev-month,
 		.input-calendar > .calendar .next-month {
-			color : #676F76;
+			color : var(--text-color-muted);
 		}
