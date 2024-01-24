@@ -51,7 +51,7 @@ export default class DataListMixin {
 			if (hasSearch) {
 				if (this._searchQuery) {
 					this.items[itemId].highlight(
-						this._searchQuery.toLowerCase().trim().split(/\s+/g)
+						this._searchQuery.toLowerCase().trim().split(/\s+/g).filter(s => s !== '')
 					)
 				} else {
 					this.items[itemId].unhighlight()

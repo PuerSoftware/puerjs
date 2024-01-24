@@ -35,7 +35,6 @@ class PuerTextElement extends PuerHtmlElement {
 		this.unhighlight()
 		if (words && words.length) {
 			const texts = $.String.splitCaseSafe(this.element.nodeValue, words)
-
 			if (texts.length > 1) {
 				this.highlightSet = []
 				for (const text of texts) {
