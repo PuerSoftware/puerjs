@@ -71,8 +71,9 @@ class InputSearchSelect extends FormInput {
 		const searchName = $.String.random(6)
 		this._tags = $.div('tags')
 		this._search = $.Search({
-			name    : searchName,
-			onclick : this._onClick
+			name        : searchName,
+			placeholder : 'Select port',
+			onclick     : this._onClick
 		})
 		this._menu = $.List('menu hidden', {
 			name            : this._menuName,
@@ -83,7 +84,6 @@ class InputSearchSelect extends FormInput {
 			isSelectable    : false
 		})
 		this.children.push(this._tags)
-		this.children.push($.br())
 		this.children.push(this._search)
 		this.children.push(this._menu)
 		return super.render()
