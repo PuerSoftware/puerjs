@@ -6,16 +6,18 @@ import DataListMixin from '../../library/class.DataListMixin.js'
 class InputSearchSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
-		this.props.default('tagName',      'input')
-		this.props.default('type',         'hidden')
-		this.props.default('renderTag',    this.renderTag)
-		this.props.default('itemRenderer', 'ListItem')
+		this.props.default('tagName',          'input')
+		this.props.default('type',             'hidden')
+		this.props.default('renderTag',        this.renderTag)
+		this.props.default('itemRenderer',     'ListItem')
+		this.props.default('singleItemSelect', false)
 
-		this._tags     = null
-		this._search   = null
-		this._menu     = null
-		this._menuName = $.String.random(6)
-		this._valueSet = new Set()
+		this._tags           = null
+		this._search         = null
+		this._menu           = null
+		this._menuName       = $.String.random(6)
+		this._valueSet       = new Set()
+		this._valueToItemMap = {}
 
 		this.on($.Event.APP_CLICK,        this._onAppClick)
 		this.on($.Event.APP_ESCAPE,       this._onAppEscape)
@@ -40,27 +42,67 @@ class InputSearchSelect extends FormInput {
 		}
 	}
 
-	_updateValue(value, func='add') {
-		this._valueSet[func](value)
-		this.value = Array.from(this._valueSet).join(',')
-	}
-
-	_onSelect(e) {
-		if (!this._valueSet.has(e.detail.data.value)) {
-			e.detail.targetComponent.addCssClass('disabled')
-			this._tags.append(this.props.renderTag(e.detail.data))
-			this._updateValue(e.detail.data.value, 'add')
-		}
+	_onSelect(event) {
+		this._select(event.detail.data, event.detail.targetComponent)
 	}
 
 	_onUnselect(e) {
-		const tag = e.detail.targetComponent
-		this._updateValue(tag.data.value, 'delete')
-		this._menu.items[tag.props.data.dataId].removeCssClass('disabled')
+		this._unselect(e.detail.targetComponent)
 	}
 
-	onInit() {
-		super.onInit()
+	_getValuesString() {
+		return Array.from(this._valueSet).join(',')
+	}
+
+	_select(data, item) {
+		if (!this._valueSet.has(data.value)) {
+			if (this.props.singleItemSelect) {
+				for (const itemId in this._menu.items) {
+					this._menu.items[itemId].removeCssClass('disabled')
+				}
+				this._tags.removeChildren()
+				this._valueSet = new Set()
+			}
+
+			item.addCssClass('disabled') // ListItem
+			this._tags.append(this.props.renderTag(data))
+			this._updateValue(data.value, 'add')
+		}
+	}
+
+	_unselect(tag) {
+		this._updateValue(tag.data.value, 'delete')
+		this._valueToItemMap[tag.data.value].removeCssClass('disabled')
+	}
+
+	_updateValue(value, func='add') {
+		this._valueSet[func](value)
+		this.value = this._getValuesString()
+	}
+
+	set value(value) {
+		value                    = value || ''
+		this.input.element.value = value
+		if (this._getValuesString() !== value) {
+			if (value === '') {
+				for (const tag of [... this._tags.children]) {
+					tag._onClose()
+				}
+			} else {
+				for (const v of String(value).split(',')) {
+					const item = this._valueToItemMap[Number(v)]
+					this._select(item.props.data, item)
+				}
+			}
+		}
+	}
+
+	onReady() {
+		for (const itemId in this._menu.items) {
+
+			const item = this._menu.items[itemId]
+			this._valueToItemMap[item.props.data.value] = item
+		}
 	}
 
 	renderTag(item) {
