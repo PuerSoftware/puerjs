@@ -12,6 +12,7 @@
             background-color : transparent;
             height           : 38px;
             padding-left     : 12px;
+            color            : var(--text-color-hi);
         }
             .search .form-input.confined > input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
                 font-size  : var(--font-size-lo);

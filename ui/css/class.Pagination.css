@@ -1,6 +1,5 @@
 .pagination {
-    flex       : none;
-    align-self : flex-end;
+    flex : none;
 }
 
     .pagination a {
