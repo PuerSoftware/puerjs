@@ -16,7 +16,6 @@ class PuerProxy {
 
 		const handler = Object.assign({
 			get: (target, prop) => {
-				// if (prop === 'code') { debugger }
 				if (prop === Symbol.iterator) {
 					return function*() {
 						for (let _prop in target.references) {
@@ -36,7 +35,6 @@ class PuerProxy {
 				}
 			},
 			set: (target, prop, value) => {
-				// if (prop === 'code') { debugger }
 				target.setProp(prop, value)
 				return true
 			},

@@ -3,7 +3,19 @@ import * as ui from '../../ui/index.js'
 
 import PortListItem from './class.PortListItem.js'
 
+
 export default class ComponentsPage extends $.Component {
+	constructor(... args) {
+		super(... args)
+		this.state.item = {}
+	}
+
+	onInit() {
+		this.state.item = {
+			label : 'foo',
+		}
+	}
+
 	render() {
 		return $.Columns([
 			$.Rows('sidebar', [

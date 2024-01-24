@@ -24,10 +24,6 @@ class PuerTextElement extends PuerHtmlElement {
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop) {
-		if ($.isObject($.dereference(this.props.text))) {
-			debugger
-		}
-
 		this.element.nodeValue = $.dereference(this.props.text)
 	}
 

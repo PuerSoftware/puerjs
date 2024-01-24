@@ -23,9 +23,17 @@ export default class DataStore {
 			return items
 		} else {
 			if ($.isReferencing) {
-				return DataStore.references[dataId][''] || null
+				return DataStore.references[dataId]['..'] || null
 			}
 			return DataStore.values[dataId]
+		}
+	}
+
+	static debug(dataId) {
+		return {
+			references : DataStore.references[dataId],
+			value      : DataStore.values[dataId],
+			owners     : DataStore.owners[dataId]
 		}
 	}
 
@@ -70,7 +78,7 @@ export default class DataStore {
 		if (!DataStore.references[dataId]) {
 			DataStore.references[dataId] = {}
 		}
-		DataStore.references[dataId][''] = new $.Reference(dataId)
+		DataStore.references[dataId]['..'] = new $.Reference(dataId)
 
 		if (isChanged) {
 			DataStore.updateOwners(dataId)

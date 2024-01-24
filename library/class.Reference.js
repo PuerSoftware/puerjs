@@ -30,18 +30,7 @@ class Reference {
 					return target.clone(prop)
 				}
 				return proxy
-			},
-			// set(target, prop, value) {
-			// 	if (prop === 'code') { debugger }
-			// 	if (!target[prop] && typeof prop == 'string') {
-			// 		let _value = target.rootValue
-			// 		for (const accessor of target._accessors) {
-			// 			_value = _value[accessor]
-			// 		}
-			// 		_value[prop] = value
-			// 	}
-			// 	return true
-			// }
+			}
 		})
 		return proxy
 	}
@@ -86,7 +75,7 @@ class Reference {
 	}
 
 	truncate() {
-		return new Reference(this.dataId, null, this._accessors.slice())
+		return new Reference(this.dataId, null, this._rootAccessors.concat(this._accessors))
 	}
 
 	clone(extraAccessor) {
