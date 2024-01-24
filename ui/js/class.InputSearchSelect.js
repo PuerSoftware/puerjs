@@ -47,6 +47,7 @@ class InputSearchSelect extends FormInput {
 
 	_onSelect(e) {
 		if (!this._valueSet.has(e.detail.data.value)) {
+			e.detail.targetComponent.addCssClass('disabled')
 			this._tags.append(this.props.renderTag(e.detail.data))
 			this._updateValue(e.detail.data.value, 'add')
 		}
@@ -55,6 +56,7 @@ class InputSearchSelect extends FormInput {
 	_onUnselect(e) {
 		const tag = e.detail.targetComponent
 		this._updateValue(tag.data.value, 'delete')
+		this._menu.items[tag.props.data.dataId].removeCssClass('disabled')
 	}
 
 	onInit() {

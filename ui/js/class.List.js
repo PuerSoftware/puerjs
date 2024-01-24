@@ -11,7 +11,7 @@ export default class List extends $.Component {
 		this.props.default('ensureSelection', this.props.isSelectable)
 		this.props.default('itemRenderer', 'ListItem')
 
-		this.items         = {}  // { dataStoreId : itemComponent } for easy lookup when applying sort and filter
+		this.items         = {}  // { dataId : itemComponent } for easy lookup when applying sort and filter
 		this.itemRenderer  = this.props.itemRenderer
 		this.itemContainer = this // may be set manually in child class
 
