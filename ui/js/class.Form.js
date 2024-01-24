@@ -14,13 +14,10 @@ class Form extends $.Component {
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
 
-
 		this.state.error        = ''
 		this._errorComponent    = null
 		this._isValidateEnabled = true
 		this.inputs             = null
-
-		this.on($.Event.FORM_RESPONSE, this._onResponse)
 	}
 
 	_onResponse(event) {
@@ -87,6 +84,7 @@ class Form extends $.Component {
 	onInit() {
 		this.inputs = this.$$.FormInput.toArray()
 		this.mixin(DataOwnerMixin)
+		this.on($.Event.FORM_RESPONSE, this._onResponse, this.props.dataSource)
 	}
 
 	onDataChange() {

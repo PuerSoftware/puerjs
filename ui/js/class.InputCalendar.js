@@ -73,14 +73,26 @@ export default class InputCalendar extends FormInput {
 		this._header     = null
 		this._calendar   = null
 		this._dateString = null
+
+		this.on($.Event.APP_CLICK,  this._onAppClick)
+		this.on($.Event.APP_ESCAPE, this._onAppEscape)
 	}
 
 	/************************************************/
 
 	_toggle(event) {
-		console.log('toggle', event)
 		this._calendar.toggle()
 	}
+
+	_onAppClick(event) {
+		const targetElement = event.detail.event.target
+
+		if (!this.element.contains(targetElement)) {
+			this._calendar.hide()
+		}
+	}
+
+	_onAppEscape(event) { this._calendar.hide() }
 
 	_onPrevious() {
 		this._monthInc --
@@ -120,6 +132,15 @@ export default class InputCalendar extends FormInput {
 		return Array.from(this._range)
 			.map(date => $.Date.format(date, $.Date.FORMAT_SLASHES))
 			.join(' - ')
+	}
+
+	_parseRangeString(rangeString) {
+		const dates = []
+		for (const s of rangeString.split('-')) {
+			const [m, d, y] = s.split('/')
+			dates.push(new Date(y, m - 1, d))
+		}
+		return dates
 	}
 
 	/************************************************/
@@ -204,6 +225,17 @@ export default class InputCalendar extends FormInput {
 	}
 
 	/************************************************/
+
+	set value(value) {
+		value                    = value || ''
+		this.input.element.value = value
+		if (this._getRangeString() !== value) {
+			this._range = []
+			this._range.push(... this._parseRangeString(value))
+			this._range.sort((a, b) => a - b )
+			this._highlightRange()
+		}
+	}
 
 	set date(timestamp) {
 		this._date = new Date(timestamp)
