@@ -1,9 +1,12 @@
 .input-search-select {
-	width           : 252px;
-	position        : relative;
-	flex-direction  : column;
-	justify-content : left;
-	align-items     : flex-start;
+	width               : 252px;
+	position            : relative;
+	flex-direction      : column;
+	justify-content     : left;
+	align-items         : flex-start;
+	-webkit-user-select : none; 
+	-ms-user-select     : none; 
+	user-select         : none; 
 }
 	.input-search-select > .menu {
 		display        : flex;

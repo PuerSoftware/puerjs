@@ -9,7 +9,7 @@
 		background-repeat   : no-repeat;
 		background-image    : var(--svg-arrow-down);
 		background-color    : transparent;
-		background-size     : 20px 20px;
+		background-size     : 10px 5px;
 	}
 
 		.input-select > select > option {

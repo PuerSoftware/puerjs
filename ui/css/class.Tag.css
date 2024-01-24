@@ -15,6 +15,11 @@
     cursor           : default;
     user-select      : none;
 }
+    .tag:hover .link {
+        width       : 9px;
+        margin-left : 4px;
+        opacity     : 1;
+    }
 
     .tag > .content {
         white-space : nowrap;
@@ -24,8 +29,10 @@
     .tag > .link {
         flex-shrink : 0;
         color       : transparent;
-        width       : 9px;
+        width       : 0;
         height      : 9px;
-        margin-left : 4px;
+        margin-left : 0;
         background  : var(--svg-btn-close-lg) center no-repeat;
+        opacity     : 0;
+        transition  : all .15s ease-in-out;
     }
