@@ -74,7 +74,7 @@ class InputSearchSelect extends FormInput {
 		})
 		this._menu = $.List('menu hidden', {
 			name            : this._menuName,
-			searchName      : this.searchName,
+			searchName      : searchName,
 			dataSource      : this.props.dataSource,
 			itemRenderer    : this.props.itemRenderer,
 			mixins          : [DataListMixin],
