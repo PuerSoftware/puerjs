@@ -264,6 +264,7 @@ export default class InputCalendar extends FormInput {
 	onInit() {
 		super.onInit()
 		this._on('click', this._toggle)
+		this.input.element.setAttribute('readonly', 'true')
 		this.date = Date.now()
 	}
 
