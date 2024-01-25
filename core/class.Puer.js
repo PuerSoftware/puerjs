@@ -8,11 +8,12 @@ class Puer {
 			this.path
 			this.appPath
 			this.isReferencing
-			this.isRouting = true
-			this._cssUrls  = new Set()
-			this._cssCount = 0
+			
+			this.isRouting  = true
+			this._cssUrls   = new Set()
+			this._cssCount  = 0
 			this.components = {}
-			Puer.instance = this
+			Puer.instance   = this
 		}
 		return Puer.instance
 	}
@@ -38,7 +39,7 @@ class Puer {
 		document.cookie = 'timezone=' + timezone + ';path=/;max-age=31536000'; // one year
 	}
 
-	_onCssLoad() {
+	_onCssLoad(success) {
 		this._cssCount --
 		if (this._cssCount == 0) {
 			this.app.__ready()
@@ -54,7 +55,6 @@ class Puer {
 			if (!this._cssUrls.has(cssUrl)) {
 				let styleElement = this.Html.load(
 					cssUrl,
-					this._onCssLoad.bind(this),
 					this._onCssLoad.bind(this)
 				)
 				this._cssUrls.add(cssUrl)

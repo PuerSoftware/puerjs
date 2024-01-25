@@ -17,14 +17,14 @@ export default class Html {
 		return element
 	}
 
-	static load(url, onload, onerror) {
+	static load(url, onLoad) {
 		const ext  = StringMethods.ext(url)
 		let attrs  = {}
 		let events = {}
 		let name   = ''
 
-		if (onload)  { events['load']  = onload  }
-		if (onerror) { events['error'] = onerror }
+		events['load']  = () => { onLoad(true)  }
+		events['error'] = () => { onLoad(false) }
 
 		switch (ext) {
 			case 'js':
@@ -47,4 +47,39 @@ export default class Html {
 				return null
 		}
 	}
+
+	static loadBatch(urls, onLoad) {
+		let counter = urls.length
+		let success = true
+
+		const callback = (good) => {
+			counter --
+			success = success ? good : false
+			if (counter == 0) {
+				onLoad(success)
+			}
+		}
+
+		for (const url of urls) {
+			Html.load(url, callback)
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

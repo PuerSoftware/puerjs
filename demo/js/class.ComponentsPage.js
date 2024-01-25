@@ -8,6 +8,7 @@ export default class ComponentsPage extends $.Component {
 	constructor(... args) {
 		super(... args)
 		this.state.item = {}
+		this.state.code = null
 	}
 
 	_renderTag(item) {
@@ -19,6 +20,7 @@ export default class ComponentsPage extends $.Component {
 		this.state.item = {
 			label : 'foo',
 		}
+		this.state.code = this.$$.Code[0].jsCode
 	}
 
 	render() {
@@ -30,6 +32,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Flag',         hash: 'cmp:flag'         }),
 				$.Link({label: 'SearchSelect', hash: 'cmp:searchselect' }),
 				$.Link({label: 'Tag',          hash: 'cmp:tag'          }),
+				$.Link({label: 'Code',         hash: 'cmp:code'         }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -80,6 +83,9 @@ export default class ComponentsPage extends $.Component {
 					]),
 					$.br(),
 					$.Tag({isRemovable: false, label: 'No close button'})
+				]),
+				$.Box({route: 'cmp:code'}, [
+					$.Code({lang: 'javascript', code: this.state.code})
 				])
 			])
 		])

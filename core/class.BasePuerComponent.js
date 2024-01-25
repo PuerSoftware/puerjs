@@ -18,6 +18,7 @@ class BasePuerComponent extends PuerObject {
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
+		this.jsCode    = this._toCode(this.classes, props, children)
 		this.isCustom  = false
 		this._isActive = true
 		this._isHidden = false
@@ -278,6 +279,39 @@ class BasePuerComponent extends PuerObject {
 		} else {
 			this.children.forEach(child => child[methodName](... args))
 		}
+	}
+
+	_toCode(classes, props, children) {
+		delete props.classes
+		const params       = []
+		const childrenCode = []
+		const propCode     = []
+		let value
+
+		if (classes.length) {
+			params.push(classes.join(' '))
+		}
+		for (const prop in props) {
+			switch ($.type(props[prop])) {
+				case 'undefined':
+					value = 'undefined'
+					break
+				case 'string':
+					value = `'${props[prop]}'`
+					break
+				default:
+					value = props[prop].toString()
+			}
+			propCode.push(`${prop}: ${value}`)
+		}
+		params.push(`{${propCode.join(', ')}}`)
+		for (const child in children) {
+			childrenCode.push(child.jsCode)
+		}
+		if (childrenCode.length) {
+			params.push(`[\n${childrenCode.join('\n')}]`)
+		}
+		return `$.${this.className}(${params.join(', ')})`
 	}
 	
 	/*********************** CASTING ***********************/

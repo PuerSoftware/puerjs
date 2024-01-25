@@ -87,10 +87,7 @@ class Reference {
 	}
 
 	toString() {
-		return JSON.stringify({
-			reference : '#' + this.dataId,
-			value     : this.rootValue
-		})
+		return `Ref #${this.dataId}}`
 	}
 }
 
