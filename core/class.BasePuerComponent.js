@@ -305,11 +305,11 @@ class BasePuerComponent extends PuerObject {
 			propCode.push(`${prop}: ${value}`)
 		}
 		params.push(`{${propCode.join(', ')}}`)
-		for (const child in children) {
-			childrenCode.push(child.jsCode)
+		for (const child of children) {
+			childrenCode.push('\t' + child.jsCode)
 		}
 		if (childrenCode.length) {
-			params.push(`[\n${childrenCode.join('\n')}]`)
+			params.push(`[\n${childrenCode.join('\n')}\n]`)
 		}
 		return `$.${this.className}(${params.join(', ')})`
 	}
