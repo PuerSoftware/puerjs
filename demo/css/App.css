@@ -4,14 +4,34 @@ html, body {
     height  : 100%;
 }
 
+:root {
+    --demo-color-1: #006080;
+    --demo-color-2: #CCCCCC;
+    --demo-color-3: #FFFFFF;
+    --demo-color-4: #d0beaf;
+}
+    :root .dark-theme {
+        --demo-color-1: #006080;
+        --demo-color-2: #000000;
+        --demo-color-3: #222222;
+        --demo-color-4: #000000;
+    }
+
+    :root .light-theme {
+        /* Default */
+    }
+
+/************************************************/
+
 .app {
     font-family : arial;
     color       : #333;
     padding     : 0;
     height      : 100%;
+    background-color: var(--demo-color-3);
 }
     .app a {
-        color           : #006080;
+        color           : var(--demo-color-1);
         text-decoration : none;
     }
     .app a:hover {
@@ -19,15 +39,15 @@ html, body {
     }
     .app .header {
         padding          : 20px 40px;
-        background-color : #006080;
+        background-color : var(--demo-color-1);
         height: 120px;
-        color            : #FFF;
+        color            : var(--demo-color-2);
     }
         .app .header > .right {
             text-align: right;
         }
     .app .header a {
-        color : #d0beaf;
+        color : var(--demo-color-4);
     }
         .app .page h3 {
             color : #aa7355;
@@ -39,7 +59,7 @@ html, body {
 
 .app .sidebar {
     padding          : 10px 20px;
-    background-color : #CCC;
+    background-color : var(--demo-color-2);
     flex             : none;
 }
     .app .sidebar > * {
