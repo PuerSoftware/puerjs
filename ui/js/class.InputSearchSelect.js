@@ -6,18 +6,19 @@ import DataListMixin from '../../library/class.DataListMixin.js'
 class InputSearchSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
-		this.props.default('tagName',          'input')
-		this.props.default('type',             'hidden')
-		this.props.default('renderTag',        this.renderTag)
-		this.props.default('itemRenderer',     'ListItem')
-		this.props.default('singleItemSelect', false)
+		this.props.default('tagName',      'input')
+		this.props.default('type',         'hidden')
+		this.props.default('renderTag',    this.renderTag)
+		this.props.default('itemRenderer', 'ListItem')
+		this.props.default('isSingular',   false)
 
-		this._tags           = null
-		this._search         = null
-		this._menu           = null
-		this._menuName       = $.String.random(6)
-		this._valueSet       = new Set()
-		this._valueToItemMap = {}
+		this._tags        = null
+		this._search      = null
+		this._menu        = null
+		this._menuName    = $.String.random(6)
+		this._valueSet    = new Set()
+		this._valueToItem = {}
+		this._valueToTag  = {}
 
 		this.on($.Event.APP_CLICK,        this._onAppClick)
 		this.on($.Event.APP_ESCAPE,       this._onAppEscape)
@@ -56,7 +57,7 @@ class InputSearchSelect extends FormInput {
 
 	_select(data, item) {
 		if (!this._valueSet.has(data.value)) {
-			if (this.props.singleItemSelect) {
+			if (this.props.isSingular) {
 				for (const itemId in this._menu.items) {
 					this._menu.items[itemId].removeCssClass('disabled')
 				}
@@ -97,14 +98,6 @@ class InputSearchSelect extends FormInput {
 		}
 	}
 
-	onReady() {
-		for (const itemId in this._menu.items) {
-
-			const item = this._menu.items[itemId]
-			this._valueToItemMap[item.props.data.value] = item
-		}
-	}
-
 	renderTag(item) {
 		return $.Tag({label: item.dataId, data: item})
 	}
@@ -123,7 +116,8 @@ class InputSearchSelect extends FormInput {
 			dataSource      : this.props.dataSource,
 			itemRenderer    : this.props.itemRenderer,
 			mixins          : [DataListMixin],
-			isSelectable    : false
+			isSelectable    : false,
+			// onDataChange    : this.
 		})
 		this.children.push(this._tags)
 		this.children.push(this._search)
