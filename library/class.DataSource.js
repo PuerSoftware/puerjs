@@ -164,6 +164,10 @@ export default class DataSource {
 
 	/******************************************************************/
 
+	get data() {
+		return $.DataStore.get(this.itemIds)
+	}
+
 	fill(items) {
 		$.defer(() => {
 			this.addItems(items)

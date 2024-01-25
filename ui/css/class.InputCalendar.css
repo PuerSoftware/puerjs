@@ -7,6 +7,10 @@
 	-ms-user-select     : none; 
 	user-select         : none; 
 }
+	.input-calendar > input {
+		color: #FFF; /*TODO: make variable by design*/
+	}
+
 	.input-calendar > .after {
 		width      : 17px;
 		height     : 16px;
@@ -32,17 +36,17 @@
 			margin-bottom : 8px;
 			padding       : 0 6px;
 		}
-			.input-calendar > .calendar > .head > div:first-child {
+			.input-calendar > .calendar > .head > div:first-child { /*TODO: add class to JS and remove first-child*/
 				white-space : nowrap;
 				user-select : none;
 			}
 
-			.input-calendar > .calendar > .head > div:nth-child(2) {
+			.input-calendar > .calendar > .head > div:nth-child(2) { /*TODO: add class to JS and remove nth-child(2)*/
 				flex        : none;
 				display     : flex;
 				align-items : center;
 			}
-				.input-calendar > .calendar > .head > div:nth-child(2) > div {
+				.input-calendar > .calendar > .head > div:nth-child(2) > div { /*TODO: add class to JS and remove nth-child(2)*/
 					display         : flex;
 					justify-content : center;
 					align-items     : center;
@@ -52,16 +56,16 @@
 					flex            : none;
 					border-radius   : 1px;
 				}
-					.input-calendar > .calendar > .head > div:nth-child(2) > div:first-child {
+					.input-calendar > .calendar > .head > div:nth-child(2) > div:first	-child { /*TODO: add class to JS and remove first*/
 						margin-right : 8px;
 						background   : var(--svg-arrow-prev) center no-repeat, var(--bg-color-dark);
 					}
 
-					.input-calendar > .calendar > .head > div:nth-child(2) > div:last-child {
+					.input-calendar > .calendar > .head > div:nth-child(2) > div:last-child { /*TODO: add class to JS and remove :nth-child(2), last-child*/
 						background : var(--svg-arrow-next) center no-repeat, var(--bg-color-dark);
 					}
 
-			.input-calendar > .calendar > .head > div:nth-child(3) {
+			.input-calendar > .calendar > .head > div:nth-child(3) { /*TODO: add class to JS and remove nth-child(3) */
 				display         : flex;
 				justify-content : center;
 				align-items     : center;
@@ -108,7 +112,7 @@
 					color       : var(--text-color-th);
 					height      : 23px;
 				}
-					.input-calendar > .calendar > .content > table > tr > th:first-child {
+					.input-calendar > .calendar > .content > table > tr > th:first-child { /*TODO: add class to JS and remove first-child*/
 						padding-left : 4px;
 					}
 

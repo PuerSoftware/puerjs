@@ -8,8 +8,8 @@ class InputToggle extends FormInput {
 		this.props.default('allowEmpty', true)
 		this.props.default('selected', '1')
 		this.props.default('options', [
-			{value: '1', text: 'Yes'},
-			{value: '0', text: 'No'}
+			{value: '1', label: 'Yes'},
+			{value: '0', label: 'No'}
 		])
 
 		this.props.type    = 'hidden'
@@ -63,18 +63,18 @@ class InputToggle extends FormInput {
 		for (let option of options) {
 			this.addOption(
 				option.value,
-				option.text,
+				option.label,
 				this.props.selected && this.props.selected === option.value
 			)
 		}
 	}
 
-	addOption(value, text, selected=false) {
+	addOption(value, label, selected=false) {
 		const cssClasses = ['option']
 		if (selected) { cssClasses.push('selected') }
 
 		this.options[value] = $.div(cssClasses.join(' '), {
-			text    : text,
+			text    : label,
 			value   : value.toString(),
 			onclick : this._onButtonClick.bind(this)
 		})

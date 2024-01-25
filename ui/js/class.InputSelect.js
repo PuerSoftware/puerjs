@@ -9,12 +9,19 @@ class InputSelect extends FormInput {
 		this.props.default('tagName', 'select')
 		this.props.default('allowEmpty', true)
 
-		this.hasData     = false
+		this.hasData  = false
+		this._options = {}
 	}
 
 	onPropSelectedChange(value) {
 		if (this.hasData) {
 			this.value = value
+		}
+	}
+
+	onDataFilter(map) {
+		for (const dataId in map) {
+			this._options[dataId].toggle(map[dataId])
 		}
 	}
 
@@ -31,22 +38,23 @@ class InputSelect extends FormInput {
 		}
 		for (let item of data) {
 			this.addOption(
-				item.value,
-				item.text,
+				item,
 				this.props.selected && (this.props.selected === item.value)
 			)
 		}
 	}
 
-	addOption(value, text, selected=false) {
+	addOption(item, selected=false) {
 		const props = {
-			value : value,
-			text  : text
+			value : item.value,
+			text  : item.text
 		}
 		if (selected) {
 			props.selected = true
 		}
-		this.input.append($.option(props))
+		const option = $.option(props)
+		this._options[item.dataId] = option
+		this.input.append(option)
 	}
 
 	reset() {

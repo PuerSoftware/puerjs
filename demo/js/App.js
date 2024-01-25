@@ -25,8 +25,8 @@ $.application(
 							onChange : this.setTheme,
 							selected : 'dark-theme',
 							options  : [
-								{value: 'dark-theme',  text: 'Dark'},
-								{value: 'light-theme', text: 'Light'}
+								{value: 'dark-theme',  label: 'Dark'},
+								{value: 'light-theme', label: 'Light'}
 							]
 						})
 					])
