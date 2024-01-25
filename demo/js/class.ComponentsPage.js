@@ -12,7 +12,9 @@ export default class ComponentsPage extends $.Component {
 	}
 
 	_renderTag(item) {
-		return $.Tag([$.Flag({label: item.port, code: item.code})])
+		return $.Tag({data: item}, [
+			$.Flag({label: item.port, code: item.code})
+		])
 	}
 
 

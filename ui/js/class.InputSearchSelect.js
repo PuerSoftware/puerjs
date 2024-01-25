@@ -44,36 +44,45 @@ class InputSearchSelect extends FormInput {
 	}
 
 	_onSelect(event) {
-		this._select(event.detail.data, event.detail.targetComponent)
+		this._select(event.detail.data)
 	}
 
 	_onUnselect(e) {
-		this._unselect(e.detail.targetComponent)
+		this._unselect(e.detail.targetComponent.data.value)
 	}
 
 	_getValuesString() {
 		return Array.from(this._valueSet).join(',')
 	}
 
-	_select(data, item) {
+	_fillValueToItem() {
+		for (const itemId in this._menu.items) {
+			const item = this._menu.items[itemId]
+			this._valueToItem[item.props.data.value] = item
+		}
+	}
+
+	_select(data) {
 		if (!this._valueSet.has(data.value)) {
 			if (this.props.isSingular) {
-				for (const itemId in this._menu.items) {
-					this._menu.items[itemId].removeCssClass('disabled')
+				for (const value in this._valueToTag) {
+					this._valueToTag[value]._onClose()
 				}
-				this._tags.removeChildren()
 				this._valueSet = new Set()
 			}
 
-			item.addCssClass('disabled') // ListItem
-			this._tags.append(this.props.renderTag(data))
+			this._valueToItem[data.value].addCssClass('disabled') // ListItem
+			const tag                    = this.props.renderTag(data)
+			this._valueToTag[data.value] = tag
+			this._tags.append(tag)
 			this._updateValue(data.value, 'add')
 		}
 	}
 
-	_unselect(tag) {
-		this._updateValue(tag.data.value, 'delete')
-		this._valueToItemMap[tag.data.value].removeCssClass('disabled')
+	_unselect(value) {
+		delete this._valueToTag[value]
+		this._updateValue(value, 'delete')
+		this._valueToItem[value].removeCssClass('disabled')
 	}
 
 	_updateValue(value, func='add') {
@@ -85,14 +94,12 @@ class InputSearchSelect extends FormInput {
 		value                    = value || ''
 		this.input.element.value = value
 		if (this._getValuesString() !== value) {
-			if (value === '') {
-				for (const tag of [... this._tags.children]) {
-					tag._onClose()
-				}
-			} else {
+			for (const v in this._valueToTag) {
+				this._valueToTag[v]._onClose()
+			}
+			if (value !== '') {
 				for (const v of String(value).split(',')) {
-					const item = this._valueToItemMap[Number(v)]
-					this._select(item.props.data, item)
+					this._select(this._valueToItem[Number(v)].props.data)
 				}
 			}
 		}
@@ -117,7 +124,7 @@ class InputSearchSelect extends FormInput {
 			itemRenderer    : this.props.itemRenderer,
 			mixins          : [DataListMixin],
 			isSelectable    : false,
-			// onDataChange    : this.
+			onDataChange    : this._fillValueToItem.bind(this),
 		})
 		this.children.push(this._tags)
 		this.children.push(this._search)

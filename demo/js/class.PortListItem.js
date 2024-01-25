@@ -6,7 +6,7 @@ export default class PortListItem extends ListItem {
 		const label = `${this.props.data.country}, ${this.props.data.port}`
 		return $.Flag({
 			code  : this.props.data.code,
-			label : label
+			label : label,
 		})
 	}
 }
