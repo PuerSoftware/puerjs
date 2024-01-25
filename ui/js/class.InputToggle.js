@@ -20,6 +20,7 @@ class InputToggle extends FormInput {
 
 	_onButtonClick(event) {
 		this.value = event.targetComponent.props.value
+		const s = this.value
 	}
 
 	/**********************************************************/
@@ -32,6 +33,10 @@ class InputToggle extends FormInput {
 		}
 	}
 
+	get value() {
+		return this.input.element.value
+	}
+
 	/**********************************************************/
 
 	onSelectedChange(value) {
@@ -39,7 +44,7 @@ class InputToggle extends FormInput {
 	}
 
 	onReady() {
-		super.onReady()
+		super.onReady && super.onReady()
 		this.addOptions(this.props.options)
 
 		this.value = this.props.selected

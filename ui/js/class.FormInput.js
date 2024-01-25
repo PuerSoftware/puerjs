@@ -44,6 +44,7 @@ class FormInput extends $.Component {
 	}
 
 	get value() {
+		debugger
 		return this.input && this.input.element
 			? this.input.element.value
 			: null

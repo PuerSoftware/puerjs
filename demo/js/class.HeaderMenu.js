@@ -2,7 +2,7 @@ import $       from '../../index.js'
 import * as ui from '../../ui/index.js'
 
 
-export default class MenuHeader extends $.Component {
+export default class HeaderMenu extends $.Component {
 	render() {
 		return $.div([
 			$.Link({label: 'Home',       hash: 'page:index' }),
@@ -12,4 +12,4 @@ export default class MenuHeader extends $.Component {
 	}
 }
 
-$.define(MenuHeader, import.meta.url)
+$.define(HeaderMenu, import.meta.url)

@@ -3,23 +3,43 @@ import * as ui from '../../ui/index.js'
 
 import IndexPage       from './class.IndexPage.js'
 import ComponentsPage  from './class.ComponentsPage.js'
-import MenuHeader      from './class.MenuHeader.js'
+import HeaderMenu      from './class.HeaderMenu.js'
 
 $.application(
 	class App extends $.App {
+		setTheme(e) {
+			document.body.classList.remove('dark-theme', 'light-theme')
+			document.body.classList.add(e.targetComponent.value)
+		}
+
 		render() {
-			return $.div([
-				$.div('header', [
-					$.h2({text: 'PuerJS'}),
-					$.MenuHeader()
+			return $.Rows([
+				$.Columns('header', [
+					$.Rows('left', [
+						$.h2({text: 'PuerJS'}),
+						$.HeaderMenu()
+					]),
+					$.Rows('right', [
+						$.InputToggle({
+							name     : 'theme',
+							onChange : this.setTheme,
+							selected : 'dark-theme',
+							options  : [
+								{value: 'dark-theme',  text: 'Dark'},
+								{value: 'light-theme', text: 'Light'}
+							]
+						})
+					])
 				]),
-				$.IndexPage({
-					route          : 'page:index',
-					isDefaultRoute : true
-				}),
-				$.ComponentsPage({
-					route: 'page:component'
-				}),
+				$.div('pages', [
+					$.IndexPage({
+						route          : 'page:index',
+						isDefaultRoute : true
+					}),
+					$.ComponentsPage({
+						route: 'page:component'
+					})
+				])
 			])
 		}
 	}, import.meta.url,

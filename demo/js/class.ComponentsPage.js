@@ -10,9 +10,7 @@ export default class ComponentsPage extends $.Component {
 		this.state.item = {}
 	}
 
-
 	_renderTag(item) {
-		console.log(item)
 		return $.Tag([$.Flag({label: item.port, code: item.code})])
 	}
 
