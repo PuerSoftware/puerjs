@@ -11,4 +11,4 @@ export default class PortListItem extends ListItem {
 	}
 }
 
-$.define(PortListItem)
+$.define(PortListItem, import.meta.url)

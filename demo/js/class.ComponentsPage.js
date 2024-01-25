@@ -10,6 +10,13 @@ export default class ComponentsPage extends $.Component {
 		this.state.item = {}
 	}
 
+
+	_renderTag(item) {
+		console.log(item)
+		return $.Tag([$.Flag({label: item.port, code: item.code})])
+	}
+
+
 	onInit() {
 		this.state.item = {
 			label : 'foo',
@@ -40,7 +47,8 @@ export default class ComponentsPage extends $.Component {
 					$.InputSearchSelect({
 						name         : 'ports',
 						dataSource   : 'Ports',
-						itemRenderer : 'PortListItem'
+						itemRenderer : 'PortListItem',
+						renderTag    : this._renderTag
 					})
 				]),
 				$.Box({route: 'cmp:flag'}, [
