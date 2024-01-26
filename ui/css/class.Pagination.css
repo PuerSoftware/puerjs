@@ -16,8 +16,8 @@
         }
 
     .pagination > .pages {
-        font-family : var(--font-text);
-        font-size   : 14px;
+        font-family : var(--puer-font-text);
+        font-size   : var(--puer-font-size-hi);
         display     : inline-flex;
         align-items : center;
         gap         : 6px;
@@ -47,5 +47,5 @@
         
         .pagination > .next::after {
             content : '⟶';
-            color   : var(--pagination-color-hi);
+            color   : var(--puer-pagination-color-hi);
         }

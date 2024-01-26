@@ -15,6 +15,7 @@ class InputSearchSelect extends FormInput {
 		this._tags        = null
 		this._search      = null
 		this._menu        = null
+		this._menuList    = null
 		this._menuName    = $.String.random(6)
 		this._valueSet    = new Set()
 		this._valueToItem = {}
@@ -56,8 +57,8 @@ class InputSearchSelect extends FormInput {
 	}
 
 	_fillValueToItem() {
-		for (const itemId in this._menu.items) {
-			const item = this._menu.items[itemId]
+		for (const itemId in this._menuList.items) {
+			const item = this._menuList.items[itemId]
 			this._valueToItem[item.props.data.value] = item
 		}
 	}
@@ -117,15 +118,17 @@ class InputSearchSelect extends FormInput {
 			placeholder : 'Select port',
 			onclick     : this._onClick
 		})
-		this._menu = $.List('menu hidden', {
-			name            : this._menuName,
-			searchName      : searchName,
-			dataSource      : this.props.dataSource,
-			itemRenderer    : this.props.itemRenderer,
-			mixins          : [DataListMixin],
-			isSelectable    : false,
-			onDataChange    : this._fillValueToItem.bind(this),
-		})
+		this._menu = $.div('menu-body hidden', [
+			this._menuList = $.List('menu', {
+				name            : this._menuName,
+				searchName      : searchName,
+				dataSource      : this.props.dataSource,
+				itemRenderer    : this.props.itemRenderer,
+				mixins          : [DataListMixin],
+				isSelectable    : false,
+				onDataChange    : this._fillValueToItem.bind(this),
+			})
+		])
 		this.children.push(this._tags)
 		this.children.push(this._search)
 		this.children.push(this._menu)

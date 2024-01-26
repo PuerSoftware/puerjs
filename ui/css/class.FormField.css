@@ -1,8 +1,9 @@
 .form-field {
 	width      : 100%;
 	box-sizing : border-box;
+	position: relative;
 }
-	.form-field>.error {
+	.form-field > .error {
 		height        : 13px;
 		white-space   : nowrap;     /* Prevents the text from wrapping to the next line */
     	overflow      : hidden;     /* Hides text that overflows the container's bounds */
@@ -10,8 +11,11 @@
 		font-size     : 12px;
 		font-family   : inter, sans-serif;
 		color         : #EA7A7A;
+		position: absolute;
+		left: 0;
+		bottom: -14px;
 	}
-	.form-field>label {
+	.form-field > label {
 		display        : block;
 		font-family    : Inter, sans-serif;
 		font-size      : 12px;
@@ -19,7 +23,8 @@
 		line-height    : 15px;
 		letter-spacing : 0em;
 		color          : #66798E;
+		white-space    : nowrap;
 	}
-	.form-field>* {
+	.form-field > * {
 		display : inline-block;
 	}

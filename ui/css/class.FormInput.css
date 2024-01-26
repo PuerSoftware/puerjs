@@ -1,7 +1,7 @@
 .form-input {
 	display       : flex;
 	align-items   : center;
-	border-bottom : 1px solid #2F4155;
+	border-bottom : 1px solid var(--puer-border-color-form);
 }
 	.form-input:focus-within {
 		border-color : #6EA7E0;
@@ -23,16 +23,20 @@
 	.form-input > textarea {
 		border-width     : 0;
 		padding          : 5px 0;
-		background-color : transparent;
+		color            : var(--puer-text-color-hi);
+        background-color : transparent;
 		width            : 100%;
 		box-sizing       : border-box;
 		font-family      : Inter, sans-serif;
 		font-size        : 14px;
 		font-weight      : 400;
 	}
+	.form-input > textarea {
+		resize : none;
+	}
 		.form-input > input:focus,
 		.form-input > select:focus,
-		.form-input > textareas:focus {
+		.form-input > textarea:focus {
 			outline : none;
 		}
 		.form-input > input::placeholder,
