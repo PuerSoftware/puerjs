@@ -7,7 +7,7 @@
 		padding-left        : 0 !important;
 		background-position : right 2px center;
 		background-repeat   : no-repeat;
-		background-image    : var(--svg-arrow-down);
+		background-image    : var(--puer-svg-arrow-down);
 		background-color    : transparent;
 		background-size     : 10px 5px;
 	}

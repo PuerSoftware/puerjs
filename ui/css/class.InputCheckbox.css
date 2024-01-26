@@ -23,7 +23,7 @@
 
     .input-checkbox > label {
         white-space : nowrap;
-        color       : var(--text-color-hi);
+        color       : var(--puer-text-color-hi);
         cursor      : pointer;
         margin-left : 9px;
     }

@@ -1,5 +1,5 @@
 .input-button {
-	background-color : #07569E;
+	background-color : var(--puer-bg-color-btn);
 	color            : #FFFFFF;
 	font-family      : Inter, sans-serif;
 	font-size        : 14px;
@@ -18,5 +18,5 @@
 
 	.input-button.btn-share {
 		padding    : 8px 8px 8px 29px;
-		background : var(--svg-share-icon) 8px center no-repeat, #07569E;
+		background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn);
 	}

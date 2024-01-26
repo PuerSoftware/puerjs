@@ -9,23 +9,26 @@ html, body {
     --demo-color-2: #CCCCCC;
     --demo-color-3: #FFFFFF;
     --demo-color-4: #d0beaf;
+
+    --demo-color-text : #333;
 }
     :root .dark-theme {
         --demo-color-1: #006080;
         --demo-color-2: #000000;
         --demo-color-3: #222222;
         --demo-color-4: #000000;
+
+        --demo-color-text : #cecece;
     }
 
     :root .light-theme {
         /* Default */
     }
-
 /************************************************/
 
 .app {
     font-family : arial;
-    color       : #333;
+    color       : var(--demo-color-text);
     padding     : 0;
     height      : 100%;
     background-color: var(--demo-color-3);
@@ -44,7 +47,8 @@ html, body {
         color            : var(--demo-color-2);
     }
         .app .header > .right {
-            text-align: right;
+            text-align : right;
+            flex       : none;
         }
     .app .header a {
         color : var(--demo-color-4);

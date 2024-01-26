@@ -190,12 +190,12 @@ export default class InputCalendar extends FormInput {
 
 	_renderHeader() {
 		return $.Columns('head', [
-			this._dateString = $.div(),
-			$.div([
-				$.div({onclick: this._onPrevious.bind(this) }),
-				$.div({onclick: this._onNext.bind(this)     }),
+			this._dateString = $.div('month'),
+			$.div('arrows', [
+				$.div('prev', {onclick: this._onPrevious.bind(this) }),
+				$.div('next', {onclick: this._onNext.bind(this)     }),
 			]),
-			$.div({onclick: this._toggle.bind(this)})
+			$.div('close', {onclick: this._toggle.bind(this)})
 		])
 	}
 

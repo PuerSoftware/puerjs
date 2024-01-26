@@ -1,5 +1,6 @@
 .input-calendar {
-	font-family         : var(--font-label);
+	font-family         : var(--puer-font-label);
+	display             : flex;
 	width               : 252px;
 	height              : 24px;
 	position            : relative;
@@ -14,7 +15,7 @@
 	.input-calendar > .after {
 		width      : 17px;
 		height     : 16px;
-		background : var(--svg-calendar-icon) no-repeat;
+		background : var(--puer-svg-calendar-icon) no-repeat;
 	}
 
 	.input-calendar > .calendar {
@@ -24,29 +25,32 @@
 		height           : auto;
 		width            : 100%;
 		padding          : 12px 6px 9px 6px;
-		color            : var(--text-color-hi);
+		color            : var(--puer-text-color-hi);
 		border-radius    : 2px;
-		border           : 1px solid var(--border-color);
-		background-color : var(--bg-color-lo);
+		border           : 1px solid var(--puer-border-color);
+		background-color : var(--puer-bg-color-lo);
 		box-shadow       : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
+		z-index          : 2;
 	}
 		.input-calendar > .calendar > .head {
-			font-size     : var(--font-size-hi);
+			font-size     : var(--puer-font-size-hi);
 			align-items   : center;
 			margin-bottom : 8px;
 			padding       : 0 6px;
 		}
-			.input-calendar > .calendar > .head > div:first-child { /*TODO: add class to JS and remove first-child*/
+
+			.input-calendar > .calendar > .head > .month {
 				white-space : nowrap;
 				user-select : none;
 			}
 
-			.input-calendar > .calendar > .head > div:nth-child(2) { /*TODO: add class to JS and remove nth-child(2)*/
+.input-calendar > .calendar > .head > .arrows {
 				flex        : none;
 				display     : flex;
 				align-items : center;
 			}
-				.input-calendar > .calendar > .head > div:nth-child(2) > div { /*TODO: add class to JS and remove nth-child(2)*/
+
+				.input-calendar > .calendar > .head > .arrows > div {
 					display         : flex;
 					justify-content : center;
 					align-items     : center;
@@ -56,16 +60,17 @@
 					flex            : none;
 					border-radius   : 1px;
 				}
-					.input-calendar > .calendar > .head > div:nth-child(2) > div:first	-child { /*TODO: add class to JS and remove first*/
+
+					.input-calendar > .calendar > .head > .arrows > .prev {
 						margin-right : 8px;
-						background   : var(--svg-arrow-prev) center no-repeat, var(--bg-color-dark);
+						background   : var(--puer-svg-arrow-prev) center no-repeat, var(--puer-bg-color-dark);
 					}
 
-					.input-calendar > .calendar > .head > div:nth-child(2) > div:last-child { /*TODO: add class to JS and remove :nth-child(2), last-child*/
-						background : var(--svg-arrow-next) center no-repeat, var(--bg-color-dark);
+					.input-calendar > .calendar > .head > .arrows > .next {
+						background : var(--puer-svg-arrow-next) center no-repeat, var(--puer-bg-color-dark);
 					}
 
-			.input-calendar > .calendar > .head > div:nth-child(3) { /*TODO: add class to JS and remove nth-child(3) */
+			.input-calendar > .calendar > .head > .close {
 				display         : flex;
 				justify-content : center;
 				align-items     : center;
@@ -75,7 +80,7 @@
 				cursor          : pointer;
 				flex            : none;
 				border-radius   : 1px;
-				background      : var(--svg-btn-close-sm) center no-repeat, var(--bg-color-dark);
+				background      : var(--puer-svg-btn-close-sm) center no-repeat, var(--puer-bg-color-dark);
 			}
 				
 		.input-calendar > .calendar > .content {
@@ -88,7 +93,7 @@
 				top              : 18px;
 				height           : 90%;
 				width            : 7px;
-				background-color : var(--bg-color-lo);
+				background-color : var(--puer-bg-color-lo);
 				z-index          : 5;
 			}	
 
@@ -104,12 +109,12 @@
 				table-layout    : fixed;
 				border-collapse : separate;
 				border-spacing  : 0 0;
-				font-size       : var(--font-size-lo);
+				font-size       : var(--puer-font-size-lo);
 				width           : 100%;
 			}
 				.input-calendar > .calendar > .content > table > tr > th {
 					font-weight : 600;
-					color       : var(--text-color-th);
+					color       : var(--puer-text-color-th);
 					height      : 23px;
 				}
 					.input-calendar > .calendar > .content > table > tr > th:first-child { /*TODO: add class to JS and remove first-child*/
@@ -149,18 +154,18 @@
 
 		.input-calendar > .calendar .today > span {
 			font-weight      : 700;
-			color            : var(--text-color-today);
-			background-color : var(--bg-color-light);
+			color            : var(--puer-text-color-today);
+			background-color : var(--puer-bg-color-light);
 		}
 			.input-calendar > .calendar .today.mid-range > span {
-				color            : var(--text-color-hi);
-				background-color : var(--bg-color-muted);
+				color            : var(--puer-text-color-hi);
+				background-color : var(--puer-bg-color-muted);
 			}
 
 		.input-calendar > .calendar .start-range > span,
 		.input-calendar > .calendar .end-range > span {
-			color            :var(--text-color-hi);
-			background-color : var(--bg-color-selected);
+			color            :var(--puer-text-color-hi);
+			background-color : var(--puer-bg-color-selected);
 		}
 
 			.input-calendar > .calendar .selected.start-range.end-range::before {
@@ -170,19 +175,19 @@
 			.input-calendar > .calendar .selected.start-range::before {
 				left             : 50%;
 				right            : 0;
-				background-color : var(--bg-color-range);
+				background-color : var(--puer-bg-color-range);
 			}
 			.input-calendar > .calendar .selected.end-range::before {
 				left             : 0;
 				right            : 50%;
-				background-color : var(--bg-color-range);
+				background-color : var(--puer-bg-color-range);
 			}
 
 		.input-calendar > .calendar .mid-range::before {
-			background-color : var(--bg-color-range);
+			background-color : var(--puer-bg-color-range);
 		}
 
 		.input-calendar > .calendar .prev-month,
 		.input-calendar > .calendar .next-month {
-			color : var(--text-color-muted);
+			color : var(--puer-text-color-muted);
 		}

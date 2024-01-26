@@ -9,7 +9,10 @@
     height           : 16px;
     border-radius    : 8px;
     color            : #FFF;
-    background-color : var(--bg-notify-counter);
+    background-color : var(--puer-bg-notify-counter);
+    -webkit-user-select : none; 
+	-ms-user-select     : none; 
+	user-select         : none; 
 }
 
     .counter > .value {

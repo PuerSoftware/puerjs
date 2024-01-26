@@ -8,15 +8,19 @@
 	font-size   : 12px;
 }
 	.input-toggle > .buttons {
-		border           : 2px solid #263545;
+		display          : flex;
+		gap              : 1px;
+		border           : 1px solid #263545;
 		border-radius    : 2px;
 		background-color : #263545;
 	}
 		.input-toggle > .buttons > .option {
-			display : inline-block;
-			padding : 6px 15px;
-			color   : #7d8893;
-			margin  : 0;
+			display          : inline-block;
+			padding          : 6px 8px;
+			color            : rgba(255, 255, 255, 0.29);
+			margin           : 0;
+			border-radius    : 1px;
+			background-color : #141C25;
 		}
 
 		.input-toggle > .buttons > .option.selected {
