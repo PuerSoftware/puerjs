@@ -20,3 +20,10 @@
 		padding    : 8px 8px 8px 29px;
 		background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn);
 	}
+	.input-button.disabled,
+	.input-button.disabled:hover,
+	.input-button.disabled:active{
+		background-color : #303D4D; /* TODO: change to vars */
+		border-color     : #303D4D; /* TODO: change to vars */
+		color            : #535E6B; /* TODO: change to vars */
+	}

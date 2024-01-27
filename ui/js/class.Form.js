@@ -48,9 +48,11 @@ class Form extends $.Component {
 
 	getData() {
 		let data = {}
-		for (const input of this.inputs) {
-			if (!input.props.isHeader) {
-				data[input.props.name] = input.value 
+		if (this.inputs) {
+			for (const input of this.inputs) {
+				if (!input.props.isHeader) {
+					data[input.props.name] = input.value 
+				}
 			}
 		}
 		return data
@@ -58,9 +60,11 @@ class Form extends $.Component {
 
 	getHeaders() {
 		let headers = {}
-		for (const input of this.inputs) {
-			if (input.props.isHeader) {
-				headers[input.props.name] = input.value
+		if (this.inputs) {
+			for (const input of this.inputs) {
+				if (input.props.isHeader) {
+					headers[input.props.name] = input.value
+				}
 			}
 		}
 		return headers
@@ -75,7 +79,7 @@ class Form extends $.Component {
 	}
 
 	submit(save) {
-		if (this._isValidateEnabled) {
+		if (this._isValidateEnabled && this._dataSource) {
 			const formData = this.getData()
 			const headers  = this.getHeaders()
 			this._dataSource.submit(formData, save, headers)
