@@ -284,6 +284,7 @@ $.init()
 
 import * as Library from '../library/index.js'
 
+$.Constants      = Library.Constants
 $.String         = Library.StringMethods
 $.Object         = Library.ObjectMethods
 $.Date           = Library.DateMethods
@@ -300,6 +301,7 @@ $.Reference      = Library.Reference
 $.ReferenceOwner = Library.ReferenceOwner
 $.RouteRoot      = Library.RouteRoot
 
+$.Constants.$($)
 $.Reference.$($)
 $.DataSource.$($)
 $.DataSet.$($)

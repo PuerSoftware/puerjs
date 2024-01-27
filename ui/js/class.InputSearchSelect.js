@@ -103,7 +103,11 @@ class InputSearchSelect extends FormInput {
 					this._select(this._valueToItem[Number(v)].props.data)
 				}
 			}
-		}
+		}		
+	}
+
+	get value() {
+		return this._getValuesString()
 	}
 
 	renderTag(item) {

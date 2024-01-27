@@ -237,6 +237,10 @@ export default class InputCalendar extends FormInput {
 		}
 	}
 
+	get value() {
+		return this._getRangeString()
+	}
+
 	set date(timestamp) {
 		this._date = new Date(timestamp)
 		this._date.setHours(0, 0 ,0 ,0)

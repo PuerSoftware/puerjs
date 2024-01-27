@@ -18,6 +18,7 @@ class Form extends $.Component {
 		this._errorComponent    = null
 		this._isValidateEnabled = true
 		this.inputs             = null
+		this.button             = null
 	}
 
 	_onResponse(event) {
@@ -49,7 +50,7 @@ class Form extends $.Component {
 		let data = {}
 		for (const input of this.inputs) {
 			if (!input.props.isHeader) {
-				data[input.props.name] = input.value
+				data[input.props.name] = input.value 
 			}
 		}
 		return data
@@ -114,7 +115,7 @@ class Form extends $.Component {
 				}, [
 					... this.children,
 					$.div ('button-panel', [
-						$.InputButton ({
+						this.button = $.InputButton ({
 							type    : 'button',
 							onclick : this._onSubmit,
 							text    : this.props.buttonCaption,
