@@ -35,6 +35,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'SearchSelect', hash: 'cmp:searchselect' }),
 				$.Link({label: 'Tag',          hash: 'cmp:tag'          }),
 				$.Link({label: 'Code',         hash: 'cmp:code'         }),
+				$.Link({label: 'Google Map',   hash: 'cmp:map'          }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -88,6 +89,11 @@ export default class ComponentsPage extends $.Component {
 				]),
 				this.codeContainer = $.Box({route: 'cmp:code'}, [
 					$.Code({lang: 'javascript', code: this.state.code})
+				]),
+				$.Box({route: 'cmp:map'}, [
+					$.GoogleMap({
+						apiKey  : 'AIzaSyAgTXEC54E9Ff55FuJturyO4LE-oenUzcU'
+					})
 				])
 			])
 		])

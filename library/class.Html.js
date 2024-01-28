@@ -17,14 +17,16 @@ export default class Html {
 		return element
 	}
 
-	static load(url, onLoad) {
-		const ext  = StringMethods.ext(url)
+	static load(url, onLoad, ext=null) {
+		ext  = ext || StringMethods.ext(url)
 		let attrs  = {}
 		let events = {}
 		let name   = ''
 
-		events['load']  = () => { onLoad(true)  }
-		events['error'] = () => { onLoad(false) }
+		if (onLoad) {
+			events['load']  = () => { onLoad(true)  }
+			events['error'] = () => { onLoad(false) }
+		}
 
 		switch (ext) {
 			case 'js':

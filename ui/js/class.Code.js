@@ -1,5 +1,6 @@
 import $ from '../../index.js'
 
+
 export default class Code extends $.Component {
     constructor(...args) {
         super(...args)

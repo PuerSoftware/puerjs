@@ -93,7 +93,6 @@ class Puer {
 	_defineGetter(name, f) {
 		Object.defineProperty(this, name, {
 			get: function() {
-				// console.log('start referencing')
 				this.isReferencing = true
 				return f
 			}
