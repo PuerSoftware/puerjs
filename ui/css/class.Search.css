@@ -6,7 +6,7 @@
         margin-top    : 0;
         border        : 1px solid transparent;
         border-bottom : 1px solid transparent;
-        background    : var(--puer-bg-search);
+        background    : var(--puer-bg-color-search);
     }
         .search .form-input.confined > input {
             background-color : transparent;
@@ -16,7 +16,7 @@
             .search .form-input.confined > input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
                 font-size  : var(--puer-font-size-lo);
                 font-style : italic;
-                color      : var(--puer-placeholder-search-color);
+                color      : var(--puer-placeholder-color-search);
                 opacity    : 1;                                 /* Firefox */
             }
                 .search .form-input.confined > input:focus::placeholder {
@@ -26,7 +26,7 @@
             .search .form-input.confined > input:-ms-input-placeholder { /* Internet Explorer 10-11 */
                 font-size  : var(--puer-font-size-lo);
                 font-style : italic;
-                color      : var(--puer-placeholder-search-color);
+                color      : var(--puer-placeholder-color-search);
             }
                 .search .form-input.confined > input:focus:-ms-input-placeholder {
                     opacity : 0;                                          
@@ -35,7 +35,7 @@
             .search .form-input.confined > input::-ms-input-placeholder { /* Microsoft Edge */
                 font-size  : var(--puer-font-size-lo);
                 font-style : italic;
-                color      : var(--puer-placeholder-search-color);
+                color      : var(--puer-placeholder-color-search);
             }
                 .search .form-input.confined > input:focus::-ms-input-placeholder {
                     opacity : 0;                                          

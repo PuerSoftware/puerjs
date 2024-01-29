@@ -9,7 +9,7 @@
 	user-select         : none; 
 }
 	.input-calendar > input {
-		color: #FFF; /*TODO: make variable by design*/
+		color : var(--puer-text-color-hi);
 	}
 
 	.input-calendar > .after {

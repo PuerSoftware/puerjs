@@ -1,9 +1,9 @@
 .form-field {
 	width      : 100%;
 	box-sizing : border-box;
-	position: relative;
 }
 	.form-field > .error {
+		display       : block;
 		height        : 13px;
 		white-space   : nowrap;     /* Prevents the text from wrapping to the next line */
     	overflow      : hidden;     /* Hides text that overflows the container's bounds */
@@ -11,9 +11,6 @@
 		font-size     : 12px;
 		font-family   : inter, sans-serif;
 		color         : #EA7A7A;
-		position: absolute;
-		left: 0;
-		bottom: -14px;
 	}
 	.form-field > label {
 		display        : block;
