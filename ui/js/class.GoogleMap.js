@@ -7,9 +7,8 @@ export default class GoogleMap extends $.Component {
 	constructor(... args) {
 		super(... args)
 
-		this.props.default('lat', 50.4504)
-		this.props.default('lng', 30.5245)
-		this.props.default('zoom', 7)
+		this.props.default('center',  [50.4504, 30.5245])
+		this.props.default('zoom',    7)
 		this.props.default('mapType', 'hybrid')
 		this.props.default('styles',  [])
 		this.props.default('icons',   {})
@@ -46,7 +45,7 @@ export default class GoogleMap extends $.Component {
 
 	_onApiLoad() {
 		this.map = new google.maps.Map(this.element, {
-			center    : { lat: this.props.lat , lng: this.props.lng },
+			center    : { lat: this.props.center[0] , lng: this.props.center[1] },
 			zoom      : this.props.zoom,
 			mapTypeId : this.props.mapType,
 
@@ -99,6 +98,19 @@ export default class GoogleMap extends $.Component {
 			: lat
 	}
 
+	/***************************************************/
+
+	onPropZoomChange(zoom) {
+		this.map && this.map.setZoom(zoom)
+	}
+
+	onPropCenterChange(center) {
+		const c = new google.maps.LatLng(center[0], center[1])
+		this.map && this.map.setCenter(c)
+	}
+
+	/***************************************************/
+
 	addMarker(lat, lng, label='', icon=null) {
 		icon = GoogleMap.Icons[icon]
 			? GoogleMap.Icons[icon]
@@ -140,8 +152,11 @@ export default class GoogleMap extends $.Component {
 		this.map.fitBounds(bounds)
 	}
 
-	center(lat, lng) {
-	}
+	set center(center) { this.props.center = center	}
+	get center()       { return this.props.center   }
+
+	set zoom(zoom)     { this.props.zoom = zoom     }
+	get zoom()         { return this.props.zoom     }
 }
 
 
