@@ -137,7 +137,7 @@ export default class InputCalendar extends FormInput {
 	_parseRangeString(rangeString) {
 		const dates = []
 		for (const s of rangeString.split('-')) {
-			const [m, d, y] = s.split('/')
+			const [d, m, y] = s.split('/')
 			dates.push(new Date(y, m - 1, d))
 		}
 		return dates
@@ -227,8 +227,7 @@ export default class InputCalendar extends FormInput {
 	/************************************************/
 
 	set value(value) {
-		value                    = value || ''
-		this.input.element.value = value
+		super.value = value
 		if (this._getRangeString() !== value) {
 			this._range = []
 			this._range.push(... this._parseRangeString(value))

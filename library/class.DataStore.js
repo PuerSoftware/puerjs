@@ -14,7 +14,7 @@ export default class DataStore {
 		return Math.round(JSON.stringify(DataStore.values).length / 1024) + ' kb'
 	}
 
-	static get(dataId) {
+	static get(dataId, ref=false) {
 		if ($.isArray(dataId)) {
 			const items = []
 			for (const _id of dataId) {
@@ -22,7 +22,7 @@ export default class DataStore {
 			}
 			return items
 		} else {
-			if ($.isReferencing) {
+			if ($.isReferencing || ref) {
 				return DataStore.references[dataId]['..'] || null
 			}
 			return DataStore.values[dataId]
@@ -36,35 +36,6 @@ export default class DataStore {
 			owners     : DataStore.owners[dataId]
 		}
 	}
-
-	// static get(dataId) {
-	// 	if ($.isArray(dataId)) {
-	// 		const items = []
-	// 		for (const _id of dataId) {
-	// 			items.push(DataStore.get(_id))
-	// 		}
-	// 		return items
-	// 	} else {
-	// 		if ($.isReferencing) {
-	// 			return DataStore.references[dataId] || null
-	// 		}
-	// 		return DataStore.values[dataId]
-	// 	}
-	// }
-
-	// static set(dataId, value, isChanged=false) {
-	// 	if (value && value.isReference) {
-	// 		return value.dataId
-	// 	}
-	// 	isChanged = isChanged || !dataId || (DataStore.values[dataId] !== value)
-	// 	dataId = dataId || DataStore._nextId()
-	// 	DataStore.values[dataId]     = value
-	// 	DataStore.references[dataId] = $.reference(dataId)
-	// 	if (isChanged) {
-	// 		DataStore.updateOwners(dataId)
-	// 	}
-	// 	return dataId
-	// }
 
 	static set(dataId, value, isChanged=false) {
 		if (value && value.isReference) {
@@ -113,14 +84,21 @@ export default class DataStore {
 		referenceOwner.update()
 	}
 
-	static mergeOwners(dataId, referenceOwners) {
-		for (const ownerId in referenceOwners) {
-			const owner = referenceOwners[ownerId]
-			DataStore.addOwner(dataId, owner.prop, owner.owner, owner.updateMethod)
+	static copyOwners(fromDataId, toDataId) { // TODO: // POTENTIAL GARBAGE COLLECTION
+		if (!DataStore.owners[toDataId]) {
+			DataStore.owners[toDataId] = {}
 		}
+		DataStore.owners[toDataId] = Object.assign(DataStore.owners[toDataId], DataStore.owners[fromDataId])
 	}
 
+	// static mergeOwners(dataId, referenceOwners) {
+	// 	for (const ownerId in referenceOwners) {
+	// 		const owner = referenceOwners[ownerId]
+	// 		DataStore.addOwner(dataId, owner.prop, owner.owner, owner.updateMethod)
+	// 	}
+	// }
+
 	static cloneOwners(dataId) {
-		return Object.assign({}, $.DataStore.owners[dataId])
+		return Object.assign({}, DataStore.owners[dataId])
 	}
 }

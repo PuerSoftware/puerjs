@@ -13,6 +13,7 @@ class Form extends $.Component {
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
+		this.props.default('doClearOnSave', false)
 
 		this.state.error        = ''
 		this._errorComponent    = null
@@ -36,6 +37,15 @@ class Form extends $.Component {
 
 	_onSubmit() {
 		this.submit(true)
+	}
+
+	get hasChange() {
+		for (const input of this.inputs) {
+			if (input.value !== input.initialValue && !  input.isHidden) {
+				return true
+			}
+		}
+		return false
 	}
 
 	getInput(name) {
@@ -82,8 +92,12 @@ class Form extends $.Component {
 		if (this._isValidateEnabled && this._dataSource) {
 			const formData = this.getData()
 			const headers  = this.getHeaders()
-			this._dataSource.submit(formData, save, headers)
+			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
 		}
+	}
+
+	onInputChange(event) {
+		this.submit(false)
 	}
 
 	onInit() {
@@ -94,11 +108,14 @@ class Form extends $.Component {
 
 	onDataChange() {
 		this._isValidateEnabled = false
-		const items = this._dataSet.items
+		const items             = this._dataSet.items
 		for (const item of items) {
 			const input = this.getInput(item.field)
 			if (input) {
 				input.value = item.value
+				if (input.initialValue === null) {
+					input.initialValue = item.value
+				}
 			}
 		}
 		this._isValidateEnabled = true

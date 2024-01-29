@@ -67,7 +67,7 @@ class PuerObject {
 	on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
 		this.listeners[name] = (...args) => {
 			const d = args[0].detail
-			if (this.isActive && d.target.isActive) {
+			if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
 				if (matchTarget) {
 					if ([d.targetName, d.target].includes(matchTarget)) {
 						f.bind(this)(...args)
@@ -89,14 +89,18 @@ class PuerObject {
 	}
 
 	trigger(name, data) {
-		if (this.isActive) {
-			data.target = this
-			data.targetName      = this.props.name || null
+		if (this.isActiveEventTarget) {
+			data.target     = this
+			data.targetName = this.name || null
 			$.Events.trigger(name, data)
 		}
 	}
 
 	/********************************************************/
+
+	get isActiveEventTarget() {
+		return true
+	}
 }
 
 PuerObject.prototype.chainName = 'PuerObject'

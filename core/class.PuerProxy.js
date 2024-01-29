@@ -65,8 +65,20 @@ class PuerProxy {
 		let dataId
 
 		if (value && value.isReference) { // cp id, accesors, merge unique ownners
+			if (this.references[prop]) {
+				const oldDataId = this.references[prop].dataId
+				const newDataId = value.dataId
+				$.DataStore.copyOwners(oldDataId, newDataId)
+				for (const accessorKey in $.DataStore.references[oldDataId]) {
+					$.DataStore.references[newDataId][accessorKey] = $.DataStore.references[oldDataId][accessorKey]
+					$.DataStore.references[newDataId][accessorKey].dataId = newDataId
+				}
+				$.DataStore.updateOwners(newDataId)
+				// delete $.DataStore.references[oldDataId] // TODO: // POTENTIAL GARBAGE COLLECTION // WARN!!!
+			}
 			this.references[prop] = value.truncate()
 			dataId = value.dataId
+
 		} else {
 			if (this.references[prop]) { // del ref, mk ref, copy owners
 				dataId = this.references[prop].dataId

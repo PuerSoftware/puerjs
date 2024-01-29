@@ -26,6 +26,7 @@ export default class DataSet extends PuerObject {
 		super()
 		
 		this.name           = name
+		this.listeners      = {}
 		this._itemIds       = []
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
@@ -75,7 +76,6 @@ export default class DataSet extends PuerObject {
 
 	_onData(e) {
 		this.itemIds = e.detail.itemIds
-		console.log('onData', this.items)
 		this.onData(this.items)
 	}
 
@@ -109,7 +109,6 @@ export default class DataSet extends PuerObject {
 	}
 
 	set itemIds(ids) {
-		console.log('itemIds setter', ids)
 		// TODO: _reindexItems?
 		this._itemIds      = this._applyInitialFilter(ids)
 		this.isInitialized = true

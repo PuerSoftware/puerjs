@@ -31,6 +31,8 @@ class BasePuerComponent extends PuerObject {
 
 		$.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
+
+		this.name = this.props.name || null
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -177,7 +179,6 @@ class BasePuerComponent extends PuerObject {
 	get $    () { return new PuerComponentSet([this]).$   }
 	get $$   () { return new PuerComponentSet([this]).$$  }
 	get $$$  () { return new PuerComponentSet([this]).$$$ }
-	get name () { return this.props.name || null          }
 
 
 	/*********************** PRIVATE ***********************/
@@ -327,6 +328,10 @@ class BasePuerComponent extends PuerObject {
 			return false
 		}
 		return this.parent ? this.parent.isActive : true
+	}
+
+	get isActiveEventTarget() {
+		return this.isActive
 	}
 
 	get isHidden() {

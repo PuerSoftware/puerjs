@@ -28,9 +28,7 @@ export default class InputCheckbox extends FormInput {
 		value          = value || false
 		const oldValue = this.input.element.checked
 		this.input.element.checked = value
-		if (oldValue !== value) {
-			this._trigger('change')
-		}
+		this._triggerChange(oldValue, value)
 	}
 
 	get value() {

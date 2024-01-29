@@ -28,7 +28,7 @@ export default class DataSource extends PuerObject {
 
 	constructor(name, url, isSingular, isCacheable) {
 		super()
-		
+
 		this.name          = name
 		this.itemIds       = []
 		this.url           = url
@@ -40,6 +40,7 @@ export default class DataSource extends PuerObject {
 		this.isCacheable   = isCacheable
 
 		this._lastLoad = null
+
 	}
 
 	_onLoad() {
@@ -101,9 +102,10 @@ export default class DataSource extends PuerObject {
 		this.db.readItems(0, _this.count, (items) => {
 			for (const item of items) {
 				_this._addItemToStore(item)
-				for (const dataSetName in _this.dataSets) {
-					_this.dataSets[dataSetName].addItem(item)
-				}
+				this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
+				// for (const dataSetName in _this.dataSets) {
+				// 	_this.dataSets[dataSetName].addItem(item)
+				// }
 			}
 			this._onLoad()
 		})

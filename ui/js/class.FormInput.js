@@ -9,15 +9,25 @@ class FormInput extends $.Component {
 		this.props.default('autocomplete', 'off')
 		this.props.default('disabled', false)
 
-		this.form  = null
-		this.input = null
-		this.field = null
+		this.form         = null
+		this.input        = null
+		this.field        = null
+		this.initialValue = null
 
 		this.disabledByDefault = this.props.disabled
 	}
 
+	_triggerChange(oldValue, newValue) {
+		if (String(oldValue) !== String(newValue)) {
+			this._trigger('change', {
+				newValue : newValue,
+				oldValue : oldValue
+			})
+		}
+	}
+
 	_onChange(event) {
-		this.validate()
+		this.form && this.form.onInputChange(event)
 	}
 
 	set disabled(value) {
@@ -38,9 +48,7 @@ class FormInput extends $.Component {
 		value          = value || ''
 		const oldValue = this.input.element.value
 		this.input.element.value = value
-		if (String(oldValue) !== String(value)) { // Must be "!=" because oldValue and value can be different types, example: "0" != 1
-			this._trigger('change', {value: value})
-		}
+		this._triggerChange(oldValue, value)
 	}
 
 	get value() {
@@ -48,8 +56,6 @@ class FormInput extends $.Component {
 			? this.input.element.value
 			: null
 	}
-
-	get name() { return this.props.name }
 
 	reset() {
 		if (!this.disabledByDefault) {
@@ -67,10 +73,6 @@ class FormInput extends $.Component {
 		this.field = this.$$$.FormField[0]
 		
 		this.disabled = this.props.disabled
-	}
-
-	validate() {
-		this.form && this.form.submit(false)
 	}
 
 	render() {

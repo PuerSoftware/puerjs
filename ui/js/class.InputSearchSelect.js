@@ -92,8 +92,7 @@ class InputSearchSelect extends FormInput {
 	}
 
 	set value(value) {
-		value                    = value || ''
-		this.input.element.value = value
+		super.value = value
 		if (this._getValuesString() !== value) {
 			for (const v in this._valueToTag) {
 				this._valueToTag[v]._onClose()
@@ -103,7 +102,7 @@ class InputSearchSelect extends FormInput {
 					this._select(this._valueToItem[Number(v)].props.data)
 				}
 			}
-		}		
+		}
 	}
 
 	get value() {

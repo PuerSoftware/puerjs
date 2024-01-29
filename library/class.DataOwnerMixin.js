@@ -32,7 +32,6 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		this._dataSet.onItemRemove = this.props.onDataItemRemove ? this.props.onDataItemRemove : this.onDataItemRemove ? this.onDataItemRemove.bind(this) : nop
 
 		this._dataSet.dataSource = this._dataSource
-		console.log('registered ds methods', name)
 	}
 
 	get dataSource() {

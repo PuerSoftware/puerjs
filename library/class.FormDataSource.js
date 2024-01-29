@@ -4,7 +4,8 @@ import DataSource from './class.DataSource.js'
 export default class FormDataSource extends DataSource {
 	constructor(name, url) {
 		super(name, url, false, false)
-		this.isSaving = false
+		this.isSaving      = false
+		this.doClearOnSave = false
 	}
 
 	adaptItems(items, headers) {
@@ -19,7 +20,10 @@ export default class FormDataSource extends DataSource {
 		if (isSaved) {
 			this.clear(() => {
 				for (const field in items.data) {
-					adaptedItems.push({field: field, value: null})
+					let value = this.doClearOnSave
+						? null
+						: items.data[field]
+					adaptedItems.push({field: field, value: value})
 				}
 			})
 			this.isSaving = false
@@ -35,10 +39,11 @@ export default class FormDataSource extends DataSource {
 		return item
 	}
 
-	submit(params, isSaving, headers=null) {
-		headers          = headers || {}
-		headers.isSaving = isSaving ? 1 : 0
-		this.isSaving    = isSaving
+	submit(params, isSaving, doClearOnSave, headers=null) {
+		headers            = headers || {}
+		headers.isSaving   = isSaving ? 1 : 0
+		this.isSaving      = isSaving
+		this.doClearOnSave = doClearOnSave
 		this.load('POST', params, headers)
 	}
 }
