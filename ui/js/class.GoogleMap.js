@@ -2,7 +2,7 @@ import $ from '../../index.js'
 
 
 export default class GoogleMap extends $.Component {
-	static Icons = {}
+	static API_URL = 'https://maps.googleapis.com/maps/api/js'
 
 	constructor(... args) {
 		super(... args)
@@ -22,28 +22,33 @@ export default class GoogleMap extends $.Component {
 
 		this.map     = null  // google.maps.Map
 		this.markers = {}    // { lat_lng: google.maps.Marker }
+		this.icons   = {}
 
-		this._loadApi()
-	}
-
-	_loadApi() {
 		if (window.google && window.google.maps) {
-			this._onApiLoad()
+			this._initMap()
 		} else {
-			const params = {
-				key      : this.props.apiKey,
-				loading  : 'async',
-				callback : 'onGoogleMapApiLoad'
-			}
-			const url = 'https://maps.googleapis.com/maps/api/js?' +
-				new URLSearchParams(params).toString()
-
-			window.onGoogleMapApiLoad = this._onApiLoad.bind(this)
-			$.Html.load(url, null, 'js')
+			this._loadApi()
 		}
 	}
 
-	_onApiLoad() {
+	_getMarkerKey(lat, lng) { // (lat, lng) || (key)
+		return lat && lng
+			? `${lat}_${lng}`
+			: lat
+	}
+
+	_loadApi() {
+		const query = $.String.query({
+			key      : this.props.apiKey,
+			loading  : 'async',
+			callback : 'onGoogleMapApiLoad'
+		})
+		const url = `${GoogleMap.API_URL}?${query}`
+		window.onGoogleMapApiLoad = this._initMap.bind(this)
+		$.Html.load(url, null, 'js')
+	}
+
+	_initMap() {
 		this.map = new google.maps.Map(this.element, {
 			center    : { lat: this.props.center[0] , lng: this.props.center[1] },
 			zoom      : this.props.zoom,
@@ -92,12 +97,6 @@ export default class GoogleMap extends $.Component {
 		} ,1000)
 	}
 
-	_getMarkerKey(lat, lng) { // (lat, lng) || (key)
-		return lat && lng
-			? `${lat}_${lng}`
-			: lat
-	}
-
 	/***************************************************/
 
 	onPropZoomChange(zoom) {
@@ -105,10 +104,14 @@ export default class GoogleMap extends $.Component {
 	}
 
 	onPropCenterChange(center) {
-		if (window.google) {
+		if (this.map) {
 			const c = new google.maps.LatLng(center[0], center[1])
-			this.map && this.map.setCenter(c)
+			this.map.setCenter(c)
 		}
+	}
+
+	onPropMapTypeChange(mapType) {
+		this.map && this.map.setMapTypeId(mapType)
 	}
 
 	/***************************************************/
@@ -154,11 +157,14 @@ export default class GoogleMap extends $.Component {
 		this.map.fitBounds(bounds)
 	}
 
-	set center(center) { this.props.center = center	}
-	get center()       { return this.props.center   }
+	set center(center)   { this.props.center = center   }
+	get center()         { return this.props.center     }
 
-	set zoom(zoom)     { this.props.zoom = zoom     }
-	get zoom()         { return this.props.zoom     }
+	set zoom(zoom)       { this.props.zoom = zoom       }
+	get zoom()           { return this.props.zoom       }
+
+	set mapType(mapType) { this.props.mapType = mapType }
+	get mapType()        { return this.props.mapType    }
 }
 
 

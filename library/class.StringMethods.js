@@ -91,6 +91,10 @@ class StringMethods {
 
 		return result
 	}
+
+	static query(o) {
+		return new URLSearchParams(o).toString()
+	}
 }
 
 export default StringMethods
