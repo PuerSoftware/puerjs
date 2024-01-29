@@ -65,14 +65,16 @@ class InputToggle extends FormInput {
 			this.addOption(
 				option.value,
 				option.label,
-				this.props.selected && this.props.selected === option.value
+				this.props.selected && this.props.selected === option.value,
+				option.cssClass
 			)
 		}
 	}
 
-	addOption(value, label, selected=false) {
+	addOption(value, label, selected=false, cssClass='') {
 		const cssClasses = ['option']
 		if (selected) { cssClasses.push('selected') }
+		if (cssClass) { cssClasses.push(cssClass) }
 
 		this.options[value] = $.div(cssClasses.join(' '), {
 			text    : label,
