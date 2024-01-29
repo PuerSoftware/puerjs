@@ -105,8 +105,10 @@ export default class GoogleMap extends $.Component {
 	}
 
 	onPropCenterChange(center) {
-		const c = new google.maps.LatLng(center[0], center[1])
-		this.map && this.map.setCenter(c)
+		if (window.google) {
+			const c = new google.maps.LatLng(center[0], center[1])
+			this.map && this.map.setCenter(c)
+		}
 	}
 
 	/***************************************************/
