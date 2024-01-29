@@ -294,6 +294,8 @@ $.Html           = Library.Html
 $.DataSet        = Library.DataSet
 $.DataStore      = Library.DataStore
 $.DataSource     = Library.DataSource
+$.DataOwnerMixin = Library.DataOwnerMixin
+$.DataListMixn   = Library.DataListMixn
 $.FormDataSource = Library.FormDataSource
 
 $.Reference      = Library.Reference

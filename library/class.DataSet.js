@@ -19,13 +19,13 @@ export default class DataSet {
 	/**************************************************************/
 
 	constructor(name, searchConfig=null, filter=null) {
-		this.name          = name
-		this.itemIds       = []
-		this.searchConfig  = searchConfig
-		this.isInitialized = false
-		this.index         = new Map()
-		this._entryFilter  = filter    // To get a subset of datasource data
-		this._excluded     = new Set() // To exclude items dynamically
+		this.name           = name
+		this.itemIds        = []
+		this.searchConfig   = searchConfig
+		this.isInitialized  = false
+		this.index          = new Map()
+		this._initialFilter = filter    // To get a subset of datasource data
+		this._excluded      = new Set() // To exclude items dynamically
 	}
 
 	/**************************************************************/
@@ -50,17 +50,17 @@ export default class DataSet {
 	}
 
 	_reindexItems() {
-		 this.index = new Map()
+		this.index = new Map()
 
 		for (const item of this.items) {
 			this._indexItem(item, item.dataId)
 		}
 	}
 
-	_applyEntryFilter(ids) {
-		if (this._entryFilter) {
+	_applyInitialFilter(ids) {
+		if (this._initialFilter) {
 			const items = $.DataStore.get(ids)
-			ids = items.filter(this._entryFilter).map((_, id) => id)
+			ids = items.filter(this._initialFilter).map((_, id) => id)
 		}
 		return ids
 	}
@@ -72,7 +72,7 @@ export default class DataSet {
 	}
 
 	init(ids) {
-		this.itemIds       = this._applyEntryFilter(ids)
+		this.itemIds       = this._applyInitialFilter(ids)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
@@ -143,7 +143,7 @@ export default class DataSet {
 	}
 
 	addItem(item) {
-		const ids = this._applyEntryFilter([item.dataId])
+		const ids = this._applyInitialFilter([item.dataId])
 		if (ids.length) {
 			this._indexItem(item, item.dataId)
 			this.onAddItem(item)

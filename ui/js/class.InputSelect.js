@@ -1,6 +1,5 @@
 import $              from '../../index.js'
 import FormInput      from './class.FormInput.js'
-import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 
 
 class InputSelect extends FormInput {
@@ -75,7 +74,7 @@ class InputSelect extends FormInput {
 
 	onInit() {
 		super.onInit()
-		this.mixin(DataOwnerMixin)
+		this.mixin($.DataOwnerMixin)
 	}
 }
 

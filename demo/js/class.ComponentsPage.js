@@ -91,8 +91,9 @@ export default class ComponentsPage extends $.Component {
 					$.Code({lang: 'javascript', code: this.state.code})
 				]),
 				$.Box({route: 'cmp:map'}, [
-					$.GoogleMap({
-						apiKey  : 'AIzaSyAgTXEC54E9Ff55FuJturyO4LE-oenUzcU'
+					this.map = $.GoogleMap({
+						apiKey     : 'AIzaSyAgTXEC54E9Ff55FuJturyO4LE-oenUzcU',
+						dataSource : 'Markers'
 					})
 				])
 			])

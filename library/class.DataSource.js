@@ -40,7 +40,7 @@ export default class DataSource {
 	}
 
 	_onLoad() {
-		this._initDataSets()
+		this._initDataSets() // TODO: is only used here
 		this.isInitialized = true
 		for (const dataSetName in this.dataSets) {
 			this.dataSets[dataSetName].data()
@@ -252,10 +252,13 @@ export default class DataSource {
 	defineDataSet(name=null, filter) {
 		name = name || this.name + Object.entries(this.dataSets).length
 		const ds = DataSet.define(name, null, filter)
-		if (this.isInitialized) {
-			ds.init(this.itemIds) // TODO: call ds.data() ???
-		}
 		this.dataSets[name] = ds
+		// $.defer(() => {
+			if (this.isInitialized) {
+				ds.init(this.itemIds) // TODO: call ds.data() ???
+				ds.data()
+			}
+		// })
 		return ds
 	}
 }

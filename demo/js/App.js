@@ -49,6 +49,13 @@ $.application(
 			{ value: '2', port: 'Port2', code: 'UA', country: 'Ukraine'},
 			{ value: '3', port: 'Port3', code: 'UA', country: 'Ukraine'},
 			{ value: '4', port: 'Port4', code: 'UA', country: 'Ukraine'},
+		]),
+		$.DataSource.define('Markers').fill([
+			{ lat: 50.4504,  lng: 30.5245, label: 'Oleksii',   icon: 'ORANGE_DOT'},
+			{ lat: 50.9077,  lng: 34.7981, label: 'Alexander', icon: 'ORANGE_DOT'},
+			{ lat: 49.4413,  lng: 32.0643, label: 'Ksenia',    icon: 'ORANGE_DOT'},
+			{ lat: 48.4816,  lng: 24.5819, label: 'Alex',      icon: 'ORANGE_DOT'},
+			{ lat: 53.5488,  lng: 9.9872,  label: 'Ivan',      icon: 'ORANGE_DOT'},
 		])
 	}
 )

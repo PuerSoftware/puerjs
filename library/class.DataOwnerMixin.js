@@ -20,7 +20,7 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		this.props.dataSource = name
 		this._dataSource      = $.DataSource[this.props.dataSource]
 		this._dataSet         = this._dataSource.defineDataSet(null, this.props.entryFilter)
-
+		console.log('attached dataset', name)
 		const nop = () => {}
 
 		this._dataSet.onInit       = this.props.onDataInit       ? this.props.onDataInit       : this.onDataInit       ? this.onDataInit.bind(this)       : nop
@@ -30,9 +30,15 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		this._dataSet.onAddItem    = this.props.onDataAddItem    ? this.props.onDataAddItem    : this.onDataAddItem    ? this.onDataAddItem.bind(this)    : nop
 		this._dataSet.onChangeItem = this.props.onDataChangeItem ? this.props.onDataChangeItem : this.onDataChangeItem ? this.onDataChangeItem.bind(this) : nop
 		this._dataSet.onRemoveItem = this.props.onDataRemoveItem ? this.props.onDataRemoveItem : this.onDataRemoveItem ? this.onDataRemoveItem.bind(this) : nop
+
+		console.log('registered ds methods', name)
 	}
 
 	get dataSource() {
 		return this._dataSource
+	}
+
+	get dataSet() {
+		return this._dataSet
 	}
 }

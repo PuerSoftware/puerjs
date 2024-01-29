@@ -25,7 +25,7 @@ export default class Code extends $.Component {
     }
 
     onPropCodeChange(code) {
-    	console.log(this.props.code)
+    	// console.log(this.props.code)
     }
 
     _onLoad(success) {
