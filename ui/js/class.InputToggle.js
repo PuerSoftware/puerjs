@@ -19,7 +19,6 @@ class InputToggle extends FormInput {
 	}
 
 	_onButtonClick(event) {
-		console.log('onToggle cliec', event.targetComponent)
 		this.value = event.targetComponent.props.value
 		const s = this.value
 	}
@@ -71,7 +70,7 @@ class InputToggle extends FormInput {
 		}
 	}
 
-	addOption(value, label, selected=false, cssClass='') {
+	addOption(value, label, selected=false, cssClass=null) {
 		const cssClasses = ['option']
 		if (selected) { cssClasses.push('selected') }
 		if (cssClass) { cssClasses.push(cssClass) }
