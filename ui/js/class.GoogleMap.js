@@ -65,7 +65,6 @@ export default class GoogleMap extends $.Component {
 		})
 
 		this.mixin($.DataOwnerMixin)
-		console.log('api loaded', 'mixin added')
 
 		GoogleMap.Icons = Object.assign({
 			GREEN_DOT: {
@@ -86,7 +85,6 @@ export default class GoogleMap extends $.Component {
 	}
 
 	onDataChange() {
-		console.log('data change', this._dataset)
 		this.removeMarkers()
 		for (const item of this.dataSet.items) {
 			this.addMarker(item.lat, item.lng, item.label, item.icon)

@@ -23,7 +23,7 @@ class PuerEvents extends EventTarget {
 	/*********************** PRIVATE ***********************/
 
 	_validateEventDetail(name, detail) {
-		const requiredProps = $.EventProps[name].concat(['targetName', 'targetComponent'])
+		const requiredProps = $.EventProps[name].concat(['targetName', 'target'])
 		const props         = Object.keys(detail)
 		const missingProps  = requiredProps.filter(x => !props.includes(x))
 
@@ -104,7 +104,7 @@ class PuerEvents extends EventTarget {
 		}
 	}
 
-	define(name, props=null) {
+	define(name, props=null) { // TODO: Combine Event & Events
 		$.Event[name]      = name
 		$.EventProps[name] = props || []
 	}

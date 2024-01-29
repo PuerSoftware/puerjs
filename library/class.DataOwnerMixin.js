@@ -14,23 +14,24 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 	set dataSource(name) {
 		if (this._dataSet) {
 			for (const id of this._dataSet.itemIds) {
-				this.onDataRemoveItem(id)
+				this.onDataItemRemove(id)
 			}
 		}
-		this.props.dataSource = name
-		this._dataSource      = $.DataSource[this.props.dataSource]
-		this._dataSet         = this._dataSource.defineDataSet(null, this.props.entryFilter)
-		console.log('attached dataset', name)
+		this.props.dataSource    = name
+		this._dataSource         = $.DataSource[this.props.dataSource]
+		this._dataSet            = $.DataSet.define(null, null, this.props.entryFilter)
+
 		const nop = () => {}
 
-		this._dataSet.onInit       = this.props.onDataInit       ? this.props.onDataInit       : this.onDataInit       ? this.onDataInit.bind(this)       : nop
+		// TODO: Refactor churchkhela
 		this._dataSet.onData       = this.props.onDataChange     ? this.props.onDataChange     : this.onDataChange     ? this.onDataChange.bind(this)     : nop
 		this._dataSet.onSort       = this.props.onDataSort       ? this.props.onDataSort       : this.onDataSort       ? this.onDataSort.bind(this)       : nop
 		this._dataSet.onFilter     = this.props.onDataFilter     ? this.props.onDataFilter     : this.onDataFilter     ? this.onDataFilter.bind(this)     : nop
-		this._dataSet.onAddItem    = this.props.onDataAddItem    ? this.props.onDataAddItem    : this.onDataAddItem    ? this.onDataAddItem.bind(this)    : nop
-		this._dataSet.onChangeItem = this.props.onDataChangeItem ? this.props.onDataChangeItem : this.onDataChangeItem ? this.onDataChangeItem.bind(this) : nop
-		this._dataSet.onRemoveItem = this.props.onDataRemoveItem ? this.props.onDataRemoveItem : this.onDataRemoveItem ? this.onDataRemoveItem.bind(this) : nop
+		this._dataSet.onItemAdd    = this.props.onDataItemAdd    ? this.props.onDataItemAdd    : this.onDataItemAdd    ? this.onDataItemAdd.bind(this)    : nop
+		this._dataSet.onItemChange = this.props.onDataItemChange ? this.props.onDataItemChange : this.onDataItemChange ? this.onDataItemChange.bind(this) : nop
+		this._dataSet.onItemRemove = this.props.onDataItemRemove ? this.props.onDataItemRemove : this.onDataItemRemove ? this.onDataItemRemove.bind(this) : nop
 
+		this._dataSet.dataSource = this._dataSource
 		console.log('registered ds methods', name)
 	}
 

@@ -78,16 +78,25 @@ import PuerApp from './core/class.PuerApp.js'
 
 $.App = PuerApp
 
-$.Events.define('APP_CLICK',        ['event'])
-$.Events.define('APP_KEYUP',        ['event'])
-$.Events.define('APP_ESCAPE',       ['event'])
-$.Events.define('LIST_ITEM_SELECT', ['data', 'name'])
-$.Events.define('LIST_ITEM_CHECK',  ['data', 'name', 'isChecked', 'isResend'])
-$.Events.define('SEARCH',           ['value'])
-$.Events.define('PAGINATE',         ['page'])
-$.Events.define('FORM_RESPONSE',    ['error', 'errors', 'isSaved'])
-$.Events.define('TAG_REMOVE',       ['label'])
-$.Events.define('TAG_CLICK',        ['label'])
+$.Events.define('APP_CLICK',              ['event'])
+$.Events.define('APP_KEYUP',              ['event'])
+$.Events.define('APP_ESCAPE',             ['event'])
+
+$.Events.define('DATASOURCE_DATA',        ['itemIds'])
+$.Events.define('DATASOURCE_ITEM_ADD',    ['item'])
+$.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])
+$.Events.define('DATASOURCE_ITEM_REMOVE', ['itemId'])
+
+// $.Events.define('DATASET_SORT',          ['event'])
+// $.Events.define('DATASET_FILTER',        ['event'])
+
+$.Events.define('LIST_ITEM_SELECT',       ['data', 'name'])
+$.Events.define('LIST_ITEM_CHECK',        ['data', 'name', 'isChecked', 'isResend'])
+$.Events.define('SEARCH',                 ['value']) // TODO: Move to DATASET_SEARCH?
+$.Events.define('PAGINATE',               ['page'])
+$.Events.define('FORM_RESPONSE',          ['error', 'errors', 'isSaved'])
+$.Events.define('TAG_REMOVE',             ['label'])
+$.Events.define('TAG_CLICK',              ['label'])
 
 
 export default $

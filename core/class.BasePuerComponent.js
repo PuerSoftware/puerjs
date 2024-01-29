@@ -249,7 +249,7 @@ class BasePuerComponent extends PuerObject {
 			const targetComponent = this
 			let _f = function (event) {
 				event.targetComponent = targetComponent
-				event.targetName      = targetComponent.props.name || null
+				// event.targetName      = target.props.name || null
 				event.extraDetail     = extraDetail
 				return f.call(targetComponent, event)
 			}

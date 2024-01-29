@@ -63,37 +63,37 @@ class PuerComponent extends BasePuerComponent {
 		return $.div()
 	}
 
-	on(name, f, matchTarget=null) { // matchTarget can be either targetComponent or targetName
-		this.listeners[name] = (...args) => {
-			const d = args[0].detail
-			if (this.isActive && d.targetComponent.isActive) {
-				if (matchTarget) {
-					if ([d.targetName, d.targetComponent].includes(matchTarget)) {
-						f.bind(this)(...args)
-					}
-				} else {
-					f.bind(this)(...args)
-				}
-			}
-		}
-		$.Events.on(name, this.listeners[name])
-	}
+	// on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
+	// 	this.listeners[name] = (...args) => {
+	// 		const d = args[0].detail
+	// 		if (this.isActive && d.target.isActive) {
+	// 			if (matchTarget) {
+	// 				if ([d.targetName, d.target].includes(matchTarget)) {
+	// 					f.bind(this)(...args)
+	// 				}
+	// 			} else {
+	// 				f.bind(this)(...args)
+	// 			}
+	// 		}
+	// 	}
+	// 	$.Events.on(name, this.listeners[name])
+	// }
 
-	once(name, f) {
-		$.Events.once(name, f.bind(this))
-	}
+	// once(name, f) {
+	// 	$.Events.once(name, f.bind(this))
+	// }
 
-	off(name) {
-		this.listeners[name] && $.Events.off(name, this.listeners[name])
-	}
+	// off(name) {
+	// 	this.listeners[name] && $.Events.off(name, this.listeners[name])
+	// }
 
-	trigger(name, data) {
-		if (this.isActive) {
-			data.targetComponent = this
-			data.targetName      = this.props.name || null
-			$.Events.trigger(name, data)
-		}
-	}
+	// trigger(name, data) {
+	// 	if (this.isActive) {
+	// 		data.target = this
+	// 		data.targetName      = this.props.name || null
+	// 		$.Events.trigger(name, data)
+	// 	}
+	// }
 }
 
 PuerComponent.prototype.chainName = 'PuerComponent'

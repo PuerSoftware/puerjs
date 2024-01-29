@@ -1,4 +1,5 @@
 class Request {
+	static $($) { window.$ = $ }
 
 	static define(name, url, method) {
 		if (Request.hasOwnProperty(name)) {
@@ -21,7 +22,7 @@ class Request {
 		}
 		if (data) {
 			if (conf.method === 'GET') {
-				url = url + '?' + new URLSearchParams(data).toString()
+				url = url + '?' + $.String.query(data)
 			} else {
 				conf.body = JSON.stringify(data)
 			}

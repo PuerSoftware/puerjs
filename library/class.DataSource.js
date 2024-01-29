@@ -1,8 +1,10 @@
-import DataBase from './class.DataBase.js'
-import DataSet  from './class.DataSet.js'
+import PuerObject from '../core/class.PuerObject.js'
+
+import DataBase   from './class.DataBase.js'
+import DataSet    from './class.DataSet.js'
 
 
-export default class DataSource {
+export default class DataSource extends PuerObject {
 	static $($) { window.$ = $ }
 	
 	/**************************************************************/
@@ -25,6 +27,8 @@ export default class DataSource {
 	/**************************************************************/
 
 	constructor(name, url, isSingular, isCacheable) {
+		super()
+		
 		this.name          = name
 		this.itemIds       = []
 		this.url           = url
@@ -34,25 +38,12 @@ export default class DataSource {
 		this.listeners     = {}
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
-		this.isInitialized = false
 
 		this._lastLoad = null
 	}
 
 	_onLoad() {
-		this._initDataSets() // TODO: is only used here
-		this.isInitialized = true
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].data()
-		}
-	}
-
-	_initDataSets() {
-		if (!this.isInitialized) {
-			for (const dataSetName in this.dataSets) {
-				this.dataSets[dataSetName].init(this.itemIds)
-			}
-		}
+		this.trigger($.Event.DATASOURCE_DATA, { itemIds: this.itemIds })
 	}
 
 	_connect(callback) {
@@ -91,7 +82,6 @@ export default class DataSource {
 
 	_loadFromUrl(method=null, params=null, headers=null) {
 		method = method || 'GET'
-		// console.log('loading from URL', this.url, method)
 		$.Request.request(
 			this.url,
 			method,
@@ -106,7 +96,6 @@ export default class DataSource {
 	}
 
 	_loadFromDb() {
-		// console.log('loading from DB')
 		const _this = this
 
 		this.db.readItems(0, _this.count, (items) => {
@@ -138,7 +127,7 @@ export default class DataSource {
 		$.DataStore.set(item.dataId, item, true)
 	}
 
-	/******************************************************************/
+	/******************************************************************
 
 	on(name, f, options) {
 		this.listeners[name] = (...args) => {
@@ -156,9 +145,9 @@ export default class DataSource {
 	}
 
 	trigger(name, data) {
-		data.targetComponent          = this
+		data.target          = this
 		data.targetName               = this.name
-		data.targetComponent.isActive = true
+		data.target.isActive = true
 		$.Events.trigger(name, data)
 	}
 
@@ -169,7 +158,7 @@ export default class DataSource {
 	}
 
 	fill(items) {
-		$.defer(() => {
+		$.defer(() => { // TODO: maybe we can remove this 
 			this.addItems(items)
 			this._onLoad()
 		})
@@ -192,7 +181,6 @@ export default class DataSource {
 
 		this.itemIds       = []
 		this.listeners     = {}
-		this.isInitialized = false
 
 		if (this.isCacheable && this.db) {
 			this.db.clear(() => {
@@ -208,10 +196,7 @@ export default class DataSource {
 
 		this.isCacheable && this._addItemToDb(item)
 		this._addItemToStore(item)
-
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].addItem(item)
-		}
+		this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
 	}
 
 	addItems(items, headers) {
@@ -232,33 +217,18 @@ export default class DataSource {
 
 		this.isCacheable && this._changeItemInDb(item)
 		this._changeItemInStore(item)
-
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].changeItem(item)
-		}
+		this.trigger($.Event.DATASOURCE_ITEM_CHANGE, { item: item })
 	}
 
 	removeItem(item) {
-		for (const dataSetName in this.dataSets) {
-			this.dataSets[dataSetName].removeItem(item.dataId)
-		}
+		this.trigger($.Event.DATASOURCE_ITEM_REMOVE, { itemId: item.dataId })
+		// for (const dataSetName in this.dataSets) {
+		// 	this.dataSets[dataSetName].removeItem(item.dataId)
+		// }
 	}
 
 	/******************************************************************/
 
 	adaptItems (items, headers) { return items }
-	adaptItem  (item)  { return item  }
-
-	defineDataSet(name=null, filter) {
-		name = name || this.name + Object.entries(this.dataSets).length
-		const ds = DataSet.define(name, null, filter)
-		this.dataSets[name] = ds
-		// $.defer(() => {
-			if (this.isInitialized) {
-				ds.init(this.itemIds) // TODO: call ds.data() ???
-				ds.data()
-			}
-		// })
-		return ds
-	}
+	adaptItem  (item)           { return item  }
 }

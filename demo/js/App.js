@@ -9,7 +9,7 @@ $.application(
 	class App extends $.App {
 		setTheme(e) {
 			document.body.classList.remove('dark-theme', 'light-theme')
-			document.body.classList.add(e.targetComponent.value)
+			document.body.classList.add(e.target.value)
 		}
 
 		render() {
@@ -56,6 +56,7 @@ $.application(
 			{ lat: 49.4413,  lng: 32.0643, label: 'Ksenia',    icon: 'ORANGE_DOT'},
 			{ lat: 48.4816,  lng: 24.5819, label: 'Alex',      icon: 'ORANGE_DOT'},
 			{ lat: 53.5488,  lng: 9.9872,  label: 'Ivan',      icon: 'ORANGE_DOT'},
+			{ lat: 50.5791,  lng: 30.2151, label: 'Denys',     icon: 'ORANGE_DOT'},
 		])
 	}
 )

@@ -25,7 +25,7 @@ export default class List extends $.Component {
 		if (this.props.isSelectable) {
 			for (const itemId in this.items) {
 				const item = this.items[itemId]
-				if (event.detail.targetComponent === item) {
+				if (event.detail.target === item) {
 					this._selectedId = itemId
 					item.select()
 				} else {

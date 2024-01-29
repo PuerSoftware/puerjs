@@ -19,7 +19,7 @@ class InputToggle extends FormInput {
 	}
 
 	_onButtonClick(event) {
-		this.value = event.targetComponent.props.value
+		this.value = event.target.props.value
 		const s = this.value
 	}
 

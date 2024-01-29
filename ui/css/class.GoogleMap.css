@@ -18,5 +18,5 @@
 }
 
 :has(> .gmnoprint) *  {
-	background: none !important;
+/*	background: none !important;*/
 }

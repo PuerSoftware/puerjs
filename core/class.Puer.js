@@ -303,9 +303,10 @@ $.ReferenceOwner = Library.ReferenceOwner
 $.RouteRoot      = Library.RouteRoot
 
 $.Constants.$($)
-$.Reference.$($)
-$.DataSource.$($)
 $.DataSet.$($)
+$.DataSource.$($)
 $.DataStore.$($)
+$.Reference.$($)
+$.Request.$($)
 
 export default $

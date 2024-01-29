@@ -61,6 +61,42 @@ class PuerObject {
 		} while (proto !== null)
 		return props
 	}
+
+	/********************************************************/
+
+	on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
+		this.listeners[name] = (...args) => {
+			const d = args[0].detail
+			if (this.isActive && d.target.isActive) {
+				if (matchTarget) {
+					if ([d.targetName, d.target].includes(matchTarget)) {
+						f.bind(this)(...args)
+					}
+				} else {
+					f.bind(this)(...args)
+				}
+			}
+		}
+		$.Events.on(name, this.listeners[name])
+	}
+
+	once(name, f) {
+		$.Events.once(name, f.bind(this))
+	}
+
+	off(name) {
+		this.listeners[name] && $.Events.off(name, this.listeners[name])
+	}
+
+	trigger(name, data) {
+		if (this.isActive) {
+			data.target = this
+			data.targetName      = this.props.name || null
+			$.Events.trigger(name, data)
+		}
+	}
+
+	/********************************************************/
 }
 
 PuerObject.prototype.chainName = 'PuerObject'

@@ -49,7 +49,7 @@ class InputSearchSelect extends FormInput {
 	}
 
 	_onUnselect(e) {
-		this._unselect(e.detail.targetComponent.data.value)
+		this._unselect(e.detail.target.data.value)
 	}
 
 	_getValuesString() {

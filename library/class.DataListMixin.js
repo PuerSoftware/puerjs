@@ -24,7 +24,7 @@ export default class DataListMixin {
 
 	/**************************************************************/
 
-	onDataInit() {
+	onDataChange() {
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true
@@ -36,7 +36,7 @@ export default class DataListMixin {
 		this.items[item.dataId] = itemComponent
 	}
 
-	onDataRemoveItem(dataId) {
+	onDataItemRemove(dataId) {
 		this.items[dataId].remove()
 		delete this.items[dataId]
 	}
@@ -96,7 +96,7 @@ export default class DataListMixin {
 
 	clear() {
 		for (const id of Object.keys(this.items)) {
-			this.onDataRemoveItem(id)
+			this.onDataItemRemove(id)
 		}
 	}
 

@@ -1,9 +1,13 @@
-export default class DataSet {
+import PuerObject from '../core/class.PuerObject.js'
+
+
+export default class DataSet extends PuerObject {
 	static $($) { window.$ = $ }
 	
 	/**************************************************************/
 
-	static define(name, searchConfig=null, filter=null) {
+	static define(name, searchConfig=null, filter=null) { // TODO: Move searchConfig to setter?
+		name = name || $.String.random(10)
 		if (DataSet.hasOwnProperty(name)) {
 			throw `DataSet already has property "${name}"`
 		}
@@ -19,8 +23,10 @@ export default class DataSet {
 	/**************************************************************/
 
 	constructor(name, searchConfig=null, filter=null) {
+		super()
+		
 		this.name           = name
-		this.itemIds        = []
+		this._itemIds       = []
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
 		this.index          = new Map()
@@ -67,18 +73,56 @@ export default class DataSet {
 
 	/**************************************************************/
 
-	get items() {
-		return $.DataStore.get(this.itemIds)
+	_onData(e) {
+		this.itemIds = e.detail.itemIds
+		console.log('onData', this.items)
+		this.onData(this.items)
 	}
 
-	init(ids) {
-		this.itemIds       = this._applyInitialFilter(ids)
+	_onItemAdd(e) {
+		const item = e.detail.item
+		const ids  = this._applyInitialFilter([item.dataId])
+
+		if (ids.length) {
+			this._indexItem(item, item.dataId)
+			this.onItemAdd(item)
+		}
+	}
+
+	_onItemChange(e) {
+		this._reindexItems()
+		this.onItemChange(e.detail.item)
+	}
+
+	_onItemRemove (e) {
+		this.onItemRemove(e.detail.itemId)
+	}
+
+	/**************************************************************/
+
+	get items() {
+		return $.DataStore.get(this._itemIds)
+	}
+
+	get itemIds() {
+		return this._itemIds
+	}
+
+	set itemIds(ids) {
+		console.log('itemIds setter', ids)
+		// TODO: _reindexItems?
+		this._itemIds      = this._applyInitialFilter(ids)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
 		this._lastSort   && this.sort(this._lastSort)
+	}
 
-		this.onInit()
+	set dataSource(dataSource) {
+		this.on('DATASOURCE_DATA',        this._onData.       bind(this), dataSource.name)
+		this.on('DATASOURCE_ITEM_ADD',    this._onItemAdd.    bind(this), dataSource.name)
+		this.on('DATASOURCE_ITEM_CHANGE', this._onItemChange. bind(this), dataSource.name)
+		this.on('DATASOURCE_ITEM_REMOVE', this._onItemRemove. bind(this), dataSource.name)
 	}
 
 	filter(f) {
@@ -138,33 +182,11 @@ export default class DataSet {
 		this._excluded.delete(id)
 	}
 
-	data() {
-		this.onData(this.items)
-	}
+	onData       (items)  {}
+	onItemAdd    (item)   {}
+	onItemChange (item)   {}
+	onItemRemove (itemId) {}
 
-	addItem(item) {
-		const ids = this._applyInitialFilter([item.dataId])
-		if (ids.length) {
-			this._indexItem(item, item.dataId)
-			this.onAddItem(item)
-		}
-	}
-
-	changeItem(item) {
-		this._reindexItems()
-		this.onChangeItem(item)
-	}
-
-	removeItem (dataId) {
-		this.onRemoveItem(dataId)
-	}
-
-	onInit       ()       {}
-	onData       (data)   {}
-	onAddItem    (item)   {}
-	onChangeItem (item)   {}
-	onRemoveItem (dataId) {}
-	onSort       (map)    {}
-	onFilter     (map)    {}
-
+	onSort       (map)    {} // TODO: Make event?
+	onFilter     (map)    {} // TODO: Make event?
 }
