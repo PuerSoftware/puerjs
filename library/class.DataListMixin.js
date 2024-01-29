@@ -24,13 +24,13 @@ export default class DataListMixin {
 
 	/**************************************************************/
 
-	onDataChange() {
+	onDataChange(items) {
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true
 	}
 
-	onDataAddItem(item) {
+	onDataItemAdd(item) {
 		const itemComponent = this.renderItem(item)
 		this.itemContainer.append(itemComponent)
 		this.items[item.dataId] = itemComponent
