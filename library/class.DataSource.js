@@ -4,7 +4,7 @@ import DataBase   from './class.DataBase.js'
 import DataSet    from './class.DataSet.js'
 
 
-export default class DataSource extends PuerObject {
+export default class DataSource extends PuerObject { // TODO: add ORM
 	static $($) { window.$ = $ }
 	
 	/**************************************************************/

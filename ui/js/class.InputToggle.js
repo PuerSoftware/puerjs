@@ -19,7 +19,8 @@ class InputToggle extends FormInput {
 	}
 
 	_onButtonClick(event) {
-		this.value = event.target.props.value
+		console.log('onToggle cliec', event.targetComponent)
+		this.value = event.targetComponent.props.value
 		const s = this.value
 	}
 

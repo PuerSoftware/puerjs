@@ -112,7 +112,7 @@ export default class InputCalendar extends FormInput {
 		} else {
 			this._range = []
 		}
-		this._range.push(event.target.date)
+		this._range.push(event.targetComponent.date)
 		this._range.sort((a, b) => a - b )
 		this._highlightRange()
 		this.value = this._getRangeString()

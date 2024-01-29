@@ -443,6 +443,9 @@ class BasePuerComponent extends PuerObject {
 		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
 		for (let key in methods) {
 			if (key !== 'constructor') {
+				if (this[key]) {
+					throw `Mixin overrides existing property "${this.className}.${key}"`
+				}
 				const descriptor = methods[key]
 				if (typeof descriptor.value === 'function') {
 					this[key] = descriptor.value.bind(this)
