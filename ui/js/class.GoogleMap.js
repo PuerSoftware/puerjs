@@ -6,6 +6,7 @@ export default class GoogleMap extends $.Component {
 
 	constructor(... args) {
 		super(... args)
+		this.props.require('apiKey')
 
 		this.props.default('center',  [50.4504, 30.5245])
 		this.props.default('zoom',    7)
@@ -128,6 +129,7 @@ export default class GoogleMap extends $.Component {
 		label && ( params['title'] = label )
 		try { this.markers[key] = new google.maps.Marker(params) } catch (e) {
 			console.log('google exception')
+			this.addMarker(lat, lng, label, icon)
 		}
 		this.markers[key].key = key
 		console.log(this.markers[key])

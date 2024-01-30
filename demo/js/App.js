@@ -5,6 +5,8 @@ import IndexPage       from './class.IndexPage.js'
 import ComponentsPage  from './class.ComponentsPage.js'
 import HeaderMenu      from './class.HeaderMenu.js'
 
+$.Constants.GOOGLE_MAPS_API_KEY = GOOGLE_MAPS_API_KEY
+
 $.application(
 	class App extends $.App {
 		setTheme(e) {

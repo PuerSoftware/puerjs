@@ -6,7 +6,10 @@ export default class Constants {
 			throw `Can not redefine constant "${name}"`
 		}
 
-		const constant = new Constants(data)
+		const constant = $.isPrimitive(data)
+			? data
+			: new Constants(data)
+
 		Object.defineProperty(Constants, name, {
 			get: function() {
 				return constant
@@ -23,10 +26,10 @@ export default class Constants {
 				let result
 				if (prop in target) {
 					result = target[prop]
-				} else if (prop[0] === '$') {
+				} else if (prop[0] === '$') { // Returns full object
 					prop = prop.slice(1)
 					if (prop in target._data) {
-						result = this._data[prop]
+						result = target._data[prop]
 					}
 				} else if (prop in target._data) {
 					result = $.isObject(target._data[prop])
