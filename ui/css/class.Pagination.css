@@ -1,7 +1,6 @@
 .pagination {
     flex : none;
 }
-
     .pagination a {
         text-decoration: none;
     }
@@ -9,7 +8,6 @@
     .pagination > .prev {
         margin-right: 20px;
     }
-
         .pagination > .prev::after {
             content: '⟵';
             color: var(--pagination-color-lo);
@@ -23,7 +21,7 @@
         gap         : 6px;
     }
         .pagination > .pages > .current {
-            color : #FFF;
+            color : var(--puer-pagination-text-color);
         }
 
         .pagination > .pages > .divider {
@@ -43,8 +41,7 @@
 
     .pagination > .next {
         margin-left : 20px;
-    }
-        
+    }    
         .pagination > .next::after {
             content : '⟶';
             color   : var(--puer-pagination-color-hi);

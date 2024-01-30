@@ -8,8 +8,8 @@
     min-width        : 16px;
     height           : 16px;
     border-radius    : 8px;
-    color            : #FFF;
-    background-color : var(--puer-bg-notify-counter);
+    color            : var(--puer-color-notify-counter);
+    background-color : var(--puer-bg-color-notify-counter);
     -webkit-user-select : none; 
 	-ms-user-select     : none; 
 	user-select         : none; 

@@ -1,33 +1,44 @@
 .input-toggle {
 	display     : inline-block;
-	font-family : Inter, sans-serif;
+	font-family : var(--puer-font-label);
 	font-weight : 400;
 	margin      : 2px;
 	cursor      : default;
 	border      : none;
-	font-size   : 12px;
+	font-size   : var(--puer-font-size-lo);
 }
 	.input-toggle > .buttons {
 		display          : flex;
 		gap              : 1px;
-		border           : 1px solid #263545;
+		border           : 1px solid var(--puer-bg-color-toggle-box );
 		border-radius    : 2px;
-		background-color : #263545;
+		background-color : var(--puer-bg-color-toggle-box );
 	}
 		.input-toggle > .buttons > .option {
 			display          : inline-block;
 			padding          : 6px 8px;
-			color            : rgba(255, 255, 255, 0.29);
+			color            : var(--puer-color-toggle);
 			margin           : 0;
 			border-radius    : 1px;
-			background-color : #141C25;
+			background-color : var(--puer-bg-color-toggle);
 		}
 
 		.input-toggle > .buttons > .option.selected {
-			background-color : #0C1015;
-			border-radius    : 1px;
-			color            : #FFFFFF;
+			background-color : var(--puer-bg-color-toggle-selected);
+			border-radius    : 1px;		
 		}
+			.input-toggle > .buttons > .option.selected.eta {
+				color: var(--puer-color-toggle-selected-eta);
+			}
+
+			.input-toggle > .buttons > .option.selected.spot {
+				color: var(--puer-color-toggle-selected-spot);
+			}
+
+			.input-toggle > .buttons > .option.selected.fixed {
+				color: var(--puer-color-toggle-selected-fixed);
+			}
+
 	.disabled .input-toggle > .buttons {
 	}
 		.disabled .input-toggle > .buttons > .option {

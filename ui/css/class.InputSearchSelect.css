@@ -13,13 +13,14 @@
 		position   : absolute;
 		left       : 0;
 		top        : 100%;
-		width      : 100%;
+		min-width  : 100%;
 		min-height : 100px;
 		max-height : 200px;
-		border     : 1px solid var(--puer-border-color-form);
+		border     : 1px solid var(--puer-border-color);
 		flex-grow  : 0;
 		overflow-y : auto;
 		z-index    : 1;
+		box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
 	}
 		.input-search-select > .menu-body::-webkit-scrollbar {
 			width : 3px;
@@ -27,8 +28,8 @@
 		
 		.input-search-select > .menu-body::-webkit-scrollbar-track {
 			border-radius : 0;
-			margin-top    : 3px;
-			margin-bottom : 2px;
+			margin-top    : 0;
+			margin-bottom : 0;
 			background    : var(--puer-bg-color-lo);
 		}
 		
@@ -60,6 +61,7 @@
 			.input-search-select > .menu-body > .menu > .port-list-item {
 				font-size       : var(--puer-font-size-lo);
 				color           : var(--puer-text-color-lowhight);
+				white-space     : nowrap;
 				padding         : 0 0 0 1.8em;
 				margin-bottom   : 4px;
 				border-radius   : 0;
@@ -87,7 +89,7 @@
 	}
 		.input-search-select > .tags > .tag {
 			margin-right     : 4px;
-			background-color : var(--puer-bg-tag-lo);
+			background-color : var(--puer-bg-color-tag-lo);
 		}
 
 	.input-search-select > .search {

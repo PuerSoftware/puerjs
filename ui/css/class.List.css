@@ -17,7 +17,7 @@
     transform     : rotate(45deg);
     box-sizing    : border-box;
     overflow      : visible !important;
-    flex          : none;
+    flex          : none !important;
     margin        : auto !important;
 }
     .loader::before {
