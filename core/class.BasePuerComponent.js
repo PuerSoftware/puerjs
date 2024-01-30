@@ -426,14 +426,14 @@ class BasePuerComponent extends PuerObject {
 		return descendantConfigs
 	}
 
-	on(name, f, matchTarget=null) {
-		matchTarget = this._getTargetSet(matchTarget)
-		if (this.prop.triggers) {
-			const triggers = this._getTargetSet(this.prop.triggers[name])
-			matchTarget    = new Set(...matchTarget, ... triggers)
-		}
-		super.on(name, f, matchTarget)
-	}
+	// on(name, f, matchTarget=null) {
+	// 	matchTarget = this._getTargetSet(matchTarget)
+	// 	if (this.props.triggers) {
+	// 		const triggers = this._getTargetSet(this.props.triggers[name])
+	// 		matchTarget    = new Set(...matchTarget, ... triggers)
+	// 	}
+	// 	super.on(name, f, matchTarget)
+	// }
 
 	as(mixinClass) {
 		const handler = {

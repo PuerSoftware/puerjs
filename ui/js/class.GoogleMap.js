@@ -129,7 +129,7 @@ export default class GoogleMap extends $.Component {
 		label && ( params['title'] = label )
 		try { this.markers[key] = new google.maps.Marker(params) } catch (e) {
 			console.log('google exception')
-			this.addMarker(lat, lng, label, icon)
+			// this.addMarker(lat, lng, label, icon)
 		}
 		this.markers[key].key = key
 		console.log(this.markers[key])

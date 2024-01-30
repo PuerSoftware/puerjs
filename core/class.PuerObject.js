@@ -84,14 +84,30 @@ class PuerObject {
 		return target
 	}
 
+	// on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
+	// 	matchTarget = this._getTargetSet(matchTarget)
+	// 	this.listeners[name] = (...args) => {
+	// 		const d = args[0].detail
+	// 		if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
+	// 			if (matchTarget) {
+	// 				const hasMatchTarget = $.Set.intersection(new Set(d.targetName, d.target), matchTarget).size
+	// 				if (hasMatchTarget) {
+	// 					f.bind(this)(...args)
+	// 				}
+	// 			} else {
+	// 				f.bind(this)(...args)
+	// 			}
+	// 		}
+	// 	}
+	// 	$.Events.on(name, this.listeners[name])
+	// }
+
 	on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
-		matchTarget = this._getTargetSet(matchTarget)
 		this.listeners[name] = (...args) => {
 			const d = args[0].detail
 			if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
 				if (matchTarget) {
-					const hasMatchTarget = $.Set.intersection(new Set(d.targetName, d.target), matchTarget).size
-					if (hasMatchTarget) {
+					if ([d.targetName, d.target].includes(matchTarget)) {
 						f.bind(this)(...args)
 					}
 				} else {
@@ -101,7 +117,7 @@ class PuerObject {
 		}
 		$.Events.on(name, this.listeners[name])
 	}
-
+	
 	once(name, f) {
 		$.Events.once(name, f.bind(this))
 	}
