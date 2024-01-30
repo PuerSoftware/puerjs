@@ -41,7 +41,7 @@ class Form extends $.Component {
 
 	get hasChange() {
 		for (const input of this.inputs) {
-			if (input.value !== input.initialValue && !  input.isHidden) {
+			if (input.value !== String(input.initialValue) && !input.isHidden) {
 				return true
 			}
 		}
