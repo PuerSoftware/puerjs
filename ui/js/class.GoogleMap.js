@@ -65,7 +65,7 @@ export default class GoogleMap extends $.Component {
 			styles: this.props.styles
 		})
 
-		this.mixin($.DataOwnerMixin)
+		this.props.dataSource && this.mixin($.DataOwnerMixin)
 
 		GoogleMap.Icons = Object.assign({
 			GREEN_DOT: {
