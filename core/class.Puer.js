@@ -165,6 +165,7 @@ class Puer {
 	isSymbol(o)   { return this.type(o) === 'symbol'   }
 	isError(o)    { return this.type(o) === 'error'    }
 	isArray(o)    { return this.type(o) === 'array'    }
+	isSet(o)      { return (o instanceof Set)          }
 	isDate(o)     { return this.type(o) === 'date'     }
 
 	isPrimitive(o) {

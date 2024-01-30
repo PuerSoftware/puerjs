@@ -8,7 +8,7 @@ class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
 		this.owner    = $.owner
-		this.id       = props['id'] || $.String.randomHex(4)
+		this.id       = props['id'] || this.id
 		this.element  = null
 		this.parent   = null
 		this.root     = null
@@ -375,13 +375,12 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	route(path, relative=false) {
-		if (path.startsWith('*')) {
-			relative = true
-			path     = path.substring(1)
-		}
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
-			if (relative) {
+			if (path.startsWith('*')) {
+				relative = true
+				path     = path.substring(1)
+			} else if (relative) {
 				path = `${routeName}:${routeValue}[${path}]`
 			}
 		}
@@ -425,6 +424,15 @@ class BasePuerComponent extends PuerObject {
 			descendantConfigs = [config]
 		}
 		return descendantConfigs
+	}
+
+	on(name, f, matchTarget=null) {
+		matchTarget = this._getTargetSet(matchTarget)
+		if (this.prop.triggers) {
+			const triggers = this._getTargetSet(this.prop.triggers[name])
+			matchTarget    = new Set(...matchTarget, ... triggers)
+		}
+		super.on(name, f, matchTarget)
 	}
 
 	as(mixinClass) {

@@ -40,8 +40,7 @@ class PuerRouter {
 	}
 
 	_route(hash) {
-		this.path = this.routeRoot.getPath(hash)
-
+		this.path   = this.routeRoot.getPath(hash)
 		$.isRouting = true
 		this.app.__route(this._flattenPath(this.path))
 		$.isRouting = false

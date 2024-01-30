@@ -1,5 +1,6 @@
 class PuerObject {
 	constructor() {
+		this.id              = $.String.randomHex(4)
 		this.classProperties = Object.getOwnPropertyNames(this.constructor.prototype)
 		this.className       = this.constructor.name
 	}
@@ -64,12 +65,33 @@ class PuerObject {
 
 	/********************************************************/
 
+	_getTargetSet(target) {
+		if ($.isString(target)) {
+			target = new Set(target)
+		} else if ($.isObject(target)) {
+			target = new Set(target.id)
+		} else if ($.isArray(target)) {
+			let newTarget = new Set()
+			for (const item of target) {
+				newTarget = new Set(... newTarget, ... this._getTargetSet(item))
+			}
+			target = newTarget
+		} else if ($.isSet(target)) {
+			return target
+		} else {
+			target = new Set()
+		}
+		return target
+	}
+
 	on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
+		matchTarget = this._getTargetSet(matchTarget)
 		this.listeners[name] = (...args) => {
 			const d = args[0].detail
 			if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
 				if (matchTarget) {
-					if ([d.targetName, d.target].includes(matchTarget)) {
+					const hasMatchTarget = $.Set.intersection(new Set(d.targetName, d.target), matchTarget).size
+					if (hasMatchTarget) {
 						f.bind(this)(...args)
 					}
 				} else {
