@@ -25,6 +25,9 @@ export default class DataListMixin {
 	/**************************************************************/
 
 	onDataChange(items) {
+		if (this.name === 'own') {
+			$.timer()
+		}
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true

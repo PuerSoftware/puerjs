@@ -128,38 +128,12 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		$.DataStore.set(item.dataId, item, true)
 	}
 
-	/******************************************************************
-
-	on(name, f, options) {
-		this.listeners[name] = (...args) => {
-			f.bind(this)(...args)
-		}
-		$.Events.on(name, this.listeners[name], options)
-	}
-
-	once(name, f, options) {
-		$.Events.once(name, f.bind(this), options)
-	}
-
-	off(name) {
-		this.listeners[name] && $.Events.off(name, this.listeners[name])
-	}
-
-	trigger(name, data) {
-		data.target          = this
-		data.targetName               = this.name
-		data.target.isActive = true
-		$.Events.trigger(name, data)
-	}
-
-	/******************************************************************/
-
 	get data() {
 		return $.DataStore.get(this.itemIds)
 	}
 
 	fill(items) {
-		$.defer(() => { // TODO: maybe we can remove this 
+		$.defer(() => { // TODO: maybe we can remove this
 			this.addItems(items)
 			this._onLoad()
 		})

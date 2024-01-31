@@ -21,6 +21,25 @@ class DateMethods {
 		return StringMethods.capitalize(m)
 	}
 
+	static timestampToRangeString(from, to=null) {
+		const dates = []
+		dates.push(
+			DateMethods.format(
+				new Date(DateMethods._dateToMilliSeconds(from)),
+				DateMethods.FORMAT_SLASHES
+			)
+		)
+		if (to) {
+			dates.push(
+			DateMethods.format(
+				new Date(DateMethods._dateToMilliSeconds(to)),
+				DateMethods.FORMAT_SLASHES
+			)
+		)
+		}
+		return dates.join(' - ')
+	}
+
     static format(date, format=DateMethods.FORMAT_DOTS) {
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)

@@ -155,17 +155,18 @@ class Puer {
 
 	/*********************** PUBLIC ***********************/
 
-	isFunction(o) { return this.type(o) === 'function' }
-	isBoolean(o)  { return this.type(o) === 'boolean'  }
-	isObject(o)   { return this.type(o) === 'object'   }
-	isString(o)   { return this.type(o) === 'string'   }
-	isNumber(o)   { return this.type(o) === 'number'   }
-	isRegexp(o)   { return this.type(o) === 'regexp'   }
-	isSymbol(o)   { return this.type(o) === 'symbol'   }
-	isError(o)    { return this.type(o) === 'error'    }
-	isArray(o)    { return this.type(o) === 'array'    }
-	isSet(o)      { return (o instanceof Set)          }
-	isDate(o)     { return this.type(o) === 'date'     }
+	isFunction(o)   { return this.type(o) === 'function' }
+	isBoolean(o)    { return this.type(o) === 'boolean'  }
+	isObject(o)     { return this.type(o) === 'object'   }
+	isPuerObject(o) { return o && o.isPuerObject         }
+	isString(o)     { return this.type(o) === 'string'   }
+	isNumber(o)     { return this.type(o) === 'number'   }
+	isRegexp(o)     { return this.type(o) === 'regexp'   }
+	isSymbol(o)     { return this.type(o) === 'symbol'   }
+	isError(o)      { return this.type(o) === 'error'    }
+	isArray(o)      { return this.type(o) === 'array'    }
+	isSet(o)        { return (o instanceof Set)          }
+	isDate(o)       { return this.type(o) === 'date'     }
 
 	isPrimitive(o) {
 		return ['string', 'number', 'boolean'].includes(this.type(o))
