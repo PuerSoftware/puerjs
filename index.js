@@ -3,12 +3,12 @@ import PuerApp from './core/class.PuerApp.js'
 
 (() => {
 	const tags = (
-		'text,a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,'      +
-		'canvas,caption,cite,code,col,colgroup,data,datalist,dd,del,details,dfn,dialog,div,'          +
-		'dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,head,header,'        +
-		'hgroup,hr,html,i,iframe,img,input,ins,kbd,label,legend,li,link,main,map,mark,meta,'          +
-		'meter,nav,noscript,object,ol,optgroup,option,output,p,param,picture,pre,progress,q,'         +
-		'rp,rt,ruby,s,samp,script,section,select,small,source,span,strong,style,sub,summary,'         +
+		'text,a,abbr,address,area,article,aside,audio,b,base,bdi,bdo,blockquote,body,br,button,'       +
+		'canvas,caption,cite,code,col,colgroup,data,datalist,dd,del,details,dfn,dialog,div,'           +
+		'dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,head,header,'         +
+		'hgroup,hr,html,i,iframe,img,input,ins,kbd,label,legend,li,link,main,map,mark,meta,'           +
+		'meter,nav,noscript,object,ol,optgroup,option,output,p,param,picture,pre,progress,q,'          +
+		'rp,rt,ruby,s,samp,script,section,select,small,source,span,strong,style,sub,summary,'          +
 		'sup,table,tbody,td,template,textarea,tfoot,th,thead,time,title,tr,track,u,ul,var,video,wbr'
 	).split(',')
 
@@ -28,7 +28,7 @@ import PuerApp from './core/class.PuerApp.js'
 		'spellcheck,src,srclang,srcset,start,step,style,tabindex,target,title,translate,'              +
 		'type,usemap,value,width,wrap'
 	).split(',')
-	
+
 	const events = (
 		'abort,ended,addtrack,change,removetrack,messageerror,message,animationcancel,animationend,'        +
 		'animationiteration,animationstart,copy,cut,dragend,dragenter,dragleave,dragover,dragstart,'        +
@@ -62,6 +62,12 @@ import PuerApp from './core/class.PuerApp.js'
 		'selectstart,squeezeend,squeezestart,squeeze,save'
 	).split(',')
 
+	const pxCssProps = ('width,height,maxWidth,maxHeight,minWidth,minHeight,margin,marginTop,marginRight,'   +
+		'marginBottom,marginLeft,padding,paddingTop,paddingRight,paddingBottom,paddingLeft,borderWidth,'    +
+		'borderTopWidth,borderRightWidth,borderBottomWidth,borderLeftWidth,fontSize,lineHeight,textIndent,' +
+		'top,right,bottom,left,backgroundSize,borderRadius,boxShadow,outlineWidth,translate'
+	).split(',')
+
 	for (const tag of tags) {
 		$.define(tag)
 	}
@@ -70,9 +76,11 @@ import PuerApp from './core/class.PuerApp.js'
 		filePath = new URL(filePath).pathname
 		return filePath.slice(0, filePath.lastIndexOf('/'))
 	}
-	$.path = dirName(import.meta.url) + '/'
-	$.isAttr  = (s) => { return attributes.indexOf(s.toLowerCase()) > -1 || s.startsWith('data-') }
-	$.isEvent = (s) => { return events.indexOf(s.replace(/^on/, '').toLowerCase())     > -1 }
+	$._path       = dirName(import.meta.url) + '/'
+	$.isTag       = (s) => { return tags          .indexOf(s) > -1 }
+	$.isPxCssProp = (s) => { return pxCssProps    .indexOf(s) > -1 }
+	$.isAttr      = (s) => { return attributes    .indexOf(s.toLowerCase()) > -1 || s.startsWith('data-') }
+	$.isEvent     = (s) => { return events        .indexOf(s.replace(/^on/, '').toLowerCase()) > -1 }
 })()
 
 

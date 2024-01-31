@@ -74,6 +74,7 @@
     --puer-text-color-hi       : #262832;
 }
 /************************************************************************************/
+
 .hidden { display: none !important; }
 
 .box {
@@ -87,3 +88,5 @@
     .box.align {
         border-width : 1px;
     }
+
+

@@ -92,9 +92,19 @@ class StringMethods {
 		return result
 	}
 
-	static query(o) {
-		return new URLSearchParams(o).toString()
+	static query(o, array_encoder=null) {
+		const params = new URLSearchParams()
+		for (const key in o) {
+			if (Array.isArray(o[key]) && array_encoder) {
+				params.append(array_encoder(o[key]))
+			} else {
+				// Directly append key-value pair for non-array values
+				params.append(key, o[key])
+			}
+		}
+		return params.toString()
 	}
+
 }
 
 export default StringMethods

@@ -11,6 +11,8 @@ html, body {
     --demo-color-4: #d0beaf;
 
     --demo-color-text : #333;
+
+    --svg-icon-1 : url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDIwIDIwIiBmaWxsPSJub25lIj4KPGNpcmNsZSBjeD0iMTAiIGN5PSIxMCIgcj0iOS41IiBmaWxsPSIjNTVCQ0NBIiAvPgo8L3N2Zz4=');
 }
     :root .dark-theme {
         --demo-color-1: #006080;
@@ -61,11 +63,44 @@ html, body {
         height: 100%;
     }
 
-.app .sidebar {
-    padding          : 10px 20px;
-    background-color : var(--demo-color-2);
-    flex             : none;
-}
-    .app .sidebar > * {
-        flex: none;
+    .app .sidebar {
+        padding          : 10px 20px;
+        background-color : var(--demo-color-2);
+        flex             : none;
     }
+        .app .sidebar > * {
+            flex: none;
+        }
+
+    /******************** ICONS ********************/
+
+    .app .icon {
+        border          : 0;
+        outline         : 0;
+        padding         : 0;
+        width           : 35px;
+        height          : 35px;
+        background      : no-repeat center center var(--icon-color-bg);
+        background-size : cover;
+        color           : transparent;
+        flex            : none;
+        border-radius   : 2px;
+        border          : 1px solid var(--icon-color-border);
+    }
+
+    .app .icon-lg {
+        width  : 60px;
+        height : 60px;
+    }
+
+    .app .icon-sm {
+        width         : 20px;
+        height        : 20px;
+        border-radius : 50%;
+    }
+
+    .app .icon-1 {
+        background-image: var(--svg-icon-1);
+    }
+
+

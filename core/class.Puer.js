@@ -5,7 +5,7 @@ class Puer {
 		if (!Puer.instance) {
 			this.app
 			this.owner
-			this.path
+			this._path
 			this.appPath
 			this.isReferencing
 			
@@ -49,7 +49,7 @@ class Puer {
 	_loadCss(componentUrl) {
 		if (componentUrl) {
 			let cssUrl = componentUrl.includes('puerjs') 
-				? this.path + componentUrl.split(this.path)[1].replace(/\bjs\b/g, 'css')
+				? this._path + componentUrl.split(this._path)[1].replace(/\bjs\b/g, 'css')
 				: componentUrl.replace(/\bjs\b/g, 'css')
 
 			if (!this._cssUrls.has(cssUrl)) {
@@ -111,6 +111,9 @@ class Puer {
 
 	_defineTag(name) {
 		let className = 'PuerTag' + this.String.capitalize(name)
+		if (window[className]) {
+			throw new PuerError(`Could not define tag "${className}": name occupied`, $, 'define')
+		}
 		eval(
 			`class ${className} extends this.HtmlElement {};` +
 			`window.${className} = ${className}`
@@ -135,14 +138,10 @@ class Puer {
 
 	define(cls, importUrl) {
 		if (typeof cls === 'string') {
-			if (window[cls]) {
-				throw new PuerError(`Could not define tag "${cls}": name occupied`, $, 'define')
-			} else {
-				if (cls === 'text') {
-					return this._defineText()
-				}
-				return this._defineTag(cls)
+			if (cls === 'text') {
+				return this._defineText()
 			}
+			return this._defineTag(cls)
 		}
 		if (this[cls.name]) {
 			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, $, 'define')

@@ -28,14 +28,15 @@ export default class ComponentsPage extends $.Component {
 	render() {
 		return $.Columns([
 			$.Rows('sidebar', [
-				$.Link({label: 'Button',       hash: 'cmp:button'       }),
-				$.Link({label: 'Calendar',     hash: 'cmp:calendar'     }),
-				$.Link({label: 'Checkbox',     hash: 'cmp:checkbox'     }),
-				$.Link({label: 'Flag',         hash: 'cmp:flag'         }),
-				$.Link({label: 'SearchSelect', hash: 'cmp:searchselect' }),
-				$.Link({label: 'Tag',          hash: 'cmp:tag'          }),
-				$.Link({label: 'Code',         hash: 'cmp:code'         }),
-				$.Link({label: 'Google Map',   hash: 'cmp:map'          }),
+				$.Link({label: 'Button',              hash: 'cmp:button'       }),
+				$.Link({label: 'Calendar',            hash: 'cmp:calendar'     }),
+				$.Link({label: 'Checkbox',            hash: 'cmp:checkbox'     }),
+				$.Link({label: 'Flag',                hash: 'cmp:flag'         }),
+				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect' }),
+				$.Link({label: 'Tag',                 hash: 'cmp:tag'          }),
+				$.Link({label: 'Code',                hash: 'cmp:code'         }),
+				$.Link({label: 'Google Map',          hash: 'cmp:map'          }),
+				$.Link({label: 'Google Static Map',   hash: 'cmp:staticmap'    }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -92,6 +93,12 @@ export default class ComponentsPage extends $.Component {
 				]),
 				$.Box({route: 'cmp:map'}, [
 					this.map = $.GoogleMap({
+						apiKey     : $.Constants.GOOGLE_MAPS_API_KEY,
+						dataSource : 'Markers'
+					})
+				]),
+				$.Box({route: 'cmp:staticmap'}, [
+					this.map = $.GoogleStaticMap({
 						apiKey     : $.Constants.GOOGLE_MAPS_API_KEY,
 						dataSource : 'Markers'
 					})

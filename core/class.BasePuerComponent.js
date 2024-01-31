@@ -57,9 +57,9 @@ class BasePuerComponent extends PuerObject {
 	__route(flatPath, activation) {
 		/*
 		*  activation can be: -1 0 1
-		*  ------ -1  - route patent deactivated
-		*  ------- 0  - route patent did not change _isActive
-		*  ------- 1  - route patent activated
+		*  ------ -1  - route parent deactivated
+		*  ------- 0  - route parent did not change _isActive
+		*  ------- 1  - route parent activated
 		*/
 		let hasMatch = false
 		if (this.props.route) {
@@ -217,10 +217,14 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_applyProp(prop) {
+		if (prop === 'cx') debugger
 		if (this.element) {
-			const value = $.dereference(this.props[prop])
+			let value = $.dereference(this.props[prop])
 			if (prop.startsWith('css')) {
 				const cssProp = $.String.camelToLower(prop.replace(/^css/, ''))
+				if ($.isPxCssProp(cssProp) && $.String.isNumeric(String(value))) {
+					value = `${value}px`
+				}
 				this.css(cssProp, value)
 			} else if (prop === 'text') {
 				const textElement = this.getTextElements()
