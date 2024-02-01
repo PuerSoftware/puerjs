@@ -1,6 +1,6 @@
 .search {
     flex   : none;
-    margin : 12px 12px 10px 12px;
+    margin : 12px;
 }
     .search .form-input.confined {
         margin-top    : 0;
