@@ -41,10 +41,16 @@ class Form extends $.Component {
 
 	get hasChange() {
 		for (const input of this.inputs) {
-			if (input.value !== String(input.initialValue) && !input.isHidden) {
-				return true
+			if (!input.isHidden) {
+				if (input.value !== input.initialValue) {
+					console.log('Change', input.name, input.value, input.initialValue)
+					return true
+				} else {
+					console.log('No Change', input.name, input.value, input.initialValue)
+				}
 			}
 		}
+		console.log('FORM No change')
 		return false
 	}
 
@@ -112,8 +118,8 @@ class Form extends $.Component {
 			const input = this.getInput(item.field)
 			if (input) {
 				input.value = item.value
-				if (input.initialValue === null) {
-					input.initialValue = item.value
+				if (input.initialValue === '') {
+					input.initialValue = String(item.value)
 				}
 			}
 		}

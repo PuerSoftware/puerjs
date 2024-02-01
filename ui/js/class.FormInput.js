@@ -12,7 +12,7 @@ class FormInput extends $.Component {
 		this.form         = null
 		this.input        = null
 		this.field        = null
-		this.initialValue = null
+		this.initialValue = ''
 
 		this.disabledByDefault = this.props.disabled
 	}
@@ -64,7 +64,8 @@ class FormInput extends $.Component {
 		if (this.field) {
 			this.field.error = ''
 		}
-		this.value = ''
+		this.value        = ''
+		this.initialValue = ''
 	}
 
 	onInit() {
