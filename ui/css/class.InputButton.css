@@ -17,7 +17,8 @@
 	}
 
 	.input-button.btn-share {
-		padding    : 8px 8px 8px 29px;
+		height     : 29px;
+		padding    : 6px 8px 6px 30px;
 		background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn);
 	}
 	.input-button.disabled,
