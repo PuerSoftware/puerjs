@@ -14,11 +14,11 @@ export default class CheckList extends List {
 		this._headerCheckbox = null
 		this._isCheckingAll  = false
 
-		this.on($.Event.LIST_ITEM_CHECK, this._onItemCheck)
+		this.on($.Event.LIST_ITEM_CHECK, this._onItemCheck, this.props.name)
 	}
 
 	_onItemCheck(event) {
-		if (event.detail.name === this.props.name && !event.detail.isResend) {
+		if (!event.detail.isResend) {
 			if (event.detail.target === this._headerCheckbox) {
 				this.checkAll(!Boolean(this._checkedCount))
 			} else {

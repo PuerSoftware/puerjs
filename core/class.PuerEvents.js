@@ -67,18 +67,18 @@ class PuerEvents extends EventTarget {
 	}
 
 	once(name, f) {
-		this.on(name, f, true)
+		this.on(name, f, null, true)
 	}
 
-	on(name, f, once=false) {
-		let _f = (e) => { return f(e) }
-		this._listenerMap.set(f, _f)
-		this.addEventListener(name, _f, {once: once})
+	on(name, f, fKey=null, once=false) {
+		fKey = fKey || f
+		this._listenerMap.set(fKey, f)
+		this.addEventListener(name, f, {once: once})
 	}
 
-	off(name, f) {
-		let _f = this._listenerMap.get(f)
-		this.removeEventListener(name, _f)
+	off(name, fKey) {
+		let f = this._listenerMap.get(fKey)
+		this.removeEventListener(name, f)
 	}
 
 	trigger(name, detail) {

@@ -34,7 +34,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.url           = url
 		this.count         = null
 		this.db            = null
-		this.listeners     = {}
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
 
@@ -155,7 +154,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		}
 
 		this.itemIds       = []
-		this.listeners     = {}
 
 		if (this.isCacheable && this.db) {
 			this.db.clear(() => {

@@ -1,13 +1,11 @@
-class SetMethods {
-	static union(s1, s2) {
-		const s = new Set()
-		for (const item of s1) { s.add(item) }
-		for (const item of s2) { s.add(item) }
-		return s
+export default class SetMethods {
+	static or(s1, s2) {
+		return new Set([... s1, ... s2])
 	}
-    static difference(s1, s2) {
+
+    static xor(s1, s2) {
 		const s = new Set()
-		for (const item of SetMethods.union(s1, s2)) {
+		for (const item of SetMethods.or(s1, s2)) {
 			if (!s1.has(item) || !s2.has(item)) {
 				s.add(item)
 			}
@@ -15,7 +13,7 @@ class SetMethods {
 		return s
 	}
 
-	static intersection(s1, s2) {
+	static and(s1, s2) {
         const s = new Set()
         for (const item of s1) {
             if (s2.has(item)) {
@@ -25,5 +23,3 @@ class SetMethods {
         return s
     }
 }
-
-export default SetMethods

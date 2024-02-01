@@ -4,6 +4,7 @@ class PuerObject {
 		this.classProperties = Object.getOwnPropertyNames(this.constructor.prototype)
 		this.className       = this.constructor.name
 		this.isPuerObject    = true
+		this.listeners       = new WeakMap()
 	}
 
 	isInstanceProperty(prop) { return Object.prototype.hasOwnProperty.call(this, prop) }
@@ -67,6 +68,9 @@ class PuerObject {
 	/********************************************************/
 
 	_getTargetSet(target) {
+		if (target && target.isReference) {
+			target = target.dereference()
+		}
 		if ($.isString(target)) {
 			return new Set([target])
 		} else if ($.isPuerObject(target)) {
@@ -74,9 +78,7 @@ class PuerObject {
 		} else if ($.isArray(target)) {
 			let newTarget = new Set()
 			for (const item of target) {
-				newTarget = new Set(
-					[... newTarget].concat([... this._getTargetSet(item)])
-				)
+				newTarget = $.Set.or(newTarget, this._getTargetSet(item))
 			}
 			return newTarget
 		} else if ($.isSet(target)) {
@@ -86,15 +88,17 @@ class PuerObject {
 		}
 	}
 
-	on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
-		matchTarget = this._getTargetSet(matchTarget)
-		this.listeners[name] = (...args) => {
-			const d = args[0].detail
-			if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
-				if (matchTarget) {
-					const targetIdentifiers = new Set([d.targetName, d.target.id])
-					const hasMatchTarget    = $.Set.intersection(targetIdentifiers, matchTarget).size
-					if (hasMatchTarget) {
+	on(name, f, validTargets=null) { // matchTarget can be either target or targetName
+		const ts = this._getTargetSet(validTargets)
+		const _f = (...args) => {
+			let validTargetsSet   = new Set([... ts])
+			const detail          = args[0].detail
+			const canReceiveEvent = this.isActiveEventTarget && detail.target.isActiveEventTarget
+			if (canReceiveEvent) {
+				if (validTargetsSet.size) {
+					const targets = new Set([detail.targetName, detail.target.id])
+					validTargetsSet  = $.Set.and(targets, validTargetsSet)
+					if (validTargetsSet.size) {
 						f.bind(this)(...args)
 					}
 				} else {
@@ -102,31 +106,15 @@ class PuerObject {
 				}
 			}
 		}
-		$.Events.on(name, this.listeners[name])
+		$.Events.on(name, _f, f)
 	}
 
-	// on(name, f, matchTarget=null) { // matchTarget can be either target or targetName
-	// 	this.listeners[name] = (...args) => {
-	// 		const d = args[0].detail
-	// 		if (this.isActiveEventTarget && d.target.isActiveEventTarget) {
-	// 			if (matchTarget) {
-	// 				if ([d.targetName, d.target].includes(matchTarget)) {
-	// 					f.bind(this)(...args)
-	// 				}
-	// 			} else {
-	// 				f.bind(this)(...args)
-	// 			}
-	// 		}
-	// 	}
-	// 	$.Events.on(name, this.listeners[name])
-	// }
-	
 	once(name, f) {
 		$.Events.once(name, f.bind(this))
 	}
 
-	off(name) {
-		this.listeners[name] && $.Events.off(name, this.listeners[name])
+	off(name, f) {
+		$.Events.off(name, f)
 	}
 
 	trigger(name, data) {

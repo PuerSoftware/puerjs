@@ -26,7 +26,6 @@ export default class DataSet extends PuerObject {
 		super()
 		
 		this.name           = name
-		this.listeners      = {}
 		this._itemIds       = []
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
