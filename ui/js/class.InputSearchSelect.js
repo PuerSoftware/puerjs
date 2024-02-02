@@ -106,7 +106,12 @@ class InputSearchSelect extends FormInput {
 	}
 
 	get value() {
-		return this._getValuesString()
+		return super.value
+	}
+
+	reset() {
+		super.reset()
+		this._valueSet = new Set()
 	}
 
 	renderTag(item) {
