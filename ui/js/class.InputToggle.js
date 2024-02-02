@@ -90,13 +90,16 @@ class InputToggle extends FormInput {
 
 	reset() {
 		if (this.props.selected) {
-			this.value = this.props.selected
+			this.input.element.value = this.props.selected.toString()
 		} else {
 			if (this.props.allowEmpty) {
-				this.value = '0'
+				this.input.element.value = '0'
 			} else {
-				this.value = null
+				this.input.element.value = null
 			}
+		}
+		for (const optionValue in this.options) {
+			this.options[optionValue].toggleCssClass('selected', optionValue === this.value)
 		}
 	}
 
