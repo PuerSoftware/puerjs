@@ -31,12 +31,20 @@ class Form extends $.Component {
 			}
 		}
 		if (event.detail.isSaved) {
+			this._updateInitialValues()
+			alert('Form saved successfully!!!')
 			this._trigger('save')
 		}
 	}
 
 	_onSubmit() {
 		this.submit(true)
+	}
+
+	_updateInitialValues() { // copy all values to initial values
+		for (const input of this.inputs) {
+			input._updateInitialValue()
+		}
 	}
 
 	get hasChange() {

@@ -30,6 +30,10 @@ class FormInput extends $.Component {
 		this.form && this.form.onInputChange(event)
 	}
 
+	_updateInitialValue() {
+		this.initialValue = this.input.element.value || undefined
+	}
+
 	set disabled(value) {
 		this.field && this.field.toggleCssClass('disabled', value)
 		if (value) {
