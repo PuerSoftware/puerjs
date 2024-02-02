@@ -27,9 +27,9 @@ class FormField extends $.Component {
 
 	render() {
 		return $.div([
-			$.label({text: this.props.label}),
+			$.label('unselectable', {text: this.props.label}),
 			... this.children,
-			$.div('error field-error', {text: this.state.error})
+			$.div('error field-error unselectable', {text: this.state.error})
 		])
 	}
 }
