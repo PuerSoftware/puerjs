@@ -56,17 +56,17 @@ class InputSelect extends FormInput {
 		this.input.append(option)
 	}
 
-	reset() {
-		if (this.props.selected) {
-			this.value = this.props.selected
-		} else {
-			if (this.props.allowEmpty) {
-				this.value = '0'
-			} else {
-				this.value = null
-			}
-		}
-	}
+	// reset() {
+	// 	if (this.props.selected) {
+	// 		this.value = this.props.selected
+	// 	} else {
+	// 		if (this.props.allowEmpty) {
+	// 			this.value = '0'
+	// 		} else {
+	// 			this.value = null
+	// 		}
+	// 	}
+	// }
 
 	load(query) {
 		this.dataSource.load('GET', query)

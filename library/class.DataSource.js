@@ -131,10 +131,17 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		return $.DataStore.get(this.itemIds)
 	}
 
-	fill(items) {
+	fill(items, reset=true) {
 		$.defer(() => { // TODO: maybe we can remove this
-			this.addItems(items)
-			this._onLoad()
+			if (reset) {
+				this.clear(() => {
+					this.addItems(items)
+					this._onLoad()
+				})
+			} else {
+				this.addItems(items)
+				this._onLoad()
+			}
 		})
 	}
 
@@ -195,9 +202,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 	removeItem(item) {
 		this.trigger($.Event.DATASOURCE_ITEM_REMOVE, { itemId: item.dataId })
-		// for (const dataSetName in this.dataSets) {
-		// 	this.dataSets[dataSetName].removeItem(item.dataId)
-		// }
 	}
 
 	/******************************************************************/

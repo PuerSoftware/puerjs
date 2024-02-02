@@ -27,10 +27,10 @@ class _Day extends $.Component {
 	}
 
 	highlightRange(range) {
+		this.removeCssClass('selected', 'start-range', 'end-range', 'mid-range')
 		if (range.length) {
 			const start = range[0]
 			const end   = range[1] || start
-			this.removeCssClass('selected', 'start-range', 'end-range', 'mid-range')
 			if ($.Date.eq(start, this.date)) {
 				this.addCssClass('selected', 'start-range')
 			}
@@ -129,9 +129,11 @@ export default class InputCalendar extends FormInput {
 	}
 
 	_getRangeString() {
-		return Array.from(this._range)
-			.map(date => $.Date.format(date, $.Date.FORMAT_SLASHES))
-			.join(' - ')
+		return this._range.length
+			? Array.from(this._range)
+				.map(date => $.Date.format(date, $.Date.FORMAT_SLASHES))
+				.join(' - ')
+			: ''
 	}
 
 	_parseRangeString(rangeString) {
@@ -237,7 +239,7 @@ export default class InputCalendar extends FormInput {
 	}
 
 	get value() {
-		return this._getRangeString()
+		return super.value
 	}
 
 	set date(timestamp) {
@@ -258,6 +260,12 @@ export default class InputCalendar extends FormInput {
 				this._date.getDate()
 			)
 		)
+	}
+
+	reset() {
+		super.reset()
+		this._range = []
+		this._update()
 	}
 
 	onRender() {

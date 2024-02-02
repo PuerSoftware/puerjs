@@ -88,20 +88,20 @@ class InputToggle extends FormInput {
 		delete options[value]
 	}
 
-	reset() {
-		if (this.props.selected) {
-			this.input.element.value = this.props.selected.toString()
-		} else {
-			if (this.props.allowEmpty) {
-				this.input.element.value = '0'
-			} else {
-				this.input.element.value = null
-			}
-		}
-		for (const optionValue in this.options) {
-			this.options[optionValue].toggleCssClass('selected', optionValue === this.value)
-		}
-	}
+	// reset() {
+	// 	// if (this.props.selected) {
+	// 	// 	this.input.element.value = this.props.selected.toString()
+	// 	// } else {
+	// 	// 	if (this.props.allowEmpty) {
+	// 	this.input.element.value = ''
+	// 	// 	} else {
+	// 	// 		this.input.element.value = null
+	// 	// 	}
+	// 	// }
+	// 	// for (const optionValue in this.options) {
+	// 	// 	this.options[optionValue].toggleCssClass('selected', optionValue === this.value)
+	// 	// }
+	// }
 
 	render() {
 		this.buttons = $.div('unselectable buttons')
