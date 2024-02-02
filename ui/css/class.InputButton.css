@@ -1,8 +1,8 @@
 .input-button {
 	background-color : var(--puer-bg-color-btn);
-	color            : #FFFFFF;
-	font-family      : Inter, sans-serif;
-	font-size        : 14px;
+	color            : var(--puer-color-btn );
+	font-family      : var(--puer-font-label);
+	font-size        : var(--font-size-hi);
 	font-weight      : 500;
 	line-height      : normal;
 	letter-spacing   : 0em;
@@ -11,9 +11,37 @@
 	border-radius    : 2px;
 	padding          : 8px 20px;
 	height           : 33px;
+	cursor           : pointer;
+	transition       : all 0.15s ease-in-out;
 }
 	.input-button:focus {
 		outline: none;
+	}
+
+	.input-button:hover,
+	.input-button.primary:hover {
+		background-color : var(--puer-bg-color-btn-hover);
+		border-color     : var(--puer-bg-color-btn-hover);
+	}
+
+	.input-button.neutral {
+		background-color : var(--puer-bg-color-btn-neutral);	
+	}
+		.input-button.neutral:hover {
+			background-color : var(--puer-bg-color-btn-neutral-hover);
+		}
+
+	.input-button.disabled,
+	.input-button.disabled:hover,
+	.input-button.disabled:active {
+		background-color    : var(--puer-bg-color-btn-disabled);
+		border-color        : var(--puer-bg-color-btn-disabled);
+		color               : var(--puer-color-btn-disabled);
+		cursor              : default;
+		user-select         : none;
+		-moz-user-select    : none;
+		-webkit-user-select : none;
+		-ms-user-select     : none;
 	}
 
 	.input-button.btn-share {
@@ -21,10 +49,12 @@
 		padding    : 6px 8px 6px 30px;
 		background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn);
 	}
-	.input-button.disabled,
-	.input-button.disabled:hover,
-	.input-button.disabled:active{
-		background-color : #303D4D; /* TODO: change to vars */
-		border-color     : #303D4D; /* TODO: change to vars */
-		color            : #535E6B; /* TODO: change to vars */
-	}
+		.input-button.btn-share:hover {
+			background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn-hover);
+		}
+
+		.input-button.btn-share.disabled,
+		.input-button.btn-share.disabled:hover,
+		.input-button.btn-share.disabled:active {
+			background : var(--puer-svg-share-icon-disabled) 8px center no-repeat, var(--puer-bg-color-btn-disabled);
+		}

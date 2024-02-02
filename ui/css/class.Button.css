@@ -1,11 +1,11 @@
 .button,
 .button.primary {
-	background-color : #07569E;
+	background-color : var(--puer-bg-color-btn);
 	display          : inline-block;
-	border           : 2px solid #07569E;
-	color            : #FFFFFF;
-	font-family      : Inter, sans-serif;
-	font-size        : 14px;
+	border           : 2px solid var(--puer-bg-color-btn);
+	color            : var(--puer-color-btn );
+	font-family      : var(--font-label);
+	font-size        : var(--font-size-hi);
 	font-weight      : 500;
 	line-height      : 20px;
 	letter-spacing   : 0em;
@@ -19,71 +19,76 @@
 }
 	.button:hover,
 	.button.primary:hover {
-		background-color : #0E76D5;
-		border-color     : #0E76D5;
+		background-color : var(--puer-bg-color-btn-hover);
+		border-color     : var(--puer-bg-color-btn-hover);
 	}
 	.button:active,
 	.button.primary:active {
-		color            : #4C89C2;
-		background-color : #06325B;
-		border-color     : #06325B;
+		color            : var(--puer-color-btn-active);
+		background-color : var(--puer-bg-color-btn-active);
+		border-color     : var(--puer-bg-color-btn-active);
 	}
 
 .button.secondary {
-	background-color : #000;
-	border           : 2px solid #07569E;
-	color            : #FFFFFF;
+	background-color : var(--puer-bg-color-btn-secondary);
+	border           : 2px solid var(--puer-bg-color-btn);
+	color            : var(--puer-color-btn );
 }
 	.button.secondary:hover {
-		background-color : #081A2C;
-		color            : #5798D4;
+		background-color : var(--puer-bg-color-btn-secondary-hover);
+		color            : var(--puer-color-btn-secondary-hover);
 	}
 	.button.secondary:active {
-		background-color : #072F54;
-		color            : #62A9EA;
+		background-color : var(--puer-bg-color-btn-secondary-active);
+		color            : var(--puer-color-btn-secondary-active);
 	}
 
 .button.neutral,
 .button.neutral.primary {
-	background-color : #11171E;
-	border-color     : #11171E;
-	color            : #FFFFFF;
-	font-size        : 12px;
+	background-color : var(--puer-bg-color-btn-neutral);
+	border-color     : var(--puer-bg-color-btn-neutral);
+	color            : var(--puer-color-btn );
+	font-size        : var(--font-size-lo);
 	line-height      : 17px;
 }
 	.button.neutral:hover,
 	.button.neutral.primary:hover {
-		background-color : #0C1015;
-		border-color     : #0C1015;
-		color            : #FFFFFF;
-		font-size        : 12px;
+		background-color : var(--puer-bg-color-btn-neutral-hover);
+		border-color     : var(--puer-bg-color-btn-neutral-hover);
+		color            : var(--puer-color-btn );
+		font-size        : var(--font-size-lo);
 	}
 	.button.neutral:active,
 	.button.neutral.primary:active {
-		background-color : #07569F;
-		border-color     : #07569F;
+		background-color : var(--puer-bg-color-btn);
+		border-color     : var(--puer-bg-color-btn);
 	}
 
 .button.neutral.secondary {
-	background-color : #202D3B;
-	border-color     : #0C1015;
-	color            : #B4B4B4;
-	font-size        : 12px;
+	background-color : var(--puer-bg-color-btn-secondary-neutral);
+	border-color     : var(--puer-bg-color-btn-neutral-hover);
+	color            : var(--puer-color-btn-secondary-neutral);
+	font-size        : var(--font-size-lo);
 }
 	.button.neutral.secondary:hover {
-		background-color : #19232E;
-		color            : #EFEFEF;
+		background-color : var(--puer-bg-color-btn-secondary-neutral-hover);
+		color            : var(--puer-color-btn-secondary-neutral-hover);
 	}
 	.button.neutral.secondary:active {
-		background-color : #1D3C5B;
-		border-color     : #07569F;
-		color            : #EFEFEF;
+		background-color : var(--puer-bg-color-btn-secondary-neutral-active);
+		border-color     : var(--puer-bg-color-btn);
+		color            : var(--puer-color-btn-secondary-neutral-hover);
 	}
 
 .button.disabled,
 .button.disabled:hover,
-.button.disabled:active{
-	background-color : #303D4D;
-	border-color     : #303D4D;
-	color            : #535E6B;
+.button.disabled:active {
+	background-color    : var(--puer-bg-color-btn-disabled);
+	border-color        : var(--puer-bg-color-btn-disabled);
+	color               : var(--puer-color-btn-disabled);
+	pointer-events      : none;
+	user-select         : none;
+    -moz-user-select    : none;
+    -webkit-user-select : none;
+    -ms-user-select     : none;
 }

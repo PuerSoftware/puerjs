@@ -4,9 +4,6 @@
 	width               : 252px;
 	height              : 24px;
 	position            : relative;
-	-webkit-user-select : none; 
-	-ms-user-select     : none; 
-	user-select         : none; 
 }
 	.input-calendar > input {
 		color : var(--puer-text-color-hi);

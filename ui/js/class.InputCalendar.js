@@ -280,7 +280,7 @@ export default class InputCalendar extends FormInput {
 	}
 
 	render() {
-		this._calendar = $.Rows('calendar hidden')
+		this._calendar = $.Rows('calendar unselectable hidden')
 		this.children.push(this._calendar)
 		return super.render()
 	}

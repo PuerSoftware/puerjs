@@ -21,7 +21,12 @@
 			margin           : 0;
 			border-radius    : 1px;
 			background-color : var(--puer-bg-color-toggle);
+			cursor           : pointer;
+			transition       : all 0.15s ease-in-out;
 		}
+			.input-toggle > .buttons > .option:hover {
+				background-color : var(--puer-bg-color-toggle-hover);	
+			}
 
 		.input-toggle > .buttons > .option.selected {
 			background-color : var(--puer-bg-color-toggle-selected);
