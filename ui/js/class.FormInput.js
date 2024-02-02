@@ -64,8 +64,8 @@ class FormInput extends $.Component {
 		if (this.field) {
 			this.field.error = ''
 		}
-		this.value        = ''
-		this.initialValue = ''
+		this.input.element.value = ''
+		this.initialValue        = ''
 	}
 
 	onInit() {
