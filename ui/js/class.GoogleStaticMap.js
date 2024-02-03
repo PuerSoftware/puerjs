@@ -1,5 +1,7 @@
 import $ from '../../index.js'
 
+import {DataOwnerMixin} from '../../library/index.js'
+
 
 export default class GoogleStaticMap extends $.Component {
 	static API_URL = 'https://maps.googleapis.com/maps/api/staticmap'
@@ -14,14 +16,27 @@ export default class GoogleStaticMap extends $.Component {
 		this.props.default('mapType', 'hybrid')
 
 		this.state.imgUrl = null
+		this._markers     = {} // {lat_lng: markerComponent}
 	}
 
-	_latLngToPx(centerLat, centerLng, zoom, lat, lng, w, h) {
-		const latRad = lat => Math.sin(lat * Math.PI / 180)
+	_getMarkerKey(lat, lng) { // (lat, lng) || (key)
+		return lat && lng
+			? `${lat}_${lng}`
+			: lat
+	}
+
+	_latLngToPx(lat, lng) {
+		const zoom                   = this.props.zoom
+		const [centerLat, centerLng] = this.props.center
+		const w                      = this.props.width
+		const h                      = this.props.height
+
 		const zoomFactor = Math.pow(2, zoom)
 
 		const x = (lng + 180) * (256 * zoomFactor) / 360
-		const y = (1 - Math.log(Math.tan(latRad(lat)) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * (256 * zoomFactor)
+		const latRad = lat => lat * Math.PI / 180
+		const mercN = lat => Math.log(Math.tan((Math.PI / 4) + (latRad(lat) / 2)))
+		const y = (256 * zoomFactor) * (1 - (mercN(lat) / Math.PI)) / 2
 
 		const centerX = (centerLng + 180) * (256 * zoomFactor) / 360
 		const centerY = (1 - Math.log(Math.tan(latRad(centerLat)) + 1 / Math.cos(centerLat * Math.PI / 180)) / Math.PI) / 2 * (256 * zoomFactor)
@@ -53,12 +68,7 @@ export default class GoogleStaticMap extends $.Component {
 	// 	}, this.props.icons)
 	// }
 
-	// onDataChange() {
-	// 	this.removeMarkers()
-	// 	for (const item of this.dataSet.items) {
-	// 		this.addMarker(item.lat, item.lng, item.label, item.icon)
-	// 	}
-	// }
+	onDataChange() { this._updateImage() }
 
 
 	_updateImage() {
@@ -71,7 +81,12 @@ export default class GoogleStaticMap extends $.Component {
 			key       : this.props.apiKey,
 			// signature : this.props.signature
 		}
+		this.removeMarkers()
 		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.query(o)})`
+
+		for (const item of this.dataSet.items) {
+			this.addMarker(item.lat, item.lng, item.icon, item.label)
+		}
 	}
 
 	/***************************************************/
@@ -79,15 +94,35 @@ export default class GoogleStaticMap extends $.Component {
 	onPropZoomChange    (zoom)    { this._updateImage() }
 	onPropCenterChange  (center)  { this._updateImage() }
 	onPropMapTypeChange (mapType) { this._updateImage() }
-	onInit              ()        { this._updateImage() }
+	onInit              ()        { this.mixin(DataOwnerMixin) }
 
 	/***************************************************/
 
-	addMarker(lat, lng, label='', icon=null) {
+	addMarker(lat, lng, icon, label='') {
+		icon = document.getElementById(icon)
+		if (icon) {
+			icon = btoa(icon.outerHTML) // encode to base64
+			const coords = this._latLngToPx(lat, lng)
+
+			if (coords.inBounds) {
+				const marker = $.div('marker', {
+					cssLeft            : coords.x - 18, // TODO: get dynamically marker radius
+					cssTop             : coords.y - 18, // TODO: get dynamically marker radius
+					cssBackgroundImage : `url('data:image/svg+xml;base64,${icon}')`
+				})
+				this.append(marker)
+				this._markers[this._getMarkerKey(lat, lng)] = marker
+			}
+		}
 	}
 
 	removeMarker(... args) {  // (lat, lng) || (key)
-		
+		const key    = this._getMarkerKey(... args)
+		const marker = this._markers[key]
+		if (marker) {
+			marker.remove()
+			delete this._markers[key]
+		}
 	}
 
 	removeMarkers() {
