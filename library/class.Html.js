@@ -68,7 +68,6 @@ export default class Html {
 	}
 
 	static cssVar(varName) {
-		console.log(varName)
 		const styles = getComputedStyle(document.documentElement)
 		return styles.getPropertyValue(varName).trim()
 	}

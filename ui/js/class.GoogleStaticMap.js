@@ -49,25 +49,6 @@ export default class GoogleStaticMap extends $.Component {
 		return { x: pixelX, y: pixelY, inBounds }
 	}
 
-
-	// 	GoogleMap.Icons = Object.assign({
-	// 		GREEN_DOT: {
-	// 			path         : google.maps.SymbolPath.CIRCLE,
-	// 			fillColor    : '#78B065',
-	// 			fillOpacity  : 1.0,
-	// 			strokeWeight : 0,
-	// 			scale        : 5  // radius
-	// 		},
-	// 		ORANGE_DOT: {
-	// 			path         : google.maps.SymbolPath.CIRCLE,
-	// 			fillColor    : '#F2B063',
-	// 			fillOpacity  : 1.0,
-	// 			strokeWeight : 0,
-	// 			scale        : 5  // radius
-	// 		}
-	// 	}, this.props.icons)
-	// }
-
 	onDataChange() { this._updateImage() }
 
 
@@ -85,7 +66,7 @@ export default class GoogleStaticMap extends $.Component {
 		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.query(o)})`
 
 		for (const item of this.dataSet.items) {
-			this.addMarker(item.lat, item.lng, item.icon, item.label)
+			this.addMarker(item.lat, item.lng, item.icons, item.label)
 		}
 	}
 
@@ -98,21 +79,17 @@ export default class GoogleStaticMap extends $.Component {
 
 	/***************************************************/
 
-	addMarker(lat, lng, icon, label='') {
-		icon = document.getElementById(icon)
-		if (icon) {
-			icon = btoa(icon.outerHTML) // encode to base64
+	addMarker(lat, lng, iconData, label='') {
 			const coords = this._latLngToPx(lat, lng)
 
-			if (coords.inBounds) {
-				const marker = $.div('marker', {
-					cssLeft            : coords.x - 18, // TODO: get dynamically marker radius
-					cssTop             : coords.y - 18, // TODO: get dynamically marker radius
-					cssBackgroundImage : `url('data:image/svg+xml;base64,${icon}')`
-				})
-				this.append(marker)
-				this._markers[this._getMarkerKey(lat, lng)] = marker
-			}
+		if (coords.inBounds) {
+			const marker = $.div('marker', {
+				cssLeft            : coords.x - 15, // TODO: get dynamically marker radius
+				cssTop             : coords.y - 15  , // TODO: get dynamically marker radius
+				cssBackgroundImage : iconData.over
+			})
+			this.append(marker)
+			this._markers[this._getMarkerKey(lat, lng)] = marker
 		}
 	}
 
