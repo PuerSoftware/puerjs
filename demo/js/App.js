@@ -70,7 +70,6 @@ $.application(
 			marker.icons.click = $.Html.cssVar('--svg-' + marker.icons.click)
 		}
 
-		console.log(markers)
 		$.DataSource.Markers.fill(markers)
 	}
 )
