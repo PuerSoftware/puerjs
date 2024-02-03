@@ -51,14 +51,26 @@ $.application(
 			{ value: '2', port: 'Port2', code: 'UA', country: 'Ukraine'},
 			{ value: '3', port: 'Port3', code: 'UA', country: 'Ukraine'},
 			{ value: '4', port: 'Port4', code: 'UA', country: 'Ukraine'},
-		]),
-		$.DataSource.define('Markers').fill([
-			{ lat: 50.4504,  lng: 30.5245, label: 'Oleksii',   icon: 'vessel-icon-spot-project-hover'},
-			{ lat: 50.9077,  lng: 34.7981, label: 'Alexander', icon: 'vessel-icon-eta'},
-			{ lat: 49.4413,  lng: 32.0643, label: 'Ksenia',    icon: 'vessel-icon-fixed-dry-hover'},
-			{ lat: 48.4816,  lng: 24.5819, label: 'Alex',      icon: 'vessel-icon-eta'},
-			{ lat: 53.5488,  lng: 9.9872,  label: 'Ivan',      icon: 'vessel-icon-eta'},
-			{ lat: 50.5791,  lng: 30.2151, label: 'Denys',     icon: 'vessel-icon-eta-wet-hover'},
 		])
+		$.DataSource.define('Markers')
+	},
+	() => {
+		const markers = [
+			{ lat: 50.4504,  lng: 30.5245, label: 'Oleksii',   icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }},
+			{ lat: 50.9077,  lng: 34.7981, label: 'Alexander', icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }},
+			{ lat: 49.4413,  lng: 32.0643, label: 'Ksenia',    icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }},
+			{ lat: 48.4816,  lng: 24.5819, label: 'Alex',      icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }},
+			{ lat: 53.5488,  lng: 9.9872,  label: 'Ivan',      icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }},
+			{ lat: 50.5791,  lng: 30.2151, label: 'Denys',     icons: { out: 'vessel-icon-spot', over: 'vessel-icon-spot-project', click: 'vessel-icon-spot-project-selected' }}
+		]
+
+		for (const marker of markers) {
+			marker.icons.out   = $.Html.cssVar('--svg-' + marker.icons.out)
+			marker.icons.over  = $.Html.cssVar('--svg-' + marker.icons.over)
+			marker.icons.click = $.Html.cssVar('--svg-' + marker.icons.click)
+		}
+
+		console.log(markers)
+		$.DataSource.Markers.fill(markers)
 	}
 )

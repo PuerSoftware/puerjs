@@ -4,6 +4,7 @@ import $ from './class.Puer.js'
 class PuerApp extends $.Component {
     constructor(props, children) {
     	super(props, children)
+    	this.props.default('onReady', () => {})
     	this.__render()
     	this.css('display', 'none')
 	}
@@ -22,6 +23,7 @@ class PuerApp extends $.Component {
 	__ready() {
 		super.__ready()
 		$.Router.start()
+		this.props.onReady()
 		this.css('display', 'block') // Display after css has loaded
 	}
 

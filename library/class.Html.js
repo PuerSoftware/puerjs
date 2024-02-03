@@ -66,6 +66,22 @@ export default class Html {
 			Html.load(url, callback)
 		}
 	}
+
+	static cssVar(varName) {
+		console.log(varName)
+		const styles = getComputedStyle(document.documentElement)
+		return styles.getPropertyValue(varName).trim()
+	}
+
+	static getSvgSize(base64) {
+		base64 = base64.replace('data:image/svg+xml;base64,', '')
+		const svgString = atob(base64)
+		const parser    = new DOMParser()
+		const svgDoc    = parser.parseFromString(svgString, 'image/svg+xml')
+		const svg       = svgDoc.documentElement
+
+		return [ svg.getAttribute('width'), svg.getAttribute('height') ]
+	}
 }
 
 

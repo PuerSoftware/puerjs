@@ -172,11 +172,11 @@ class Puer {
 		return ['string', 'number', 'boolean'].includes(this.type(o))
 	}
 
-	application(cls, importUrl, init) {
+	application(cls, importUrl, onInit, onReady) {
 		this._defineComponent(cls, importUrl)
-		this.app        = this[cls.name]()
+		this.app        = this[cls.name]({onReady: onReady})
 		this.Router     = new this.PuerRouter(this.app)
-		init()
+		onInit()
 		this.app.__init()
 		return $
 	}
