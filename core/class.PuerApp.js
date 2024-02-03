@@ -23,7 +23,7 @@ class PuerApp extends $.Component {
 	__ready() {
 		super.__ready()
 		$.Router.start()
-		this.props.onReady()
+		this.props.onReady && this.props.onReady()
 		this.css('display', 'block') // Display after css has loaded
 	}
 
