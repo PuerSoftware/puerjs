@@ -217,7 +217,6 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_applyProp(prop) {
-		if (prop === 'cx') debugger
 		if (this.element) {
 			let value = $.dereference(this.props[prop])
 			if (prop.startsWith('css')) {

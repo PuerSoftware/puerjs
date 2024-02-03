@@ -7,7 +7,7 @@
 // 	]
 // }
 
-class Svg {
+export default class Svg {
 	constructor(data) { this._data = data }
 
 	/******************************************************************/
