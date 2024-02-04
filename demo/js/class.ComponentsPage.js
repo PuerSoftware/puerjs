@@ -28,15 +28,16 @@ export default class ComponentsPage extends $.Component {
 	render() {
 		return $.Columns([
 			$.Rows('sidebar', [
-				$.Link({label: 'Button',              hash: 'cmp:button'       }),
-				$.Link({label: 'Calendar',            hash: 'cmp:calendar'     }),
-				$.Link({label: 'Checkbox',            hash: 'cmp:checkbox'     }),
-				$.Link({label: 'Flag',                hash: 'cmp:flag'         }),
-				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect' }),
-				$.Link({label: 'Tag',                 hash: 'cmp:tag'          }),
-				$.Link({label: 'Code',                hash: 'cmp:code'         }),
-				$.Link({label: 'Google Map',          hash: 'cmp:map'          }),
-				$.Link({label: 'Google Static Map',   hash: 'cmp:staticmap'    }),
+				$.Link({label: 'Button',              hash: 'cmp:button'        }),
+				$.Link({label: 'Calendar',            hash: 'cmp:calendar'      }),
+				$.Link({label: 'Checkbox',            hash: 'cmp:checkbox'      }),
+				$.Link({label: 'Flag',                hash: 'cmp:flag'          }),
+				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect'  }),
+				$.Link({label: 'Tag',                 hash: 'cmp:tag'           }),
+				$.Link({label: 'Code',                hash: 'cmp:code'          }),
+				$.Link({label: 'Google Map',          hash: 'cmp:map'           }),
+				$.Link({label: 'Google Static Map',   hash: 'cmp:staticmap'     }),
+				$.Link({label: 'Text Highlight',      hash: 'cmp:texthighlight' }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -101,6 +102,11 @@ export default class ComponentsPage extends $.Component {
 					this.map = $.GoogleStaticMap({
 						apiKey     : $.Constants.GOOGLE_MAPS_API_KEY,
 						dataSource : 'Markers'
+					})
+				]),
+				$.Box({route: 'cmp:texthighlight'}, [
+					$.TextHighlight({
+						text : 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.',
 					})
 				])
 			])

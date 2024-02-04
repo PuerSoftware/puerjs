@@ -1,0 +1,20 @@
+.text-highlight {
+	--color-yellow : #DCD598;
+	--color-purple : #817DE2;
+	--color-blue   : #6EA6E0;
+	--color-orange : #FFC888;
+	--color-green  : #81E0A4;
+	--color-pink   : #D07DC8;
+
+	white-space    : pre;
+}
+
+	.text-highlight > .high {
+		font-weight : bold;
+	}
+	.text-highlight > .yellow { color : var(--color-yellow); }
+	.text-highlight > .purple { color : var(--color-purple); }
+	.text-highlight > .blue   { color : var(--color-blue);   }
+	.text-highlight > .orange { color : var(--color-orange); }
+	.text-highlight > .green  { color : var(--color-green);  }
+	.text-highlight > .pink   { color : var(--color-pink);   }
