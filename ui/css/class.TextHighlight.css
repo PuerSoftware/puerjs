@@ -5,6 +5,7 @@
 	--color-orange : #FFC888;
 	--color-green  : #81E0A4;
 	--color-pink   : #D07DC8;
+	--color-red    : #CC4444;
 
 	white-space    : pre;
 }
@@ -18,3 +19,4 @@
 	.text-highlight > .orange { color : var(--color-orange); }
 	.text-highlight > .green  { color : var(--color-green);  }
 	.text-highlight > .pink   { color : var(--color-pink);   }
+	.text-highlight > .red    { color : var(--color-red);    }

@@ -6,3 +6,10 @@
 	.components-page .body > * {
 		display: block;
 	}
+
+	.components-page .body .text-highlight textarea {
+		padding : 20px;
+		width   : 400px;
+		height  : 100px;
+		margin  : 0 0 20px 0;
+	}

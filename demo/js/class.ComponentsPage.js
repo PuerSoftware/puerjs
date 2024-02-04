@@ -7,14 +7,22 @@ import PortListItem from './class.PortListItem.js'
 export default class ComponentsPage extends $.Component {
 	constructor(... args) {
 		super(... args)
+		
+		this._highlightString = 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.'
+
 		this.state.item = {}
-		this.state.code = null
+		this.state.code     = null
+		this.state.highText = this._highlightString
 	}
 
 	_renderTag(item) {
 		return $.Tag({data: item}, [
 			$.Flag({label: item.port, code: item.code})
 		])
+	}
+
+	_updateTextHighlight(e) {
+		this.state.highText = e.target.value
 	}
 
 
@@ -104,9 +112,10 @@ export default class ComponentsPage extends $.Component {
 						dataSource : 'Markers'
 					})
 				]),
-				$.Box({route: 'cmp:texthighlight'}, [
+				$.Box('text-highlight', {route: 'cmp:texthighlight'}, [
+					$.textarea({text: this._highlightString, onkeyup: this._updateTextHighlight }),
 					$.TextHighlight({
-						text : 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.',
+						text : this.state.highText,
 					})
 				])
 			])
