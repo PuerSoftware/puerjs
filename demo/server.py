@@ -12,7 +12,8 @@ HOST                = '127.0.0.1'
 PORT                = 8001
 BASE_PUER_DIR       = os.path.dirname(os.getcwd())
 BASE_DIR            = os.path.join(BASE_PUER_DIR, 'demo')
-GOOGLE_MAPS_API_KEY = config('GOOGLE_MAPS_API_KEY')
+GOOGLE_DYNAMIC_MAPS_API_KEY = config('GOOGLE_DYNAMIC_MAPS_API_KEY')
+GOOGLE_STATIC_MAPS_API_KEY  = config('GOOGLE_STATIC_MAPS_API_KEY')
 
 print('BASE_PUER_DIR', BASE_PUER_DIR)
 print('BASE_DIR',      BASE_DIR)
@@ -37,7 +38,11 @@ def serve_file(filename):
 
 @app.route('/')
 def index():
-	return render_template('index.html', GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
+	return render_template(
+		'index.html',
+		GOOGLE_DYNAMIC_MAPS_API_KEY=GOOGLE_DYNAMIC_MAPS_API_KEY,
+	    GOOGLE_STATIC_MAPS_API_KEY=GOOGLE_STATIC_MAPS_API_KEY,
+	)
 
 
 if __name__ == '__main__':

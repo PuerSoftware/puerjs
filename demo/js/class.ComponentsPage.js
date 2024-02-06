@@ -102,13 +102,13 @@ export default class ComponentsPage extends $.Component {
 				]),
 				$.Box({route: 'cmp:map'}, [
 					this.map = $.GoogleMap({
-						apiKey     : $.Constants.GOOGLE_MAPS_API_KEY,
+						apiKey     : $.Constants.GOOGLE_DYNAMIC_MAPS_API_KEY,
 						dataSource : 'Markers'
 					})
 				]),
 				$.Box({route: 'cmp:staticmap'}, [
 					this.map = $.GoogleStaticMap({
-						apiKey     : $.Constants.GOOGLE_MAPS_API_KEY,
+						apiKey     : $.Constants.GOOGLE_STATIC_MAPS_API_KEY,
 						dataSource : 'Markers'
 					})
 				]),
