@@ -68,7 +68,7 @@ export default class GoogleStaticMap extends $.Component {
 		const markers = this.props.dataSource
 			? this.dataSet.items
 			: this.props.markers
-		debugger
+
 		for (const marker of markers) {
 			this.addMarker(marker.lat, marker.lng, marker.icons, marker.label)
 		}
@@ -80,13 +80,13 @@ export default class GoogleStaticMap extends $.Component {
 	onPropCenterChange  (center)  { this._updateImage() }
 	onPropMapTypeChange (mapType) { this._updateImage() }
 
-	onPropMarkersChange () { !this.props.dataSource && this._updateImage()        }
+	onPropMarkersChange () { !this.props.dataSource && this._updateImage() }
 	onInit              () { this.props.dataSource  && this.mixin(DataOwnerMixin) }
 
 	/***************************************************/
 
 	addMarker(lat, lng, iconData, label='') {
-			const coords = this._latLngToPx(lat, lng)
+		const coords = this._latLngToPx(lat, lng)
 
 		if (coords.inBounds) {
 			const marker = $.div('marker', {
@@ -94,6 +94,7 @@ export default class GoogleStaticMap extends $.Component {
 				cssTop             : coords.y - 15  , // TODO: get dynamically marker radius
 				cssBackgroundImage : iconData.over
 			})
+
 			this.append(marker)
 			this._markers[this._getMarkerKey(lat, lng)] = marker
 		}
@@ -109,7 +110,7 @@ export default class GoogleStaticMap extends $.Component {
 	}
 
 	removeMarkers() {
-		for (const key in this.markers) {
+		for (const key in this._markers) {
 			this.removeMarker(key)
 		}
 	}
