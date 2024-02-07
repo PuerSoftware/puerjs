@@ -19,7 +19,7 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		}
 		this.props.dataSource    = name
 		this._dataSource         = $.DataSource[this.props.dataSource]
-		this._dataSet            = $.DataSet.define(null, null, this.props.entryFilter)
+		this._dataSet            = $.DataSet.define(null, null, this.props.itemFilter, this.props.itemAdapter)
 
 		const nop = () => {}
 

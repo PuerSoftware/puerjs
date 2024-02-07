@@ -14,6 +14,7 @@ export default class GoogleStaticMap extends $.Component {
 		this.props.default('height',  400)
 		this.props.default('zoom',    7)
 		this.props.default('mapType', 'hybrid')
+		this.props.default('markers',  [])
 
 		this.state.imgUrl = null
 		this._markers     = {} // {lat_lng: markerComponent}
@@ -65,8 +66,12 @@ export default class GoogleStaticMap extends $.Component {
 		this.removeMarkers()
 		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.query(o)})`
 
-		for (const item of this.dataSet.items) {
-			this.addMarker(item.lat, item.lng, item.icons, item.label)
+		const markers = this.props.dataSource
+			? this.dataSet.items
+			: this.props.markers
+
+		for (const marker of markers) {
+			this.addMarker(marker.lat, marker.lng, marker.icons, marker.label)
 		}
 	}
 
@@ -75,7 +80,16 @@ export default class GoogleStaticMap extends $.Component {
 	onPropZoomChange    (zoom)    { this._updateImage() }
 	onPropCenterChange  (center)  { this._updateImage() }
 	onPropMapTypeChange (mapType) { this._updateImage() }
-	onInit              ()        { this.mixin(DataOwnerMixin) }
+
+	onPropMarkersChange() {
+		if (!this.props.dataSource) {
+			this.props.markers.length
+				? this._updateImage()
+				: this.removeMarkers()
+		}
+	}
+
+	onInit() { this.props.dataSource && this.mixin(DataOwnerMixin) }
 
 	/***************************************************/
 

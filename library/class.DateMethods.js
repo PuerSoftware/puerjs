@@ -40,6 +40,22 @@ class DateMethods {
 		return dates.join(' - ')
 	}
 
+	static formatTime(date) {
+		date = DateMethods._dateToMilliSeconds(date)
+		date = new Date(date)
+		let hours   = date.getHours().toString()
+		let minutes = date.getMinutes().toString()
+		// Zero-padding for hours
+		if (hours.length < 2) {
+			hours = '0' + hours
+		}
+		// Zero-padding for minutes
+		if (minutes.length < 2) {
+			minutes = '0' + minutes
+		}
+		return `${hours}:${minutes}`
+	}
+
     static format(date, format=DateMethods.FORMAT_DOTS) {
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)
@@ -52,15 +68,6 @@ class DateMethods {
 		    case DateMethods.FORMAT_SLASHES:
 				return `${day}/${month}/${year}`
 	    }
-	}
-
-	static formatTime(date) { // TODO: rename this method
-		date = DateMethods._dateToMilliSeconds(date)
-		date = new Date(date)
-		const hours   = date.getHours().toString()
-		const minutes = date.getMinutes().toString()
-
-		return `${hours}:${minutes}`
 	}
 
 	static intlMonthYear(date, code='en-US') { // TODO: rename this method

@@ -6,12 +6,12 @@ export default class DataSet extends PuerObject {
 	
 	/**************************************************************/
 
-	static define(name, searchConfig=null, filter=null) { // TODO: Move searchConfig to setter?
+	static define(name, searchConfig=null, filter=null, adapter=null) { // TODO: Move searchConfig to setter?
 		name = name || $.String.random(10)
 		if (DataSet.hasOwnProperty(name)) {
 			throw `DataSet already has property "${name}"`
 		}
-		const dataSet = new DataSet(name, searchConfig, filter)
+		const dataSet = new DataSet(name, searchConfig, filter, adapter)
 		Object.defineProperty(DataSet, name, {
 			get: function() {
 				return dataSet
@@ -22,7 +22,7 @@ export default class DataSet extends PuerObject {
 
 	/**************************************************************/
 
-	constructor(name, searchConfig=null, filter=null) {
+	constructor(name, searchConfig=null, filter=null, adapter=null) {
 		super()
 		
 		this.name           = name
@@ -30,7 +30,8 @@ export default class DataSet extends PuerObject {
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
 		this.index          = new Map()
-		this._initialFilter = filter    // To get a subset of datasource data
+		this._itemFilter    =  filter    // To get a subset of datasource data
+		this._itemAdapter   = adapter
 		this._excluded      = new Set() // To exclude items dynamically
 	}
 
@@ -63,10 +64,10 @@ export default class DataSet extends PuerObject {
 		}
 	}
 
-	_applyInitialFilter(ids) {
-		if (this._initialFilter) {
+	_applyitemFilter(ids) {
+		if (this._itemFilter) {
 			const items = $.DataStore.get(ids)
-			ids = items.filter(this._initialFilter).map((_, id) => id)
+			ids = items.filter(this._itemFilter).map((_, id) => id)
 		}
 		return ids
 	}
@@ -80,7 +81,7 @@ export default class DataSet extends PuerObject {
 
 	_onItemAdd(e) {
 		const item = e.detail.item
-		const ids  = this._applyInitialFilter([item.dataId])
+		const ids  = this._applyitemFilter([item.dataId])
 
 		if (ids.length) {
 			this._indexItem(item, item.dataId)
@@ -100,7 +101,10 @@ export default class DataSet extends PuerObject {
 	/**************************************************************/
 
 	get items() {
-		return $.DataStore.get(this._itemIds)
+		const items = $.DataStore.get(this._itemIds)
+		return this._itemAdapter
+			? this._itemAdapter(items)
+			: items
 	}
 
 	get itemIds() {
@@ -109,7 +113,7 @@ export default class DataSet extends PuerObject {
 
 	set itemIds(ids) {
 		// TODO: _reindexItems?
-		this._itemIds      = this._applyInitialFilter(ids)
+		this._itemIds      = this._applyitemFilter(ids)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
