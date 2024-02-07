@@ -52,15 +52,14 @@ export default class GoogleStaticMap extends $.Component {
 
 	onDataChange() { this._updateImage() }
 
-
 	_updateImage() {
 		const center = this.props.center
 		const o = {
-			center    : `${center[0]},${center[1]}`,
-			zoom      : this.props.zoom,
-			size      : `${this.props.width}x${this.props.height}`,
-			maptype   : this.props.mapType,
-			key       : this.props.apiKey,
+			center  : `${center[0]},${center[1]}`,
+			zoom    : this.props.zoom,
+			size    : `${this.props.width}x${this.props.height}`,
+			maptype : this.props.mapType,
+			key     : this.props.apiKey,
 			// signature : this.props.signature
 		}
 		this.removeMarkers()
@@ -69,7 +68,7 @@ export default class GoogleStaticMap extends $.Component {
 		const markers = this.props.dataSource
 			? this.dataSet.items
 			: this.props.markers
-
+		debugger
 		for (const marker of markers) {
 			this.addMarker(marker.lat, marker.lng, marker.icons, marker.label)
 		}
@@ -81,15 +80,8 @@ export default class GoogleStaticMap extends $.Component {
 	onPropCenterChange  (center)  { this._updateImage() }
 	onPropMapTypeChange (mapType) { this._updateImage() }
 
-	onPropMarkersChange() {
-		if (!this.props.dataSource) {
-			this.props.markers.length
-				? this._updateImage()
-				: this.removeMarkers()
-		}
-	}
-
-	onInit() { this.props.dataSource && this.mixin(DataOwnerMixin) }
+	onPropMarkersChange () { !this.props.dataSource && this._updateImage()        }
+	onInit              () { this.props.dataSource  && this.mixin(DataOwnerMixin) }
 
 	/***************************************************/
 

@@ -174,8 +174,8 @@ class Puer {
 
 	application(cls, importUrl, onInit, onReady) {
 		this._defineComponent(cls, importUrl)
-		this.app        = this[cls.name]({onReady: onReady})
-		this.Router     = new this.PuerRouter(this.app)
+		this.app    = this[cls.name]({onReady: onReady})
+		this.Router = new this.PuerRouter(this.app)
 		onInit()
 		this.app.__init()
 		return $
@@ -185,10 +185,6 @@ class Puer {
 		return this.Router.define(getRoutes)
 	}
 	
-	// reference(id) {
-	// 	return new this.Reference(id)
-	// }
-
 	dereference(value) {
 		return value && value.isReference 
 			? value.dereference()
