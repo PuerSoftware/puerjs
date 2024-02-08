@@ -4,6 +4,7 @@ import PuerComponentMixin from '../core/class.PuerComponentMixin.js'
 
 export default class DataOwnerMixin extends PuerComponentMixin {
 	static init(component) {
+		component.props.require('name')
 		component.props.require('dataSource')
 
 		component._dataSet    = null
@@ -17,9 +18,12 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 				this.onDataItemRemove(id)
 			}
 		}
+		const dsName = `${name}__${this.className}__${this.name}`
+		// console.log(dsName)
+
 		this.props.dataSource    = name
 		this._dataSource         = $.DataSource[this.props.dataSource]
-		this._dataSet            = $.DataSet.define(null, null, this.props.itemFilter, this.props.itemAdapter)
+		this._dataSet            = $.DataSet.define(dsName, null, this.props.itemFilter, this.props.itemAdapter)
 		this._dataSet.owner      = this
 		
 		const nop = () => {}
@@ -42,4 +46,8 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 	get dataSet() {
 		return this._dataSet
 	}
+	//
+	// onActivate() {
+	// 	console.log('onActivate', this.name)
+	// }
 }

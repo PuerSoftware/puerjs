@@ -90,11 +90,11 @@ export default class GoogleMap extends $.Component {
 	_onMarkerClick(e) {
 		const key    = this._getMarkerKey(e.latLng.lat(), e.latLng.lng())
 		const marker = this._markers[key]
-		if (this._selectedMarker) {
-			this._setIcon(this._selectedMarker, 'out')
-		}
-		this._selectedMarker = marker
-		this._setIcon(marker, 'click')
+		this._selectMarker(marker)
+	}
+
+	_onMarkerDoubleClick(e) {
+		this.selectMarker(e.latLng.lat(), e.latLng.lng())
 	}
 
 	_setIcon(marker, iconState='out') {
@@ -108,18 +108,22 @@ export default class GoogleMap extends $.Component {
 		})
 	}
 
+	_selectMarker(marker) {
+		if (this._selectedMarker) {
+			this._setIcon(this._selectedMarker, 'out')
+		}
+		this._selectedMarker = marker
+		this._setIcon(marker, 'click')
+	}
+
+	/***************************************************/
+
 	onDataChange() {
 		this.removeMarkers()
 		for (const item of this.dataSet.items) {
 			this.addMarker(item.lat, item.lng, item.icons, item.label)
 		}
-		// let _this = this
-		// setTimeout(() => {
-		// 	_this.showMarkers()
-		// } ,1000)
 	}
-
-	/***************************************************/
 
 	onPropZoomChange(zoom) {
 		this.map && this.map.setZoom(zoom)
@@ -162,6 +166,7 @@ export default class GoogleMap extends $.Component {
 		marker.addListener('mouseover', this._onMarkerMouseOver.bind(this))
 		marker.addListener('mouseout',  this._onMarkerMouseOut.bind(this))
 		marker.addListener('click',     this._onMarkerClick.bind(this))
+		marker.addListener('dblclick',  this._onMarkerDoubleClick.bind(this))
 	}
 
 	removeMarker(... args) {  // (lat, lng) || (key)
@@ -184,6 +189,22 @@ export default class GoogleMap extends $.Component {
 		    bounds.extend(marker.getPosition())
 		})
 		this.map.fitBounds(bounds)
+	}
+
+	selectMarker(lat, lng) {
+		const key    = this._getMarkerKey(lat, lng)
+		const marker = this._markers[key]
+
+		this._selectMarker(marker)
+		setTimeout(() => {
+			this.zoom = 10
+			setTimeout(() => {
+				this.center = [lat, lng]
+				setTimeout(() => {
+					this.zoom = 7
+				}, 250)
+			}, 250)
+		}, 250)
 	}
 
 	set center(center)   { this.props.center = center   }

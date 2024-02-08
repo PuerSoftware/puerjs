@@ -26,6 +26,7 @@ export default class DataSet extends PuerObject {
 		super()
 		
 		this.name           = name
+		this.owner          = null // set in DataOwnerMixin
 		this._itemIds       = []
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
@@ -67,7 +68,7 @@ export default class DataSet extends PuerObject {
 	_applyItemFilter(ids) {
 		if (this._itemFilter) {
 			const items = $.DataStore.get(ids)
-			ids = items.filter(this._itemFilter).map((_, id) => id)
+			ids = items.filter(this._itemFilter).map((item, _) => item.dataId)
 		}
 		return ids
 	}
@@ -77,7 +78,9 @@ export default class DataSet extends PuerObject {
 
 	_onData(e) {
 		this.itemIds = e.detail.itemIds
-		this.onData(this.items)
+		const items  = this.items
+		this.onData(items)
+		this.trigger($.Event.DATASET_DATA, {items: items})
 	}
 
 	_onItemAdd(e) {
@@ -85,13 +88,13 @@ export default class DataSet extends PuerObject {
 		const ids  = this._applyItemFilter([item.dataId])
 
 		if (ids.length) {
-			// this._indexItem(item, item.dataId)
+			this._indexItem(item, item.dataId)
 			this.onItemAdd(item)
 		}
 	}
 
 	_onItemChange(e) {
-		// this._reindexItems()
+		this._reindexItems()
 		this.onItemChange(e.detail.item)
 	}
 
@@ -103,7 +106,6 @@ export default class DataSet extends PuerObject {
 
 	get items() {
 		const items = $.DataStore.get(this._itemIds)
-		console.log('items getter', items)
 		return this._itemAdapter
 			? this._itemAdapter(items)
 			: items
@@ -113,10 +115,14 @@ export default class DataSet extends PuerObject {
 		return this._itemIds
 	}
 
+	trigger(name, data) {
+		if (this.owner.isActive) {
+			super.trigger(name, data)
+		}
+	}
+
 	set itemIds(ids) {
 		// TODO: _reindexItems?
-		console.log('itemIds1', this.owner.className, this._itemIds)
-		if (this.owner.name === 'own') debugger
 		this._itemIds      = this._applyItemFilter(ids)
 		// console.log('itemIds2', this._itemIds)
 		this.isInitialized = true
@@ -181,12 +187,13 @@ export default class DataSet extends PuerObject {
 				}
 			})
 		})
-		console.log('search result', result, this._itemIds)
+
 		this.filter(item => {
-			console.log(item)
 			return result.has(item.dataId)// && !this._excluded.has(item.dataId))
 		})
 	}
+
+
 
 	exclude(id) { this._excluded.add(id)    }
 	include(id) { this._excluded.delete(id) }

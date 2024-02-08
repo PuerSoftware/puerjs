@@ -15,6 +15,7 @@ export default class GoogleStaticMap extends $.Component {
 		this.props.default('zoom',    7)
 		this.props.default('mapType', 'hybrid')
 		this.props.default('markers',  [])
+		this.props.default('mapId',    null)
 
 		this.state.imgUrl = null
 		this._markers     = {} // {lat_lng: markerComponent}
@@ -61,6 +62,9 @@ export default class GoogleStaticMap extends $.Component {
 			maptype : this.props.mapType,
 			key     : this.props.apiKey,
 			// signature : this.props.signature
+		}
+		if (this.props.mapId) {
+			o.map_id = this.props.mapId
 		}
 		this.removeMarkers()
 		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.query(o)})`
