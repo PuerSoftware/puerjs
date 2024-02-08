@@ -6,10 +6,12 @@ export default class GoogleMap extends $.Component {
 
 	constructor(... args) {
 		super(... args)
+		this.defaultZoom = 5
+
 		this.props.require('apiKey')
 
 		this.props.default('center',  [50.4504, 30.5245])
-		this.props.default('zoom',    7)
+		this.props.default('zoom',    this.defaultZoom)
 		this.props.default('mapType', 'hybrid')
 		this.props.default('styles',  [])
 		this.props.default('icons',   {})
@@ -197,11 +199,11 @@ export default class GoogleMap extends $.Component {
 
 		this._selectMarker(marker)
 		setTimeout(() => {
-			this.zoom = 10
+			this.zoom = this.defaultZoom + 1
 			setTimeout(() => {
 				this.center = [lat, lng]
 				setTimeout(() => {
-					this.zoom = 7
+					this.zoom = this.defaultZoom
 				}, 250)
 			}, 250)
 		}, 250)
