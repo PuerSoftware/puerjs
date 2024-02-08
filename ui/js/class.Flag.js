@@ -5,8 +5,8 @@ class Flag extends $.Component {
 	constructor(... args) {
 		super(... args)
 		this.props.default('square', false)
-		this.props.default('code',   'US')
-		this.props.default('label', this.props.code)
+		this.props.require('code',   'US')
+		this.props.default('label',  '')
 
 		this.state.imgUrl = null
 
@@ -15,19 +15,24 @@ class Flag extends $.Component {
 	}
 
 	set code(code) {
-		this.props.code   = code.toLowerCase()
-		const x = `url(${this._imgUrl}${this._imgSize}${this.props.code}.svg)`
-		this.state.imgUrl = x
-		this.props.square && this.addCssClass('square')
+		this.props.code = code
 	}
 
 	get code() {
 		return this.props.code
 	}
 
-	onInit() {
-		this.code = this.props.code
+	onPropCodeChange(code) {
+		if (code) {
+			code = code.toLowerCase()
+			this.state.imgUrl = `url(${this._imgUrl}${this._imgSize}${code}.svg)`
+			this.props.square && this.addCssClass('square')
+		}
 	}
+
+	// onInit() {
+	// 	this.code = this.props.code
+	// }
 
 	render() {
 		return $.div({
