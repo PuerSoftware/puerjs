@@ -4,7 +4,9 @@ class Pagination extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('page', 1)
-		this.state.display = 'none'
+		this.props.default('pages', 1)
+		this._prev = null
+		this._next = null
 	}
 
 	setPage(page) {
@@ -15,30 +17,36 @@ class Pagination extends $.Component {
 	prev(event) {
 		if (this.props.page > 1) {
 			this.setPage(this.props.page - 1)
+			this._next.removeCssClass('disabled')
+		}
+		if (this.props.page == 1) {
+			this._prev.addCssClass('disabled')
 		}
 	}
 
 	next(event) {
 		if (this.props.page < this.props.pages) {
 			this.setPage(this.props.page + 1)
+			this._prev.removeCssClass('disabled')
+		}
+		if (this.props.page == this.props.pages) {
+			this._next.addCssClass('disabled')
 		}
 	}
 
-	updateDisplay() {
-		this.state.display = this.props.pages > 1
-			? 'block'
-			: 'none'
+	onPropPagesChange() {
+		this.toggleCssClass('hidden', this.props.pages <= 1)
 	}
 
 	render() {
-		return $.div({cssDisplay: this.state.display}, [
-			$.a ('prev' , {text : '', onClick: this.prev}),
+		return $.div('hidden', [
+			this._prev = $.a ('prev disabled' , {text : '', onClick: this.prev}),
 			$.span('pages', [
 				$.span('current', {'text': this.props.page}),
 				$.span('divider'),
 				$.span('total', {'text': this.props.pages})
 			]),
-			$.a ('next', {text : '', onClick: this.next})
+			this._next = $.a ('next', {text : '', onClick: this.next})
 		])
 	}
 }

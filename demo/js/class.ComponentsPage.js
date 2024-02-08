@@ -39,13 +39,15 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Button',              hash: 'cmp:button'        }),
 				$.Link({label: 'Calendar',            hash: 'cmp:calendar'      }),
 				$.Link({label: 'Checkbox',            hash: 'cmp:checkbox'      }),
-				$.Link({label: 'Flag',                hash: 'cmp:flag'          }),
-				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect'  }),
-				$.Link({label: 'Tag',                 hash: 'cmp:tag'           }),
 				$.Link({label: 'Code',                hash: 'cmp:code'          }),
+				$.Link({label: 'Flag',                hash: 'cmp:flag'          }),
 				$.Link({label: 'Google Map',          hash: 'cmp:map'           }),
 				$.Link({label: 'Google Static Map',   hash: 'cmp:staticmap'     }),
+				$.Link({label: 'Pagination',          hash: 'cmp:pagination'    }),
+				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect'  }),			
+				$.Link({label: 'Tag',                 hash: 'cmp:tag'           }),
 				$.Link({label: 'Text Highlight',      hash: 'cmp:texthighlight' }),
+				$.Link({label: 'Toggle',              hash: 'cmp:toggle'        }),
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -56,14 +58,11 @@ export default class ComponentsPage extends $.Component {
 				$.Box({route: 'cmp:calendar'}, [
 					$.InputCalendar({name: 'test', isRange: true})
 				]),
-				$.Box({route: 'cmp:checkbox'}),
-				$.Box({route: 'cmp:searchselect'}, [
-					$.InputSearchSelect({
-						name         : 'ports',
-						dataSource   : 'Ports',
-						itemRenderer : 'PortListItem',
-						renderTag    : this._renderTag
-					})
+				$.Box({route: 'cmp:checkbox'}, [
+					$.InputCheckbox({name: 'test'})
+				]),
+				this.codeContainer = $.Box({route: 'cmp:code'}, [
+					$.Code({lang: 'javascript', code: this.state.code})
 				]),
 				$.Box({route: 'cmp:flag'}, [
 					$.h3({text: 'Square'}),
@@ -88,18 +87,6 @@ export default class ComponentsPage extends $.Component {
 					$.br(),
 					$.Flag({code: 'TR'})
 				]),
-				$.Box({route: 'cmp:tag'}, [
-					$.Tag({'label': 'Tag with close button'}),
-					$.br(),
-					$.Tag([
-						$.Flag({code: 'UA', label: 'Tag with child component'})
-					]),
-					$.br(),
-					$.Tag({isRemovable: false, label: 'No close button'})
-				]),
-				this.codeContainer = $.Box({route: 'cmp:code'}, [
-					$.Code({lang: 'javascript', code: this.state.code})
-				]),
 				$.Box({route: 'cmp:map'}, [
 					this.map = $.GoogleMap({
 						apiKey     : $.Constants.GOOGLE_DYNAMIC_MAPS_API_KEY,
@@ -112,12 +99,38 @@ export default class ComponentsPage extends $.Component {
 						dataSource : 'Markers'
 					})
 				]),
+				$.Box({route: 'cmp:pagination'}, [
+					$.Pagination({
+						name  : 'test',
+						pages : '10'
+					})
+				]),
+				$.Box({route: 'cmp:searchselect'}, [
+					$.InputSearchSelect({
+						name         : 'ports',
+						dataSource   : 'Ports',
+						itemRenderer : 'PortListItem',
+						renderTag    : this._renderTag
+					})
+				]),
+				$.Box({route: 'cmp:tag'}, [
+					$.Tag({'label': 'Tag with close button'}),
+					$.br(),
+					$.Tag([
+						$.Flag({code: 'UA', label: 'Tag with child component'})
+					]),
+					$.br(),
+					$.Tag({isRemovable: false, label: 'No close button'})
+				]),				
 				$.Box('text-highlight', {route: 'cmp:texthighlight'}, [
 					$.textarea({text: this._highlightString, onkeyup: this._updateTextHighlight }),
 					$.TextHighlight({
 						text : this.state.highText,
 					})
-				])
+				]),
+				$.Box({route: 'cmp:toggle'}, [
+					$.InputToggle({name: 'test'})
+				]),
 			])
 		])
 	}

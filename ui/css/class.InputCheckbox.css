@@ -38,8 +38,8 @@
             width             : 20px;
             height            : 20px;
             border-radius     : 2px;
-            border            : 1px solid #24374D;
-            background-color  : #121A23;
+            border            : 1px solid var(--puer-border-color-checkbox);
+            background-color  : var(--puer-bg-color-checkbox );
         }
 
         .input-checkbox > label::after {
@@ -53,12 +53,12 @@
             width             : 10px;
             height            : 10px;
             border-radius     : 1px;
-            background-color  : #81E0A4;
+            background-color  : var(--puer-bg-color-checkmark);
             opacity           : 0;
         }
 
     .input-checkbox > input:checked+label::before {
-        border : 1px solid #5798D4;
+        border : 1px solid var(--puer-border-color-checkbox-checked);
     }
 
     .input-checkbox > input:checked+label::after {
