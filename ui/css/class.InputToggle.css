@@ -29,6 +29,7 @@
 			}
 
 		.input-toggle > .buttons > .option.selected {
+			color            : var(--puer-color-toggle-selected);
 			background-color : var(--puer-bg-color-toggle-selected);
 			border-radius    : 1px;		
 		}

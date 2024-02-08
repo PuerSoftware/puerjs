@@ -1,17 +1,28 @@
 .pagination {
-    flex : none;
+    display     : flex;
+    align-items : center;
+    flex        : none;
 }
-    .pagination a {
-        text-decoration: none;
+    .pagination a,
+    .pagination a:hover {
+        text-decoration: none!important;
     }
 
     .pagination > .prev {
         margin-right: 20px;
     }
-        .pagination > .prev::after {
-            content: '⟵';
-            color: var(--pagination-color-lo);
+        .pagination > .prev.disabled {
+            pointer-events : none;
         }
+        
+        .pagination > .prev::after {
+            content : '⟵';
+            color   : var(--puer-pagination-color-hi);
+        }         
+            .pagination > .prev.disabled::after {
+                color          : var(--puer-pagination-color-lo);
+                pointer-events : none;
+            }
 
     .pagination > .pages {
         font-family : var(--puer-font-text);
@@ -19,9 +30,10 @@
         display     : inline-flex;
         align-items : center;
         gap         : 6px;
+        user-select : none;
     }
         .pagination > .pages > .current {
-            color : var(--puer-pagination-text-color);
+            color : var(--puer-text-color-hi);
         }
 
         .pagination > .pages > .divider {
@@ -32,17 +44,24 @@
         }
         
         .pagination > .pages > .divider {
-            background-color : var(--pagination-color-lo);
+            background-color : var(--puer-pagination-color-lo);
         }
 
         .pagination > .pages > .total {
-            color : var(--pagination-color-lo);
+            color : var(--puer-pagination-color-lo);
         }
 
     .pagination > .next {
         margin-left : 20px;
-    }    
+    }
+        .pagination > .next.disabled {
+            pointer-events : none;
+        }
+
         .pagination > .next::after {
             content : '⟶';
             color   : var(--puer-pagination-color-hi);
         }
+            .pagination > .next.disabled::after {
+                color : var(--puer-pagination-color-lo);
+            }
