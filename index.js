@@ -95,8 +95,8 @@ $.Events.define('DATASOURCE_ITEM_ADD',    ['item'])
 $.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])
 $.Events.define('DATASOURCE_ITEM_REMOVE', ['itemId'])
 
-// $.Events.define('DATASET_SORT',          ['event'])
-// $.Events.define('DATASET_FILTER',        ['event'])
+$.Events.define('DATASET_SORT',           ['map'])
+$.Events.define('DATASET_FILTER',         ['map'])
 
 $.Events.define('LIST_ITEM_SELECT',       ['data', 'name'])
 $.Events.define('LIST_ITEM_CHECK',        ['data', 'name', 'isChecked', 'isResend'])

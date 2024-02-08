@@ -64,7 +64,7 @@ export default class DataSet extends PuerObject {
 		}
 	}
 
-	_applyitemFilter(ids) {
+	_applyItemFilter(ids) {
 		if (this._itemFilter) {
 			const items = $.DataStore.get(ids)
 			ids = items.filter(this._itemFilter).map((_, id) => id)
@@ -73,6 +73,7 @@ export default class DataSet extends PuerObject {
 	}
 
 	/**************************************************************/
+	// Responding on events
 
 	_onData(e) {
 		this.itemIds = e.detail.itemIds
@@ -81,16 +82,16 @@ export default class DataSet extends PuerObject {
 
 	_onItemAdd(e) {
 		const item = e.detail.item
-		const ids  = this._applyitemFilter([item.dataId])
+		const ids  = this._applyItemFilter([item.dataId])
 
 		if (ids.length) {
-			this._indexItem(item, item.dataId)
+			// this._indexItem(item, item.dataId)
 			this.onItemAdd(item)
 		}
 	}
 
 	_onItemChange(e) {
-		this._reindexItems()
+		// this._reindexItems()
 		this.onItemChange(e.detail.item)
 	}
 
@@ -102,6 +103,7 @@ export default class DataSet extends PuerObject {
 
 	get items() {
 		const items = $.DataStore.get(this._itemIds)
+		console.log('items getter', items)
 		return this._itemAdapter
 			? this._itemAdapter(items)
 			: items
@@ -113,7 +115,10 @@ export default class DataSet extends PuerObject {
 
 	set itemIds(ids) {
 		// TODO: _reindexItems?
-		this._itemIds      = this._applyitemFilter(ids)
+		console.log('itemIds1', this.owner.className, this._itemIds)
+		if (this.owner.name === 'own') debugger
+		this._itemIds      = this._applyItemFilter(ids)
+		// console.log('itemIds2', this._itemIds)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
@@ -141,6 +146,8 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastFilter = f
+
+			this.trigger($.Event.DATASET_FILTER, {map: map})
 			this.onFilter(map)
 		}
 	}
@@ -157,6 +164,8 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastSort = f
+
+			this.trigger($.Event.DATASET_SORT, {map: map})
 			this.onSort(map)
 		}
 	}
@@ -172,17 +181,15 @@ export default class DataSet extends PuerObject {
 				}
 			})
 		})
-
-		return this.filter(item => result.has(item.dataId) && !this._excluded.has(item.dataId))
+		console.log('search result', result, this._itemIds)
+		this.filter(item => {
+			console.log(item)
+			return result.has(item.dataId)// && !this._excluded.has(item.dataId))
+		})
 	}
 
-	exclude(id) {
-		this._excluded.add(id)
-	}
-
-	include(id) {
-		this._excluded.delete(id)
-	}
+	exclude(id) { this._excluded.add(id)    }
+	include(id) { this._excluded.delete(id) }
 
 	onData       (items)  {}
 	onItemAdd    (item)   {}

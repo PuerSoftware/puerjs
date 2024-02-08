@@ -101,9 +101,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 			for (const item of items) {
 				_this._addItemToStore(item)
 				this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
-				// for (const dataSetName in _this.dataSets) {
-				// 	_this.dataSets[dataSetName].addItem(item)
-				// }
 			}
 			this._onLoad()
 		})
