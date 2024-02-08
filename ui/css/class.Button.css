@@ -1,5 +1,6 @@
 .button,
 .button.primary {
+	height           : 32px;
 	background-color : var(--puer-bg-color-btn);
 	display          : inline-block;
 	border           : 2px solid var(--puer-bg-color-btn);
@@ -12,7 +13,7 @@
 	text-align       : center;
 	text-decoration  : none !important;
 	border-radius    : 2px;
-	padding          : 7px 19px;
+	padding          : 5px 19px;
 	margin           : 2px;
 	white-space      : nowrap;
 	transition       : all 0.15s ease-in-out;
