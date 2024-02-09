@@ -9,6 +9,12 @@ class Pagination extends $.Component {
 		this._next = null
 	}
 
+	reset() {
+		this._next.removeCssClass('disabled')
+		this._prev.addCssClass('disabled')
+		this.setPage(1)
+	}
+
 	setPage(page) {
 		this.props.page = page
 		this.trigger($.Event.PAGINATE, {page: this.props.page})
