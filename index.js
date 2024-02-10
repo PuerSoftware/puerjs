@@ -103,7 +103,7 @@ $.Events.define('LIST_ITEM_SELECT',       ['data', 'name'])
 $.Events.define('LIST_ITEM_CHECK',        ['data', 'name', 'isChecked', 'isResend'])
 $.Events.define('SEARCH',                 ['value']) // TODO: Move to DATASET_SEARCH?
 $.Events.define('PAGINATE',               ['page'])
-$.Events.define('FORM_RESPONSE',          ['error', 'errors', 'isSaved'])
+$.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'isSaved'])
 $.Events.define('TAG_REMOVE',             ['label'])
 $.Events.define('TAG_CLICK',              ['label'])
 

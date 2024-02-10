@@ -13,9 +13,10 @@ export default class FormDataSource extends DataSource {
 		const isSaved      = this.isSaving && !items.error
 		const adaptedItems = []
 		this.trigger($.Event.FORM_RESPONSE, {
-			error   : items.error,
-			errors  : items.errors,
-			isSaved : isSaved
+			formName : items.formName,
+			error    : items.error,
+			errors   : items.errors,
+			isSaved  : isSaved
 		})
 		if (isSaved) {
 			this.clear(() => {
@@ -39,7 +40,12 @@ export default class FormDataSource extends DataSource {
 		return item
 	}
 
+	adaptSubmit(params, headers, isSaving) {
+		return [params, headers, isSaving]
+	}
+
 	submit(params, isSaving, doClearOnSave, headers=null) {
+		[params, headers]  = this.adaptSubmit(params, headers, isSaving)
 		headers            = headers || {}
 		headers.isSaving   = isSaving ? 1 : 0
 		this.isSaving      = isSaving

@@ -2,13 +2,12 @@ import $              from '../../index.js'
 import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 
 
-
 class Form extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('title',         '')
 		this.props.default('subtitle',      '')
-		this.props.default('buttonCaption', 'Submit')
+		this.props.default('buttonLabel', 'Submit')
 		this.props.default('action',        '')
 		this.props.default('method',        'POST')
 		this.props.default('enctype',       'application/json')
@@ -23,17 +22,19 @@ class Form extends $.Component {
 	}
 
 	_onResponse(event) {
-		this.state.error = event.detail.error
-		this._errorComponent.toggle(this.state.error)
-		for (const input of this.inputs) {
-			if (input.field) {
-				input.field.error = event.detail.errors[input.props.name]
+		if (event.detail.formName === this.props.name) {
+			this.state.error = event.detail.error
+			this._errorComponent.toggle(this.state.error)
+			for (const input of this.inputs) {
+				if (input.field) {
+					input.field.error = event.detail.errors[input.props.name]
+				}
 			}
-		}
-		if (event.detail.isSaved) {
-			this._updateInitialValues()
-			alert('Form saved successfully!!!')
-			this._trigger('save')
+			if (event.detail.isSaved) {
+				this._updateInitialValues()
+				alert('Form saved successfully!!!')
+				this._trigger('save')
+			}
 		}
 	}
 
@@ -100,8 +101,9 @@ class Form extends $.Component {
 
 	submit(save) {
 		if (this._isValidateEnabled && this._dataSource) {
-			const formData = this.getData()
-			const headers  = this.getHeaders()
+			const formData    = this.getData()
+			const headers     = this.getHeaders()
+			formData.formName = this.props.name
 			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
 		}
 	}
@@ -148,8 +150,8 @@ class Form extends $.Component {
 						this.button = $.InputButton ({
 							type    : 'button',
 							onclick : this._onSubmit,
-							text    : this.props.buttonCaption,
-							value   : this.props.buttonCaption
+							text    : this.props.buttonLabel,
+							value   : this.props.buttonLabel
 						})
 					])
 				])
