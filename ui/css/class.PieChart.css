@@ -14,12 +14,12 @@
         clip: rect(0, 100px, 200px, 0);
     }
 
-    .pie-chart.scheme1 > .segments > .segment:nth-child(1) { background-color: #FFC888; }
-    .pie-chart.scheme1 > .segments > .segment:nth-child(2) { background-color: #927EE3; }
-    .pie-chart.scheme1 > .segments > .segment:nth-child(3) { background-color: #5EAAF5; }
-    .pie-chart.scheme1 > .segments > .segment:nth-child(4) { background-color: #3498db; }
-    .pie-chart.scheme1 > .segments > .segment:nth-child(5) { background-color: #3498db; }
-    .pie-chart.scheme1 > .segments > .segment:nth-child(6) { background-color: #3498db; }
+    .pie-chart > .segments > .segment:nth-child(1) { background-color: var(--bg-color-piechart-segment-1); }
+    .pie-chart > .segments > .segment:nth-child(2) { background-color: var(--bg-color-piechart-segment-2); }
+    .pie-chart > .segments > .segment:nth-child(3) { background-color: var(--bg-color-piechart-segment-3); }
+    .pie-chart > .segments > .segment:nth-child(4) { background-color: var(--bg-color-piechart-segment-1-more); }
+    .pie-chart > .segments > .segment:nth-child(5) { background-color: var(--bg-color-piechart-segment-3-more); }
+    .pie-chart > .segments > .segment:nth-child(6) { background-color: var(--bg-color-piechart-segment-2-more); }
 
     .doughnut-hole {
         position: absolute;
