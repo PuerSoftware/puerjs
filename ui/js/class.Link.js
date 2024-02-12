@@ -4,10 +4,13 @@ import $ from '../../index.js'
 class Link extends $.Component {
 	constructor(... args) {
 		super(... args)
+		this.props.default('stopPropagation', false)
 		this._linkSet = null
 	}
 
-	_navigate() {
+	_navigate(e) {
+		this.props.stopPropagation && e.stopPropagation()
+
 		if (this._linkSet) {
 			this._linkSet.select(this)
 		}
