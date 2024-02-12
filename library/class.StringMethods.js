@@ -38,6 +38,18 @@ class StringMethods {
 			!isNaN(parseFloat(s))                   // ...and ensure strings of whitespace fail
 	}
 
+	static toInt(s) {
+		return parseInt(('' + s).replace(/[^\d-]+/g, ''), 10)
+	}
+
+	static toFloat(s) {
+		return parseFloat(('' + s).replace(/[^\d.-]+/g, ''))
+	}
+
+	static toUnits(s) {
+		return ('' + s).replace(/^[^\d.-]*[\d.-]+/g, '')
+	}
+
 	static randomHex(len) {
 		const digits = '0123456789ABCDEF'
 		let hex = ''

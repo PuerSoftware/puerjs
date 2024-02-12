@@ -56,9 +56,9 @@ $.application(
 		$.DataSource.define('Markers')
 
 		$.DataSource.define('PieChart').fill([
-			{ label: 'Label 1', value: 50 },
-			{ label: 'Label 2', value: 28 },
-			{ label: 'Label 3', value: 22 },
+			{ label: 'Label 1', value: '50%' },
+			{ label: 'Label 2', value: '28%' },
+			{ label: 'Label 3', value: '22%' },
 		])
 	},
 	() => {

@@ -1,12 +1,16 @@
 .pie-chart {
-    position: relative;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    clip: rect(0, 200px, 200px, 100px);
+    
 }
 
-    .pie-chart > .segments > .segment {
+    .pie-chart > .doughnut {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        clip: rect(0, 200px, 200px, 100px);
+    }
+
+    .pie-chart > .doughnut > .segments > .segment {
         position: absolute;
         width: 200px;
         height: 200px;
