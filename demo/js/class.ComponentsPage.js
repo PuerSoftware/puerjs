@@ -48,6 +48,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Tag',                 hash: 'cmp:tag'           }),
 				$.Link({label: 'Text Highlight',      hash: 'cmp:texthighlight' }),
 				$.Link({label: 'Toggle',              hash: 'cmp:toggle'        }),
+				$.Link({label: 'PieChart',            hash: 'cmp:piechart'      })
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -89,12 +90,14 @@ export default class ComponentsPage extends $.Component {
 				]),
 				$.Box({route: 'cmp:map'}, [
 					this.map = $.GoogleMap({
+						name       : 'map',
 						apiKey     : $.Constants.GOOGLE_DYNAMIC_MAPS_API_KEY,
 						dataSource : 'Markers'
 					})
 				]),
 				$.Box({route: 'cmp:staticmap'}, [
 					this.map = $.GoogleStaticMap({
+						name       : 'staticMap',
 						apiKey     : $.Constants.GOOGLE_STATIC_MAPS_API_KEY,
 						dataSource : 'Markers'
 					})
@@ -131,6 +134,12 @@ export default class ComponentsPage extends $.Component {
 				$.Box({route: 'cmp:toggle'}, [
 					$.InputToggle({name: 'test'})
 				]),
+				$.Box({route: 'cmp:piechart'}, [
+					$.PieChart('scheme1', {
+						name       : 'PieChart',
+						dataSource : 'PieChart'
+					})
+				])
 			])
 		])
 	}

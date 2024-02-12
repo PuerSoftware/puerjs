@@ -1,5 +1,5 @@
 class PuerError extends Error {
-	constructor(message, className, methodName) {
+	constructor(message, className='', methodName='') {
 		if (typeof className !== 'string') {
 			className = className.constructor.name
 		}

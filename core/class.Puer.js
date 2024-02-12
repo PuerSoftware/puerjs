@@ -144,7 +144,7 @@ class Puer {
 			return this._defineTag(cls)
 		}
 		if (this[cls.name]) {
-			throw new PuerError(`Could not define component "$.${cls.name}": name occupied`, $, 'define')
+			throw new $.Error(`Could not define component "$.${cls.name}": name occupied`, $, 'define')
 		}
 		return this._defineComponent(cls, importUrl)
 	}
