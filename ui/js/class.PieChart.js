@@ -4,36 +4,39 @@ import $ from '../../index.js'
 export default class PieChart extends $.Component {
 	constructor(... args) {
 		super(... args)
-		this._segments = {}
-		this._data     = {}
+		this._segments     = {}
+		this._holeSegments = {}
+		this._data         = {}
 
-		this.segments     = null
-		this.doughnutHole = null
-		this.legend       = null
+		this.segments = null
+		this.hole     = null
+		this.legend   = null
+		this.label    = null
 	}
 
 	_onSegmentMouseOver(label) {
 		let segment
 		for (const segmentLabel in this._segments) {
-			segment = this._segments[segmentLabel]
-			segment.removeCssClass('hover')
+			this._segments[segmentLabel].removeCssClass('hover')
+			this._holeSegments[segmentLabel].removeCssClass('hover')
 		}
-		segment = this._segments[label]
-		segment.addCssClass('hover')
-		this.doughnutHole.removeChildren()
-		this.doughnutHole.append($.Rows([
+		this._segments[label].addCssClass('hover')
+		this._holeSegments[label].addCssClass('hover')
+		this.label.removeChildren()
+		this.label.append($.Rows([
 			$.Box('label', {text: label}),
 			$.Box('label', {text: this._data[label].value}),
 		]))
 	}
 
 	_onSegmentMouseOut(label) {
-		this.doughnutHole.removeChildren()
+		this.label.removeChildren()
 	}
 
 	onDataChange(items) {
 		this.segments.removeChildren()
 		this.legend.removeChildren()
+		this.hole.removeChildren()
 
 		this._segments = {}
 		this._data     = {}
@@ -45,17 +48,22 @@ export default class PieChart extends $.Component {
 		for (const item of items) {
 			const deg     = 90
 			const segment = $.div('segment', {
-				cssTransform : `rotate(${angle}deg)`,
+				cssTransform : `rotate(${angle}deg)`
 			})
 			this._segments[item.label] = segment
-			this._data[item.label]     = item
 			this.segments.append(segment)
 
+			const holeSegment = $.div('hole-segment', {
+				cssTransform : `rotate(${angle}deg)`
+			})
+			this._holeSegments[item.label] = holeSegment
+			this.hole.append(holeSegment)
+
+			this._data[item.label] = item
 			angle += $.String.toFloat(item.value) / total * 360
 
 			segment._on('mouseover', () => { this._onSegmentMouseOver (item.label) })
 			segment._on('mouseout',  () => { this._onSegmentMouseOut  (item.label) })
-
 
 			const legendItem = $.Rows([
 				$.Box('label', {text: item.label}),
@@ -75,8 +83,10 @@ export default class PieChart extends $.Component {
 		return $.div([
 			this.legend = $.Columns('legend'),
 			$.div('doughnut', [
-				this.segments     = $.div('segments'),
-				this.doughnutHole = $.div('doughnut-hole')
+				this.segments = $.div('segments'),
+				this.hole     = $.div('hole'),
+				this.label    = $.div('label'),
+				this.labelBg  = $.div('label-bg')
 			]),
 			$.Rows('total', [
 				$.div({text: 'Total'}),
