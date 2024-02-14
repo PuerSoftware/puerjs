@@ -12,7 +12,7 @@ class BasePuerComponent extends PuerObject {
 		this.element  = null
 		this.parent   = null
 		this.root     = null
-		this.children = new PuerComponentSet(children, this._onChildrenChange, this)
+		this.children = new PuerComponentSet(children, this._onChildrenChange.bind(this))
 		this.props    = new PuerProps(props, '_onPropChange', this)
 
 		this.events   = this.props.extractEvents(this.owner)
@@ -588,6 +588,24 @@ class BasePuerComponent extends PuerObject {
 				this.element.appendChild(component.element)
 			}
 		}
+	}
+
+	replace(oldComponent, newComponent) {
+		newComponent.__render()
+		newComponent.__init()
+		newComponent.__ready()
+		newComponent._applyProps()
+
+		newComponent.parent = this.root
+		newComponent.owner = this.owner
+		
+		const index = this.root.children.indexOf(oldComponent)
+		if (index < 0) {
+			throw 'Cannot replace component - not found'
+		}
+		this.root.children[index] = newComponent
+
+		oldComponent.element.parentNode.replaceChild(newComponent.element, oldComponent.element)
 	}
 	
 	remove() {
