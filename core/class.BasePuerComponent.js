@@ -451,18 +451,27 @@ class BasePuerComponent extends PuerObject {
 		return new Proxy(this, handler)
 	}
 
-	mixin(mixinClass) {
+	mixin(mixinClass, overwrite=false) {
 		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
 		for (let key in methods) {
 			if (key !== 'constructor') {
-				if (this[key]) {
-					throw `Mixin overrides existing property "${this.className}.${key}"`
-				}
 				const descriptor = methods[key]
 				if (typeof descriptor.value === 'function') {
-					this[key] = descriptor.value.bind(this)
+					if (this[key] && !overwrite) {
+						const original = this[key]
+						this[key] = (... args) => {
+							descriptor.value.apply(this, args)
+							original.apply(this, args)
+						}
+					} else {
+						this[key] = descriptor.value.bind(this)
+					}
 				} else {
-					Object.defineProperty(this, key, descriptor)
+					if (this[key] && !overwrite) {
+						throw `Mixin overrides existing property "${this.className}.${key}"`
+					} else {
+						Object.defineProperty(this, key, descriptor)
+					}
 				}
 			}
 		}
