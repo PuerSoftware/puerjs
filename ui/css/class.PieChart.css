@@ -15,6 +15,7 @@
         width: 200px;
         height: 200px;
         border-radius: 50%;
+        border: 3px solid #23252D;
         clip: rect(0, 100px, 200px, 0);
     }
 
@@ -25,14 +26,22 @@
     .pie-chart > .doughnut > .segments > .segment:nth-child(5) { background-color: var(--color-5); }
     .pie-chart > .doughnut > .segments > .segment:nth-child(6) { background-color: var(--color-6); }
 
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(1) { border-color: var(--color-1); }
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(2) { border-color: var(--color-2); }
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(3) { border-color: var(--color-3); }
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(4) { border-color: var(--color-4); }
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(5) { border-color: var(--color-5); }
+    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(6) { border-color: var(--color-6); }
+
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(1) { border-color: var(--color-1); }
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(2) { border-color: var(--color-2); }
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(3) { border-color: var(--color-3); }
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(4) { border-color: var(--color-4); }
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(5) { border-color: var(--color-5); }
+    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(6) { border-color: var(--color-6); }
+
 
     .pie-chart > .doughnut > .hole > .hole-segment {
-        /* position: absolute;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        clip: rect(0, 100px, 200px, 0);
-        background-color: #23252D; */
         position: absolute;
         top: 25px;
         left: 25px;
@@ -42,27 +51,7 @@
         background-color: #23252D;
         margin: auto;
         border-radius: 50%;
+        border: 3px solid #23252D;
         z-index: 1;
     }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover {
-        top: 35px;
-        left: 35px;
-        width: 130px;
-        height: 130px;
-        clip: rect(0, 65px, 200px, 0);
-    }
-
-    /* .pie-chart > .doughnut > .hole > .hole-segment { background-color: #23252D; } */
-   
-
-    .doughnut-hole {
-        /* position: absolute;
-        top: 25px;
-        left: 25px;
-        width: 150px;
-        height: 150px;
-        background-color: #23252D;
-        margin: auto;
-        border-radius: 50%;
-        z-index: 1; */
-    }
+    
