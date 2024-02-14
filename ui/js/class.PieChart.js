@@ -31,6 +31,10 @@ export default class PieChart extends $.Component {
 
 	_onSegmentMouseOut(label) {
 		this.label.removeChildren()
+		for (const segmentLabel in this._segments) {
+			this._segments[segmentLabel].removeCssClass('hover')
+			this._holeSegments[segmentLabel].removeCssClass('hover')
+		}
 	}
 
 	onDataChange(items) {

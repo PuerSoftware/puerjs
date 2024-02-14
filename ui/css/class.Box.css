@@ -81,23 +81,21 @@
 }
 
 :root .scheme1 {
-    --bg-color-piechart-segment-1 : #FFC888;
-    --bg-color-piechart-segment-2 : #927EE3;
-    --bg-color-piechart-segment-3 : #5EAAF5;
-
-    --bg-color-piechart-segment-1-more : #D9AADD;
-    --bg-color-piechart-segment-2-more : #3A3E52;
-    --bg-color-piechart-segment-3-more : #4EB29A;
+    --color-1 : #FFC888;
+    --color-2 : #927EE3;
+    --color-3 : #5EAAF5;
+    --color-4 : #D9AADD;
+    --color-5 : #3A3E52;
+    --color-6 : #4EB29A;
 }
 
 :root .scheme2 {
-    --bg-color-piechart-segment-1 : #1C80DD;
-    --bg-color-piechart-segment-2 : #B0D2ED;
-    --bg-color-piechart-segment-3 : #11429C;
-
-    --bg-color-piechart-segment-1-more : #F7FBFF;
-    --bg-color-piechart-segment-2-more : #5EACEC;
-    --bg-color-piechart-segment-3-more : #1E78FF;
+    --color-1 : #1C80DD;
+    --color-2 : #B0D2ED;
+    --color-3 : #11429C;
+    --color-4 : #F7FBFF;
+    --color-5 : #5EACEC;
+    --color-6 : #1E78FF;
 }
 
 :root .dark-theme {
