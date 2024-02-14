@@ -25,9 +25,6 @@ export default class DataListMixin {
 	/**************************************************************/
 
 	onDataChange(items) {
-		if (this.name === 'own') {
-			$.timer()
-		}
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true
@@ -42,6 +39,10 @@ export default class DataListMixin {
 	onDataItemRemove(dataId) {
 		this.items[dataId].remove()
 		delete this.items[dataId]
+	}
+
+	onDataClear() {
+		this.clearItems()
 	}
 
 	onDataFilter(filterMap) {

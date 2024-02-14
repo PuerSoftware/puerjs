@@ -102,6 +102,10 @@ export default class DataSet extends PuerObject {
 		this.onItemRemove(e.detail.itemId)
 	}
 
+	_onClear(e) {
+		this.onClear()
+	} 	
+
 	/**************************************************************/
 
 	get items() {
@@ -136,6 +140,7 @@ export default class DataSet extends PuerObject {
 		this.on('DATASOURCE_ITEM_ADD',    this._onItemAdd.    bind(this), dataSource.name)
 		this.on('DATASOURCE_ITEM_CHANGE', this._onItemChange. bind(this), dataSource.name)
 		this.on('DATASOURCE_ITEM_REMOVE', this._onItemRemove. bind(this), dataSource.name)
+		this.on('DATASOURCE_CLEAR',       this._onClear.      bind(this), dataSource.name)
 	}
 
 	filter(f) {
@@ -202,6 +207,7 @@ export default class DataSet extends PuerObject {
 	onItemAdd    (item)   {}
 	onItemChange (item)   {}
 	onItemRemove (itemId) {}
+	onClear      ()       {}
 
 	onSort       (map)    {} // TODO: Make event?
 	onFilter     (map)    {} // TODO: Make event?

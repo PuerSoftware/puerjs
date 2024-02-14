@@ -35,6 +35,8 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 		this._dataSet.onItemAdd    = this.props.onDataItemAdd    ? this.props.onDataItemAdd    : this.onDataItemAdd    ? this.onDataItemAdd.bind(this)    : nop
 		this._dataSet.onItemChange = this.props.onDataItemChange ? this.props.onDataItemChange : this.onDataItemChange ? this.onDataItemChange.bind(this) : nop
 		this._dataSet.onItemRemove = this.props.onDataItemRemove ? this.props.onDataItemRemove : this.onDataItemRemove ? this.onDataItemRemove.bind(this) : nop
+		this._dataSet.onClear      = this.props.onDataClear      ? this.props.onDataClear      : this.onDataClear      ? this.onDataClear.bind(this)      : nop
+
 
 		this._dataSet.dataSource = this._dataSource
 	}
@@ -46,8 +48,4 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 	get dataSet() {
 		return this._dataSet
 	}
-	//
-	// onActivate() {
-	// 	console.log('onActivate', this.name)
-	// }
 }

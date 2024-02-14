@@ -156,7 +156,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		for (const dataId of this.itemIds) {
 			$.DataStore.unset(dataId)
 		}
-
+		this.trigger($.Event.DATASOURCE_CLEAR, {})
 		this.itemIds       = []
 
 		if (this.isCacheable && this.db) {
@@ -166,6 +166,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		} else {
 			callback()
 		}
+
 	}
 
 	addItem(item) {
