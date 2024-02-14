@@ -30,10 +30,10 @@ class PuerEvents extends EventTarget {
 		if (missingProps.length > 0) {
 			throw `Event detail ${name} is missing props: "${missingProps.join(', ')}"`
 		}
-		const extraProps =  props.filter(x => !requiredProps.includes(x))
-		if (extraProps.length > 0) {
-			throw `Props "${extraProps.join(', ')}" are not defined in event details of "${name}"`
-		}
+		// const extraProps =  props.filter(x => !requiredProps.includes(x))
+		// if (extraProps.length > 0) {
+		// 	throw `Props "${extraProps.join(', ')}" are not defined in event details of "${name}"`
+		// }
 	}
 
 	/*********************** PUBLIC ***********************/
@@ -48,17 +48,23 @@ class PuerEvents extends EventTarget {
 		}
 
 		this.socket.onmessage = (event) => {
-			const data = JSON.parse(event.data)
-			console.log('Received event: ', data.name, data.data)
+			const eventData = JSON.parse(event.data)
+			const data      = eventData.data
+			console.log('Received event: ', eventData.name, data)
 	
-			if (Array.isArray(data.data)) {
-				data.data.forEach((item) => {
-					this.trigger(data.name, item)
+			if (Array.isArray(data)) {
+				data.forEach((item) => {
+					this.trigger(eventData.name, item)
 				})
 			} else {
-				this.trigger(data.name, data.data)
+
+				// data.detail = {
+					data.targetName = 'backend'
+					data.target     = {id: 0, isActiveEventTarget: true}
+				// }
+				this.trigger(eventData.name, data)
 			}
-			this.send($.Event.SYS_CONFIRM, {name: data.name, key: data.key})
+			this.send($.Event.SYS_CONFIRM, {name: eventData.name, key: eventData.key})
 		}
 
 		this.socket.onclose = (event) => {

@@ -102,6 +102,10 @@ export default class List extends $.Component {
 		this.items = {}
 	}
 	/*****************************************************************/
+
+	scrollToBottom() { this.element.scrollTop = this.element.scrollHeight }
+	scrollToTop() { this.element.scrollTop = 0 }
+
 	render() {
 		return $.ul(this.children)
 	}
