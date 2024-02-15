@@ -151,6 +151,13 @@ class DateMethods {
 		return (y % 4 === 0 && y % 100 !== 0) || (y % 400 === 0)
 	}
 
+	static isToday(date) {
+		const todayDate = new Date()
+		return (date.getFullYear() === todayDate.getFullYear()) &&
+			(date.getMonth() === todayDate.getMonth())          &&
+			(date.getDate()  === todayDate.getDate())
+	}
+
 	static eq(dateA, dateB) { return dateA.getTime() === dateB.getTime() }
 	static gt(dateA, dateB) { return dateA.getTime() > dateB.getTime() }
 	static lt(dateA, dateB) { return dateA.getTime() < dateB.getTime() }

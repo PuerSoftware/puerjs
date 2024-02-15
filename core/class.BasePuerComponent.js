@@ -553,7 +553,6 @@ class BasePuerComponent extends PuerObject {
 			component.owner  = this.owner
 			this.root.children.push(component)
 			this.element.appendChild(component.element)
-			console.log('append', component.element, this.root.children)
 		}
 	}
 
@@ -577,7 +576,6 @@ class BasePuerComponent extends PuerObject {
 			} else {
 				this.element.appendChild(component.element)
 			}
-			console.log('prepend', component.element, this.root.children)
 		}
 	}
 
@@ -591,14 +589,12 @@ class BasePuerComponent extends PuerObject {
 		component.owner  = this.parent.owner
 		
 		const index = this.parent.root.children.indexOf(this)
-		console.log('found at index', index)
 		if (index >= 0) {
 			this.parent.root.children[index] = component
 			this.element.parentNode.replaceChild(component.element, this.element)
 		} else {
 			throw 'Cannot replace component - not found'
 		}
-		console.log('replace', component.element, this.parent.root.children)
 		this.remove()
 	}
 	
@@ -615,11 +611,8 @@ class BasePuerComponent extends PuerObject {
 		this.id && delete $.components[this.id]
 	}
 
-	removeChildren() {
-		console.log('BasePuerComponent removeChildren', this.root.children.length)
-		
+	removeChildren() {		
 		while (this.root.children.length) {
-			console.log('child', this.root.children[0])
 			this.root.children[0].remove()
 		}				
 	}

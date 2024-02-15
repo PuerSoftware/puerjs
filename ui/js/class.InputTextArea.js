@@ -9,6 +9,10 @@ export default class InputTextArea extends FormInput {
 		this.props.default('tagName', 'textarea')
 		this.props.default('type',    'text')
 	}
+
+	moveCaretDown() {
+		document.execCommand('insertText', false, '\n')
+	}
 }
 
 $.define(InputTextArea, import.meta.url)
