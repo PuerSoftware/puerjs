@@ -46,15 +46,14 @@ export default class DataListMixin {
 		const oldItemComponent = this.items[item.dataId]
 		const itemComponent    = this.renderItem(item)
 		console.log('onDataItemChange', this.itemContainer.children)
-		this.itemContainer.replace(oldItemComponent, itemComponent)
+		oldItemComponent.replace(itemComponent)
 		console.log('onDataItemChange AFTER', this.itemContainer.children)
-
-		oldItemComponent.remove()
 		this.items[item.dataId] = itemComponent
 	}
 
 	onDataClear() {
-		this.clearItems()
+		console.log('DataListMixin onDataClear')
+		this.clearItems && this.clearItems()
 	}
 
 	onDataFilter(filterMap) {

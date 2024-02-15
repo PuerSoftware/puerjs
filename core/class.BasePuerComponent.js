@@ -549,16 +549,11 @@ class BasePuerComponent extends PuerObject {
 			component.__ready()
 			component._applyProps()
 
-
-			// const root = this.isCustom
-			// 	? this.root
-			// 	: this
-
 			component.parent = this.root
 			component.owner  = this.owner
 			this.root.children.push(component)
-
 			this.element.appendChild(component.element)
+			console.log('append', component.element, this.root.children)
 		}
 	}
 
@@ -573,13 +568,8 @@ class BasePuerComponent extends PuerObject {
 			component.__ready()
 			component._applyProps()
 
-
-			// const root = this.isCustom
-			// 	? this.root
-			// 	: this
-
 			component.parent = this.root
-			component.owner = this.owner
+			component.owner  = this.owner
 			this.root.children.unshift(component)
 
 			if (this.element.firstChild) {
@@ -587,25 +577,29 @@ class BasePuerComponent extends PuerObject {
 			} else {
 				this.element.appendChild(component.element)
 			}
+			console.log('prepend', component.element, this.root.children)
 		}
 	}
 
-	replace(oldComponent, newComponent) {
-		newComponent.__render()
-		newComponent.__init()
-		newComponent.__ready()
-		newComponent._applyProps()
+	replace(component) {
+		component.__render()
+		component.__init()
+		component.__ready()
+		component._applyProps()
 
-		newComponent.parent = this.root
-		newComponent.owner = this.owner
+		component.parent = this.parent.root
+		component.owner  = this.parent.owner
 		
-		const index = this.root.children.indexOf(oldComponent)
-		if (index < 0) {
+		const index = this.parent.root.children.indexOf(this)
+		console.log('found at index', index)
+		if (index >= 0) {
+			this.parent.root.children[index] = component
+			this.element.parentNode.replaceChild(component.element, this.element)
+		} else {
 			throw 'Cannot replace component - not found'
 		}
-		this.root.children[index] = newComponent
-
-		oldComponent.element.parentNode.replaceChild(newComponent.element, oldComponent.element)
+		console.log('replace', component.element, this.parent.root.children)
+		this.remove()
 	}
 	
 	remove() {
@@ -614,18 +608,19 @@ class BasePuerComponent extends PuerObject {
 			this.parent.root = null
 		} else {
 			const index = this.parent.children.indexOf(this)
-			delete this.parent.children[index]
+			if (index >= 0) {
+				delete this.parent.children[index]
+			}
 		}
 		this.id && delete $.components[this.id]
 	}
 
 	removeChildren() {
-		const root = this.isCustom
-			? this.root
-			: this
-
-		while (root.children.length) {
-			root.children[0].remove()
+		console.log('BasePuerComponent removeChildren', this.root.children.length)
+		
+		while (this.root.children.length) {
+			console.log('child', this.root.children[0])
+			this.root.children[0].remove()
 		}				
 	}
 

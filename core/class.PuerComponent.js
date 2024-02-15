@@ -37,8 +37,8 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	_setupRoot() {
-		$.owner = this
-		this.root  = this.render()
+		$.owner   = this
+		this.root = this.render()
 		if (!this.root) {
 			throw `${this.className}.render() did not return anything`
 		}

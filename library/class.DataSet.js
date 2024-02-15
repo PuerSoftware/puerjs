@@ -103,6 +103,7 @@ export default class DataSet extends PuerObject {
 	}
 
 	_onClear(e) {
+		console.log('DataSet _onClear')
 		this.onClear()
 	} 	
 

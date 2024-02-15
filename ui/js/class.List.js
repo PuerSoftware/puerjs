@@ -98,6 +98,7 @@ export default class List extends $.Component {
 	}
 
 	clearItems() {
+		console.log('list clearItems')
 		this.itemContainer.removeChildren()
 		this.items = {}
 	}
