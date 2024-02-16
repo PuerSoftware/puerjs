@@ -4,6 +4,8 @@ import $ from '../../index.js'
 class Link extends $.Component {
 	constructor(... args) {
 		super(... args)
+		this.props.default('selected', false)
+		this.props.default('label', '')
 		this.props.default('stopPropagation', false)
 		this._linkSet = null
 	}
@@ -15,9 +17,6 @@ class Link extends $.Component {
 			this._linkSet.select(this)
 		}
 		this.props.hash && this.route(this.props.hash)
-		if (this.props.f) {
-			this.props.callback(this)
-		}
 	}
 
 	_pathToHash(path) {
@@ -50,6 +49,7 @@ class Link extends $.Component {
 		if (this._linkSet) {
 			this.onRoute = null
 		}
+		this.selected = this.props.selected
 	}
 
 	render() {
