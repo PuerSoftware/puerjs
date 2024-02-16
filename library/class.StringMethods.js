@@ -27,6 +27,10 @@ class StringMethods {
 		return s.charAt(0).toUpperCase() + s.slice(1)
 	}
 
+	static snakeToKebab(s) {
+		return s.toLowerCase().replace('_', '-')
+	}
+
 	static titleDivider(title, n = 20, ch = '=') {
 		let pad = Math.floor((n - title.length - 2) / 2)
 		return ch.repeat(pad) + ' ' + title + ' ' + ch.repeat(n - title.length - 2 - pad)
