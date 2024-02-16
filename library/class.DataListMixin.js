@@ -31,18 +31,19 @@ export default class DataListMixin {
 	}
 
 	onDataItemAdd(item) {
-		const itemComponent = this.renderItem(item)
-		this.itemContainer.append(itemComponent)
-		this.items[item.dataId] = itemComponent
+		if (!this.items[item.dataId]) {
+			const itemComponent = this.renderItem(item)
+			this.itemContainer.append(itemComponent)
+			this.items[item.dataId] = itemComponent
+		}
 	}
 
-	onDataItemRemove(dataId) {  
+	onDataItemRemove(dataId) {
 		this.items[dataId].remove()
 		delete this.items[dataId]
 	}
 
 	onDataItemChange(item) {
-		debugger
 		const oldItemComponent = this.items[item.dataId]
 		const itemComponent    = this.renderItem(item)
 		const selected         = this._selectedId == item.dataId
@@ -106,6 +107,10 @@ export default class DataListMixin {
 				container.appendChild(element)
 			}
 		})
+	}
+
+	onActivate() {
+		this._dataSet.refresh()
 	}
 
 	clear() {
