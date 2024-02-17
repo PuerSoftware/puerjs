@@ -235,6 +235,15 @@ class Puer {
 		return this._classToType[className] || typeof o
 	}
 
+	when(c, t) {
+		const _ = {}
+		return (o) => {
+			const r = c(o)
+			_.hasOwnProperty('v') && _.v !== r && t(r)
+			_.v = r
+		}
+	}
+
 	timer(name) {
 		const time = Date.now()
 		if (this._time) {
