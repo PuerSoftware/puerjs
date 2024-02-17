@@ -37,8 +37,16 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
 
-		this._lastLoad = null
+		this._changeHandlers = []
+		this._lastLoad       = null
 
+	}
+
+	_recalculate() {
+		const items = this.data
+		for (const handler of this._changeHandlers) {
+			handler(items)
+		}
 	}
 
 	_onLoad() {
@@ -124,8 +132,14 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		$.DataStore.set(item.dataId, item, true)
 	}
 
+	/********************************************************/
+
 	get data() {
 		return $.DataStore.get(this.itemIds)
+	}
+
+	onChange(condition, callback) {
+		this._changeHandlers.push($.when(condition, callback))
 	}
 
 	fill(items, reset=true) {
@@ -156,6 +170,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		for (const dataId of this.itemIds) {
 			$.DataStore.unset(dataId)
 		}
+		this._recalculate()
 		this.trigger($.Event.DATASOURCE_CLEAR, {})
 		this.itemIds       = []
 
@@ -166,26 +181,26 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		} else {
 			callback()
 		}
-
 	}
 
-	addItem(item) {
+	addItem(item, recalculate=true) {
 		item = this.adaptItem(item)
-
 		this.isCacheable && this._addItemToDb(item)
 		this._addItemToStore(item)
+		recalculate && this._recalculate()
 		this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
 	}
 
 	addItems(items, headers) {
 		items = this.adaptItems(items, headers)
 		if (this.isSingular) {
-			this.addItem(items)
+			this.addItem(items, false)
 		} else {
 			for (const item of items) {
-				this.addItem(item)
+				this.addItem(item, false)
 			}
 		}
+		this._recalculate()
 	}
 
 	changeItem(item) {
@@ -195,10 +210,12 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 		this.isCacheable && this._changeItemInDb(item)
 		this._changeItemInStore(item)
+		this._recalculate()
 		this.trigger($.Event.DATASOURCE_ITEM_CHANGE, { item: item })
 	}
 
 	removeItem(item) {
+		this._recalculate()
 		this.trigger($.Event.DATASOURCE_ITEM_REMOVE, { itemId: item.dataId })
 	}
 
