@@ -25,7 +25,7 @@ export default class PieChart extends $.Component {
 		this.label.removeChildren()
 		this.label.append($.Rows([
 			$.Box('label', {text: label}),
-			$.Box('label', {text: this._data[label].value}),
+			$.Box('value', {text: this._data[label].value}),
 		]))
 	}
 
