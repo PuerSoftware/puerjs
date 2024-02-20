@@ -1,57 +1,143 @@
-.pie-chart {
-    
-}
+.pie-chart {}
+
+    .pie-chart > .legend {
+        height        : auto;
+        margin-bottom : 20px;
+        gap           : 30px;
+    }
+        .pie-chart > .legend > .rows {}
+
+            .pie-chart > .legend > .rows > .label {
+                flex        : none;
+                font-size   : var(--puer-font-size-lo);
+                font-weight : 300;
+                white-space : nowrap;
+            }
+
+            .pie-chart > .legend > .rows > .value {
+                flex        : none;
+                font-size   : var(--puer-font-size-hi);
+                font-weight : 600;
+                color       : var(--text-color-hi);
+            }
+
+            .pie-chart > .legend > .rows:nth-child(1) > .label {
+                color : var(--color-1);
+            }
+
+            .pie-chart > .legend > .rows:nth-child(2) > .label {
+                color : var(--color-2);
+            }
+            .pie-chart > .legend > .rows:nth-child(3) > .label {
+                color : var(--color-3);
+            }
 
     .pie-chart > .doughnut {
-        position: relative;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        clip: rect(0, 200px, 200px, 100px);
+        position      : relative;
+        width         : 126px;
+        height        : 126px;
+        border-radius : 50%;
+        clip          : rect(0, 126px, 126px, 63px);
+        margin        : 0 auto;
     }
+        .pie-chart > .doughnut > .label {
+            text-align        : center;
+            position          : absolute;
+            top               : 50%;
+            left              : 50%;
+            transform         : translate(-50%, -50%);
+            -webkit-transform : translate(-50%, -50%);
+            -moz-transform    : translate(-50%, -50%);
+            -ms-transform     : translate(-50%, -50%);
+            z-index           : 5;
+        }
+            .pie-chart > .doughnut > .label > .rows {
+                align-items : center;
+            }
+                .pie-chart > .doughnut > .label > .rows > .label {
+                    flex        : none;
+                    font-size   : var(--puer-font-size-lo);
+                    font-weight : 300;
+                }
 
-    .pie-chart > .doughnut > .segments > .segment {
-        position: absolute;
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-        border: 3px solid #23252D;
-        clip: rect(0, 100px, 200px, 0);
+                .pie-chart > .doughnut > .label > .rows > .value {
+                    flex        : none;
+                    font-size   : var(--puer-font-size-hi);
+                    font-weight : 600;
+                    color       : var(--text-color-hi);
+                }
+
+        .pie-chart > .doughnut > .segments > .segment {
+            position       : absolute;
+            width          : 120px;
+            height         : 120px;
+            border-radius  : 50%;
+            border         : 4px solid #222222;
+            outline        : 2px solid #222222;
+            outline-offset : -1px;
+            clip           : rect(0, 60px, 120px, 0);
+        }
+
+        .pie-chart > .doughnut > .segments > .segment:nth-child(1) { background-color: var(--color-1); }
+        .pie-chart > .doughnut > .segments > .segment:nth-child(2) { background-color: var(--color-2); }
+        .pie-chart > .doughnut > .segments > .segment:nth-child(3) { background-color: var(--color-3); }
+        .pie-chart > .doughnut > .segments > .segment:nth-child(4) { background-color: var(--color-4); }
+        .pie-chart > .doughnut > .segments > .segment:nth-child(5) { background-color: var(--color-5); }
+        .pie-chart > .doughnut > .segments > .segment:nth-child(6) { background-color: var(--color-6); }
+
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(1) { border-color: var(--color-1); }
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(2) { border-color: var(--color-2); }
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(3) { border-color: var(--color-3); }
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(4) { border-color: var(--color-4); }
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(5) { border-color: var(--color-5); }
+        .pie-chart > .doughnut > .segments > .segment.hover:nth-child(6) { border-color: var(--color-6); }
+
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(1) { border-color : var(--color-1); }
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(2) { border-color : var(--color-2); }
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(3) { 
+            border-color   : var(--color-3);
+            outline        : 2px solid var(--color-3);
+            outline-offset : -1px;
+        }
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(4) { border-color: var(--color-4); }
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(5) { border-color: var(--color-5); }
+        .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(6) { 
+            border-color   : var(--color-6);
+            outline        : 2px solid var(--color-6);
+            outline-offset : -1px;
+        }
+
+        .pie-chart > .doughnut > .hole {
+            width            : 106px;
+            height           : 106px;
+            border-radius    : 50%;
+            background-color : var(--bg-color-hi);
+            border           : 3px solid #222222;
+        }
+            .pie-chart > .doughnut > .hole > .hole-segment {
+                position         : absolute;
+                top              : 10px;
+                left             : 10px;
+                width            : 100px;
+                height           : 100px;
+                clip             : rect(0, 50px, 100px, 0);
+                background-color : #222222;
+                margin           : auto;
+                border-radius    : 50%;
+                border           : 3px solid #222222;
+                z-index          : 1;
+            }
+
+    .pie-chart > .total {
+        font-size       : var(--font-size-lo);
+        font-weight     : 600;
+        color           : var(--text-color-hi-profile);
+        height          : auto;
+        flex-direction  : row;
+        justify-content : center;
+        gap             : 3px;
+        margin-top      : 16px;
     }
-
-    .pie-chart > .doughnut > .segments > .segment:nth-child(1) { background-color: var(--color-1); }
-    .pie-chart > .doughnut > .segments > .segment:nth-child(2) { background-color: var(--color-2); }
-    .pie-chart > .doughnut > .segments > .segment:nth-child(3) { background-color: var(--color-3); }
-    .pie-chart > .doughnut > .segments > .segment:nth-child(4) { background-color: var(--color-4); }
-    .pie-chart > .doughnut > .segments > .segment:nth-child(5) { background-color: var(--color-5); }
-    .pie-chart > .doughnut > .segments > .segment:nth-child(6) { background-color: var(--color-6); }
-
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(1) { border-color: var(--color-1); }
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(2) { border-color: var(--color-2); }
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(3) { border-color: var(--color-3); }
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(4) { border-color: var(--color-4); }
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(5) { border-color: var(--color-5); }
-    .pie-chart > .doughnut > .segments > .segment.hover:nth-child(6) { border-color: var(--color-6); }
-
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(1) { border-color: var(--color-1); }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(2) { border-color: var(--color-2); }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(3) { border-color: var(--color-3); }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(4) { border-color: var(--color-4); }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(5) { border-color: var(--color-5); }
-    .pie-chart > .doughnut > .hole > .hole-segment.hover:nth-child(6) { border-color: var(--color-6); }
-
-
-    .pie-chart > .doughnut > .hole > .hole-segment {
-        position: absolute;
-        top: 25px;
-        left: 25px;
-        width: 150px;
-        height: 150px;
-        clip: rect(0, 75px, 200px, 0);
-        background-color: #23252D;
-        margin: auto;
-        border-radius: 50%;
-        border: 3px solid #23252D;
-        z-index: 1;
-    }
-    
+        .pie-chart > .total > div {
+            flex : none;
+        }

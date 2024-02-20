@@ -93,3 +93,18 @@
     -webkit-user-select : none;
     -ms-user-select     : none;
 }
+
+.button.btn-share {
+	height     : 29px;
+	padding    : 6px 8px 6px 30px;
+	background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn);
+}
+	.button.btn-share:hover {
+		background : var(--puer-svg-share-icon) 8px center no-repeat, var(--puer-bg-color-btn-hover);
+	}
+
+	.button.btn-share.disabled,
+	.button.btn-share.disabled:hover,
+	.button.btn-share.disabled:active {
+		background : var(--puer-svg-share-icon-disabled) 8px center no-repeat, var(--puer-bg-color-btn-disabled);
+	}
