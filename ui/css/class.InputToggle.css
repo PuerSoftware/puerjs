@@ -20,6 +20,7 @@
 			color            : var(--puer-color-toggle);
 			margin           : 0;
 			border-radius    : 1px;
+			border           : 1px solid var(--puer-border-color-toggle);
 			background-color : var(--puer-bg-color-toggle);
 			cursor           : pointer;
 			transition       : all 0.15s ease-in-out;
@@ -34,15 +35,21 @@
 			border-radius    : 1px;		
 		}
 			.input-toggle > .buttons > .option.selected.eta {
-				color: var(--puer-color-toggle-selected-eta);
+				color            : var(--puer-color-toggle-selected-eta);
+				border           : 1px solid var(--puer-border-color-toggle-selected-eta);
+				background-color : var(--puer-bg-color-toggle-selected-eta);
 			}
 
 			.input-toggle > .buttons > .option.selected.spot {
-				color: var(--puer-color-toggle-selected-spot);
+				color            : var(--puer-color-toggle-selected-spot);
+				border           : 1px solid var(--puer-border-color-toggle-selected-spot);
+				background-color : var(--puer-bg-color-toggle-selected-spot);
 			}
 
 			.input-toggle > .buttons > .option.selected.fixed {
-				color: var(--puer-color-toggle-selected-fixed);
+				color            : var(--puer-color-toggle-selected-fixed);
+				border           : 1px solid var(--puer-border-color-toggle-selected-fixed);
+				background-color : var(--puer-bg-color-toggle-selected-fixed);
 			}
 
 	.disabled .input-toggle > .buttons {

@@ -8,18 +8,18 @@
 		white-space   : nowrap;     /* Prevents the text from wrapping to the next line */
     	overflow      : hidden;     /* Hides text that overflows the container's bounds */
     	text-overflow : ellipsis;   /* Replaces the end of the overflowed text with ellipsis */
-		font-size     : 12px;
-		font-family   : inter, sans-serif;
-		color         : #EA7A7A;
+		font-size     : var(--puer-font-size-lo);
+		font-family   : var(--puer-font-label);
+		color         : var(--puer-text-color-form-error);
 	}
 	.form-field > label {
 		display        : block;
-		font-family    : Inter, sans-serif;
-		font-size      : 12px;
+		font-family    : var(--puer-font-label);
+		font-size      : var(--puer-font-size-lo);
 		font-weight    : 300;
 		line-height    : 15px;
 		letter-spacing : 0em;
-		color          : #66798E;
+		color          : var(--puer-text-color-form-label);
 		white-space    : nowrap;
 	}
 	.form-field > * {

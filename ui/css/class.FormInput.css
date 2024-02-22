@@ -72,5 +72,5 @@
 
 .error .form-input,
 .error .form-input * {
-	border-color : #EA7A7A !important;
+	border-color : var(--puer-text-color-form-error) !important;
 }
