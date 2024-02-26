@@ -34,13 +34,14 @@
 
     .pie-chart > .doughnut {
         position      : relative;
-        width         : 126px;
-        height        : 126px;
+        width         : 122px;
+        height        : 122px;
         border-radius : 50%;
         clip          : rect(0, 126px, 126px, 63px);
         margin        : 0 auto;
     }
-        .pie-chart > .doughnut > .label {
+        .pie-chart > .doughnut > .label,
+        .pie-chart > .doughnut > .label-bg {
             text-align        : center;
             position          : absolute;
             top               : 50%;
@@ -69,6 +70,8 @@
 
         .pie-chart > .doughnut > .segments > .segment {
             position       : absolute;
+            top            : 0;
+            left           : 0;
             width          : 120px;
             height         : 120px;
             border-radius  : 50%;

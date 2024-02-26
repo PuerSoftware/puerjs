@@ -38,6 +38,7 @@
     --puer-bg-color-range                        : rgba(28, 115, 196, 0.27);
     --puer-bg-color-selected                     : #0861B3;
     --puer-bg-color-light                        : #FFF;
+    --puer-bg-color-modal                        : rgba(0, 0, 0, 0.5);
     --puer-bg-color-muted                        : rgba(255, 255, 255, 0.07);
     --puer-bg-color-blur                         : rgba(18, 26, 35, 0.61);
     --puer-bg-color-search                       : transparent;
@@ -69,12 +70,14 @@
     --puer-border-color-checkbox              : #24374D;
     --puer-border-color-checkbox-checked      : #5798D4;
     --puer-border-color-form                  : #2F4155;
+    --puer-border-color-form-focus            : #6EA7E0;
     --puer-border-color-comment               : #2F4155;
     --puer-border-color-toggle                : transparent;
     --puer-border-color-toggle-selected-eta   : transparent;
     --puer-border-color-toggle-selected-spot  : transparent;
     --puer-border-color-toggle-selected-fixed : transparent;
     --puer-divider-color-hi                   : #435261;
+    --puer-placeholder-color                  : #263546;
     --puer-placeholder-color-search           : #808080;
     --puer-pagination-color-hi                : #5798D4;
     --puer-pagination-color-lo                : #768799;
@@ -116,6 +119,7 @@
 }
 
 :root .light-theme {
+    --puer-svg-arrow-down   : url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iNiIgdmlld0JveD0iMCAwIDEyIDYiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDFMNS42ODc2NSA0Ljc1MDEyQzUuODcwMjYgNC44OTYyMSA2LjEyOTc0IDQuODk2MjEgNi4zMTIzNSA0Ljc1MDEyTDExIDEiIHN0cm9rZT0iIzBDMTAxNSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPC9zdmc+Cg==');
     --puer-svg-btn-close-lg : url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEgMUw5IDkiIHN0cm9rZT0iIzI2MjgzMiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8cGF0aCBkPSJNOSAxTDEgOSIgc3Ryb2tlPSIjMjYyODMyIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+Cjwvc3ZnPgo=');
 
     --puer-bg-color-lo                    : #EBF4FF;
@@ -124,6 +128,7 @@
     --puer-bg-color-btn-neutral-hover     : #A3BDD3;
     --puer-bg-color-btn-disabled          : #BECCD9;
     --puer-bg-color-checkbox              : #EFF6FF;
+    --puer-bg-color-modal                 : rgba(244, 244, 245, 0.85);
     --puer-bg-color-selected              : #6AA7EF;
     --puer-bg-color-tag-lo                : #EBF4FF;
     --puer-bg-color-tag-hi                : #EBF4FF;
@@ -141,6 +146,7 @@
     --puer-border-color-checkbox              : #92AABF;
     --puer-border-color-checkbox-checked      : #0E6EC6;
     --puer-border-color-form                  : #DCDFE5; /*#A3CAF8*/
+    --puer-border-color-form-focus            : #C6C9CF;
     --puer-border-color-comment               : transparent;
     --puer-border-color-toggle                : transparent;
     --puer-border-color-toggle-selected-eta   : #2D7DC7;
@@ -148,6 +154,7 @@
     --puer-border-color-toggle-selected-fixed : #DE791B;
     --puer-pagination-color-hi                : #0E6EC6;
     --puer-pagination-color-lo                : #7B7D8E;
+    --puer-placeholder-color                  : rgba(126, 130, 150, 0.898);
 
     --puer-text-color-hi         : #262832;
     --puer-text-color-form-label : #607489;

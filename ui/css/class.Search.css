@@ -13,33 +13,17 @@
             height           : 38px;
             padding-left     : 12px;
         }
-            .search .form-input.confined > input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            .search .form-input.confined > input::placeholder {
                 font-size  : var(--puer-font-size-lo);
                 font-style : italic;
                 color      : var(--puer-placeholder-color-search);
-                opacity    : 1;                                 /* Firefox */
             }
-                .search .form-input.confined > input:focus::placeholder {
-                    opacity : 0;                                          
-                }
 
             .search .form-input.confined > input:-ms-input-placeholder { /* Internet Explorer 10-11 */
                 font-size  : var(--puer-font-size-lo);
                 font-style : italic;
                 color      : var(--puer-placeholder-color-search);
             }
-                .search .form-input.confined > input:focus:-ms-input-placeholder {
-                    opacity : 0;                                          
-                }
-
-            .search .form-input.confined > input::-ms-input-placeholder { /* Microsoft Edge */
-                font-size  : var(--puer-font-size-lo);
-                font-style : italic;
-                color      : var(--puer-placeholder-color-search);
-            }
-                .search .form-input.confined > input:focus::-ms-input-placeholder {
-                    opacity : 0;                                          
-                }
 
         .search .form-input.confined > .after {
             height           : 16px;

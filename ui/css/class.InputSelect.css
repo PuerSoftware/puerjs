@@ -10,8 +10,7 @@
 		background-image    : var(--puer-svg-arrow-down);
 		background-color    : transparent;
 		background-size     : 10px 5px;
-	}
-
+}
 		.input-select > select > option {
-			background-color : #000;
+			background-color : var(--puer-bg-color-lo);
 		}
