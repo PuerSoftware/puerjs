@@ -8,10 +8,10 @@
 	width            : 100vw;
 	height           : 100vh;
 	z-index          : 1000; /* Ensuring it's above other content */
-	background-color : rgba(0, 0, 0, 0.5);
+	background-color : var(--puer-bg-color-modal);
 	backdrop-filter  : blur(10px);
 }
-	.modal>.content {
+	.modal > .content {
 /*		background-color : white;*/
 /*		border-radius    : 5px;*/
 /*		box-shadow       : 0 4px 8px rgba(0, 0, 0, 0.1);*/
@@ -20,7 +20,7 @@
 		overflow         : auto; /* For scrolling if the content is too large */
 	}
 
-	.modal>.close-btn {
+	.modal > .close-btn {
 		position : absolute;
 		right    : 0;
 		top      : 0;
