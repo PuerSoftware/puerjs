@@ -10,7 +10,7 @@
             .pie-chart > .legend > .rows > .label {
                 flex        : none;
                 font-size   : var(--puer-font-size-lo);
-                font-weight : 300;
+                font-weight : 500;
                 white-space : nowrap;
             }
 

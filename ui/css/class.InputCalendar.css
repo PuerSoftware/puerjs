@@ -35,7 +35,6 @@
 			margin-bottom : 8px;
 			padding       : 0 6px;
 		}
-
 			.input-calendar > .calendar > .head > .month {
 				white-space : nowrap;
 				user-select : none;
@@ -46,7 +45,6 @@
 				display     : flex;
 				align-items : center;
 			}
-
 				.input-calendar > .calendar > .head > .arrows > div {
 					display         : flex;
 					justify-content : center;
@@ -57,7 +55,6 @@
 					flex            : none;
 					border-radius   : 1px;
 				}
-
 					.input-calendar > .calendar > .head > .arrows > .prev {
 						margin-right : 8px;
 						background   : var(--puer-svg-arrow-prev) center no-repeat, var(--puer-bg-color-dark);
@@ -161,10 +158,10 @@
 
 		.input-calendar > .calendar .start-range > span,
 		.input-calendar > .calendar .end-range > span {
-			color            :var(--puer-text-color-hi);
+			font-weight      : 700;
+			color            :var(--puer-text-color-light);
 			background-color : var(--puer-bg-color-selected);
 		}
-
 			.input-calendar > .calendar .selected.start-range.end-range::before {
 				background-color : transparent;	
 			}
