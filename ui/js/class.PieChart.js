@@ -85,7 +85,7 @@ export default class PieChart extends $.Component {
 
 	render() {
 		return $.div([
-			this.legend = $.Columns('legend'),
+			this.legend = $.Columns('legend unselectable'),
 			$.div('doughnut', [
 				this.segments = $.div('segments'),
 				this.hole     = $.div('hole'),
