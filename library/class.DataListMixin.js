@@ -45,11 +45,13 @@ export default class DataListMixin {
 
 	onDataItemChange(item) {
 		const oldItemComponent = this.items[item.dataId]
-		const itemComponent    = this.renderItem(item)
-		const selected         = this._selectedId == item.dataId
-		oldItemComponent.replace(itemComponent)
-		this.items[item.dataId] = itemComponent
-		selected && itemComponent._select()
+		if (oldItemComponent) {
+			const itemComponent    = this.renderItem(item)
+			const selected         = this._selectedId == item.dataId
+			oldItemComponent.replace(itemComponent)
+			this.items[item.dataId] = itemComponent
+			selected && itemComponent._select()
+		}
 	}
 
 	onDataClear() {

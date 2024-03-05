@@ -22,7 +22,7 @@ class Form extends $.Component {
 	}
 
 	_onResponse(event) {
-		if (event.detail.formName === this.props.name) {
+		// if (event.detail.formName === this.props.name) {
 			this.state.error = event.detail.error
 			this._errorComponent.toggle(this.state.error)
 			for (const input of this.inputs) {
@@ -35,7 +35,7 @@ class Form extends $.Component {
 				alert('Form saved successfully!!!')
 				this._trigger('save')
 			}
-		}
+		// }
 	}
 
 	_onSubmit() {

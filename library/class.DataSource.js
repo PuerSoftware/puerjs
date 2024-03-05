@@ -139,8 +139,17 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	}
 
 	onChange(condition, callback) {
-		this._changeHandlers.push($.when(condition, callback))
+		this._changeHandlers.push($.when(
+			condition.bind(this),
+			callback.bind(this)
+		))
 	}
+
+	select(path, data=null) {
+		data = data || this.data
+		return $.Object.select(data, path)
+	}
+	  
 
 	fill(items, reset=true) {
 		$.defer(() => { // TODO: maybe we can remove this
