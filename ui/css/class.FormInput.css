@@ -50,6 +50,7 @@
 			letter-spacing : 0em;
 			text-align     : left;
 		    color          : var(--puer-placeholder-color);
+			opacity        : 1;
 		}
 
 		.form-input > input:focus::placeholder {
