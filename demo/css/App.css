@@ -7,7 +7,7 @@ html, body {
 :root {
 	--demo-color-1: #006080;
 	--demo-color-2: #CCCCCC;
-	--demo-color-3: #FFFFFF;
+	--demo-color-3: #FDFDFF;
 	--demo-color-4: #d0beaf;
 
 	--demo-color-text : #333;
@@ -51,7 +51,7 @@ html, body {
 	:root .dark-theme {
 		--demo-color-1: #006080;
 		--demo-color-2: #000000;
-		--demo-color-3: #222222;
+		--demo-color-3: #1B2734;
 		--demo-color-4: #000000;
 
 		--demo-color-text : #cecece;
@@ -94,7 +94,7 @@ html, body {
 		}
 
 	.app .pages {
-		height: 100%;
+		height: calc(100% - 120px);
 	}
 
 	.app .sidebar {
