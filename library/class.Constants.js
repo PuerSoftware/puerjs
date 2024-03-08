@@ -51,6 +51,14 @@ export default class Constants {
 		}
 	}
 
+	getByLabel(label) {
+		for (const name in this._data) {
+			if (this._data[name].label === label) {
+				return this._data[name]
+			}
+		}
+	}
+
 	toArray(f=null) {
 		const a = []
 		if (f) {

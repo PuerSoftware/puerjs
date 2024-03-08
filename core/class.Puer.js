@@ -36,7 +36,8 @@ class Puer {
 
 	_setTimezoneCookie() {
 		const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-		document.cookie = 'timezone=' + timezone + ';path=/;max-age=31536000'; // one year
+		this.setCookie('timezone', timezone, 365)
+		// document.cookie = 'timezone=' + timezone + ';path=/;max-age=31536000'; // one year
 	}
 
 	_onCssLoad(success) {
@@ -257,6 +258,31 @@ class Puer {
 			this._time      = undefined
 			this._time_name = undefined
 		}
+	}
+
+	getCookie(name) {
+		const cookies = document.cookie.split(';')
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+			if (cookie.startsWith(name + '=')) {
+				return cookie.substring(name.length + 1)
+			}
+		}
+		return null
+	}
+
+	setCookie(name, value, days) {
+		let expires = ''
+		if (days) {
+			const date = new Date();
+			date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+			expires = '; expires=' + date.toUTCString()
+		}
+		document.cookie = name + '=' + value + expires + '; path=/'
+	}
+
+	removeCookie(name) {
+		document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
 	}
 
 	log( ... args ) {

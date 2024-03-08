@@ -6,6 +6,7 @@ class Link extends $.Component {
 		super(... args)
 		this.props.default('selected', false)
 		this.props.default('label', '')
+		this.props.default('hash', '')
 		this.props.default('stopPropagation', false)
 		this._linkSet = null
 	}
