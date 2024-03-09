@@ -1,5 +1,6 @@
 class Request {
 	static $($) { window.$ = $ }
+	static _pollMap = {}
 
 	static define(name, url, method) {
 		if (Request.hasOwnProperty(name)) {
@@ -58,6 +59,29 @@ class Request {
 		Request.request(url, 'POST', data, headers, callback)
 	}
 
+
+	static pollStart(url, callback, urlParams=null, headers=null, interval=1000, id=null) {
+		if (!id) {
+			id = $.String.randomHex(5)
+			Request._pollMap[id] = 1
+		}
+		setTimeout(() => {
+			$.Request.get(
+				url,
+				(d, h) => {
+					callback(d, h)
+					Request._pollMap[id] && Request.pollStart(url, callback, urlParams, headers, interval, id)
+				},
+				urlParams,
+				headers
+			)
+		}, interval)
+		return id
+	}
+	
+	static pollStop(id) {
+		delete Request._pollMap[id]
+	}
 
 	constructor(url, method) {
 		this.url        = url
