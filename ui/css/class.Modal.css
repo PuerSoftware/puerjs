@@ -8,20 +8,31 @@
 	width            : 100vw;
 	height           : 100vh;
 	z-index          : 1000; /* Ensuring it's above other content */
-	background-color : var(--puer-bg-color-modal);
-	backdrop-filter  : blur(10px);
+	backdrop-filter  : blur(20px);
+	background-color : var(--puer-bg-color-modal);	
 }
-	.modal > .content {
+	.modal > .body {
 /*		background-color : white;*/
 /*		border-radius    : 5px;*/
 /*		box-shadow       : 0 4px 8px rgba(0, 0, 0, 0.1);*/
+		position         : relative;
 		max-width        : 90%; /* Optional: To ensure it doesn't stretch too much */
 		max-height       : 90%; /* Optional: To ensure it doesn't stretch too much */
 		overflow         : auto; /* For scrolling if the content is too large */
 	}
 
-	.modal > .close-btn {
-		position : absolute;
-		right    : 0;
-		top      : 0;
+	.modal > .body > .close-btn {
+		position         : absolute;
+		right            : 0;
+		top              : 0;
+		border           : 0;
+		outline          : 0;
+		padding          : 0;
+		width            : 26px;
+		height           : 20px;
+		background       : no-repeat center center transparent;
+		background-image : var(--puer-svg-btn-close);
+		background-size  : cover;
+		color            : transparent;
+		cursor           : pointer;
 	}
