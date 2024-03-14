@@ -2,8 +2,6 @@ import $         from '../../index.js'
 import InputText from './class.InputText.js'
 
 
-const KEY_ESCAPE = 27
-
 export default class Search extends $.Component {
 	constructor(props, children) {
 		super(props, children)
@@ -19,9 +17,13 @@ export default class Search extends $.Component {
 	_onBlur  (event) { this.isFocused = false }
 
 	_onKeyUp(event) {
-		if (event.keyCode === KEY_ESCAPE) {
+		if (event.keyCode === $.Constants.Keys.Escape) {
 			this.input.value = ''
 		}
+		this.search()	
+	}
+
+	search() {
 		this.trigger($.Event.SEARCH, {
 			value : this.input.value
 		})
@@ -29,9 +31,7 @@ export default class Search extends $.Component {
 
 	reset() {
 		this.input.value = ''
-		this.trigger($.Event.SEARCH, {
-			value : ''
-		})
+		this.search()
 	}
 
 	render() {

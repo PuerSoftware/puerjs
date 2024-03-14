@@ -1,5 +1,6 @@
-import $       from './core/class.Puer.js'
-import PuerApp from './core/class.PuerApp.js'
+import $             from './core/class.Puer.js'
+import PuerApp       from './core/class.PuerApp.js'
+import * as constant from './constants.js'
 
 (() => {
 	const tags = (
@@ -85,6 +86,8 @@ import PuerApp from './core/class.PuerApp.js'
 
 
 $.App = PuerApp
+
+$.Constants.Keys = constant.Keys
 
 $.Events.define('APP_CLICK',              ['event'])
 $.Events.define('APP_KEYUP',              ['event'])
