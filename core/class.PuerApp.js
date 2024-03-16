@@ -41,6 +41,7 @@ class PuerApp extends $.Component {
 		$.Router.navigate(path)
 	}
 
+
 	toTreeString(root, indent='') {
 		let s = ''
 		if (root) {

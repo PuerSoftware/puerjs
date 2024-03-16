@@ -53,6 +53,12 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
+	__onBeforeRoute(path) {
+		if (path) {
+			return this._cascade('__onBeforeRoute', [path]) && this.onBeforeRoute(path)		
+		}
+		return true
+	}
 
 	__route(flatPath, activation) {
 		/*
@@ -279,11 +285,15 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	_cascade(methodName, args=[]) {
+		let b = true
 		if (this.isCustom) {
-			this.root[methodName](... args)
+			b = this.root[methodName](... args)
 		} else {
-			this.children.forEach(child => child[methodName](... args))
+			for (const child of this.children) {
+				b = child[methodName](... args)
+			}
 		}
+		return b
 	}
 
 	_toCode(classes, props, children) {
@@ -640,6 +650,10 @@ class BasePuerComponent extends PuerObject {
 
 	unhighlight() {
 		this._cascade('unhighlight')
+	}
+
+	onBeforeRoute(path) {
+		return true
 	}
 }
 

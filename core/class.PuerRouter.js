@@ -40,11 +40,15 @@ class PuerRouter {
 	}
 
 	_route(hash) {
-		this.path   = this.routeRoot.getPath(hash)
-		$.isRouting = true
-		this.app.__route(this._flattenPath(this.path))
-		$.isRouting = false
-		this.app.__routeChange()
+		this.path = this.routeRoot.getPath(hash)
+		if (this.app.__onBeforeRoute(this.path)) {
+			$.isRouting = true
+			this.app.__route(this._flattenPath(this.path))
+			$.isRouting = false
+			this.app.__routeChange()
+		} else {
+			window.history.back()
+		}
 	}
 
 	/*********************** PUBLIC ***********************/
