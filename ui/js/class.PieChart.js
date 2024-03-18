@@ -27,6 +27,7 @@ export default class PieChart extends $.Component {
 			$.Box('label', {text: label}),
 			$.Box('value', {text: this._data[label].value}),
 		]))
+		this.labelBg.hide()
 	}
 
 	_onSegmentMouseOut(label) {
@@ -35,6 +36,7 @@ export default class PieChart extends $.Component {
 			this._segments[segmentLabel].removeCssClass('hover')
 			this._holeSegments[segmentLabel].removeCssClass('hover')
 		}
+		this.labelBg.show()
 	}
 
 	onDataChange(items) {
