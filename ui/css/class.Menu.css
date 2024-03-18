@@ -1,18 +1,34 @@
 .menu {
-    height          : 24px;
-    padding         : 2px 4px;
-    align-self      : center;
-    justify-content : space-between;
-    cursor          : pointer;
+    flex     : none;
+    position : relative;
+    cursor   : pointer;
 }
-    .menu div {
-        width            : 4px;
-        height           : 4px;
-        border-radius    : 2px;
-        background-color : #A9A9A9;
-        flex             : none;
+    .menu > .user-menu {
+        height          : 24px;
+        padding         : 2px 4px;
+        align-self      : center;
+        justify-content : space-between;
     }
-
-    .menu:hover div {
-        background-color : #5798D4;
+        .menu > .user-menu > div {
+            width            : 4px;
+            height           : 4px;
+            border-radius    : 2px;
+            background-color : var(--puer-color-user-menu);
+            flex             : none;
+        }
+            .menu:hover .user-menu > div {
+                background-color : var(--puer-color-user-menu-hover);
+            }
+    .menu > .popup {
+        width            : 140px;
+        height           : auto;
+        position         : absolute;
+        top              : 0;
+        right            : calc(100% + 4px);
+        padding          : 16px 20px;
+        border-radius    : 2px;
+        color            : var(--puer-color-user-menu);
+        border           : 1px solid var(--divider-color-hi);
+        background-color : var(--bg-color-lo);
+        z-index          : 10;
     }

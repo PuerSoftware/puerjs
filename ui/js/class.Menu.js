@@ -33,7 +33,7 @@ export default class Menu extends $.Component {
 				$.div(),
 				$.div() 
 			]),
-			this._menu = $.Rows('hidden', items)
+			this._menu = $.Rows('popup hidden', items)
 		])
 	}
 }
