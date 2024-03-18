@@ -2,6 +2,11 @@ import $ from '../../index.js'
 
 
 class Modal extends $.Component {
+	constructor(... args) {
+		super(... args)
+		this.props.default('canClose', true)
+	}
+
 
 	_hide(e) {
 		this.props.hideCallback && this.props.hideCallback()
@@ -9,10 +14,14 @@ class Modal extends $.Component {
 	}
 
 	render() {
+		const closeBtn = this.props.canClose
+			? $.button('close-btn', {text: 'x', onclick: this._hide})
+			: $.div('hidden')
+
 		return $.div('hidden', [
 			$.Box('body', [
 				$.div('content', this.children),
-				$.button('close-btn', {text: 'x', onclick: this._hide})
+				closeBtn
 			])
 		])
 	}
