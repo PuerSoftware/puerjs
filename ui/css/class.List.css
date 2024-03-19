@@ -9,10 +9,10 @@
     }
 
 .loader {
-    width         : 48px;
-    height        : 48px;
+    width         : 48px !important;
+    height        : 48px !important;
     border        : 10px solid #FFF;
-    border-radius : 50%;
+    border-radius : 50% !important;
     position      : relative;
     transform     : rotate(45deg);
     box-sizing    : border-box;
