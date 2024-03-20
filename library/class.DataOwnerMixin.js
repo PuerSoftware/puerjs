@@ -18,7 +18,7 @@ export default class DataOwnerMixin extends PuerComponentMixin {
 				this.onDataItemRemove(id)
 			}
 		}
-		const dsName = `${name}__${this.className}__${this.name}`
+		const dsName = `${name}__${this.className}__${this.name}` + $.String.randomHex(3)
 		// console.log(dsName)
 
 		this.props.dataSource    = name

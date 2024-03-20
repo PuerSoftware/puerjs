@@ -10,15 +10,19 @@ export default class ListItem extends $.Component {
 		this._isClickSubscribed = false
 	}
 
+	_triggerSelect() {
+		this.trigger($.Event.LIST_ITEM_SELECT, {
+			data: this.props.data,
+			name: this.props.name
+		})
+	}
+
 	_select(e) {
 		const excludedTagNames = ['a', 'input', 'textarea', 'label', 'select', 'button', 'option']
 		const isFromInput      = e && excludedTagNames.includes(e.target.tagName.toLowerCase())
 		
 		if (!isFromInput) {
-			this.trigger($.Event.LIST_ITEM_SELECT, {
-				data: this.props.data,
-				name: this.props.name
-			})
+			this._triggerSelect()
 		}
 	}
 

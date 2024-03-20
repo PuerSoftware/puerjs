@@ -7,7 +7,8 @@ export default class DataListMixin {
 
 	static init(component) {
 		component.mixin(DataOwnerMixin)
-		component.props.default('searchName', null) // if not set search is inactive
+		component.props.default('searchName', null)   // if not set search is inactive
+		component.props.default('queryKey', 'dataId') // key from url query to select item
 
 		component.isInitialized = false
 		component._searchQuery  = ''
@@ -22,12 +23,22 @@ export default class DataListMixin {
 		this._dataSet.search(this._searchQuery)
 	}
 
+	_handleQueryKey() {
+		const dataId = $.isFunction(this.props.queryKey)
+			? this.props.queryKey(this)
+			: $.Router.getQueryValue(this.props.queryKey)  
+		if (dataId) {
+			this.items[parseInt(dataId)]._triggerSelect()
+		}
+	}
+
 	/**************************************************************/
 
 	onDataChange(items) {
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true
+		this._handleQueryKey()
 	}
 
 	onDataItemAdd(item) {
@@ -35,6 +46,7 @@ export default class DataListMixin {
 			const itemComponent = this.renderItem(item)
 			this.itemContainer.append(itemComponent)
 			this.items[item.dataId] = itemComponent
+			this._handleQueryKey()
 		}
 	}
 
@@ -113,6 +125,12 @@ export default class DataListMixin {
 
 	onActivate() {
 		this._dataSet.refresh()
+	}
+
+	onRoute(routes) {
+		if (this.isActive && this.isInitialized) {
+			this._handleQueryKey()
+		}
 	}
 
 	clear() {

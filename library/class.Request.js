@@ -23,7 +23,7 @@ class Request {
 		}
 		if (data) {
 			if (conf.method === 'GET') {
-				url = url + '?' + $.String.query(data)
+				url = url + '?' + $.String.toQuery(data)
 			} else {
 				conf.body = JSON.stringify(data)
 			}

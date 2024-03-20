@@ -15,6 +15,7 @@ class PuerRouter {
 	constructor(app) {
 		if (!PuerRouter.instance) {
 			this.app            = app
+			this.query          = {}
 			this.initialHash    = this._getHash()
 			this.path           = null
 			this.routeRoot      = null
@@ -35,8 +36,15 @@ class PuerRouter {
 	}
 
 	_getHash() {
-		let hash = window.location.hash.split('#')[1]
-		return hash ? decodeURIComponent(hash) : hash
+		let hash  = window.location.hash.split('#')[1]
+		let query = ''
+		if (hash) {
+			[hash, query] = hash.split('?')
+			hash          = hash || decodeURIComponent(hash)
+			query         = $.String.fromQuery(query)
+		}
+		this.query = query || {}
+		return hash
 	}
 
 	_route(hash) {
@@ -57,14 +65,41 @@ class PuerRouter {
 		return this.app.getRouteConfig()
 	}
 
-	navigate(hash) {
-		hash = this.routeRoot.updateHash(hash)
-		window.location.hash = '#' + hash
+	hasValue(name, value, routes=null) {
+		return this.getValue(name, routes || this.path).includes(value)
+	}
+
+	getValue(name, routes=null) {
+		routes = routes || this.path
+		let values = []
+		for (const route of routes) {
+			if (route.name === name) {
+				values.push(route.value)
+			}
+			values = values.concat(this.getValue(name, route.routes))
+		}
+		return values
+	}
+
+	hasQueryValue(name, value) {
+		return this.query[name] === value
+	}
+
+	getQueryValue(name) {
+		return this.query[name]	
+	}
+
+	navigate(hash, query=null) {
+		hash  = this.routeRoot.updateHash(hash)
+		query = query
+			? '?' + $.String.toQuery(query)
+			: ''
+		window.location.hash = '#' + hash + query
 	}
 
 	start() {
 		this.routeRoot = new $.RouteRoot(this.getConfig())
-		this.navigate(this.initialHash || this.routeRoot.getDefaultHash())
+		this.navigate(this.initialHash || this.routeRoot.getDefaultHash(), this.query)
 
 		window.addEventListener('hashchange', (event) => {
 			let hash = this._getHash(event.newURL)

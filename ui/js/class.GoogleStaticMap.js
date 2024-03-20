@@ -67,7 +67,7 @@ export default class GoogleStaticMap extends $.Component {
 			o.map_id = this.props.mapId
 		}
 		this.removeMarkers()
-		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.query(o)})`
+		this.state.imgUrl = `url(${GoogleStaticMap.API_URL}?${$.String.toQuery(o)})`
 
 		const markers = this.props.dataSource
 			? this.dataSet.items

@@ -37,8 +37,8 @@ class PuerApp extends $.Component {
 		return this.element
 	}
 
-	route(path) {
-		$.Router.navigate(path)
+	route(path, query=null) {
+		$.Router.navigate(path, query)
 	}
 
 
