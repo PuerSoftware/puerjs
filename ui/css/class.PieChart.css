@@ -53,7 +53,8 @@
             z-index           : 5;
         }
 
-        .profile-stats > .pie-chart > .doughnut > .label-bg {
+        .profile-stats.pie-chart > .doughnut > .label-bg,
+        .my-profile-stats > .pie-chart > .doughnut > .label-bg {
             width      : 37px;
             height     : 31px;
             background : var(--puer-svg-logo-sm) no-repeat;
