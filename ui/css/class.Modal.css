@@ -1,15 +1,16 @@
 .modal {
-	display          : flex;
-	justify-content  : center;
-	align-items      : center;
-	position         : fixed;
-	top              : 0;
-	left             : 0;
-	width            : 100vw;
-	height           : 100vh;
-	z-index          : 1000; /* Ensuring it's above other content */
-	backdrop-filter  : blur(20px);
-	background-color : var(--puer-bg-color-modal);	
+	display                  : flex;
+	justify-content          : center;
+	align-items              : center;
+	position                 : fixed;
+	top                      : 0;
+	left                     : 0;
+	width                    : 100vw;
+	height                   : 100vh;
+	z-index                  : 1000; /* Ensuring it's above other content */
+	backdrop-filter          : blur(20px);
+	-webkit-backdrop-filter  : blur(20px);
+	background-color         : var(--puer-bg-color-modal);	
 }
 	.modal > .body {
 /*		background-color : white;*/
