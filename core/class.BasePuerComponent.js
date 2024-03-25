@@ -32,6 +32,7 @@ class BasePuerComponent extends PuerObject {
 		$.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
 		this.props.default('extra', null)
+		this.props.default('isExtra', false)
 
 		this.name = this.props.name || null
 	}
@@ -111,7 +112,14 @@ class BasePuerComponent extends PuerObject {
 
 	__init() {
 		this._cascade('__init')
-		this.onInit && this.onInit()
+		if (this.props.isExtra) {
+			$.wait(
+				() => Boolean(this.parent),
+				() => {this.onInit && this.onInit()}
+			)
+		} else {
+			this.onInit && this.onInit()
+		}
 	}
 
 	__ready() {

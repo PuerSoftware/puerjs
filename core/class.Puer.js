@@ -245,6 +245,17 @@ class Puer {
 		}
 	}
 
+	wait(condition, then, interval=50) {
+		if (condition()) {
+			then()
+		} else {
+			setTimeout(() => {
+				$.wait(condition, then)
+			}, interval)
+		}
+		
+	}
+
 	timer(name) {
 		const time = Date.now()
 		if (this._time) {

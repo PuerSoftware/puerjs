@@ -143,6 +143,10 @@ export default class DataSet extends PuerObject {
 		this.on('DATASOURCE_CLEAR',       this._onClear.      bind(this), dataSource.name)
 	}
 
+	reduce(f) {
+		return this.items.reduce(f, 0)
+	}
+
 	filter(f) {
 		if (this.isInitialized) {
 			const items = this.items
