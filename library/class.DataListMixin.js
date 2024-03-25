@@ -5,8 +5,8 @@ import DataOwnerMixin from './class.DataOwnerMixin.js'
 
 export default class DataListMixin {
 
-	static init(component) {
-		component.mixin(DataOwnerMixin)
+	static init(component, data) {
+		component.mixin(DataOwnerMixin, data)
 		component.props.default('searchName', null)   // if not set search is inactive
 		component.props.default('queryKey', 'dataId') // key from url query to select item
 

@@ -1,9 +1,7 @@
 import $                  from '../core/class.Puer.js'
-import PuerComponentMixin from '../core/class.PuerComponentMixin.js'
 
-
-export default class DataOwnerMixin extends PuerComponentMixin {
-	static init(component) {
+export default class DataOwnerMixin {
+	static init(component, data) {
 		component.props.require('name')
 		component.props.require('dataSource')
 

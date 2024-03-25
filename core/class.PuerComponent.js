@@ -9,10 +9,18 @@ class PuerComponent extends BasePuerComponent {
 		this.state     = new PuerProxy({}, '_onStateChange', this)
 		this.classes   = this._computeClasses()
 		this.isCustom  = true
+		this.props.default('mixins', []) // [{mixin: mixinClass, data: data}]
 	}
 
 	/********************** FRAMEWORK **********************/
 	
+	__init() {
+		for (const mixin of this.props.mixins) {
+			this.mixin(mixin.mixin, mixin.data)
+		}
+		super.__init()
+	}
+
 	__ready() {
 		super.__ready()
 		for (const prop in this.props) {
@@ -57,6 +65,33 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	/*********************** PUBLIC ***********************/
+
+	mixin(mixinClass, data=null, overwrite=false) {
+		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
+		for (let key in methods) {
+			if (key !== 'constructor') {
+				const descriptor = methods[key]
+				if (typeof descriptor.value === 'function') {
+					if (this[key] && !overwrite) {
+						const original = this[key]
+						this[key] = (... args) => {
+							descriptor.value.apply(this, args)
+							original.apply(this, args)
+						}
+					} else {
+						this[key] = descriptor.value.bind(this)
+					}
+				} else {
+					if (this[key] && !overwrite) {
+						throw `Mixin overrides existing property "${this.className}.${key}"`
+					} else {
+						Object.defineProperty(this, key, descriptor)
+					}
+				}
+			}
+		}
+		mixinClass.init(this, data || {})
+	}
 
 	render() {
 		return $.div()

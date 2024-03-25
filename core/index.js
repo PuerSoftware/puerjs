@@ -1,5 +1,4 @@
 export { default as PuerComponent      } from './class.PuerComponent.js'
-export { default as PuerComponentMixin } from './class.PuerComponentMixin.js'
 export { default as PuerRouter         } from './class.PuerRouter.js'
 export { default as PuerEvents         } from './class.PuerEvents.js'
 export { default as PuerError          } from './class.PuerError.js'
