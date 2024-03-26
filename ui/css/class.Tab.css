@@ -12,3 +12,9 @@
 		bottom           : -2px;
 		left             : 0;
 	}
+
+	.tab > .counter {
+		position : absolute;
+		top      : -8px;
+		right    : -8px;
+	}
