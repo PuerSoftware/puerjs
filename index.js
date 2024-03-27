@@ -93,6 +93,8 @@ $.Events.define('APP_CLICK',              ['event'])
 $.Events.define('APP_KEYUP',              ['event'])
 $.Events.define('APP_ESCAPE',             ['event'])
 
+$.Events.define('COUNTER_UPDATE',         ['count'])
+
 $.Events.define('DATASOURCE_DATA',        ['itemIds'])
 $.Events.define('DATASOURCE_ITEM_ADD',    ['item'])
 $.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])

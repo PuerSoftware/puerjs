@@ -8,6 +8,9 @@ export default class DataOwnerMixin {
 		component._dataSet    = null
 		component._dataSource = null
 		component.dataSource  = component.props.dataSource
+		if (component.dataSource.isPreloadable) {
+			$.onDataMixinInit()
+		}
 	}
 
 	set dataSource(name) {
@@ -25,9 +28,18 @@ export default class DataOwnerMixin {
 		this._dataSet.owner      = this
 		
 		const nop = () => {}
+		const onDataFunction = this.props.onDataChange ? this.props.onDataChange : this.onDataChange ? this.onDataChange.bind(this) : nop
+
+		const onData = (items) => {
+			onDataFunction(items)
+			if (this.dataSource.isPreloadable) {
+				$.onDataMixinLoad()
+			}
+		}
+
 
 		// TODO: Refactor churchkhela
-		this._dataSet.onData       = this.props.onDataChange     ? this.props.onDataChange     : this.onDataChange     ? this.onDataChange.bind(this)     : nop
+		this._dataSet.onData       = onData
 		this._dataSet.onSort       = this.props.onDataSort       ? this.props.onDataSort       : this.onDataSort       ? this.onDataSort.bind(this)       : nop
 		this._dataSet.onFilter     = this.props.onDataFilter     ? this.props.onDataFilter     : this.onDataFilter     ? this.onDataFilter.bind(this)     : nop
 		this._dataSet.onItemAdd    = this.props.onDataItemAdd    ? this.props.onDataItemAdd    : this.onDataItemAdd    ? this.onDataItemAdd.bind(this)    : nop
@@ -35,7 +47,7 @@ export default class DataOwnerMixin {
 		this._dataSet.onItemRemove = this.props.onDataItemRemove ? this.props.onDataItemRemove : this.onDataItemRemove ? this.onDataItemRemove.bind(this) : nop
 		this._dataSet.onClear      = this.props.onDataClear      ? this.props.onDataClear      : this.onDataClear      ? this.onDataClear.bind(this)      : nop
 
-
+	
 		this._dataSet.dataSource = this._dataSource
 	}
 

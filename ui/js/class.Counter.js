@@ -6,30 +6,17 @@ export default class Counter extends $.Component {
 	constructor(... args) {
 		super(... args)
 		this.props.default('count', 0)
-		this.props.default('dataSource',  null)
-		this.props.default('itemReducer', null)
+		this.on($.Event.COUNTER_UPDATE, this._onCounterUpdate)
 	}
 
-	_updateCount() {
-		this.props.count = this.dataSet.reduce(this.props.itemReducer)
+	_onCounterUpdate(e) {
+		this.props.count = e.detail.count
 	}
 
 	onPropCountChange(count) {
 		($.isNumber(count) && count > 0) || ($.isString(count) && count !== '')
 			? this.show()
 			: this.hide()
-	}
-
-	onDataChange(items)    { this._updateCount() }
-
-	onDataItemAdd(item)    { this._updateCount() }
-
-	onDataItemChange(item) { this._updateCount(); console.log('onDataItemChange', this.props.count) }
-
-	onInit() {
-		if (this.props.dataSource && !this.dataSource) {
-			this.mixin(DataOwnerMixin)
-		}
 	}
 
 	render() {

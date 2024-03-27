@@ -9,11 +9,12 @@ class Puer {
 			this.appPath
 			this.isReferencing
 			
-			this.isRouting  = true
-			this._cssUrls   = new Set()
-			this._cssCount  = 0
-			this.components = {}
-			Puer.instance   = this
+			this.isRouting        = true
+			this._cssUrls         = new Set()
+			this._cssCount        = 0
+			this._dataMixinsCount = 0
+			this.components       = {}
+			Puer.instance         = this
 		}
 		return Puer.instance
 	}
@@ -173,12 +174,13 @@ class Puer {
 		return ['string', 'number', 'boolean'].includes(this.type(o))
 	}
 
-	application(cls, importUrl, onInit, onReady) {
+	application(cls, importUrl, onInit, onReady, onComplete) {
 		this._defineComponent(cls, importUrl)
 		this.app    = this[cls.name]({onReady: onReady})
 		this.Router = new this.PuerRouter(this.app)
 		onInit()
 		this.app.__init()
+		this.app.onComplete = onComplete
 		return $
 	}
 
@@ -191,6 +193,7 @@ class Puer {
 			? value.dereference()
 			: value
 	}
+
 
 	defer(f, args, context, timeout=1) {
 		setTimeout(() => {
@@ -306,6 +309,14 @@ class Puer {
 			}
 		}
 		console.log( ... newArgs )
+	}
+
+	onDataMixinInit() { this._dataMixinsCount ++ }
+	onDataMixinLoad() {
+		this._dataMixinsCount --
+		if (this._dataMixinsCount === 0) {
+			this.app.__complete()
+		} 
 	}
 }
 

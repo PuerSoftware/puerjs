@@ -71,7 +71,9 @@ class PuerObject {
 		if (target && target.isReference) {
 			target = target.dereference()
 		}
-		if ($.isString(target)) {
+		if ($.isFunction(target)) {
+			return target
+		} else if ($.isString(target)) {
 			return new Set([target])
 		} else if ($.isPuerObject(target)) {
 			return new Set([target.id])
@@ -91,18 +93,22 @@ class PuerObject {
 	on(name, f, validTargets=null) { // matchTarget can be either target or targetName
 		const ts = this._getTargetSet(validTargets)
 		const _f = (...args) => {
-			let validTargetsSet   = new Set([... ts])
-			const detail          = args[0].detail
-			const canReceiveEvent = this.isActiveEventTarget && detail.target.isActiveEventTarget
-			if (canReceiveEvent) {
-				if (validTargetsSet.size) {
-					const targets = new Set([detail.targetName, detail.target.id])
-					validTargetsSet  = $.Set.and(targets, validTargetsSet)
+			if ($.isFunction(ts)) {
+				ts(...args) && f.bind(this)(...args)
+			} else {
+				let validTargetsSet   = new Set([... ts])
+				const detail          = args[0].detail
+				const canReceiveEvent = this.isActiveEventTarget && detail.target.isActiveEventTarget
+				if (canReceiveEvent) {
 					if (validTargetsSet.size) {
+						const targets = new Set([detail.targetName, detail.target.id])
+						validTargetsSet  = $.Set.and(targets, validTargetsSet)
+						if (validTargetsSet.size) {
+							f.bind(this)(...args)
+						}
+					} else {
 						f.bind(this)(...args)
 					}
-				} else {
-					f.bind(this)(...args)
 				}
 			}
 		}

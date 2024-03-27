@@ -55,7 +55,8 @@ class Link extends $.Component {
 
 	render() {
 		return $.div({onclick : this._navigate}, [
-			$.a ({text : this.props.label})
+			$.a ({text : this.props.label}),
+			... this.children
 		])
 	}
 }

@@ -112,14 +112,14 @@ class BasePuerComponent extends PuerObject {
 
 	__init() {
 		this._cascade('__init')
-		if (this.props.isExtra) {
-			$.wait(
-				() => Boolean(this.parent),
-				() => {this.onInit && this.onInit()}
-			)
-		} else {
-			this.onInit && this.onInit()
-		}
+		// if (this.props.isExtra) {
+		// 	$.wait(
+		// 		() => Boolean(this.parent),
+		// 		() => {this.onInit && this.onInit()}
+		// 	)
+		// } else {
+		this.onInit && this.onInit()
+		// }
 	}
 
 	__ready() {

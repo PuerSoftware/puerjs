@@ -9,13 +9,13 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	
 	/**************************************************************/
 
-	static define(name, cls, url, isSingular=false, isCacheable=false) {
+	static define(name, cls, url, isSingular=false, isCacheable=false, isPreloadable=false) {
 		cls = cls || DataSource
 		if (DataSource.hasOwnProperty(name)) {
 			throw `DataSource class already has property "${name}"`
 		}
 
-		const dataSource = new cls(name, url, isSingular, isCacheable)
+		const dataSource = new cls(name, url, isSingular, isCacheable, isPreloadable)
 		Object.defineProperty(DataSource, name, {
 			get: function() {
 				return dataSource
@@ -26,7 +26,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 	/**************************************************************/
 
-	constructor(name, url, isSingular, isCacheable) {
+	constructor(name, url, isSingular, isCacheable, isPreloadable) {
 		super()
 
 		this.name          = name
@@ -36,7 +36,9 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.db            = null
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
+		this.isPreloadable = isPreloadable
 
+		this._wasLoaded      = false
 		this._changeHandlers = []
 		this._lastLoad       = null
 
@@ -138,12 +140,12 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		return $.DataStore.get(this.itemIds)
 	}
 
-	onChange(condition, callback) {
-		this._changeHandlers.push($.when(
-			condition.bind(this),
-			callback.bind(this)
-		))
-	}
+	// onChange(condition, callback) {
+	// 	this._changeHandlers.push($.when(
+	// 		condition.bind(this),
+	// 		callback.bind(this)
+	// 	))
+	// }
 
 	select(path, data=null) {
 		data = data || this.data
