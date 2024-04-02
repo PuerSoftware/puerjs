@@ -14,10 +14,14 @@ class Link extends $.Component {
 	_navigate(e) {
 		this.props.stopPropagation && e.stopPropagation()
 
-		if (this._linkSet) {
-			this._linkSet.select(this)
-		}
-		this.props.hash && this.route(this.props.hash)
+        if (this.props.href) {
+            window.open(this.props.href, this.props.target)
+        } else {
+            if (this._linkSet) {
+		    	this._linkSet.select(this)
+	    	}
+		    this.props.hash && this.route(this.props.hash)
+        }
 	}
 
 	_pathToHash(path) {
@@ -42,7 +46,11 @@ class Link extends $.Component {
 	}
 
 	onRoute(path) {
-		this.selected = this._pathToHash(path).includes(this.props.hash)
+        if (this.props.href) {
+            this.selected = false
+        } else {
+            this.selected = this._pathToHash(path).includes(this.props.hash)
+        }
 	}
 
 	onInit() {
