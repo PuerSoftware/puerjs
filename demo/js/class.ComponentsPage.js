@@ -1,18 +1,44 @@
 import $       from '../../index.js'
 import * as ui from '../../ui/index.js'
 
-import PortListItem from './class.PortListItem.js'
-
 
 export default class ComponentsPage extends $.Component {
 	constructor(... args) {
 		super(... args)
 		
 		this._highlightString = 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.'
+        // this._pthPosText = `
+        // {
+        //     "bar"  : [11, 3],
+        //     "foo"  : [6, 3],
+        //     "buzz" : [19, 4]
+        // }`
+        // this._pthColorText = `
+        // {
+        //     "foo"  : "red",
+        //     "bar"  : "green",
+        //     "buzz" : "blue"
+        // }`
+
 
 		this.state.item = {}
 		this.state.code     = null
 		this.state.highText = this._highlightString
+
+        this.state.pthText = 'Words foo, bar and buzz are highlighted in this text.'
+        this.state.pthPositions = {
+            bar  : [11, 3],
+            foo  : [6, 3],
+            buzz : [19, 4]
+        }
+        this.state.pthColors = {
+            foo  : 'red',
+            bar  : 'green',
+            buzz : 'blue'
+        }
+
+        this._pthPosText   = JSON.stringify(this.state.pthPositions, null, 4)
+        this._pthColorText = JSON.stringify(this.state.pthColors, null, 4)
 	}
 
 	_renderTag(item) {
@@ -25,6 +51,21 @@ export default class ComponentsPage extends $.Component {
 		this.state.highText = e.target.value
 	}
 
+    _updatePthPosText(e) {
+        try {
+            this.state.pthPositions = JSON.parse(e.target.value)
+        } catch (e) {
+            alert('Invalid positioning')
+        }
+    }
+
+    _updatePthColorText(e) {
+         try {
+            this.state.pthColors = JSON.parse(e.target.value)
+        } catch (e) {
+            alert('Invalid colors')
+        }
+    }
 
 	onInit() {
 		this.state.item = {
@@ -36,19 +77,20 @@ export default class ComponentsPage extends $.Component {
 	render() {
 		return $.Columns([
 			$.Rows('sidebar', [
-				$.Link({label: 'Button',              hash: 'cmp:button'        }),
-				$.Link({label: 'Calendar',            hash: 'cmp:calendar'      }),
-				$.Link({label: 'Checkbox',            hash: 'cmp:checkbox'      }),
-				$.Link({label: 'Code',                hash: 'cmp:code'          }),
-				$.Link({label: 'Flag',                hash: 'cmp:flag'          }),
-				$.Link({label: 'Google Map',          hash: 'cmp:map'           }),
-				$.Link({label: 'Google Static Map',   hash: 'cmp:staticmap'     }),
-				$.Link({label: 'Pagination',          hash: 'cmp:pagination'    }),
-				$.Link({label: 'SearchSelect',        hash: 'cmp:searchselect'  }),			
-				$.Link({label: 'Tag',                 hash: 'cmp:tag'           }),
-				$.Link({label: 'Text Highlight',      hash: 'cmp:texthighlight' }),
-				$.Link({label: 'Toggle',              hash: 'cmp:toggle'        }),
-				$.Link({label: 'PieChart',            hash: 'cmp:piechart'      })
+				$.Link({label: 'Button',                  hash: 'cmp:button'                }),
+				$.Link({label: 'Calendar',                hash: 'cmp:calendar'              }),
+				$.Link({label: 'Checkbox',                hash: 'cmp:checkbox'              }),
+				$.Link({label: 'Code',                    hash: 'cmp:code'                  }),
+				$.Link({label: 'Flag',                    hash: 'cmp:flag'                  }),
+				$.Link({label: 'Google Map',              hash: 'cmp:map'                   }),
+				$.Link({label: 'Google Static Map',       hash: 'cmp:staticmap'             }),
+				$.Link({label: 'Pagination',              hash: 'cmp:pagination'            }),
+				$.Link({label: 'SearchSelect',            hash: 'cmp:searchselect'          }),
+				$.Link({label: 'Tag',                     hash: 'cmp:tag'                   }),
+				$.Link({label: 'Text Highlight',          hash: 'cmp:texthighlight'         }),
+				$.Link({label: 'Position Text Highlight', hash: 'cmp:positiontexthighlight' }),
+				$.Link({label: 'Toggle',                  hash: 'cmp:toggle'                }),
+				$.Link({label: 'PieChart',                hash: 'cmp:piechart'              })
 			]),
 			$.Box('body', [
 				$.Box({route: 'cmp:button', isDefaultRoute: true}, [
@@ -129,6 +171,15 @@ export default class ComponentsPage extends $.Component {
 					$.textarea({text: this._highlightString, onkeyup: this._updateTextHighlight }),
 					$.TextHighlight({
 						text : this.state.highText,
+					})
+				]),
+                $.Box('text-highlight', {route: 'cmp:positiontexthighlight'}, [
+					$.textarea({text: this._pthPosText,   onkeyup: this._updatePthPosText   }),
+					$.textarea({text: this._pthColorText, onkeyup: this._updatePthColorText }),
+					$.PositionTextHighlight({
+						srcText   : this.state.pthText,
+                        positions : this.state.pthPositions,
+                        colors    : this.state.pthColors
 					})
 				]),
 				$.Box({route: 'cmp:toggle'}, [

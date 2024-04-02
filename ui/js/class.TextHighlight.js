@@ -1,9 +1,9 @@
 import $ from '../../index.js'
 
 
-class TextHighlight extends $.Component {
-	constructor(props, children) {
-		super(props, children)
+export default class TextHighlight extends $.Component {
+	constructor(... args) {
+		super(... args)
 		this.props.default('text', '')  // Format: text text ```[class]text```
 
 		this.separator = '```'
@@ -35,4 +35,3 @@ class TextHighlight extends $.Component {
 }
 
 $.define(TextHighlight, import.meta.url)
-export default TextHighlight
