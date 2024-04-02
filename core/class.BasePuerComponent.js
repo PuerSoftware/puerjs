@@ -195,7 +195,7 @@ class BasePuerComponent extends PuerObject {
 	/*********************** PRIVATE ***********************/
 
 	_onChildrenChange() {
-		console.log(`${this.className}._onChildrenChange`)
+		// console.log(`${this.className}._onChildrenChange`)
 		this._applyProps()
 	}
 
