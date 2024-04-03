@@ -13,3 +13,10 @@
 		height  : 100px;
 		margin  : 0 0 20px 0;
 	}
+
+    .components-page .body .text-position-highlight textarea {
+		padding : 20px;
+		width   : 400px;
+		height  : 300px;
+		margin  : 0 0 20px 0;
+	}

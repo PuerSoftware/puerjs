@@ -7,38 +7,26 @@ export default class ComponentsPage extends $.Component {
 		super(... args)
 		
 		this._highlightString = 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.'
-        // this._pthPosText = `
-        // {
-        //     "bar"  : [11, 3],
-        //     "foo"  : [6, 3],
-        //     "buzz" : [19, 4]
-        // }`
-        // this._pthColorText = `
-        // {
-        //     "foo"  : "red",
-        //     "bar"  : "green",
-        //     "buzz" : "blue"
-        // }`
-
 
 		this.state.item = {}
 		this.state.code     = null
 		this.state.highText = this._highlightString
 
-        this.state.pthText = 'Words foo, bar and buzz are highlighted in this text.'
+        this._pthText      = 'Words foo, bar and buzz are highlighted in this text.'
+        this.state.pthText = this._pthText
         this.state.pthPositions = {
             bar  : [11, 3],
             foo  : [6, 3],
             buzz : [19, 4]
         }
-        this.state.pthColors = {
+        this.state.pthClasses = {
             foo  : 'red',
             bar  : 'green',
             buzz : 'blue'
         }
 
-        this._pthPosText   = JSON.stringify(this.state.pthPositions, null, 4)
-        this._pthColorText = JSON.stringify(this.state.pthColors, null, 4)
+        this._pthPosText     = JSON.stringify(this.state.pthPositions, null, 4)
+        this._pthClassesText = JSON.stringify(this.state.pthClasses, null, 4)
 	}
 
 	_renderTag(item) {
@@ -51,6 +39,11 @@ export default class ComponentsPage extends $.Component {
 		this.state.highText = e.target.value
 	}
 
+    _updatePthText(e) {
+        this.state.pthText = e.target.value
+        console.log('_updatePthText', this.state.pthText)
+    }
+
     _updatePthPosText(e) {
         try {
             this.state.pthPositions = JSON.parse(e.target.value)
@@ -59,9 +52,9 @@ export default class ComponentsPage extends $.Component {
         }
     }
 
-    _updatePthColorText(e) {
+    _updatePthClassesText(e) {
          try {
-            this.state.pthColors = JSON.parse(e.target.value)
+            this.state.pthClasses = JSON.parse(e.target.value)
         } catch (e) {
             alert('Invalid colors')
         }
@@ -173,13 +166,14 @@ export default class ComponentsPage extends $.Component {
 						text : this.state.highText,
 					})
 				]),
-                $.Box('text-highlight', {route: 'cmp:positiontexthighlight'}, [
+                $.Box('text-position-highlight', {route: 'cmp:positiontexthighlight'}, [
+                    $.textarea({text: this._pthText,      onkeyup: this._updatePthText      }),
 					$.textarea({text: this._pthPosText,   onkeyup: this._updatePthPosText   }),
-					$.textarea({text: this._pthColorText, onkeyup: this._updatePthColorText }),
+					$.textarea({text: this._pthClassesText, onkeyup: this._updatePthClassesText }),
 					$.PositionTextHighlight({
-						srcText   : this.state.pthText,
-                        positions : this.state.pthPositions,
-                        colors    : this.state.pthColors
+						srcText     : this.state.pthText,
+                        positions   : this.state.pthPositions,
+                        textClasses : this.state.pthClasses
 					})
 				]),
 				$.Box({route: 'cmp:toggle'}, [
