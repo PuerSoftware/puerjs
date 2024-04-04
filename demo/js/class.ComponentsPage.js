@@ -48,7 +48,7 @@ export default class ComponentsPage extends $.Component {
         try {
             this.state.pthPositions = JSON.parse(e.target.value)
         } catch (e) {
-            alert('Invalid positioning')
+            $.notify('Invalid positioning')
         }
     }
 
@@ -56,7 +56,7 @@ export default class ComponentsPage extends $.Component {
          try {
             this.state.pthClasses = JSON.parse(e.target.value)
         } catch (e) {
-            alert('Invalid colors')
+            $.notify('Invalid colors')
         }
     }
 

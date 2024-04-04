@@ -13,7 +13,7 @@ class Puer {
 			this._cssUrls         = new Set()
 			this._cssCount        = 0
 			this._dataMixinsCount = 0
-			this.components       = {}
+			this.components       = {} // {id: component, ...}
 			Puer.instance         = this
 		}
 		return Puer.instance
@@ -310,6 +310,10 @@ class Puer {
 		}
 		console.log( ... newArgs )
 	}
+
+    notify(text) {
+        this.app.trigger($.Event.NOTIFICATION, {text: text})
+    }
 
 	onDataMixinInit() { this._dataMixinsCount ++ }
 	onDataMixinLoad() {

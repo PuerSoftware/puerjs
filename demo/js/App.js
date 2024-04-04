@@ -17,6 +17,7 @@ $.application(
 
 		render() {
 			return $.Rows([
+                $.Notification(),
 				$.Columns('header', [
 					$.Rows('left', [
 						$.h2({text: 'PuerJS'}),

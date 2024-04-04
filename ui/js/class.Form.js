@@ -32,7 +32,7 @@ class Form extends $.Component {
 			}
 			if (event.detail.isSaved) {
 				this._updateInitialValues()
-				alert('Form saved successfully!!!')
+				$.notify('Form saved successfully!')
 				this._trigger('save')
 			}
 		// }
