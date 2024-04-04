@@ -112,6 +112,6 @@ $.Events.define('PAGINATE',               ['page'])
 $.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'isSaved'])
 $.Events.define('TAG_REMOVE',             ['label'])
 $.Events.define('TAG_CLICK',              ['label'])
-
+$.Events.define('NOTIFICATION',           ['text'])
 
 export default $
