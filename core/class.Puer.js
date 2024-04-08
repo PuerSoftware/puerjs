@@ -353,7 +353,7 @@ $.DataSet        = Library.DataSet
 $.DataStore      = Library.DataStore
 $.DataSource     = Library.DataSource
 $.DataOwnerMixin = Library.DataOwnerMixin
-$.DataListMixn   = Library.DataListMixn
+$.DataListMixn   = Library.DataListMixin
 $.FormDataSource = Library.FormDataSource
 
 $.Reference      = Library.Reference
