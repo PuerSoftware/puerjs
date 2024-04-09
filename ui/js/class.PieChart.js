@@ -39,7 +39,7 @@ export default class PieChart extends $.Component {
 		this.labelBg.show()
 	}
 
-	onDataChange(items) {
+	onDataItemAdd(items) {
 		this.segments.removeChildren()
 		this.legend.removeChildren()
 		this.hole.removeChildren()
