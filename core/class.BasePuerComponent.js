@@ -372,6 +372,10 @@ class BasePuerComponent extends PuerObject {
 		return false
 	}
 
+    isDomEventTarget(e) {
+        return this.element && this.element.contains(e.target)
+    }
+
 	/********************* DIRECTIVES *********************/
 
 	activate() {
