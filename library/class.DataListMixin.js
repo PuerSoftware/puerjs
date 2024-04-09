@@ -47,12 +47,14 @@ export default class DataListMixin {
 			this.itemContainer.append(itemComponent)
 			this.items[item.dataId] = itemComponent
 			this._handleQueryKey()
+            this.onDataItemAddMixin && this.onDataItemAddMixin(item)
 		}
 	}
 
 	onDataItemRemove(dataId) {
 		this.items[dataId].remove()
 		delete this.items[dataId]
+        this.onDataItemRemoveMixin && this.onDataItemRemoveMixin(dataId)
 	}
 
 	onDataItemChange(item) {
@@ -63,11 +65,13 @@ export default class DataListMixin {
 			oldItemComponent.replace(itemComponent)
 			this.items[item.dataId] = itemComponent
 			selected && itemComponent._select()
+            this.onDataItemChangeMixin && this.onDataItemChangeMixin(item)
 		}
 	}
 
 	onDataClear() {
 		this.clearItems && this.clearItems()
+        this.onDataClearMixin && this.onDataClearMixin
 	}
 
 	onDataFilter(filterMap) {
@@ -92,7 +96,7 @@ export default class DataListMixin {
 
 	onDataSort(sortMap) {
 		this._sortMap = sortMap
-		console.log('onStateSortMapChange', sortMap)
+		// console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
 		const elements = []
 		for (const itemId in this.items) {
@@ -118,7 +122,7 @@ export default class DataListMixin {
 		// Appending elements in the new order
 		newOrder.forEach(element => {
 			if (element) {
-				container.appendChild(element)
+			    this.element.appendChild(element)
 			}
 		})
 	}
