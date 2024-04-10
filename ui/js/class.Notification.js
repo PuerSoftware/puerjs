@@ -4,7 +4,7 @@ import $ from '../../index.js'
 export default class Notification extends $.Component {
     constructor(... args) {
         super(... args)
-        this.props.default('timeout', 2000)
+        this.props.default('timeout', 3000)
         this._notifications = {} // componentId: timeoutId
 
         this.on($.Event.NOTIFICATION, this._onNotification)
@@ -24,7 +24,7 @@ export default class Notification extends $.Component {
         setTimeout(() => {
             delete _this._notifications[notificationId]
             notification.remove()
-        }, 1000)
+        }, 1400)
     }
 
     _onItemMouseOver(e) {
