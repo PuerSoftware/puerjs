@@ -15,6 +15,10 @@ export default class LinkSet extends $.Component {
 		this._selectedLink.selected = true
 	}
 
+	get selected() {
+		return this._selectedLink
+	}
+
 	render() {
 		return $.div(this.children)
 	}

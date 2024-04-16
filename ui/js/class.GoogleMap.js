@@ -13,6 +13,8 @@ export default class GoogleMap extends $.Component {
 		this.props.default('center',  [50.4504, 30.5245])
 		this.props.default('zoom',    this.defaultZoom)
 		this.props.default('mapType', 'hybrid')
+		this.props.default('mapIds',  []) // list of map ids to load
+		this.props.default('mapId',   '') // map id of current map
 		this.props.default('styles',  [])
 		this.props.default('icons',   {})
 
@@ -23,10 +25,10 @@ export default class GoogleMap extends $.Component {
 		this.props.default('rotateControl',     false)
 		this.props.default('fullscreenControl', false)
 
-		this.map             = null  // google.maps.Map
-		this._markers        = {}    // { lat_lng: google.maps.Marker }
-		this._markerIcons    = {}    // { lat_lng: {out: '', over: '', click: ''} }
-		this._selectedMarker = null  // google.maps.Marker
+		this.map              = null  // google.maps.Map
+		this._markers         = {}    // { lat_lng: google.maps.Marker }
+		this._markerIcons     = {}    // { lat_lng: {out: '', over: '', click: ''} }
+		this._selectedMarker  = null  // google.maps.Marker
 
 		if (window.google && window.google.maps) {
 			this._initMap()
@@ -37,7 +39,7 @@ export default class GoogleMap extends $.Component {
 
 	_getMarkerKey(lat, lng) { // (lat, lng) || (key)
 		if (lat && lat.position) {
-			return `${lat.position.lat()}_${lat.position.lng()}`
+			return `${lat.position.lat}_${lat.position.lng}`
 		}
 		return lat && lng
 			? `${lat}_${lng}`
@@ -46,9 +48,11 @@ export default class GoogleMap extends $.Component {
 
 	_loadApi() {
 		const query = $.String.toQuery({
-			key      : this.props.apiKey,
-			loading  : 'async',
-			callback : 'onGoogleMapApiLoad'
+			key       : this.props.apiKey,
+			map_ids   : this.props.mapIds.join(','),
+			loading   : 'async',
+			libraries : 'maps,marker',
+			callback  : 'onGoogleMapApiLoad'
 		})
 		const url = `${GoogleMap.API_URL}?${query}`
 		window.onGoogleMapApiLoad = this._initMap.bind(this)
@@ -60,6 +64,7 @@ export default class GoogleMap extends $.Component {
 			center    : { lat: this.props.center[0] , lng: this.props.center[1] },
 			zoom      : this.props.zoom,
 			mapTypeId : this.props.mapType,
+			mapId     : this.props.mapId,
 
 			zoomControl       : this.props.zoomControl,
 			mapTypeControl    : this.props.mapTypeControl,
@@ -73,41 +78,36 @@ export default class GoogleMap extends $.Component {
 
 		this.props.dataSource && this.mixin($.DataOwnerMixin)
 	}
-	_onMarkerMouseOver(e) {
-		const key    = this._getMarkerKey(e.latLng.lat(), e.latLng.lng())
-		const marker = this._markers[key]
-		if (key !== this._getMarkerKey(this._selectedMarker)) {
+	_onMarkerMouseOver(marker) {
+		if (marker !== this._selectedMarker) {
 			this._setIcon(marker, 'over')
 		}
 	}
 
-	_onMarkerMouseOut(e) {
-		const key    = this._getMarkerKey(e.latLng.lat(), e.latLng.lng())
-		const marker = this._markers[key]
-		if (key !== this._getMarkerKey(this._selectedMarker)) {
+	_onMarkerMouseOut(marker) {
+		if (marker !== this._selectedMarker) {
 			this._setIcon(marker, 'out')
 		}
 	}
 
-	_onMarkerClick(e) {
-		const key    = this._getMarkerKey(e.latLng.lat(), e.latLng.lng())
-		const marker = this._markers[key]
+	_onMarkerClick(marker) {
 		this._selectMarker(marker)
 	}
 
-	_onMarkerDoubleClick(e) {
-		this.selectMarker(e.latLng.lat(), e.latLng.lng())
+	_onMarkerDoubleClick(marker) {
+		this.selectMarker(marker.position.lat, marker.position.lng)
 	}
 
 	_setIcon(marker, iconState='out') {
 		const key      = this._getMarkerKey(marker)
 		const icon     = this._markerIcons[key][iconState]
-		const iconSize = $.Html.getSvgSize(icon)
+		const iconSize = $.Html.getSvgSize(icon.replace(/^url\('(.*)'\)$/, '$1'))
 
-		marker.setIcon({
-			url    : icon,
-			anchor : new google.maps.Point(iconSize[0]/2, iconSize[1]/2)
-		})
+		marker.content.style.backgroundImage  = this._markerIcons[key][iconState]
+		marker.content.style.backgroundSize   = 'contain'
+        marker.content.style.backgroundRepeat = 'no-repeat'
+        marker.content.style.width            = `${iconSize[0]}px`
+        marker.content.style.height           = `${iconSize[1]}px`
 	}
 
 	_selectMarker(marker) {
@@ -145,30 +145,36 @@ export default class GoogleMap extends $.Component {
 	/***************************************************/
 
 	addMarker(lat, lng, iconData, label='') {
-		iconData.out   = iconData.out.replace(/^url\('(.*)'\)$/, '$1')
-		iconData.over  = iconData.over.replace(/^url\('(.*)'\)$/, '$1')
-		iconData.click = iconData.click.replace(/^url\('(.*)'\)$/, '$1')
-
-		let   marker
+		const _this  = this
 		const key    = this._getMarkerKey(lat, lng)
 		const params = {
 			position: {
 				lat: lat,
 				lng: lng
 			},
-			map   : this.map,
-			title : label
+			map     : this.map,
+			title   : label,
+			content : document.createElement('div')
 		}
-		try { marker = new google.maps.Marker(params) } catch (e) {}
+		const marker = new google.maps.marker.AdvancedMarkerElement(params)
+
+		marker.addListener('click', (e) => {
+			_this._onMarkerClick(marker)
+		})
+		marker.content.addEventListener('mouseover', (e) => {
+			_this._onMarkerMouseOver(marker)
+		})
+		marker.content.addEventListener('mouseout', (e) => {
+			_this._onMarkerMouseOut(marker)
+		})
+		marker.content.addEventListener('dblclick', (e) => {
+			_this._onMarkerDoubleClick(marker)
+		})
 
 		this._markers[key]     = marker
 		this._markerIcons[key] = iconData
-		this._setIcon(marker, 'out')
 
-		marker.addListener('mouseover', this._onMarkerMouseOver.bind(this))
-		marker.addListener('mouseout',  this._onMarkerMouseOut.bind(this))
-		marker.addListener('click',     this._onMarkerClick.bind(this))
-		marker.addListener('dblclick',  this._onMarkerDoubleClick.bind(this))
+		this._setIcon(marker, 'out')
 	}
 
 	removeMarker(... args) {  // (lat, lng) || (key)
