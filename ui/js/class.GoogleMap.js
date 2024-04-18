@@ -204,15 +204,8 @@ export default class GoogleMap extends $.Component {
 		const marker = this._markers[key]
 
 		this._selectMarker(marker)
-		setTimeout(() => {
-			this.zoom = this.defaultZoom + 1
-			setTimeout(() => {
-				this.center = [lat, lng]
-				setTimeout(() => {
-					this.zoom = this.defaultZoom
-				}, 250)
-			}, 250)
-		}, 250)
+		this.zoom = this.defaultZoom + 1
+		this.center = [lat, lng]
 	}
 
 	set center(center)   { this.props.center = center   }

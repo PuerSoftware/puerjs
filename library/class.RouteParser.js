@@ -167,7 +167,21 @@ class RouteParser {
 		}
 		this._parseSpace()
 		this.routes = routes
+
 		return result
+	}
+
+	_augmentPath(routes) {
+		routes.getRoute = (name, value) => {
+			for (const route of routes) {
+				if (route.name === name && route.value === value) {
+					return route
+				}
+			}
+		}
+		for (const route of routes) {
+			this._augmentPath(route.routes)
+		}
 	}
 
 	/********************** PUBLIC ***********************/
@@ -177,6 +191,7 @@ class RouteParser {
 			this._reset(path.toLowerCase())
 			this._parseRoutes()
 			// console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
+			this._augmentPath(this.a)
 			return this.a
 		}
 		return []

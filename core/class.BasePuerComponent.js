@@ -56,13 +56,6 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
-	__onBeforeRoute(path) {
-		if (path) {
-			return this._cascade('__onBeforeRoute', [path]) && this.onBeforeRoute(path)		
-		}
-		return true
-	}
-
 	__route(flatPath, activation) {
 		/*
 		*  activation can be: -1 0 1
@@ -112,14 +105,7 @@ class BasePuerComponent extends PuerObject {
 
 	__init() {
 		this._cascade('__init')
-		// if (this.props.isExtra) {
-		// 	$.wait(
-		// 		() => Boolean(this.parent),
-		// 		() => {this.onInit && this.onInit()}
-		// 	)
-		// } else {
 		this.onInit && this.onInit()
-		// }
 	}
 
 	__ready() {
@@ -397,7 +383,7 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	route(path, query=null, relative=false) {
+	route(path, query=null, byUser=false, relative=false) {
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
 			if (path.startsWith('*')) {
@@ -407,7 +393,7 @@ class BasePuerComponent extends PuerObject {
 				path = `${routeName}:${routeValue}[${path}]`
 			}
 		}
-		this.parent.route(path, query, relative)
+		this.parent.route(path, query, byUser, relative)
 	}
 
 	getRouteConfig() {
@@ -634,9 +620,6 @@ class BasePuerComponent extends PuerObject {
 		this._cascade('unhighlight')
 	}
 
-	onBeforeRoute(path) {
-		return true
-	}
 }
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'

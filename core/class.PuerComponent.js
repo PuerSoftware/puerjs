@@ -13,7 +13,6 @@ class PuerComponent extends BasePuerComponent {
 	}
 
 	/********************** FRAMEWORK **********************/
-	
 	__init() {
 		for (const mixin of this.props.mixins) {
 			this.mixin(mixin.mixin, mixin.data)

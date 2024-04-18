@@ -1,9 +1,10 @@
 import $ from './class.Puer.js'
 
 
-class PuerApp extends $.Component {
+class PuerApp extends $.ControllerComponent {
     constructor(props, children) {
     	super(props, children)
+	    this._activeController = this._controller || null
     	this.props.default('onReady', () => {})
     	this.__render()
     	this.css('display', 'none')
@@ -18,6 +19,26 @@ class PuerApp extends $.Component {
 		if (event.keyCode === 27) {
 			this.trigger($.Event.APP_ESCAPE, {event: event})
 		}
+	}
+
+	__complete() {
+		this.onComplete && this.onComplete()
+		this.trigger($.Event.APP_COMPLETE, {
+			data: [],
+			name: 'app'
+		})
+	}
+
+	__onBeforeRoute(path, byUser) {
+		return this._activeController
+			? this._activeController.onBeforeRoute(path, byUser)
+			: true
+	}
+
+	__onBeforeEvent(e) {
+		return this._activeController
+			? this._activeController.onBeforeEvent(e)
+			: true
 	}
 
 	__ready() {
@@ -36,15 +57,9 @@ class PuerApp extends $.Component {
 		this._on('keyup', this._onAppKeyUp)
 		return this.element
 	}
-
-	__complete() {
-		this.onComplete()
+	route(path, query=null, byUser) {
+		$.Router.navigate(path, query, byUser)
 	}
-
-	route(path, query=null) {
-		$.Router.navigate(path, query)
-	}
-
 
 	toTreeString(root, indent='') {
 		let s = ''
@@ -62,6 +77,14 @@ class PuerApp extends $.Component {
 			}
 		}
 		return s
+	}
+
+	get activeController() {
+		return this._activeController
+	}
+
+	set activeController(controller) {
+		this._activeController = controller || this._controller
 	}
 }
 

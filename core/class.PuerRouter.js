@@ -1,4 +1,5 @@
-import $ from './class.Puer.js'
+import $              from './class.Puer.js'
+import {WaitingQueue} from '../library/index.js'
 
 // page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
 
@@ -16,9 +17,11 @@ class PuerRouter {
 		if (!PuerRouter.instance) {
 			this.app            = app
 			this.query          = {}
+			this.queue          = new WaitingQueue(() => { return !$.isRouting })
 			this.initialHash    = this._getHash()
 			this.path           = null
 			this.routeRoot      = null
+			this.byUser         = true
 			PuerRouter.instance = this
 		}
 		return PuerRouter.instance
@@ -48,14 +51,15 @@ class PuerRouter {
 	}
 
 	_route(hash) {
+		$.isRouting = true
 		this.path = this.routeRoot.getPath(hash)
-		if (this.app.__onBeforeRoute(this.path)) {
-			$.isRouting = true
+		if (this.app.__onBeforeRoute(this.path, this.byUser)) {
 			this.app.__route(this._flattenPath(this.path))
 			$.isRouting = false
 			this.app.__routeChange()
 		} else {
 			window.history.back()
+			$.isRouting = false
 		}
 	}
 
@@ -89,12 +93,17 @@ class PuerRouter {
 		return this.query[name]	
 	}
 
-	navigate(hash, query=null) {
-		hash  = this.routeRoot.updateHash(hash)
-		query = query
-			? '?' + $.String.toQuery(query)
-			: ''
-		window.location.hash = '#' + hash + query
+	navigate(hash, query=null, byUser=false) {
+		if ($.isRouting) {
+			this.queue.enqueue(this.navigate, this, [hash, query, byUser]).start()
+		} else {
+			this.byUser = byUser // TODO: solve case when user entered hash manually
+			hash  = this.routeRoot.updateHash(hash)
+			query = query
+				? '?' + $.String.toQuery(query)
+				: ''
+			window.location.hash = '#' + hash + query
+		}
 	}
 
 	start() {

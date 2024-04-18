@@ -174,13 +174,12 @@ class Puer {
 		return ['string', 'number', 'boolean'].includes(this.type(o))
 	}
 
-	application(cls, importUrl, onInit, onReady, onComplete) {
+	application(cls, importUrl, onInit, onReady) {
 		this._defineComponent(cls, importUrl)
 		this.app    = this[cls.name]({onReady: onReady})
 		this.Router = new this.PuerRouter(this.app)
 		onInit()
 		this.app.__init()
-		this.app.onComplete = onComplete
 		return $
 	}
 
@@ -322,6 +321,10 @@ class Puer {
 			this.app.__complete()
 		} 
 	}
+
+	canTriggerEvent(e) {
+		return this.app.__onBeforeEvent(e)
+	}
 }
 
 const $ = new Puer()
@@ -329,19 +332,21 @@ window.$ = $
 
 import * as Core from './index.js'
 
-$.Component      = Core.PuerComponent
-$.ComponentMixin = Core.PuerComponentMixin
-$.PuerRouter     = Core.PuerRouter     
-$.PuerEvents     = Core.PuerEvents
-$.Error          = Core.PuerError      
-$.HtmlElement    = Core.PuerHtmlElement
-$.TextElement    = Core.PuerTextElement
+$.Component           = Core.PuerComponent
+$.ControllerComponent = Core.PuerControllerComponent
+$.ComponentMixin      = Core.PuerComponentMixin
+$.PuerRouter          = Core.PuerRouter
+$.PuerEvents          = Core.PuerEvents
+$.Error               = Core.PuerError
+$.HtmlElement         = Core.PuerHtmlElement
+$.TextElement         = Core.PuerTextElement
 
 $.init()
 
 import * as Library from '../library/index.js'
 
 $.Constants      = Library.Constants
+$.Controller     = Library.Controller
 $.String         = Library.StringMethods
 $.Object         = Library.ObjectMethods
 $.Date           = Library.DateMethods
@@ -361,6 +366,7 @@ $.ReferenceOwner = Library.ReferenceOwner
 $.RouteRoot      = Library.RouteRoot
 
 $.Constants.$($)
+$.Controller.$($)
 $.DataSet.$($)
 $.DataSource.$($)
 $.DataStore.$($)

@@ -13,14 +13,17 @@ class Link extends $.Component {
 
 	_navigate(e) {
 		this.props.stopPropagation && e.stopPropagation()
-
+		this.trigger($.Event.CLICK, {
+			data: {},
+			name: this.name
+		})
         if (this.props.href) {
             window.open(this.props.href, this.props.target)
         } else {
             if (this._linkSet) {
 		    	this._linkSet.select(this)
 	    	}
-		    this.props.hash && this.route(this.props.hash)
+		    this.props.hash && this.route(this.props.hash, null, true)
         }
 	}
 
