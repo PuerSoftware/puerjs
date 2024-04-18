@@ -89,6 +89,7 @@
     --puer-border-color-toggle-selected-spot  : transparent;
     --puer-border-color-toggle-selected-fixed : transparent;
     --puer-divider-color-hi                   : #435261;
+    --puer-loader-color                       : #EEE;
     --puer-placeholder-color                  : #263546;
     --puer-placeholder-color-search           : #808080;
     --puer-pagination-color-hi                : #5798D4;
@@ -190,6 +191,7 @@
     --puer-border-color-toggle-selected-eta   : #55BCCA;
     --puer-border-color-toggle-selected-spot  : #60C150;
     --puer-border-color-toggle-selected-fixed : #DCDFE5;
+    --puer-loader-color                       : #333;
     --puer-pagination-color-hi                : #0E6EC6;
     --puer-pagination-color-lo                : #7B7D8E;
     --puer-placeholder-color                  : rgba(126, 130, 150, 0.898);
