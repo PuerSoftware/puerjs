@@ -18,7 +18,7 @@ export default class Menu extends $.Component {
 		const items = []
 
 		for (const item of this.props.items) {
-			const itemComponent = $.Box({
+			const itemComponent = $.Box(item.cssClass,{
 				text    : item.label,
 				onclick : (e) => {
 					item.callback(e, this.props.data)
