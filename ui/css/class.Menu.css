@@ -19,16 +19,37 @@
             .menu:hover .user-menu > div {
                 background-color : var(--puer-color-user-menu-hover);
             }
+
     .menu > .popup {
-        width            : 140px;
+        width            : auto;
         height           : auto;
         position         : absolute;
-        top              : 17px;
+        top              : 16px;
         right            : calc(100% + 4px);
         padding          : 16px 20px;
+        gap              : 12px;
         border-radius    : 2px;
-        color            : var(--puer-color-user-menu);
-        border           : 1px solid var(--divider-color-hi);
+        font-size        : var(--puer-font-size-hi);
+        color            : var(--puer-text-color-hi);
+        border           : 1px solid var(--puer-divider-color-lo);
         background-color : var(--bg-color-lo);
         z-index          : 10;
     }
+        .menu > .popup > .box {
+            padding-left        : 24px;
+            background-repeat   : no-repeat;
+            background-size     : 16px 16px;
+            background-position : left center;
+            white-space         : nowrap;
+        }
+            .menu > .popup > .box:hover {
+                color : var(--puer-text-color-hover);
+            }
+
+            .menu > .popup > .box.open-chat {
+                background-image: var(--puer-svg-icon-open-chat);
+            }
+
+            .menu > .popup > .box.information{
+                background-image: var(--puer-svg-icon-information);
+            }
