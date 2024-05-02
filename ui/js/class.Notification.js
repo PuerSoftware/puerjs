@@ -37,7 +37,7 @@ export default class Notification extends $.Component {
     }
 
     _onNotification(e) {
-        const notification = $.li('notification-item', {
+        const notification = $.li('notification-item unselectable', {
             text        : e.detail.text,
             onmouseover : this._onItemMouseOver.bind(this),
             onmouseout  : this._onItemMouseOut.bind(this)

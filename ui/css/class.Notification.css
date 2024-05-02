@@ -7,8 +7,7 @@
     .notification > .notification-item {
         font-size               : var(--puer-font-size-lo);
         line-height             : 1.5;
-        letter-spacing          : -0.02em;
-        color                   : var(--puer-text-color-light);
+        color                   : var(--puer-text-color-hi);
         width                   : 300px;
         border-radius           : 2px;
         border                  : 1px solid var(--puer-border-color-notification);
@@ -21,7 +20,12 @@
         opacity                 : 1;
         transition              : opacity .4s ease-in-out;
     }
+        .notification > .notification-item:hover > .button {
+            display : block;
+        }
+
         .notification > .notification-item > .button {
+            display    : none;
             position   : absolute;
             top        : 8px;
             right      : 8px;
