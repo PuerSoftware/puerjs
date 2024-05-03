@@ -57,7 +57,7 @@ export default class List extends $.Component {
 	}
 
 	get firstItem() {
-		const items = Object.values(this.items)
+		const items = Object.values(this.items).filter((item, _) => !item.isHidden)
 		return items.length ? items[0] : null
 	}
 

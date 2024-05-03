@@ -91,6 +91,7 @@ export default class DataListMixin {
 				}
 			}
 		}
+		debugger
 		this._selectFirstItem()
 	}
 
@@ -160,7 +161,7 @@ export default class DataListMixin {
 	}
 
 	get firstItem() {
-		let item = Object.values(this.items)[0]
+		let item = Object.values(this.items).filter((item, _) => !item.isHidden)[0]
 		if (this._searchQuery) {
 			if (this._filterMap) {
 				item = this.items[

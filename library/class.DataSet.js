@@ -116,18 +116,6 @@ export default class DataSet extends PuerObject {
 			: items
 	}
 
-	get filteredItems() {
-		const itemIds = Object.entries(this._filterMap)
-			.filter(([key, value]) => value)
-			.map(([key, value]) => key)
-			
-		const items = $.DataStore.get(itemIds)
-
-		return this._itemAdapter
-			? this._itemAdapter(items)
-			: items
-	}
-
 	get itemIds() {
 		return this._itemIds
 	}
