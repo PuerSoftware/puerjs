@@ -92,10 +92,7 @@ class PuerEvents extends EventTarget {
 			this.innerQueue.enqueue(this.trigger, this, [name, detail]).start()
 		} else {
 			this._validateEventDetail(name, detail)
-			const event = new CustomEvent(name, { detail: detail })
-			if ($.canTriggerEvent(event)) {
-				this.dispatchEvent(event)
-			}
+			this.dispatchEvent(new CustomEvent(name, { detail: detail }))
 		}
 	}
 

@@ -1,21 +1,6 @@
 class RouteParser {
 	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789'
 
-	constructor() {
-		// const _this = this
-		// Object.getOwnPropertyNames(Object.getPrototypeOf(this))
-        //     .filter(method => method.startsWith('_parse'))
-        //     .forEach(method => {
-        //     	const f = this[method]
-        //         this[method] = (...args) => {
-        //         	this._in(method + ' [' + args.join(', ') + ']')
-        //         	let result = f.bind(_this)(...args)
-        //         	this._out(method + (result ? ' TRUE' : ' FALSE'))
-        //         	return result
-        //         }
-        //     })
-	}
-
 	/********************** PRIVATE ***********************/
 
 	_in(s) {
@@ -172,9 +157,19 @@ class RouteParser {
 	}
 
 	_augmentPath(routes) {
-		routes.getRoute = (name, value) => {
-			for (const route of routes) {
-				if (route.name === name && route.value === value) {
+		routes.getRoute = (name, value=null) => {
+			for (let route of routes) {
+				if (value) {
+					if (route.name === name && route.value === value) {
+						return route
+					}
+				} else {
+					if (route.name === name) {
+						return route
+					}
+				}
+				route = route.routes.getRoute(name, value)
+				if (route) {
 					return route
 				}
 			}
@@ -190,7 +185,6 @@ class RouteParser {
 		if (path) {
 			this._reset(path.toLowerCase())
 			this._parseRoutes()
-			// console.log(JSON.stringify(this.a, null, 4).split('"').join(''))
 			this._augmentPath(this.a)
 			return this.a
 		}

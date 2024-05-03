@@ -1,10 +1,9 @@
 import $ from './class.Puer.js'
 
 
-class PuerApp extends $.ControllerComponent {
+class PuerApp extends $.Component {
     constructor(props, children) {
     	super(props, children)
-	    this._activeController = this._controller || null
     	this.props.default('onReady', () => {})
     	this.__render()
     	this.css('display', 'none')
@@ -29,18 +28,6 @@ class PuerApp extends $.ControllerComponent {
 		})
 	}
 
-	__onBeforeRoute(path, byUser) {
-		return this._activeController
-			? this._activeController.onBeforeRoute(path, byUser)
-			: true
-	}
-
-	__onBeforeEvent(e) {
-		return this._activeController
-			? this._activeController.onBeforeEvent(e)
-			: true
-	}
-
 	__ready() {
 		super.__ready()
 		$.Router.start()
@@ -57,8 +44,8 @@ class PuerApp extends $.ControllerComponent {
 		this._on('keyup', this._onAppKeyUp)
 		return this.element
 	}
-	route(path, query=null, byUser) {
-		$.Router.navigate(path, query, byUser)
+	route(path, query=null) {
+		$.Router.navigate(path, query)
 	}
 
 	toTreeString(root, indent='') {
@@ -77,14 +64,6 @@ class PuerApp extends $.ControllerComponent {
 			}
 		}
 		return s
-	}
-
-	get activeController() {
-		return this._activeController
-	}
-
-	set activeController(controller) {
-		this._activeController = controller || this._controller
 	}
 }
 

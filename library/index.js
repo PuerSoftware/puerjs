@@ -1,5 +1,4 @@
 export { default as Constants       } from './class.Constants.js'
-export { default as Controller      } from './class.Controller.js'
 export { default as DataBase   		} from './class.DataBase.js'
 export { default as DataSet    		} from './class.DataSet.js'
 export { default as DataSource 		} from './class.DataSource.js'

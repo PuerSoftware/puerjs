@@ -383,7 +383,7 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	route(path, query=null, byUser=false, relative=false) {
+	route(path, query=null, relative=false) {
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
 			if (path.startsWith('*')) {
@@ -393,7 +393,7 @@ class BasePuerComponent extends PuerObject {
 				path = `${routeName}:${routeValue}[${path}]`
 			}
 		}
-		this.parent.route(path, query, byUser, relative)
+		this.parent.route(path, query, relative)
 	}
 
 	getRouteConfig() {

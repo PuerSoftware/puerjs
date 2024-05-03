@@ -31,6 +31,7 @@ export default class DataSet extends PuerObject {
 		this.searchConfig   = searchConfig
 		this.isInitialized  = false
 		this.index          = new Map()
+		this._filterMap     = {}
 		this._itemFilter    = filter    // To get a subset of datasource data
 		this._itemAdapter   = adapter
 		this._excluded      = new Set() // To exclude items dynamically
@@ -115,6 +116,18 @@ export default class DataSet extends PuerObject {
 			: items
 	}
 
+	get filteredItems() {
+		const itemIds = Object.entries(this._filterMap)
+			.filter(([key, value]) => value)
+			.map(([key, value]) => key)
+			
+		const items = $.DataStore.get(itemIds)
+
+		return this._itemAdapter
+			? this._itemAdapter(items)
+			: items
+	}
+
 	get itemIds() {
 		return this._itemIds
 	}
@@ -161,7 +174,7 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastFilter = f
-
+			this._filterMap  = map 
 			this.trigger($.Event.DATASET_FILTER, {map: map})
 			this.onFilter(map)
 		}

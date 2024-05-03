@@ -321,10 +321,6 @@ class Puer {
 			this.app.__complete()
 		} 
 	}
-
-	canTriggerEvent(e) {
-		return this.app.__onBeforeEvent(e)
-	}
 }
 
 const $ = new Puer()
@@ -333,8 +329,6 @@ window.$ = $
 import * as Core from './index.js'
 
 $.Component           = Core.PuerComponent
-$.ControllerComponent = Core.PuerControllerComponent
-$.ComponentMixin      = Core.PuerComponentMixin
 $.PuerRouter          = Core.PuerRouter
 $.PuerEvents          = Core.PuerEvents
 $.Error               = Core.PuerError
@@ -346,7 +340,6 @@ $.init()
 import * as Library from '../library/index.js'
 
 $.Constants      = Library.Constants
-$.Controller     = Library.Controller
 $.String         = Library.StringMethods
 $.Object         = Library.ObjectMethods
 $.Date           = Library.DateMethods
@@ -366,7 +359,6 @@ $.ReferenceOwner = Library.ReferenceOwner
 $.RouteRoot      = Library.RouteRoot
 
 $.Constants.$($)
-$.Controller.$($)
 $.DataSet.$($)
 $.DataSource.$($)
 $.DataStore.$($)
