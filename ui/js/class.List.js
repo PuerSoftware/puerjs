@@ -32,6 +32,7 @@ export default class List extends $.Component {
 					item.deselect()
 				}
 			}
+			this._onItemSelected && this._onItemSelected() // for using in DataListMixin 
 		}
 	}
 

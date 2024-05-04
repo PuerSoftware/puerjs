@@ -10,17 +10,70 @@ export default class DataListMixin {
 		component.props.default('searchName', null)   // if not set search is inactive
 		component.props.default('queryKey', 'dataId') // key from url query to select item
 
-		component.isInitialized = false
-		component._searchQuery  = ''
-		component._filterMap    = null
-		component._sortMap      = null
+		component.isInitialized     = false
+		component._searchQuery      = ''
+		component._filterMap        = null
+		component._filterMapKey     = null
+		component._filterSelection  = {}
+		component._sortMap          = null
 
 		component.on($.Event.SEARCH, component._onSearch, component.props.searchName)
+	}
+
+	_getFilterMapKey(filterMap) {
+		if (filterMap.__search) {
+			return '__search'
+		}
+		const filteredValues = Object
+			.entries(filterMap)
+			.filter((value, _) => value[1] === true)
+		
+		let key = ''
+		for (const [k, _] in filteredValues) {
+			key += String(k)
+		}
+		return key
+	}
+
+	_ensureFilterSelection() {
+		if (this._filterMap.__search) {
+			if (this._filterMap[this._selectedId]) {
+				this.items[this._selectedId]._select()
+			} else {
+				this._selectFirstItem()	
+			}
+			return
+		}
+
+		const searchSelectedId = this._filterSelection['__search']
+		if (searchSelectedId && this._filterMap[searchSelectedId]) {
+			this.items[searchSelectedId]._select()
+			return
+		}
+
+		if (this._selectedId) {
+			if (this._filterMap[this._selectedId]) {
+				this.items[this._selectedId]._select()
+			} else {
+				const selectedId = this._filterSelection[this._filterMapKey]
+				if (selectedId) {
+					this.items[selectedId]._select()
+				} else {
+					this._selectFirstItem()
+				}
+			}
+		} else {
+			this._selectFirstItem()
+		}
 	}
 
 	_onSearch(event) {
 		this._searchQuery = event.detail.value
 		this._dataSet.search(this._searchQuery)
+	}
+
+	_onItemSelected() {
+		this._filterSelection[this._filterMapKey] = this._selectedId 
 	}
 
 	_handleQueryKey() {
@@ -75,8 +128,11 @@ export default class DataListMixin {
 	}
 
 	onDataFilter(filterMap) {
-		const hasSearch = Boolean(this.props.searchName)
-		this._filterMap = filterMap
+		const hasSearch        = Boolean(this.props.searchName)
+		this._prevFilterMapKey = this._filterMapKey 
+		this._filterMap        = filterMap
+		this._filterMapKey     = this._getFilterMapKey(filterMap)
+
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
 				this.items[itemId].toggle(filterMap[itemId])
@@ -91,8 +147,10 @@ export default class DataListMixin {
 				}
 			}
 		}
-		debugger
-		this._selectFirstItem()
+		
+		if (this.props.isSelectable) {
+			this._ensureFilterSelection(filterMap.__search)
+		}
 	}
 
 	onDataSort(sortMap) {

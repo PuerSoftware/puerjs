@@ -24,7 +24,6 @@ export default class DataSet extends PuerObject {
 
 	constructor(name, searchConfig=null, filter=null, adapter=null) {
 		super()
-		
 		this.name           = name
 		this.owner          = null // set in DataOwnerMixin
 		this._itemIds       = []
@@ -148,9 +147,16 @@ export default class DataSet extends PuerObject {
 		return this.items.reduce(f, 0)
 	}
 
-	filter(f) {
+	filter(f, search=false) {
 		if (this.isInitialized) {
-			const items = this.items
+			let items
+			if (search && this._filterMap) {
+				// search in already filtered items
+				items = this.items.filter((item, _) => this._filterMap[item.dataId])
+			} else {
+				items = this.items
+			}
+
 			const map   = {}
 
 			items.forEach((item, index) => {
@@ -162,7 +168,11 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastFilter = f
-			this._filterMap  = map 
+			if (!search) {
+				this._filterMap  = map
+			}
+			map.__search = search
+
 			this.trigger($.Event.DATASET_FILTER, {map: map})
 			this.onFilter(map)
 		}
@@ -200,7 +210,7 @@ export default class DataSet extends PuerObject {
 
 		this.filter(item => {
 			return result.has(item.dataId)// && !this._excluded.has(item.dataId))
-		})
+		}, true)
 	}
 
 	refresh() {
