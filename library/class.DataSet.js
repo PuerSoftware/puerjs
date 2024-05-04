@@ -24,16 +24,17 @@ export default class DataSet extends PuerObject {
 
 	constructor(name, searchConfig=null, filter=null, adapter=null) {
 		super()
-		this.name           = name
-		this.owner          = null // set in DataOwnerMixin
-		this._itemIds       = []
-		this.searchConfig   = searchConfig
-		this.isInitialized  = false
-		this.index          = new Map()
-		this._filterMap     = {}
-		this._itemFilter    = filter    // To get a subset of datasource data
-		this._itemAdapter   = adapter
-		this._excluded      = new Set() // To exclude items dynamically
+		this.name             = name
+		this.owner            = null // set in DataOwnerMixin
+		this._itemIds         = []
+		this.searchConfig     = searchConfig
+		this.isInitialized    = false
+		this.index            = new Map()
+		this._filterSearchMap = null
+		this._filterMap       = {}
+		this._itemFilter      = filter    // To get a subset of datasource data
+		this._itemAdapter     = adapter
+		this._excluded        = new Set() // To exclude items dynamically
 	}
 
 	/**************************************************************/
@@ -115,14 +116,19 @@ export default class DataSet extends PuerObject {
 			: items
 	}
 
-	get itemIds() {
-		return this._itemIds
+	get filteredItems() {
+		const map     = this._filterSearchMap || this._filterMap
+		const itemIds = this._itemIds.filter(
+			(itemId, _) => map[itemId]
+		)
+		const items = $.DataStore.get(itemIds)
+		return this._itemAdapter
+			? this._itemAdapter(items)
+			: items
 	}
 
-	trigger(name, data) {
-		if (this.owner.isActive) {
-			super.trigger(name, data)
-		}
+	get itemIds() {
+		return this._itemIds
 	}
 
 	set itemIds(ids) {
@@ -168,10 +174,13 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastFilter = f
-			if (!search) {
-				this._filterMap  = map
+			map.__search     = search
+			if (search) {
+				this._filterSearchMap = map
+			} else {
+				this._filterMap       = map
+				this._filterSearchMap = null
 			}
-			map.__search = search
 
 			this.trigger($.Event.DATASET_FILTER, {map: map})
 			this.onFilter(map)
@@ -226,6 +235,11 @@ export default class DataSet extends PuerObject {
 		this._lastSort   && this.sort(this._lastSort)
 	}
 
+	trigger(name, data) {
+		if (this.owner.isActive) {
+			super.trigger(name, data)
+		}
+	}
 
 	exclude(id) { this._excluded.add(id)    }
 	include(id) { this._excluded.delete(id) }

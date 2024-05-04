@@ -87,30 +87,28 @@ export default class DataListMixin {
 
 	/**************************************************************/
 
-	onDataChange(items) {
+	_onDataChange(items) {
 		this._selectFirstItem()
 		this.removeCssClass('loader')
 		this.isInitialized = true
 		this._handleQueryKey()
 	}
 
-	onDataItemAdd(item) {
+	_onDataItemAdd(item) {
 		if (!this.items[item.dataId]) {
 			const itemComponent = this.renderItem(item)
 			this.itemContainer.append(itemComponent)
 			this.items[item.dataId] = itemComponent
 			this._handleQueryKey()
-            this.onDataItemAddMixin && this.onDataItemAddMixin(item)
 		}
 	}
 
-	onDataItemRemove(dataId) {
+	_onDataItemRemove(dataId) {
 		this.items[dataId].remove()
 		delete this.items[dataId]
-        this.onDataItemRemoveMixin && this.onDataItemRemoveMixin(dataId)
 	}
 
-	onDataItemChange(item) {
+	_onDataItemChange(item) {
 		const oldItemComponent = this.items[item.dataId]
 		if (oldItemComponent) {
 			const itemComponent    = this.renderItem(item)
@@ -118,20 +116,17 @@ export default class DataListMixin {
 			oldItemComponent.replace(itemComponent)
 			this.items[item.dataId] = itemComponent
 			selected && itemComponent._select()
-            this.onDataItemChangeMixin && this.onDataItemChangeMixin(item)
 		}
 	}
 
-	onDataClear() {
+	_onDataClear() {
 		this.clearItems && this.clearItems()
-        this.onDataClearMixin && this.onDataClearMixin
 	}
 
-	onDataFilter(filterMap) {
-		const hasSearch        = Boolean(this.props.searchName)
-		this._prevFilterMapKey = this._filterMapKey 
-		this._filterMap        = filterMap
-		this._filterMapKey     = this._getFilterMapKey(filterMap)
+	_onDataFilter(filterMap) {
+		const hasSearch    = Boolean(this.props.searchName)
+		this._filterMap    = filterMap
+		this._filterMapKey = this._getFilterMapKey(filterMap)
 
 		for (const itemId in this.items) {
 			if (filterMap.hasOwnProperty(itemId)) {
@@ -153,7 +148,7 @@ export default class DataListMixin {
 		}
 	}
 
-	onDataSort(sortMap) {
+	_onDataSort(sortMap) {
 		this._sortMap = sortMap
 		// console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
@@ -184,6 +179,7 @@ export default class DataListMixin {
 			    this.element.appendChild(element)
 			}
 		})
+
 	}
 
 	onActivate() {
