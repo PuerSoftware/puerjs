@@ -1,9 +1,11 @@
 import $                  from '../core/class.Puer.js'
 
+
 export default class DataOwnerMixin {
 	static init(component, data) {
 		component.props.require('name')
 		component.props.require('dataSource')
+		component.props.default('itemFilter', null)
 
 		component._dataSet    = null
 		component._dataSource = null
@@ -59,17 +61,6 @@ export default class DataOwnerMixin {
 			this._onDataClear      && this._onDataClear.call(this, ...args)
 			this.props.onDataClear && this.props.onDataClear(... args)
 		}
-
-
-		// TODO: Refactor churchkhela 
-		// this._dataSet.onData       = onData
-		// this._dataSet.onSort       = this.props.onDataSort       ? this.props.onDataSort       : this.onDataSort       ? this.onDataSort.bind(this)       : nop
-		// this._dataSet.onFilter     = this.props.onDataFilter     ? this.props.onDataFilter     : this.onDataFilter     ? this.onDataFilter.bind(this)     : nop
-		// this._dataSet.onItemAdd    = this.props.onDataItemAdd    ? this.props.onDataItemAdd    : this.onDataItemAdd    ? this.onDataItemAdd.bind(this)    : nop
-		// this._dataSet.onItemChange = this.props.onDataItemChange ? this.props.onDataItemChange : this.onDataItemChange ? this.onDataItemChange.bind(this) : nop
-		// this._dataSet.onItemRemove = this.props.onDataItemRemove ? this.props.onDataItemRemove : this.onDataItemRemove ? this.onDataItemRemove.bind(this) : nop
-		// this._dataSet.onClear      = this.props.onDataClear      ? this.props.onDataClear      : this.onDataClear      ? this.onDataClear.bind(this)      : nop
-
 	
 		this._dataSet.dataSource = this._dataSource
 	}

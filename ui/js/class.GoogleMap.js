@@ -17,6 +17,7 @@ export default class GoogleMap extends $.Component {
 		this.props.default('mapId',   '') // map id of current map
 		this.props.default('styles',  [])
 		this.props.default('icons',   {})
+		this.props.default('minZoom', 2)
 
 		this.props.default('zoomControl',       false)
 		this.props.default('mapTypeControl',    false)
@@ -60,11 +61,13 @@ export default class GoogleMap extends $.Component {
 	}
 
 	_initMap() {
+		this.props.dataSource && this.mixin($.DataOwnerMixin)
 		this.map = new google.maps.Map(this.element, {
 			center    : { lat: this.props.center[0] , lng: this.props.center[1] },
 			zoom      : this.props.zoom,
 			mapTypeId : this.props.mapType,
 			mapId     : this.props.mapId,
+			minZoom   : this.props.minZoom,
 
 			zoomControl       : this.props.zoomControl,
 			mapTypeControl    : this.props.mapTypeControl,
@@ -73,10 +76,18 @@ export default class GoogleMap extends $.Component {
 			rotateControl     : this.props.rotateControl,
 			fullscreenControl : this.props.fullscreenControl,
 
-			styles: this.props.styles
-		})
+			styles: this.props.styles,
 
-		this.props.dataSource && this.mixin($.DataOwnerMixin)
+			restriction: {
+				strictBounds: true,
+				latLngBounds: {
+					north: 85,
+					south: -85,
+					west: -180,
+					east: 180
+				}
+			}
+		})
 	}
 	_onMarkerMouseOver(marker) {
 		if (marker !== this._selectedMarker) {

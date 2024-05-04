@@ -117,9 +117,8 @@ export default class DataSet extends PuerObject {
 	}
 
 	get filteredItems() {
-		const map     = this._filterSearchMap || this._filterMap
 		const itemIds = this._itemIds.filter(
-			(itemId, _) => map[itemId]
+			(itemId, _) => this._filterMap[itemId]
 		)
 		const items = $.DataStore.get(itemIds)
 		return this._itemAdapter
@@ -153,16 +152,9 @@ export default class DataSet extends PuerObject {
 		return this.items.reduce(f, 0)
 	}
 
-	filter(f, search=false) {
+	filter(f) {
 		if (this.isInitialized) {
-			let items
-			if (search && this._filterMap) {
-				// search in already filtered items
-				items = this.items.filter((item, _) => this._filterMap[item.dataId])
-			} else {
-				items = this.items
-			}
-
+			const items = this.items
 			const map   = {}
 
 			items.forEach((item, index) => {
@@ -174,13 +166,7 @@ export default class DataSet extends PuerObject {
 			})
 
 			this._lastFilter = f
-			map.__search     = search
-			if (search) {
-				this._filterSearchMap = map
-			} else {
-				this._filterMap       = map
-				this._filterSearchMap = null
-			}
+			this._filterMap  = map
 
 			this.trigger($.Event.DATASET_FILTER, {map: map})
 			this.onFilter(map)
@@ -219,7 +205,7 @@ export default class DataSet extends PuerObject {
 
 		this.filter(item => {
 			return result.has(item.dataId)// && !this._excluded.has(item.dataId))
-		}, true)
+		})
 	}
 
 	refresh() {
