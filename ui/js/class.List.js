@@ -62,6 +62,16 @@ export default class List extends $.Component {
 		return items.length ? items[0] : null
 	}
 
+	get selectedItem() {
+		return this.items[this._selectedId]
+	}
+
+	set selectedItem(itemId) {
+		this.items[itemId]._select()
+	}
+
+	/**************************************************************/
+
 	onRoute() {
 		this.props.ensureSelection && this._ensureSelection()
 	}

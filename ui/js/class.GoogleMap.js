@@ -28,6 +28,7 @@ export default class GoogleMap extends $.Component {
 
 		this.map              = null  // google.maps.Map
 		this._markers         = {}    // { lat_lng: google.maps.Marker }
+		this._markersData     = {}    // { lat_lng: data }
 		this._markerIcons     = {}    // { lat_lng: {out: '', over: '', click: ''} }
 		this._selectedMarker  = null  // google.maps.Marker
 
@@ -89,16 +90,19 @@ export default class GoogleMap extends $.Component {
 			}
 		})
 	}
+
 	_onMarkerMouseOver(marker) {
 		if (marker !== this._selectedMarker) {
 			this._setIcon(marker, 'over')
 		}
+		this.trigger($.Event.MAP_MARKER_OVER, {data: this._getMarkerData(marker)})
 	}
 
 	_onMarkerMouseOut(marker) {
 		if (marker !== this._selectedMarker) {
 			this._setIcon(marker, 'out')
 		}
+		this.trigger($.Event.MAP_MARKER_OUT, {data: this._getMarkerData(marker)})
 	}
 
 	_onMarkerClick(marker) {
@@ -107,6 +111,12 @@ export default class GoogleMap extends $.Component {
 
 	_onMarkerDoubleClick(marker) {
 		this.selectMarker(marker.position.lat, marker.position.lng)
+	}
+
+	_getMarkerData(marker) {
+		return this._markersData[
+			this._getMarkerKey(marker.position.lat, marker.position.lng)
+		]
 	}
 
 	_setIcon(marker, iconState='out') {
@@ -127,6 +137,7 @@ export default class GoogleMap extends $.Component {
 		}
 		this._selectedMarker = marker
 		this._setIcon(marker, 'click')
+		this.trigger($.Event.MAP_MARKER_SELECT, {data: this._getMarkerData(marker)})
 	}
 
 	/***************************************************/
@@ -134,7 +145,7 @@ export default class GoogleMap extends $.Component {
 	_onDataChange() {
 		this.removeMarkers()
 		for (const item of this.dataSet.items) {
-			this.addMarker(item.lat, item.lng, item.icons, item.label)
+			this.addMarker(item.lat, item.lng, item.icons, item.label, item.data)
 		}
 	}
 
@@ -155,7 +166,7 @@ export default class GoogleMap extends $.Component {
 
 	/***************************************************/
 
-	addMarker(lat, lng, iconData, label='') {
+	addMarker(lat, lng, iconData, label='', data=null) {
 		const _this  = this
 		const key    = this._getMarkerKey(lat, lng)
 		const params = {
@@ -183,6 +194,7 @@ export default class GoogleMap extends $.Component {
 		})
 
 		this._markers[key]     = marker
+		this._markersData[key] = data
 		this._markerIcons[key] = iconData
 
 		this._setIcon(marker, 'out')

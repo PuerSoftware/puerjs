@@ -117,5 +117,8 @@ $.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'isSav
 $.Events.define('TAG_REMOVE',             ['label'])
 $.Events.define('TAG_CLICK',              ['label'])
 $.Events.define('NOTIFICATION',           ['text'])
+$.Events.define('MAP_MARKER_SELECT',      ['data'])
+$.Events.define('MAP_MARKER_OVER',        ['data'])
+$.Events.define('MAP_MARKER_OUT',         ['data'])
 
 export default $
