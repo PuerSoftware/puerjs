@@ -23,7 +23,7 @@ class Link extends $.Component {
             if (this._linkSet) {
 		    	this._linkSet.select(this)
 	    	}
-		    this.props.hash && this.route(this.props.hash, null, true)
+		    this.props.hash && this.route(this.props.hash, null)
         }
 	}
 
