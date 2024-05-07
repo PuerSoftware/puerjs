@@ -31,8 +31,6 @@ class BasePuerComponent extends PuerObject {
 
 		$.components[this.id] = this
 		this.props.default('isDefaultRoute', false)
-		this.props.default('extra', null)
-		this.props.default('isExtra', false)
 
 		this.name = this.props.name || null
 	}
@@ -46,7 +44,6 @@ class BasePuerComponent extends PuerObject {
 		this._createText()
 		this.addCssClass(... this.classes.map(c => $.dereference(c)))
 		this._addEvents()
-		this.props.extra && this.root.append(this.props.extra)
 		this.onRender && this.onRender()
 		return this.root
 	}
