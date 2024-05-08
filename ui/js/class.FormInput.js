@@ -72,6 +72,14 @@ class FormInput extends $.Component {
 		this.initialValue        = undefined
 	}
 
+	focus() {
+		this.input.element.focus()
+	}
+
+	blur() {
+		this.input.element.blur()
+	}
+
 	onInit() {
 		this._on('change', this._onChange)
 		this.form  = this.$$$.Form[0]

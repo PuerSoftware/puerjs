@@ -45,6 +45,7 @@ export default class DataListMixin {
 	/**************************************************************/
 
 	_onDataChange(items) {
+		
 		this._ensureSelection()
 		this.removeCssClass('loader')
 		this.isInitialized = true
@@ -77,6 +78,7 @@ export default class DataListMixin {
 	}
 
 	_onDataClear() {
+		
 		this.clearItems && this.clearItems()
 	}
 

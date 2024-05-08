@@ -13,12 +13,12 @@ class Form extends $.Component {
 		this.props.default('enctype',       'application/json')
 		this.props.default('autocomplete',  'off')
 		this.props.default('doClearOnSave', false)
+		this.props.default('hasButton',     true)
 
 		this.state.error        = ''
 		this._errorComponent    = null
 		this._isValidateEnabled = true
 		this.inputs             = null
-		this.button             = null
 	}
 
 	_onResponse(event) {
@@ -134,6 +134,19 @@ class Form extends $.Component {
 
 	render() {
 		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
+		const formChildren = [... this.children]
+		if (this.props.hasButton) {
+			formChildren.push(
+				$.div ('button-panel', [
+					$.InputButton ({
+						type    : 'button',
+						onclick : this._onSubmit,
+						text    : this.props.buttonLabel,
+						value   : this.props.buttonLabel
+					})
+				])
+			)
+		}
 		return (
 			$.div([
 				$.h1 ({text: this.props.title}),
@@ -144,17 +157,7 @@ class Form extends $.Component {
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype,
-				}, [
-					... this.children,
-					$.div ('button-panel', [
-						this.button = $.InputButton ({
-							type    : 'button',
-							onclick : this._onSubmit,
-							text    : this.props.buttonLabel,
-							value   : this.props.buttonLabel
-						})
-					])
-				])
+				}, formChildren)
 			])
 		)
 	}

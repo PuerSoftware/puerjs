@@ -18,13 +18,13 @@ class InputSelect extends FormInput {
 		}
 	}
 
-	onDataFilter(map) {
+	_onDataFilter(map) {
 		for (const dataId in map) {
 			this._options[dataId].toggle(map[dataId])
 		}
 	}
 
-	onDataChange(data) {
+	_onDataChange(data) {
 		this.input.removeChildren()
 		this.addOptions(data)
 		this.hasData = true

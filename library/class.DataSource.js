@@ -203,6 +203,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	}
 
 	addItems(items, headers) {
+		
 		items = this.adaptItems(items, headers)
 		if (this.isSingular) {
 			this.addItem(items, false)
