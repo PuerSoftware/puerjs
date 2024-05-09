@@ -1,4 +1,4 @@
-import $                  from '../core/class.Puer.js'
+import $ from '../core/class.Puer.js'
 
 
 export default class DataOwnerMixin {
@@ -71,5 +71,12 @@ export default class DataOwnerMixin {
 
 	get dataSet() {
 		return this._dataSet
+	}
+
+	onBeforeRemove() {
+		this._dataSet.remove()
+		console.log('DataSet', $.DataSet[this._dataSet.name])
+		delete this._dataSet
+		console.log('Mixin', this._dataSet)
 	}
 }

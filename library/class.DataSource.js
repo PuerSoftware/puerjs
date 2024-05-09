@@ -151,7 +151,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		data = data || this.data
 		return $.Object.select(data, path)
 	}
-	  
+	
 
 	fill(items, reset=true) {
 		$.defer(() => { // TODO: maybe we can remove this
@@ -182,8 +182,8 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 			$.DataStore.unset(dataId)
 		}
 		this._recalculate()
+		this.itemIds = []
 		this.trigger($.Event.DATASOURCE_CLEAR, {})
-		this.itemIds       = []
 
 		if (this.isCacheable && this.db) {
 			this.db.clear(() => {
@@ -203,7 +203,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	}
 
 	addItems(items, headers) {
-		
 		items = this.adaptItems(items, headers)
 		if (this.isSingular) {
 			this.addItem(items, false)

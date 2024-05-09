@@ -1,6 +1,4 @@
 class ReferenceOwner {
-
-
 	constructor(owner, prop, updateMethod) {
 		this.owner        = owner
 		this.prop         = prop

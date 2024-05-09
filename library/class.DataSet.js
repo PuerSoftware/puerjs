@@ -13,10 +13,12 @@ export default class DataSet extends PuerObject {
 		}
 		const dataSet = new DataSet(name, searchConfig, filter, adapter)
 		Object.defineProperty(DataSet, name, {
-			get: function() {
-				return dataSet
-			}
+			writable     : true,
+ 			enumerable   : true,
+ 			configurable : true,
+			value        : dataSet
 		})
+
 		return dataSet
 	}
 
@@ -227,10 +229,14 @@ export default class DataSet extends PuerObject {
 		}
 	}
 
+	remove() {
+		delete DataSet[this.name]
+	}
+
 	exclude(id) { this._excluded.add(id)    }
 	include(id) { this._excluded.delete(id) }
 
-	onData       (items)  {}
+	onData       (items)  {}	
 	onItemAdd    (item)   {}
 	onItemChange (item)   {}
 	onItemRemove (itemId) {}

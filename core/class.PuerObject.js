@@ -5,6 +5,7 @@ class PuerObject {
 		this.className       = this.constructor.name
 		this.isPuerObject    = true
 		this.listeners       = new WeakMap()
+		this._eventListeners = {} // {enventName: [f, ...], ...} | users for off() on remmove() in components 
 	}
 
 	isInstanceProperty(prop) { return Object.prototype.hasOwnProperty.call(this, prop) }
@@ -113,6 +114,11 @@ class PuerObject {
 			}
 		}
 		$.Events.on(name, _f, f)
+		if (!this._eventListeners[name]) {
+			this._eventListeners[name] = [f]
+		} else {
+			this._eventListeners[name].push(f)
+		}
 	}
 
 	once(name, f) {

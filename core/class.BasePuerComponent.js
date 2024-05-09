@@ -18,10 +18,11 @@ class BasePuerComponent extends PuerObject {
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
-		this.jsCode    = this._toCode(this.classes, props, children)
-		this.isCustom  = false
-		this._isActive = true
-		this._isHidden = false
+		this.jsCode     = this._toCode(this.classes, props, children)
+		this.isCustom   = false
+		this._isActive  = true
+		this._isHidden  = false
+		this._isRemoved = false 
 
 		this.elementCopy       = null
 		this.parentElementCopy = null
@@ -333,7 +334,7 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	get isActiveEventTarget() {
-		return this.isActive
+		return !this._isRemoved && this.isActive
 	}
 
 	get isHidden() {
@@ -439,6 +440,14 @@ class BasePuerComponent extends PuerObject {
 				: null
 		)
 		super.on(name, f, validTargets)
+	}
+
+	offAll() { // off to all custom event listeners
+		for (const name in this._eventListeners) {
+			for (const fKey of this._eventListeners[name]) {
+				this.off(name, fKey)
+			}
+		}
 	}
 
 	as(mixinClass) {
@@ -574,7 +583,13 @@ class BasePuerComponent extends PuerObject {
 	}
 	
 	remove() {
+		this.onBeforeRemove && this.onBeforeRemove()
+		
+		this.removeChildren()
+		this.offAll()
 		this.element.remove()
+
+
 		if (this.parent.isCustom) {
 			this.parent.root = null
 		} else {
@@ -583,6 +598,7 @@ class BasePuerComponent extends PuerObject {
 				delete this.parent.children[index]
 			}
 		}
+		this._isRemoved = true
 		this.id && delete $.components[this.id]
 	}
 

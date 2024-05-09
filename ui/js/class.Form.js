@@ -33,6 +33,7 @@ class Form extends $.Component {
 			if (event.detail.isSaved) {
 				this._updateInitialValues()
 				$.notify('Form saved successfully!')
+				console.log('_onResponse', this.id, this.props.name)
 				this._trigger('save')
 			}
 		// }

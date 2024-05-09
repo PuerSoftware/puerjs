@@ -99,7 +99,6 @@ class PuerEvents extends EventTarget {
 	send(name, data) {
 		if (!this.isConnected) {
 			if (this.isConnecting) {
-				// this._outerCache(name, data)
 				this.outerQueue.enqueue(this.send, this, [name, data]).start()
 			} else {
 				throw new $.Error('$.Events.connect() must be called prior to sending events', this, 'send')
