@@ -69,13 +69,13 @@ class BasePuerComponent extends PuerObject {
 				if (routeName === name) {
 					hasMatch = true
 					if (routeValue === flatPath[name]) {
-						activation = this._isActive ? 0 : 1
+						activation = this._isActive ? activation : 1
 						this.activate()
 						this.onActivate && this.onActivate()
 						this._cascade('__route', [flatPath, activation])
 					} else {
-						activation = !this._isActive ? 0 : -1
-						this.onDeactivate // TODO: check if need to do like onActivate
+						activation = !this._isActive ? 0 : -1 // TODO: check if need to use activation in condition
+						this.onDeactivate
 							? this.onDeactivate()
 							: this.deactivate()
 

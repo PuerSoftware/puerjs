@@ -22,21 +22,18 @@ class Form extends $.Component {
 	}
 
 	_onResponse(event) {
-		// if (event.detail.formName === this.props.name) {
-			this.state.error = event.detail.error
-			this._errorComponent.toggle(this.state.error)
-			for (const input of this.inputs) {
-				if (input.field) {
-					input.field.error = event.detail.errors[input.props.name]
-				}
+		this.state.error = event.detail.error
+		this._errorComponent.toggle(this.state.error)
+		for (const input of this.inputs) {
+			if (input.field) {
+				input.field.error = event.detail.errors[input.props.name]
 			}
-			if (event.detail.isSaved) {
-				this._updateInitialValues()
-				$.notify('Form saved successfully!')
-				console.log('_onResponse', this.id, this.props.name)
-				this._trigger('save')
-			}
-		// }
+		}
+		if (event.detail.isSaved) {
+			this._updateInitialValues()
+			$.notify('Form saved successfully!')
+			this._trigger('save')
+		}
 	}
 
 	_onSubmit() {
@@ -72,8 +69,8 @@ class Form extends $.Component {
 		let data = {}
 		if (this.inputs) {
 			for (const input of this.inputs) {
-				if (!input.props.isHeader) {
-					data[input.props.name] = input.value 
+				if (!input.props.isHeader && !input.props.isReadOnly) {
+					data[input.props.name] = input.value
 				}
 			}
 		}
@@ -119,7 +116,7 @@ class Form extends $.Component {
 		this.on($.Event.FORM_RESPONSE, this._onResponse, this.props.dataSource)
 	}
 
-	onDataChange(items) {
+	_onDataChange(items) {
 		this._isValidateEnabled = false
 		for (const item of items) {
 			const input = this.getInput(item.field)

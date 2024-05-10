@@ -61,6 +61,12 @@
 			opacity : 0;
 		}
 
+		.form-input  .in-place-label {
+			width: 100%;
+			height: 100%;
+			background-color: red;
+		}
+
 .form-input.confined {
 	margin-top    : 7px;
 	border        : 1px solid var(--puer-border-color-form);

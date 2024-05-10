@@ -56,6 +56,13 @@ class InputSelect extends FormInput {
 		this.input.append(option)
 	}
 
+	get stringValue() {
+		const selected = this.input.element.options[this.input.element.selectedIndex] 
+		return selected
+			? selected.innerText
+			: '' 
+	}
+
 	// reset() {
 	// 	if (this.props.selected) {
 	// 		this.value = this.props.selected

@@ -7,11 +7,14 @@ class FormInput extends $.Component {
 		this.props.require('name')
 		this.props.default('isHeader', false)
 		this.props.default('autocomplete', 'off')
-		this.props.default('disabled', false)
-
+		this.props.default('disabled', false) // TODO: rename to isDisabled
+		this.props.default('isEditable', true)
+		this.props.default('isReadOnly', false)
+		
 		this.form         = null
 		this.input        = null
 		this.field        = null
+		this.inPlaceLabel = null
 		this.initialValue = undefined
 
 		this.disabledByDefault = this.props.disabled
@@ -61,6 +64,10 @@ class FormInput extends $.Component {
 			: null
 	}
 
+	get stringValue() {
+		return this.value
+	}
+
 	reset() {
 		if (!this.disabledByDefault) {
 			this.disabled = false
@@ -80,16 +87,36 @@ class FormInput extends $.Component {
 		this.input.element.blur()
 	}
 
+	onBlur(e) {
+		this.props.isEditable = false
+	}
+
+	onPropIsEditableChange(isEditable) {
+		if (this.inPlaceLabel) {
+			this.inPlaceLabel.toggle(!isEditable)
+			this.input.toggle(isEditable)
+			for (const child of this.children) {
+				child.toggle(isEditable)
+			}
+			this.inPlaceLabel.props.text = this.stringValue || '-'
+			if (isEditable) {
+				this.focus()
+			}
+		}
+
+	}
+
 	onInit() {
 		this._on('change', this._onChange)
 		this.form  = this.$$$.Form[0]
 		this.field = this.$$$.FormField[0]
-		
 		this.disabled = this.props.disabled
 	}
 
 	render() {
-		this.input = $[this.props.tagName]({ ... this.props })
+		this.input        = $[this.props.tagName]({ ... this.props })
+		this.inPlaceLabel = $.Box('in-place-label hidden')
+		
 		this._eventTarget = this.input
 		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
@@ -98,6 +125,7 @@ class FormInput extends $.Component {
 			$.div('before', beforeProps),
 			this.input,
 			... this.children,
+			this.inPlaceLabel,	
 			$.div('after', afterProps)
 		]
 
