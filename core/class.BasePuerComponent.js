@@ -584,9 +584,6 @@ class BasePuerComponent extends PuerObject {
 	
 	remove() {
 		this.onBeforeRemove && this.onBeforeRemove()
-		
-		this.removeChildren()
-		this.offAll()
 		this.element.remove()
 
 
