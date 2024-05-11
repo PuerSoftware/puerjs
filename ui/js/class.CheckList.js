@@ -5,10 +5,11 @@ import InputCheckbox from './class.InputCheckbox.js'
 export default class CheckList extends List {
 	constructor(... args) {
 		super(... args)
+		this.props.default('itemRenderer', 'CheckListItem')
 		this.props.default('header', true)
 
 		this.itemContainer = null
-		this.itemRenderer  = 'CheckListItem'
+		this.itemRenderer  = this.props.itemRenderer
 
 		this._checkedCount   = 0
 		this._headerCheckbox = null
@@ -90,24 +91,24 @@ export default class CheckList extends List {
 
 	render() {
 		this.itemContainer = $.ul('body')
-		const checkboxes = []
 		if (this.props.header) {
-			this._headerCheckbox = $.InputCheckbox({
-				label : 'Select all',
-				name  : this.props.name
-			})
-			checkboxes.push(this._headerCheckbox)
+			return $.Rows([
+				$.Box('head', [
+					$.Columns([
+						$.Box('left', [
+							this._headerCheckbox = $.InputCheckbox({
+								label : 'Select all',
+								name  : this.props.name
+							})
+						]),
+						$.Box('right', this.children)
+					])
+				]),
+				this.itemContainer
+			])
+		} else {
+			return this.itemContainer
 		}
-
-		return $.Rows([
-			$.Box('head', [
-				$.Columns([
-					$.Box('left',  checkboxes),
-					$.Box('right', this.children)
-				])
-			]),
-			this.itemContainer
-		])
 	}
 }
 
