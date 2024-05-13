@@ -24,7 +24,7 @@
         width            : auto;
         height           : auto;
         position         : absolute;
-        top              : 6px;
+        top              : 0;
         right            : calc(100% + 4px);
         padding          : 16px 20px;
         gap              : 12px;
@@ -46,10 +46,18 @@
                 color : var(--puer-text-color-hover);
             }
 
-            .menu > .popup > .box.open-chat {
+            .menu > .popup > .box.user-chat {
                 background-image: var(--puer-svg-icon-open-chat);
             }
 
-            .menu > .popup > .box.information{
+            .menu > .popup > .box.vessel-chat {
+                background-image: var(--puer-svg-icon-open-chat);
+            }
+
+            .menu > .popup > .box.make-offer {
+                background-image: var(--puer-svg-icon-information);
+            }
+
+            .menu > .popup > .box.update-status {
                 background-image: var(--puer-svg-icon-information);
             }
