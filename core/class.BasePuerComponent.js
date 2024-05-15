@@ -338,7 +338,7 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	get isHidden() {
-		return this._isHidden
+		return this.hasCssClass('hidden')
 	}
 
 	hasDescendant(component) {
@@ -606,12 +606,10 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	hide() {
-		this._isHidden = true
 		this.addCssClass('hidden')
 	}
 
 	show(display='auto') {
-		this._isHidden = false
 		this.removeCssClass('hidden')
 	}
 

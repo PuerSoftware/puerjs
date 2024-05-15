@@ -23,6 +23,7 @@ export default class ListItem extends $.Component {
 		
 		if (!isFromInput) {
 			this._triggerSelect()
+			this.scrollIntoView()
 		}
 	}
 
@@ -41,6 +42,10 @@ export default class ListItem extends $.Component {
 		if (!this.isHidden) {
 			super.unhighlight()
 		}
+	}
+
+	scrollIntoView() {
+		this.element.scrollIntoView({ behavior: 'smooth', block: 'start' })
 	}
 
 	onInit() {

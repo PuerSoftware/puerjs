@@ -39,9 +39,9 @@ class PuerApp extends $.Component {
 		super.__render()
 		document.body.appendChild(this.element)
 		this.__rendered()
-
-		this._on('click', this._onAppClick)
-		this._on('keyup', this._onAppKeyUp)
+		
+		document.addEventListener('click', this._onAppClick.bind(this))
+		document.addEventListener('keyup', this._onAppKeyUp.bind(this))
 		return this.element
 	}
 	route(path, query=null) {

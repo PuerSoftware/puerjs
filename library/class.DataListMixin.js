@@ -29,8 +29,10 @@ export default class DataListMixin {
 	}
 
 	_onSearch(event) {
-		this._searchQuery = event.detail.value
-		this._dataSet.search(this._searchQuery)
+		if (event.detail.name === this.props.searchName) { // TODO: fix
+			this._dataSet.search(this._searchQuery)
+			this._searchQuery = event.detail.value
+		}
 	}
 
 	_handleQueryKey() {

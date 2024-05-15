@@ -25,7 +25,8 @@ export default class Search extends $.Component {
 
 	search() {
 		this.trigger($.Event.SEARCH, {
-			value : this.input.value
+			value : this.input.value,
+			name  : this.props.name
 		})
 	}
 
