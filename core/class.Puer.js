@@ -334,6 +334,12 @@ class Puer {
         this.app.trigger($.Event.NOTIFICATION, {text: text})
     }
 
+	copyToCb(text, notify=true) {
+		navigator.clipboard.writeText(text)
+		.then(() => {
+			notify && $.notify('Copied')
+		})
+	}
 }
 
 const $ = new Puer()
