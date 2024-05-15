@@ -10,10 +10,10 @@ export default class DataListMixin {
 		component.props.default('searchName', null)   // if not set search is inactive
 		component.props.default('queryKey', 'dataId') // key from url query to select item
 
-		component.isInitialized     = false
-		component._searchQuery      = ''
-		component._filterMap        = null
-		component._sortMap          = null
+		component.isInitialized = false
+		component._searchQuery  = ''
+		component._filterMap    = null
+		component._sortMap      = null
 
 		component.on($.Event.SEARCH, component._onSearch, component.props.searchName)
 	}
@@ -45,9 +45,11 @@ export default class DataListMixin {
 	/**************************************************************/
 
 	_onDataChange(items) {
-		
 		this._ensureSelection()
 		this.removeCssClass('loader')
+		if (!this.isInitialized) {
+			this.onDataInit()
+		}
 		this.isInitialized = true
 		this._handleQueryKey()
 	}
@@ -78,7 +80,6 @@ export default class DataListMixin {
 	}
 
 	_onDataClear() {
-		
 		this.clearItems && this.clearItems()
 	}
 
@@ -132,10 +133,14 @@ export default class DataListMixin {
 		// Appending elements in the new order
 		newOrder.forEach(element => {
 			if (element) {
-			    this.element.appendChild(element)
+				this.element.appendChild(element)
 			}
 		})
 
+	}
+
+	onDataInit() { // items are available
+		
 	}
 
 	onActivate() {
@@ -183,5 +188,18 @@ export default class DataListMixin {
 		}
 		return item
 	}
+
+	get selectedItem() {
+		return this.items[this._selectedId]
+	}
+
+	set selectedItem(dataId) {
+		if (!this.items[dataId]) {
+			this._selectedId = dataId
+		} else {
+			this.items[dataId]._select()
+		}
+	}
+
 }
 

@@ -9,12 +9,13 @@ class Puer {
 			this.appPath
 			this.isReferencing
 			
-			this.isRouting        = true
-			this._cssUrls         = new Set()
-			this._cssCount        = 0
-			this._dataMixinsCount = 0
-			this.components       = {} // {id: component, ...}
-			Puer.instance         = this
+			this.isRouting         = false
+			this.isPreloading      = false
+			this._cssUrls          = new Set()
+			this._cssCount         = 0
+			this._preloadCount     = 0
+			this.components        = {} // {id: component, ...}
+			Puer.instance          = this
 		}
 		return Puer.instance
 	}
@@ -44,7 +45,10 @@ class Puer {
 	_onCssLoad(success) {
 		this._cssCount --
 		if (this._cssCount == 0) {
-			this.app.__ready()
+			if (this._preloadCount == 0) {
+				// console.log('_onCssLoad')
+				this.app.__ready()
+			}
 		}
 	}
 
@@ -63,6 +67,22 @@ class Puer {
 				this._cssCount ++
 			}
 		}
+	}
+
+	_onDataSourceLoad() {
+		this._preloadCount --
+		if (this._preloadCount == 0) {
+			this.isPreloading = false
+			if (this._cssCount == 0) {
+			// console.log('_onDataSourceLoad')
+				this.app.__ready()
+			}
+		}
+	}
+
+	_loadDataSource() {
+		this.isPreloading = true
+		this._preloadCount ++
 	}
 
 	_toClassesArray(value) {
@@ -211,7 +231,7 @@ class Puer {
 			if (this.isFunction(args.at(-1))) {
 				callback = args.pop()
 			}
- 			asyncFunc(...args).then(result => {
+			asyncFunc(...args).then(result => {
 				callback && callback(result, null)
 			}).catch(error => {
 				callback && callback(null, error)
@@ -314,13 +334,6 @@ class Puer {
         this.app.trigger($.Event.NOTIFICATION, {text: text})
     }
 
-	onDataMixinInit() { this._dataMixinsCount ++ }
-	onDataMixinLoad() {
-		this._dataMixinsCount --
-		if (this._dataMixinsCount === 0) {
-			this.app.__complete()
-		} 
-	}
 }
 
 const $ = new Puer()

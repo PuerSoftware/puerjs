@@ -9,7 +9,7 @@ class PuerEvents extends EventTarget {
 			super()
 			this.socket            = null
 			this.outerQueue        = new WaitingQueue(() => { return this.isConnected }) // cashes events, that are waiting socket connection
-			this.innerQueue        = new WaitingQueue(() => { return !$.isRouting     }) // cashes events, that are waiting end of routing
+			this.innerQueue        = new WaitingQueue(() => { return !$.isRouting && !$.isPreloading}) // cashes events, that are waiting end of routing
 			this.isConnecting      = false
 			this.isConnected       = false
 			this._listenerMap      = new WeakMap()
@@ -88,7 +88,7 @@ class PuerEvents extends EventTarget {
 	}
 
 	trigger(name, detail) {
-		if ($.isRouting) {
+		if (!this.innerQueue.isDone()) {
 			this.innerQueue.enqueue(this.trigger, this, [name, detail]).start()
 		} else {
 			this._validateEventDetail(name, detail)

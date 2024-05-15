@@ -3,10 +3,10 @@ import $ from './class.Puer.js'
 
 class PuerApp extends $.Component {
     constructor(props, children) {
-    	super(props, children)
-    	this.props.default('onReady', () => {})
-    	this.__render()
-    	this.css('display', 'none')
+		super(props, children)
+		this.props.default('onReady', () => {})
+		this.__render()
+		this.css('display', 'none')
 	}
 
 	_onAppClick(event) {

@@ -17,7 +17,7 @@ class PuerRouter {
 		if (!PuerRouter.instance) {
 			this.app            = app
 			this.query          = {}
-			this.queue          = new WaitingQueue(() => { return !$.isRouting })
+			this.queue          = new WaitingQueue(() => { return !$.isRouting})
 			this.initialHash    = this._getHash()
 			this.path           = null
 			this.routeRoot      = null
@@ -72,7 +72,7 @@ class PuerRouter {
 	}
 
 	navigate(hash, query=null) {
-		if ($.isRouting) {
+		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
 			hash  = this.routeRoot.updateHash(hash)
@@ -85,6 +85,7 @@ class PuerRouter {
 	}
 
 	start() {
+		// console.log('Router.start()')
 		this.routeRoot = new $.RouteRoot(this.getConfig())
 		this.navigate(this.initialHash || this.routeRoot.getDefaultHash(), this.query)
 
@@ -97,6 +98,7 @@ class PuerRouter {
 				this.navigate(this.routeRoot.getDefaultHash())
 			}
 		})
+
 		this._route(this.initialHash || this.routeRoot.getDefaultHash())
 	}
 }

@@ -14,8 +14,8 @@ export default class DataSet extends PuerObject {
 		const dataSet = new DataSet(name, searchConfig, filter, adapter)
 		Object.defineProperty(DataSet, name, {
 			writable     : true,
- 			enumerable   : true,
- 			configurable : true,
+			enumerable   : true,
+			configurable : true,
 			value        : dataSet
 		})
 

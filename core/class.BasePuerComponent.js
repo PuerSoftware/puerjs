@@ -350,7 +350,7 @@ class BasePuerComponent extends PuerObject {
 			if (this.parent === component) {
 				return true
 			} else {
-				 return this.parent.hasAncestor(component)
+				return this.parent.hasAncestor(component)
 			}
 		}
 		return false

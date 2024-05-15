@@ -42,6 +42,11 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this._changeHandlers = []
 		this._lastLoad       = null
 
+		if (isPreloadable) {
+			$._loadDataSource()
+			// console.log($._preloadCount, this.name)
+			this.load()
+		}
 	}
 
 	_recalculate() {
@@ -53,6 +58,11 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 	_onLoad() {
 		this.trigger($.Event.DATASOURCE_DATA, { itemIds: this.itemIds })
+		if (this.isPreloadable && !this._wasLoaded) {
+			this._wasLoaded = true
+			$._onDataSourceLoad()
+			// console.log($._preloadCount, this.name)
+		}
 	}
 
 	_connect(callback) {
@@ -234,4 +244,13 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 	adaptItems (items, headers) { return items }
 	adaptItem  (item)           { return item  }
+
+	/******************************************************************/
+
+	filter(f) {
+		const data = this.isSingular
+			? [this.data]
+			: this.data
+		return data.filter((item, _) => f(item))
+	}
 }

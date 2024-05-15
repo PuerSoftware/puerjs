@@ -10,9 +10,6 @@ export default class DataOwnerMixin {
 		component._dataSet    = null
 		component._dataSource = null
 		component.dataSource  = component.props.dataSource
-		if (component.dataSource.isPreloadable) {
-			$.onDataMixinInit()
-		}
 	}
 
 	set dataSource(name) {
@@ -33,9 +30,6 @@ export default class DataOwnerMixin {
 		this._dataSet.onData = (... args) => {
 			this._onDataChange      && this._onDataChange.call(this, ...args)
 			this.props.onDataChange && this.props.onDataChange(... args)
-			if (this.dataSource.isPreloadable) {
-				$.onDataMixinLoad()
-			}
 		}
 		this._dataSet.onSort = (... args) => {
 			this._onDataSort      && this._onDataSort.call(this, ...args)
@@ -75,8 +69,6 @@ export default class DataOwnerMixin {
 
 	onBeforeRemove() {
 		this._dataSet.remove()
-		console.log('DataSet', $.DataSet[this._dataSet.name])
 		delete this._dataSet
-		console.log('Mixin', this._dataSet)
 	}
 }
