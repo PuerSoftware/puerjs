@@ -37,7 +37,7 @@ export default class List extends $.Component {
 
 	_ensureSelection() {
 		if (this.length) {
-			if (this._selectedId) {
+			if (this._selectedId && this.items[this._selectedId]) {
 				this.items[this._selectedId]._select()
 			} else {
 				this._selectFirstItem()
