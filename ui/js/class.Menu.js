@@ -13,6 +13,7 @@ export default class Menu extends $.Component {
 		Menu.menus.push(this)
 
 		this.on($.Event.APP_CLICK, this.hideMenu)
+		this.on($.Event.APP_ESCAPE, this.hideMenu)
 	}
 
 	_onClick(e) {
