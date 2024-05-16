@@ -40,7 +40,7 @@ export default class DataListMixin {
 			? this.props.queryKey(this)
 			: $.Router.getQueryValue(this.props.queryKey)  
 		if (dataId) {
-			this.items[parseInt(dataId)]._triggerSelect()
+			this.items[parseInt(dataId)]._select()
 		}
 	}
 
