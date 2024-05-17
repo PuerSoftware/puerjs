@@ -28,8 +28,8 @@ export default class DataOwnerMixin {
 		
 
 		this._dataSet.onData = (... args) => {
-			this._onDataChange      && this._onDataChange.call(this, ...args)
-			this.props.onDataChange && this.props.onDataChange(... args)
+			this._onDataLoad      && this._onDataLoad.call(this, ...args)
+			this.props.onDataLoad && this.props.onDataLoad(... args)
 		}
 		this._dataSet.onSort = (... args) => {
 			this._onDataSort      && this._onDataSort.call(this, ...args)

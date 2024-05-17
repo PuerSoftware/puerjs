@@ -91,7 +91,7 @@ class PuerObject {
 		}
 	}
 
-	on(name, f, validTargets=null) { // matchTarget can be either target or targetName
+	_wrapEventListener(f, validTargets) {
 		const ts = this._getTargetSet(validTargets)
 		const _f = (...args) => {
 			if ($.isFunction(ts)) {
@@ -113,6 +113,11 @@ class PuerObject {
 				}
 			}
 		}
+		return _f
+	}
+
+	on(name, f, validTargets=null) { // matchTarget can be either target or targetName
+		const _f = this._wrapEventListener(f, validTargets)
 		$.Events.on(name, _f, f)
 		if (!this._eventListeners[name]) {
 			this._eventListeners[name] = [f]
@@ -121,8 +126,9 @@ class PuerObject {
 		}
 	}
 
-	once(name, f) {
-		$.Events.once(name, f.bind(this))
+	once(name, f, validTargets=null) {
+		const _f = this._wrapEventListener(f, validTargets)
+		$.Events.once(name, _f)
 	}
 
 	off(name, f) {

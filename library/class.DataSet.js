@@ -83,7 +83,7 @@ export default class DataSet extends PuerObject {
 		this.itemIds = e.detail.itemIds
 		const items  = this.items
 		this.onData(items)
-		this.trigger($.Event.DATASET_DATA, {items: items})
+		// this.trigger($.Event.DATASET_DATA, {items: items})
 	}
 
 	_onItemAdd(e) {
@@ -217,7 +217,7 @@ export default class DataSet extends PuerObject {
 		}
 
 		this.onData(items)
-		this.trigger($.Event.DATASET_DATA, {items: items})
+		// this.trigger($.Event.DATASET_DATA, {items: items})
 
 		this._lastFilter && this.filter(this._lastFilter)
 		this._lastSort   && this.sort(this._lastSort)

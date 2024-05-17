@@ -116,7 +116,7 @@ class Form extends $.Component {
 		this.on($.Event.FORM_RESPONSE, this._onResponse, this.props.dataSource)
 	}
 
-	_onDataChange(items) {
+	_onDataLoad(items) {
 		this._isValidateEnabled = false
 		for (const item of items) {
 			const input = this.getInput(item.field)

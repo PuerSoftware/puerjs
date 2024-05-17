@@ -46,7 +46,11 @@ export default class DataListMixin {
 
 	/**************************************************************/
 
-	_onDataChange(items) {
+	_onDataLoad(items) {
+		for (const item of items) {
+			this.addItem(item)
+		}
+
 		this._ensureSelection()
 		this.removeCssClass('loader')
 		if (!this.isInitialized) {
@@ -58,9 +62,7 @@ export default class DataListMixin {
 
 	_onDataItemAdd(item) {
 		if (!this.items[item.dataId]) {
-			const itemComponent = this.renderItem(item)
-			this.itemContainer.append(itemComponent)
-			this.items[item.dataId] = itemComponent
+			this.addItem(item)
 			this._handleQueryKey()
 		}
 	}
@@ -141,18 +143,19 @@ export default class DataListMixin {
 
 	}
 
-	onDataInit() { // items are available
-		
-	}
-
-	onActivate() {
-		this._dataSet.refresh()
-	}
+	onDataInit() {} // items are available
 
 	onRoute(routes) {
 		if (this.isActive && this.isInitialized) {
 			this._handleQueryKey()
+			this._ensureSelection()
 		}
+	}
+
+	addItem(item) {
+		const itemComponent = this.renderItem(item)
+		this.itemContainer.append(itemComponent)
+		this.items[item.dataId] = itemComponent
 	}
 
 	clear() {

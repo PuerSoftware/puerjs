@@ -66,7 +66,7 @@ class PuerComponent extends BasePuerComponent {
 
 	/*********************** PUBLIC ***********************/
 
-	mixin(mixinClass, data=null, overwrite=false) {
+	mixin(mixinClass, data=null, overwrite=true) {
 		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
 		for (let key in methods) {
 			if (key !== 'constructor') {

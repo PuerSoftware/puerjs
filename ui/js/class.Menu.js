@@ -38,12 +38,13 @@ export default class Menu extends $.Component {
 
 	render() {
 		const items = []
-
 		for (const item of this.props.items) {
 			const itemComponent = $.Box(item.cssClass,{
 				text    : item.label,
 				onclick : (e) => {
+					e.stopPropagation()
 					item.callback(e, this.props.data)
+					this.hideMenu()
 				}
 			})
 			items.push(itemComponent)

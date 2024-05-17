@@ -5,7 +5,7 @@ import InputSelect from './class.InputSelect.js'
 export default class InPlaceEditForm extends Form {
 	constructor(... args) {
 		super(... args)
-		this.props.onDataChange = this.onDataChange.bind(this)
+		this.props.onDataLoad = this.onDataLoad.bind(this)
 		this.currentInput = null
 		this.changedInput = null
 	}
@@ -41,7 +41,7 @@ export default class InPlaceEditForm extends Form {
 		}
 	}
 
-	onDataChange(items) {
+	onDataLoad(items) {
 		for (const input of this.inputs) {
 			input.props.isEditable = false
 		}

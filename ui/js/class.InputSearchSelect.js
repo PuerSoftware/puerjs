@@ -134,7 +134,7 @@ class InputSearchSelect extends FormInput {
 				itemRenderer    : this.props.itemRenderer,
 				mixins          : [{mixin: DataListMixin}],
 				isSelectable    : false,
-				onDataChange    : this._fillValueToItem.bind(this),
+				onDataLoad      : this._fillValueToItem.bind(this),
 			})
 		])
 		this.children.push(this._tags)

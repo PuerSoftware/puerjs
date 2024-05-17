@@ -51,7 +51,7 @@ export default class GoogleStaticMap extends $.Component {
 		return { x: pixelX, y: pixelY, inBounds }
 	}
 
-	onDataChange() { this._updateImage() }
+	_onDataLoad() { this._updateImage() }
 
 	_updateImage() {
 		const center = this.props.center

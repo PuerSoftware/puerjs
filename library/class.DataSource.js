@@ -39,6 +39,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.isPreloadable = isPreloadable
 
 		this._wasLoaded      = false
+		this._isLoading      = false // initial load or reload in progress
 		this._changeHandlers = []
 		this._lastLoad       = null
 
@@ -56,13 +57,19 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		}
 	}
 
+	_onItemAdd(item) {
+		if (!this._isLoading) {
+			this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
+		}
+	}
+
 	_onLoad() {
 		this.trigger($.Event.DATASOURCE_DATA, { itemIds: this.itemIds })
 		if (this.isPreloadable && !this._wasLoaded) {
 			this._wasLoaded = true
 			$._onDataSourceLoad()
-			// console.log($._preloadCount, this.name)
 		}
+		this._isLoading = false
 	}
 
 	_connect(callback) {
@@ -81,6 +88,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		}
 		const _this = this
 
+		this._isLoading = true
 		this.clear(() => {
 			if (!method && this.isCacheable) {
 				this._connect(db => {
@@ -120,7 +128,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.db.readItems(0, _this.count, (items) => {
 			for (const item of items) {
 				_this._addItemToStore(item)
-				this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
+				this._onItemAdd(item)
 			}
 			this._onLoad()
 		})
@@ -163,17 +171,13 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	}
 	
 
-	fill(items, reset=true) {
+	fill(items) {
+		this._isLoading = true
 		$.defer(() => { // TODO: maybe we can remove this
-			if (reset) {
-				this.clear(() => {
-					this.addItems(items)
-					this._onLoad()
-				})
-			} else {
+			this.clear(() => {
 				this.addItems(items)
 				this._onLoad()
-			}
+			})
 		})
 	}
 
@@ -209,7 +213,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.isCacheable && this._addItemToDb(item)
 		this._addItemToStore(item)
 		recalculate && this._recalculate()
-		this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
+		this._onItemAdd(item)
 	}
 
 	addItems(items, headers) {

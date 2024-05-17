@@ -39,8 +39,8 @@ class PuerProxy {
 				return true
 			},
 			has: (target, prop) => {
-		        return prop in target.references
-		    },
+				return prop in target.references
+			},
 			deleteProperty: (target, prop) => {
 				delete target.references[prop]
 				target.owner[onChangeMethod](prop)

@@ -24,7 +24,7 @@ class InputSelect extends FormInput {
 		}
 	}
 
-	_onDataChange(data) {
+	_onDataLoad(data) {
 		this.input.removeChildren()
 		this.addOptions(data)
 		this.hasData = true

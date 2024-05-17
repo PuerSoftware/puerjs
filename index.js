@@ -105,7 +105,7 @@ $.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])
 $.Events.define('DATASOURCE_ITEM_REMOVE', ['itemId'])
 $.Events.define('DATASOURCE_CLEAR',       [])
 
-$.Events.define('DATASET_DATA',           ['items'])
+// $.Events.define('DATASET_DATA',           ['items'])
 $.Events.define('DATASET_SORT',           ['map'])
 $.Events.define('DATASET_FILTER',         ['map'])
 

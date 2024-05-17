@@ -142,7 +142,7 @@ export default class GoogleMap extends $.Component {
 
 	/***************************************************/
 
-	_onDataChange() {
+	_onDataLoad() {
 		this.removeMarkers()
 		for (const item of this.dataSet.items) {
 			this.addMarker(item.lat, item.lng, item.icons, item.label, item.data)

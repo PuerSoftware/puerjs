@@ -442,14 +442,6 @@ class BasePuerComponent extends PuerObject {
 		super.on(name, f, validTargets)
 	}
 
-	offAll() { // off to all custom event listeners
-		for (const name in this._eventListeners) {
-			for (const fKey of this._eventListeners[name]) {
-				this.off(name, fKey)
-			}
-		}
-	}
-
 	as(mixinClass) {
 		const handler = {
 			get: (target, prop, receiver) => {
