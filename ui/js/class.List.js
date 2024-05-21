@@ -84,7 +84,6 @@ export default class List extends $.Component {
 	_adjustPageSize() {
 		const minPageSize = 20
 		if (this.props.pageSize < minPageSize) {
-			console.log('Adjust page size from', this.props.pageSize, 'to', minPageSize)
 			this.props.pageSize = minPageSize
 		}
 	}
