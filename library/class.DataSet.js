@@ -82,8 +82,8 @@ export default class DataSet extends PuerObject {
 	_onData(e) {
 		this.itemIds = e.detail.itemIds
 		const items  = this.items
+		this._reindexItems()
 		this.onData(items)
-		// this.trigger($.Event.DATASET_DATA, {items: items})
 	}
 
 	_onItemAdd(e) {

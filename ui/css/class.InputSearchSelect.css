@@ -18,7 +18,7 @@
 		max-height : 200px;
 		border     : 1px solid var(--puer-border-color);
 		flex-grow  : 0;
-		overflow-y : auto;
+		/* overflow-y : auto; */
 		z-index    : 1;
 		box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
 	}
@@ -45,6 +45,8 @@
 			margin         : 0;
 			padding        : 12px;
 			position       : relative;
+			min-height     : 40px;
+			max-height     : 200px;
 		}
 			.input-search-select > .menu-body > .menu::after {
 				content                 : '';

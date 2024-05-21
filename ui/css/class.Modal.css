@@ -19,7 +19,6 @@
 		position         : relative;
 		max-width        : 90%; /* Optional: To ensure it doesn't stretch too much */
 		max-height       : 90%; /* Optional: To ensure it doesn't stretch too much */
-		overflow         : auto; /* For scrolling if the content is too large */
 	}
 
 	.modal > .body > .close-btn {

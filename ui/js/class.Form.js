@@ -14,11 +14,13 @@ class Form extends $.Component {
 		this.props.default('autocomplete',  'off')
 		this.props.default('doClearOnSave', false)
 		this.props.default('hasButton',     true)
+		this.props.default('saveNotification', 'Form saved successfully!')
 
 		this.state.error        = ''
 		this._errorComponent    = null
 		this._isValidateEnabled = true
 		this.inputs             = null
+		this.button             = null
 	}
 
 	_onResponse(event) {
@@ -31,7 +33,7 @@ class Form extends $.Component {
 		}
 		if (event.detail.isSaved) {
 			this._updateInitialValues()
-			$.notify('Form saved successfully!')
+			$.notify(this.props.saveNotification)
 			this._trigger('save')
 		}
 	}
@@ -91,7 +93,7 @@ class Form extends $.Component {
 
 	reset() {
 		for (const input of this.inputs) {
-			if (!input.isHidden) {
+			if (!input._isHidden) {
 				input.reset()
 			}
 		}
@@ -136,7 +138,7 @@ class Form extends $.Component {
 		if (this.props.hasButton) {
 			formChildren.push(
 				$.div ('button-panel', [
-					$.InputButton ({
+					this.button = $.InputButton ({
 						type    : 'button',
 						onclick : this._onSubmit,
 						text    : this.props.buttonLabel,

@@ -3,23 +3,25 @@ import FormInput     from './class.FormInput.js'
 import DataListMixin from '../../library/class.DataListMixin.js'
 
 
+
 class InputSearchSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('tagName',      'input')
+		this.props.default('pageSize',     100)
 		this.props.default('type',         'hidden')
 		this.props.default('renderTag',    this.renderTag)
 		this.props.default('itemRenderer', 'ListItem')
 		this.props.default('isSingular',   false)
 
-		this._tags        = null
-		this._search      = null
-		this._menu        = null
-		this._menuList    = null
-		this._menuName    = $.String.random(6)
-		this._valueSet    = new Set()
-		this._valueToItem = {}
-		this._valueToTag  = {}
+		this._tags            = null
+		this._search          = null
+		this._menu            = null
+		this._menuList        = null
+		this._menuName        = $.String.random(6)
+		this._valueSet        = new Set()
+		this._valueToDataId   = {}
+		this._valueToTag      = {}
 
 		this.on($.Event.APP_CLICK,        this._onAppClick)
 		this.on($.Event.APP_ESCAPE,       this._onAppEscape)
@@ -29,7 +31,6 @@ class InputSearchSelect extends FormInput {
 
 	_onAppClick(event) {
 		const targetElement = event.detail.event.target
-
 		if (!this.element.contains(targetElement)) {
 			this._menu.hide()
 		}
@@ -56,11 +57,26 @@ class InputSearchSelect extends FormInput {
 		return Array.from(this._valueSet).join(',')
 	}
 
-	_fillValueToItem() {
-		for (const itemId in this._menuList.items) {
-			const item = this._menuList.items[itemId]
-			this._valueToItem[item.props.data.value] = item
+	_fillValueToDataId() {
+		for (const data of this._menuList.filteredItemData) {
+			this._valueToDataId[data.value] = data.dataId
+			if (this._menuList.items[data.dataId]) {
+				if (this._valueSet.has(data.value)) {
+					this._disableItem(data.value)
+				} else {
+					this._enableItem(data.value)
+				}
+			}
 		}
+	}
+
+
+	_disableItem(value) {
+		this._menuList.items[this._valueToDataId[value]].addCssClass('disabled')
+	}
+	
+	_enableItem(value) {
+		this._menuList.items[this._valueToDataId[value]].removeCssClass('disabled')
 	}
 
 	_select(data) {
@@ -72,7 +88,7 @@ class InputSearchSelect extends FormInput {
 				this._valueSet = new Set()
 			}
 
-			this._valueToItem[data.value].addCssClass('disabled') // ListItem
+			this._disableItem(data.value)
 			const tag                    = this.props.renderTag(data)
 			this._valueToTag[data.value] = tag
 			this._tags.append(tag)
@@ -83,7 +99,7 @@ class InputSearchSelect extends FormInput {
 	_unselect(value) {
 		delete this._valueToTag[value]
 		this._updateValue(value, 'delete')
-		this._valueToItem[value].removeCssClass('disabled')
+		this._enableItem(value)
 	}
 
 	_updateValue(value, func='add') {
@@ -99,7 +115,9 @@ class InputSearchSelect extends FormInput {
 			}
 			if (value !== '') {
 				for (const v of String(value).split(',')) {
-					this._select(this._valueToItem[Number(v)].props.data)
+					const dataId = this._valueToDataId[Number(v)]
+					const idx    = this._menuList.idToIdx[dataId]
+					this._select(this._menuList.filteredItemData[idx])
 				}
 			}
 		}
@@ -131,10 +149,12 @@ class InputSearchSelect extends FormInput {
 				name            : this._menuName,
 				searchName      : searchName,
 				dataSource      : this.props.dataSource,
+				pageSize        : this.props.pageSize,
 				itemRenderer    : this.props.itemRenderer,
 				mixins          : [{mixin: DataListMixin}],
 				isSelectable    : false,
-				onDataLoad      : this._fillValueToItem.bind(this),
+				onBuffer        : this._fillValueToDataId.bind(this),
+				onDataLoad      : this._fillValueToDataId.bind(this),
 			})
 		])
 		this.children.push(this._tags)

@@ -341,6 +341,18 @@ class BasePuerComponent extends PuerObject {
 		return this.hasCssClass('hidden')
 	}
 
+	get computedStyle() {
+		return window.getComputedStyle ? getComputedStyle(this.element, null) : this.element.currentStyle
+	}
+
+	get height() {
+		return parseInt(this.computedStyle.height, 10)
+	}
+
+	get width() {
+		return parseInt(this.computedStyle.width, 10)
+	}
+
 	hasDescendant(component) {
 		return component.hasAncestor(this)
 	}

@@ -7,29 +7,46 @@ export default class List extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
-		this.props.default('isSelectable',    true)
+		this.props.default('isSelectable', true)
+		this.props.default('pageSize',     null)
+		this.props.default('onBuffer',     null)
 		this.props.default('ensureSelection', this.props.isSelectable)
 		this.props.default('itemRenderer', 'ListItem')
 
-		this.items         = {}  // { dataId : itemComponent } for easy lookup when applying sort and filter
-		this.itemRenderer  = this.props.itemRenderer
-		this.itemContainer = this // may be set manually in child class
+		this.items            = {} // { id : itemComponent } for easy lookup when applying sort and filter
+		this.idToIdx          = {} // {id: idx} idx is index of data in in itemData
+		this.idxToId          = {} // {idx: id} idx is index of data in in itemData
+		this.itemData         = [] // [data, ...] data is list item data
+		this.filteredItemData = [] // [data, ...] data is list item data
+		this.buffer           = [] // [id]
+		this.itemRenderer     = this.props.itemRenderer
+		this.itemContainer    = null // may be set manually in child class
+
+		this._selectedId       = null
+		this._filterMap    	   = null
+		this._sortMap      	   = null
+		this._numRenderedItems = 0
 
 		this.on($.Event.LIST_ITEM_SELECT, this._onItemSelect, this.name)
-
-		this._selectedId = null
 	}
 
-	_onItemSelect(event) {
+	_onScroll(e) {
+		const up = this._isDirectionUp()
+		if (this._canBuffer(up)) {
+			this._buffer(up)
+		}
+	}
+
+	_onItemSelect(e) {
 		// Its mean, that these items is owned by this list
 		if (this.props.isSelectable) {
 			for (const itemId in this.items) {
 				const item = this.items[itemId]
-				if (event.detail.target === item) {
+				if (e.detail.target === item) {
 					this._selectedId = itemId
 					item.select()
 				} else {
-					item.deselect()
+					item  && item.deselect()
 				}
 			}
 		}
@@ -51,14 +68,120 @@ export default class List extends $.Component {
 	}
 
 	/**************************************************************/
+	_isDirectionUp() {
+		const [ t, b ] = this.extremeItems
+		const centerIdx = this.buffer.indexOf(b.bufferId) - this.buffer.indexOf(t.bufferId) 
+		return centerIdx > this.buffer.length / 2
+	}
+
+	_canBuffer(up) {
+		return up 
+			? this.buffer[0] !== this.idxToId[0]
+			: this.buffer[this.buffer.length - 1] !== this.idxToId[this.itemData.length - 1]
+	}
+
+	_adjustPageSize() {
+		const minPageSize = 20
+		if (this.props.pageSize < minPageSize) {
+			console.log('Adjust page size from', this.props.pageSize, 'to', minPageSize)
+			this.props.pageSize = minPageSize
+		}
+	}
+
+	_bufferItem(id, up) {
+		if (!this.items[id]) {
+			const itemComponent = this.renderItem(this.filteredItemData[this.idToIdx[id]])
+			itemComponent.bufferId = id
+			if (up) {
+				this.itemContainer.prepend(itemComponent)
+				this.buffer.unshift(id)
+			} else {
+				this.itemContainer.append(itemComponent)
+				this.buffer.push(id)
+			}
+			this.items[id] = itemComponent
+		}
+	}
+
+	_unbufferItem(id) {
+		if (this.items[id]) {
+			this.items[id].remove()
+			this.items[id] = null
+			this.buffer.splice(this.buffer.indexOf[id], 1)
+		}
+	}
+
+	_fillBuffer() {
+		if (this.props.pageSize) {
+			for (let idx=0; idx<this.props.pageSize; idx++) {
+				if (idx >= this.filteredItemData.length) {
+					break
+				}
+				this._bufferItem(this.idxToId[idx], true)
+			}
+		} else {
+			for (const idx in this.filteredItemData) {
+				this._bufferItem(this.idxToId[idx], true)
+			}
+		}
+	}
+	
+	_scrollBuffer(up) {
+		const direction = up ? -1 : 1		
+		const bufferIdx = up ? 0 : this.buffer.length - 1
+		const pageSize  = Math.round(this.props.pageSize / 2)
+		// console.log('buffer - up', up, pageSize)
+		let idx = this.idToIdx[this.buffer[bufferIdx]]
+		for (let n=0; n<pageSize; n++) {
+			idx += direction
+			if (!this.filteredItemData[idx]) {
+				break
+			}
+			const id = this.idxToId[idx]
+			
+			this._bufferItem(id, up)
+		}
+		// console.log('unbuffer - up', up, pageSize)
+		idx = this.buffer[up ? this.buffer.length - 1 : 0]
+		for (let n=0; n<pageSize; n++) {
+			idx += direction
+			this._unbufferItem(this.idxToId[idx])
+		}
+		// console.log('bufferSize', this.buffer.length, 'of', this.itemData.length)
+		// console.log('**************************************')
+	}
+
+	_buffer(up) {
+		if (this.filteredItemData) {
+			if (this.buffer.length) {
+				this._scrollBuffer(up)
+			} else {
+				this._fillBuffer()
+			}
+			this.onBuffer()
+			this.props.onBuffer && this.props.onBuffer()
+		}
+	}
+
+	_unbuffer() {
+		while (this.buffer.length) {
+			this._unbufferItem(this.buffer[0])
+		}
+	}
+
+	_rebuffer() {
+		this._unbuffer()
+		this._buffer()
+	}
+
+	/**************************************************************/
 
 	get length() {
-		return Object.values(this.items).length
+		return this.itemData.length
 	}
 
 	get firstItem() {
-		const items = Object.values(this.items).filter((item, _) => !item.isHidden)
-		return items.length ? items[0] : null
+		return this.items[this.buffer[0]]
 	}
 
 	get selectedItem() {
@@ -69,10 +192,49 @@ export default class List extends $.Component {
 		this.items[itemId]._select()
 	}
 
+	get extremeItems() {
+		const scrollTop    = this.element.scrollTop
+		const scrollBottom = scrollTop + this.element.clientHeight;
+
+		let topVisibleItem    = null
+		let bottomVisibleItem = null
+		let minTopDistance    = Number.POSITIVE_INFINITY
+		let minBottomDistance = Number.POSITIVE_INFINITY
+
+		for (const itemId in this.items) {
+			const item             = this.items[itemId]
+			if (item) {
+				const itemOffsetTop    = item.element.offsetTop
+				const itemOffsetBottom = itemOffsetTop + item.element.clientHeight
+
+				const topDistance = Math.abs(itemOffsetTop - scrollTop)
+				if (topDistance < minTopDistance) {
+					minTopDistance = topDistance
+					topVisibleItem = item
+				}
+
+				const bottomDistance = Math.abs(itemOffsetBottom - scrollBottom)
+				if (bottomDistance < minBottomDistance) {
+
+					minBottomDistance = bottomDistance
+					bottomVisibleItem = item
+				}
+			}
+		}
+
+		return [ topVisibleItem, bottomVisibleItem ]
+	}
+
 	/**************************************************************/
 
 	onRoute() {
 		this.props.ensureSelection && this._ensureSelection()
+	}
+
+	onRender() {
+		if (this.props.pageSize) {
+			this._on('scroll', this._onScroll)
+		}
 	}
 
 	renderItem(item) {
@@ -87,37 +249,65 @@ export default class List extends $.Component {
 	}
 
 	/*****************************************************************/
-	/*
-	TODO: check if need create no-dataSource mixin for List.
-	If need, mixin must implements methods for working with this.items.
-	Example: addItem, removeItem, clearItems, sortItems, filterItems etc.
-	In this mixin case item will be components.
-	*/
-	addItem(item) {
-		const itemComponent = this.renderItem(item)
-		this.itemContainer.append(itemComponent)
-		this.items[itemComponent.id] = itemComponent
+	addItem(item, id=null) {
+		id = id || $.String.random(5)
+		
+		this.itemData.push(item)
+		this.filteredItemData.push(item)
+		this.idToIdx[id] = this.itemData.length - 1
+		this.idxToId[this.itemData.length - 1] = id
+		this.items[id]   = null
+
+		if (this.props.pageSize) {
+			if (this.props.pageSize * 2 > this.buffer.length) {
+				this._bufferItem(id, false)
+			}
+			if (this.buffer.length === 1) {
+				this._adjustPageSize()
+			}
+		} else {
+			this._bufferItem(id, false)
+		}
+		return id
 	}
 
-	removeItem(itemId) {
-		const itemComponent = this.items[itemId]
-		if (itemComponent) {
-			itemComponent.remove()
-			delete this.items[itemId]
-		}
+	removeItem(id) {
+		this._unbufferItem(id)
+		const idx  = this.idToIdx[id]
+		const data = this.filteredItemData[idx]
+		this.itemData.splice(this.itemData.indexOf(data), 1)
+		this.filteredItemData.splice(idx, 1)
+		delete this.idToIdx[id]
+		delete this.idxToId[idx]
 	}
 
 	clearItems() {
-		this.itemContainer.removeChildren()
-		this.items = {}
+		this._unbuffer()
+		this.items            = {}
+		this.idToIdx          = {}
+		this.idxToId          = {}
+		this.itemData         = []
+		this.filteredItemData = []
+		this.buffer           = []
+	}
+
+	sort(f) {
+		// TODO: implement
+	}
+
+	fiter(f) {
+		// TODO: implement
 	}
 	/*****************************************************************/
 
 	scrollToBottom() { this.element.scrollTop = this.element.scrollHeight }
 	scrollToTop()    { this.element.scrollTop = 0 }
 
+	onBuffer() {}
+
 	render() {
-		return $.ul(this.children)
+		this.itemContainer = $.ul(this.children)
+		return this.itemContainer
 	}
 }
 
