@@ -37,7 +37,7 @@
 }
 	.button.secondary:hover {
 		background-color : var(--puer-bg-color-btn-secondary-hover);
-		color            : var(--puer-color-btn-secondary-hover);
+		/* color            : var(--puer-color-btn-secondary-hover); */
 	}
 	.button.secondary:active {
 		background-color : var(--puer-bg-color-btn-secondary-active);
