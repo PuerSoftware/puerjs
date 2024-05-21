@@ -105,13 +105,9 @@ $.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])
 $.Events.define('DATASOURCE_ITEM_REMOVE', ['itemId'])
 $.Events.define('DATASOURCE_CLEAR',       [])
 
-// $.Events.define('DATASET_DATA',           ['items'])
-$.Events.define('DATASET_SORT',           ['map'])
-$.Events.define('DATASET_FILTER',         ['map'])
-
 $.Events.define('LIST_ITEM_SELECT',       ['data', 'name'])
 $.Events.define('LIST_ITEM_CHECK',        ['data', 'name', 'isChecked', 'isResend'])
-$.Events.define('SEARCH',                 ['value']) // TODO: Move to DATASET_SEARCH?
+$.Events.define('SEARCH',                 ['value'])
 $.Events.define('PAGINATE',               ['page'])
 $.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'isSaved'])
 $.Events.define('TAG_REMOVE',             ['label'])

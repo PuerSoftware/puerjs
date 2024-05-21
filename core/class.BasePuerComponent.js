@@ -341,6 +341,18 @@ class BasePuerComponent extends PuerObject {
 		return this.hasCssClass('hidden')
 	}
 
+	get computedStyle() {
+		return window.getComputedStyle ? getComputedStyle(this.element, null) : this.element.currentStyle
+	}
+
+	get height() {
+		return parseInt(this.computedStyle.height, 10)
+	}
+
+	get width() {
+		return parseInt(this.computedStyle.width, 10)
+	}
+
 	hasDescendant(component) {
 		return component.hasAncestor(this)
 	}
@@ -367,7 +379,7 @@ class BasePuerComponent extends PuerObject {
 			this.element = this.elementCopy
 			this.parentElementCopy.appendChild(this.element)
 			this.elementCopy = null
-			this._isActive    = true
+			this._isActive   = true
 		}
 	}
 
@@ -376,7 +388,7 @@ class BasePuerComponent extends PuerObject {
 			this.elementCopy       = this.element
 			this.parentElementCopy = this.element.parentNode
 			this.element.remove()
-			this.element  = null
+			this.element   = null
 			this._isActive = false
 		}
 	}
@@ -520,13 +532,15 @@ class BasePuerComponent extends PuerObject {
 				this.append(c)
 			}
 		} else {
-			component.__render()
-			component.__init()
-			component.__ready()
-			component._applyProps()
-
-			component.parent = this.root
-			component.owner  = this.owner
+			if (!component.element) {
+				component.__render()
+				component.__init()
+				component.__ready()
+				component._applyProps()	
+			}
+			component._isRemoved = false
+			component.parent     = this.root
+			component.owner      = this.owner
 			this.root.children.push(component)
 			this.element.appendChild(component.element)
 		}
@@ -538,13 +552,16 @@ class BasePuerComponent extends PuerObject {
 				this.prepend(c)
 			}
 		} else {
-			component.__render()
-			component.__init()
-			component.__ready()
-			component._applyProps()
+			if (!component.element) {
+				component.__render()
+				component.__init()
+				component.__ready()
+				component._applyProps()
+			}
 
-			component.parent = this.root
-			component.owner  = this.owner
+			component._isRemoved = false
+			component.parent     = this.root
+			component.owner      = this.owner
 			this.root.children.unshift(component)
 
 			if (this.element.firstChild) {
@@ -577,7 +594,6 @@ class BasePuerComponent extends PuerObject {
 	remove() {
 		this.onBeforeRemove && this.onBeforeRemove()
 		this.element.remove()
-
 
 		if (this.parent.isCustom) {
 			this.parent.root = null

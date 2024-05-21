@@ -9,6 +9,7 @@ class PuerTextElement extends PuerHtmlElement {
 		super({text: text}, [])
 		this.tagName      = 'text'
 		this.highlightSet = []
+		this.hasHighlight = null
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -24,7 +25,9 @@ class PuerTextElement extends PuerHtmlElement {
 	/*********************** PRIVATE ***********************/
 
 	_onPropChange(prop) {
-		this.element.nodeValue = $.dereference(this.props.text)
+		if (!this.hasHighlight) {
+			this.element.nodeValue = $.dereference(this.props.text)
+		}
 	}
 
 	_renderElement() {
@@ -33,6 +36,7 @@ class PuerTextElement extends PuerHtmlElement {
 
 	highlight(words) {
 		this.unhighlight()
+		this.hasHighlight = true
 		if (words && words.length) {
 			const texts = $.String.splitCaseSafe(this.element.nodeValue, words)
 			if (texts.length > 1) {
@@ -63,6 +67,7 @@ class PuerTextElement extends PuerHtmlElement {
 			}
 			this.highlightSet = []
 		}
+		this.hasHighlight = false
 	}
 }
 

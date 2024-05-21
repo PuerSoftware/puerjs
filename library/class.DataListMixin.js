@@ -7,20 +7,68 @@ export default class DataListMixin {
 
 	static init(component, data) {
 		component.mixin(DataOwnerMixin, data)
-		component.props.default('searchName', null)   // if not set search is inactive
-		component.props.default('queryKey', 'dataId') // key from url query to select item
+		component.props.default('searchName',  null)   // if not set search is inactive
+		component.props.default('queryKey',   'dataId') // key from url query to select item
 
 		component.isInitialized = false
 		component._searchQuery  = ''
-		component._filterMap    = null
-		component._sortMap      = null
 
 		component.on($.Event.SEARCH, component._onSearch, component.props.searchName)
 	}
 
+	_addItem(item) {
+		this.addItem(item, item.dataId)
+	}
+
+	_applyFilter(filterMap) {
+		this._filterMap       = filterMap
+		this.filteredItemData = []
+		this.idxToId          = {}
+		this.idToIdx          = {}
+		for (const idx in this.itemData) {
+			const dataId = this.itemData[idx].dataId
+			if (this._filterMap[dataId]) {
+				this.filteredItemData.push(this.itemData[idx])
+				this.idxToId[this.filteredItemData.length - 1] = dataId
+				this.idToIdx[dataId] = this.filteredItemData.length - 1
+			}
+		}
+		this._rebuffer()
+	}
+
+	_applySearch() {
+		for (const itemId of this.buffer) {
+			if (this._searchQuery) {
+				const search = this._searchQuery.toLowerCase().trim().split(/\s+/g).filter(s => s !== '')
+				this.items[itemId].highlight(search)
+			} else {
+				this.items[itemId].unhighlight()
+			}
+		}
+	}
+
+	_hasFilterChanges(filterMap) {
+		if (Object.keys(filterMap).length) {
+			if (this._filterMap) {
+				for (const id in this._filterMap) {
+					if (this._filterMap[id] !== filterMap[id]) {
+						return true
+					}
+				}
+			} else {
+				for (const id of this.buffer) {
+					if (!filterMap[id]) {
+						return true
+					}
+				}
+			}
+		}
+		return false
+	}
+
 	_ensureFilterSelection() {
 		if (this._selectedId) {
-			if (this._filterMap[this._selectedId]) {
+			if (this._filterMap && this._filterMap[this._selectedId]) {
 				this.items[this._selectedId]._select()
 			} else {
 				this._selectFirstItem()
@@ -29,9 +77,9 @@ export default class DataListMixin {
 	}
 
 	_onSearch(event) {
-		if (event.detail.name === this.props.searchName) { // TODO: fix
-			this._dataSet.search(this._searchQuery)
+		if (event.detail.name === this.props.searchName) {
 			this._searchQuery = event.detail.value
+			this._dataSet.search(this._searchQuery)
 		}
 	}
 
@@ -48,7 +96,7 @@ export default class DataListMixin {
 
 	_onDataLoad(items) {
 		for (const item of items) {
-			this.addItem(item)
+			this._addItem(item)
 		}
 
 		this._ensureSelection()
@@ -62,7 +110,7 @@ export default class DataListMixin {
 
 	_onDataItemAdd(item) {
 		if (!this.items[item.dataId]) {
-			this.addItem(item)
+			this._addItem(item)
 			this._handleQueryKey()
 		}
 	}
@@ -88,22 +136,11 @@ export default class DataListMixin {
 	}
 
 	_onDataFilter(filterMap) {
-		const hasSearch    = Boolean(this.props.searchName)
-		this._filterMap    = filterMap
-
-		for (const itemId in this.items) {
-			if (filterMap.hasOwnProperty(itemId)) {
-				this.items[itemId].toggle(filterMap[itemId])
-			}
-			if (hasSearch) {
-				if (this._searchQuery) {
-					this.items[itemId].highlight(
-						this._searchQuery.toLowerCase().trim().split(/\s+/g).filter(s => s !== '')
-					)
-				} else {
-					this.items[itemId].unhighlight()
-				}
-			}
+		if (this._hasFilterChanges(filterMap)) {
+			this._applyFilter(filterMap)
+		}
+		if (Boolean(this.props.searchName)) {
+			this._applySearch()
 		}
 		
 		this._ensureFilterSelection()
@@ -111,7 +148,6 @@ export default class DataListMixin {
 
 	_onDataSort(sortMap) {
 		this._sortMap = sortMap
-		// console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
 		const elements = []
 		for (const itemId in this.items) {
@@ -140,7 +176,6 @@ export default class DataListMixin {
 				this.element.appendChild(element)
 			}
 		})
-
 	}
 
 	onDataInit() {} // items are available
@@ -150,12 +185,6 @@ export default class DataListMixin {
 			this._handleQueryKey()
 			this._ensureSelection()
 		}
-	}
-
-	addItem(item) {
-		const itemComponent = this.renderItem(item)
-		this.itemContainer.append(itemComponent)
-		this.items[item.dataId] = itemComponent
 	}
 
 	clear() {
@@ -178,20 +207,6 @@ export default class DataListMixin {
 
 	get searchName() {
 		return this.props.searchName
-	}
-
-	get firstItem() {
-		let item = Object.values(this.items).filter((item, _) => !item.isHidden)[0]
-		if (this._searchQuery) {
-			if (this._filterMap) {
-				item = this.items[
-					Object
-						.keys(this._filterMap)
-						.find(id => this._filterMap[id])
-				]
-			}
-		}
-		return item
 	}
 
 	get selectedItem() {
