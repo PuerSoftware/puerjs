@@ -32,11 +32,10 @@ export default class DataSet extends PuerObject {
 		this.searchConfig     = searchConfig
 		this.isInitialized    = false
 		this.index            = new Map()
-		this._filterSearchMap = null
 		this._filterMap       = {}
+		this._searchMap       = {}
 		this._itemFilter      = filter    // To get a subset of datasource data
 		this._itemAdapter     = adapter
-		this._excluded        = new Set() // To exclude items dynamically
 	}
 
 	/**************************************************************/
@@ -68,12 +67,30 @@ export default class DataSet extends PuerObject {
 		}
 	}
 
-	_applyItemFilter(ids) {
+	_applyInitialFilter(ids) {
 		if (this._itemFilter) {
 			const items = $.DataStore.get(ids)
 			ids = items.filter(this._itemFilter).map((item, _) => item.dataId)
 		}
 		return ids
+	}
+
+	_applyFilters() {
+		const map = {}
+		const hasSearch = Boolean(Object.keys(this._searchMap).length)
+		const hasFilter = Boolean(Object.keys(this._filterMap).length)
+
+		for (const dataId of this._itemIds) {
+			if (!hasSearch) {
+				map[dataId] = this._filterMap[dataId]
+			} else if (!hasFilter) {
+				map[dataId] = this._searchMap[dataId]
+			} else {
+				map[dataId] = this._filterMap[dataId] && this._searchMap[dataId]
+			}
+		}
+
+		this.onFilter(map)
 	}
 
 	/**************************************************************/
@@ -88,7 +105,7 @@ export default class DataSet extends PuerObject {
 
 	_onItemAdd(e) {
 		const item = e.detail.item
-		const ids  = this._applyItemFilter([item.dataId])
+		const ids  = this._applyInitialFilter([item.dataId])
 
 		if (ids.length) {
 			this._indexItem(item, item.dataId)
@@ -134,8 +151,7 @@ export default class DataSet extends PuerObject {
 
 	set itemIds(ids) {
 		// TODO: _reindexItems?
-		this._itemIds      = this._applyItemFilter(ids)
-		// console.log('itemIds2', this._itemIds)
+		this._itemIds      = this._applyInitialFilter(ids)
 		this.isInitialized = true
 
 		this._lastFilter && this.filter(this._lastFilter)
@@ -156,23 +172,37 @@ export default class DataSet extends PuerObject {
 
 	filter(f) {
 		if (this.isInitialized) {
-			const items = this.items
-			const map   = {}
+			const map = {}
 
-			items.forEach((item, index) => {
-				if (this._excluded.has(item.dataId)) {
-					map[item.dataId] = false
-				} else {
-					map[item.dataId] = f(item)
-				}
-			})
+			for (const item of this.items) {
+				map[item.dataId] = f(item)
+			}
 
 			this._lastFilter = f
 			this._filterMap  = map
-
-			this.trigger($.Event.DATASET_FILTER, {map: map})
-			this.onFilter(map)
+			this._applyFilters()
 		}
+	}
+
+	search(query) {
+		const words  = query.toLowerCase().trim().split(/\s+/g)
+		const result = new Set()
+		const map    = {}
+
+		for (const word of words) {
+			for (const [valueString, indexes] of this.index) {
+				if (valueString.includes(word)) {
+					indexes.forEach(id => result.add(id))
+				}
+			}
+		}
+
+		for (const item of this.items) {
+			map[item.dataId] = result.has(item.dataId)
+		}
+
+		this._searchMap = map
+		this._applyFilters()
 	}
 
 	sort(f) {
@@ -188,26 +218,8 @@ export default class DataSet extends PuerObject {
 
 			this._lastSort = f
 
-			this.trigger($.Event.DATASET_SORT, {map: map})
 			this.onSort(map)
 		}
-	}
-
-	search(query) {
-		const words  = query.toLowerCase().trim().split(/\s+/g)
-		const result = new Set()
-
-		words.forEach((word) => {
-			this.index.forEach((indexes, valueString) => {
-				if (valueString.includes(word)) {
-					indexes.forEach(id => result.add(id))
-				}
-			})
-		})
-
-		this.filter(item => {
-			return result.has(item.dataId)// && !this._excluded.has(item.dataId))
-		})
 	}
 
 	refresh() {
@@ -217,7 +229,6 @@ export default class DataSet extends PuerObject {
 		}
 
 		this.onData(items)
-		// this.trigger($.Event.DATASET_DATA, {items: items})
 
 		this._lastFilter && this.filter(this._lastFilter)
 		this._lastSort   && this.sort(this._lastSort)
@@ -232,9 +243,6 @@ export default class DataSet extends PuerObject {
 	remove() {
 		delete DataSet[this.name]
 	}
-
-	exclude(id) { this._excluded.add(id)    }
-	include(id) { this._excluded.delete(id) }
 
 	onData       (items)  {}	
 	onItemAdd    (item)   {}

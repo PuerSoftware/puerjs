@@ -14,11 +14,12 @@ export default class List extends $.Component {
 		this.props.default('itemRenderer', 'ListItem')
 
 		this.items            = {} // { id : itemComponent } for easy lookup when applying sort and filter
-		this.idToIdx          = {} // {id: idx} idx is index of data in in itemData
-		this.idxToId          = {} // {idx: id} idx is index of data in in itemData
+		this.buffer           = [] // [id]
 		this.itemData         = [] // [data, ...] data is list item data
 		this.filteredItemData = [] // [data, ...] data is list item data
-		this.buffer           = [] // [id]
+		this.idxToId          = {} // {idx: id} idx is index of data in in itemData
+		this.idToIdx          = {} // {id: idx} idx is index of data in in itemData
+
 		this.itemRenderer     = this.props.itemRenderer
 		this.itemContainer    = null // may be set manually in child class
 
@@ -89,24 +90,21 @@ export default class List extends $.Component {
 	}
 
 	_bufferItem(id, up) {
-		if (!this.items[id]) {
-			const itemComponent = this.renderItem(this.filteredItemData[this.idToIdx[id]])
-			itemComponent.bufferId = id
-			if (up) {
-				this.itemContainer.prepend(itemComponent)
-				this.buffer.unshift(id)
-			} else {
-				this.itemContainer.append(itemComponent)
-				this.buffer.push(id)
-			}
-			this.items[id] = itemComponent
+		const itemComponent = this.items[id] || this.renderItem(this.filteredItemData[this.idToIdx[id]])
+		itemComponent.bufferId = id
+		if (up) {
+			this.itemContainer.prepend(itemComponent)
+			this.buffer.unshift(id)
+		} else {
+			this.itemContainer.append(itemComponent)
+			this.buffer.push(id)
 		}
+		this.items[id] = itemComponent
 	}
 
 	_unbufferItem(id) {
 		if (this.items[id]) {
 			this.items[id].remove()
-			this.items[id] = null
 			this.buffer.splice(this.buffer.indexOf[id], 1)
 		}
 	}
@@ -117,11 +115,11 @@ export default class List extends $.Component {
 				if (idx >= this.filteredItemData.length) {
 					break
 				}
-				this._bufferItem(this.idxToId[idx], true)
+				this._bufferItem(this.idxToId[idx], false)
 			}
 		} else {
 			for (const idx in this.filteredItemData) {
-				this._bufferItem(this.idxToId[idx], true)
+				this._bufferItem(this.idxToId[idx], false)
 			}
 		}
 	}
@@ -130,7 +128,7 @@ export default class List extends $.Component {
 		const direction = up ? -1 : 1		
 		const bufferIdx = up ? 0 : this.buffer.length - 1
 		const pageSize  = Math.round(this.props.pageSize / 2)
-		// console.log('buffer - up', up, pageSize)
+		
 		let idx = this.idToIdx[this.buffer[bufferIdx]]
 		for (let n=0; n<pageSize; n++) {
 			idx += direction
@@ -141,14 +139,12 @@ export default class List extends $.Component {
 			
 			this._bufferItem(id, up)
 		}
-		// console.log('unbuffer - up', up, pageSize)
+
 		idx = this.buffer[up ? this.buffer.length - 1 : 0]
 		for (let n=0; n<pageSize; n++) {
 			idx += direction
 			this._unbufferItem(this.idxToId[idx])
 		}
-		// console.log('bufferSize', this.buffer.length, 'of', this.itemData.length)
-		// console.log('**************************************')
 	}
 
 	_buffer(up) {
@@ -254,8 +250,8 @@ export default class List extends $.Component {
 		
 		this.itemData.push(item)
 		this.filteredItemData.push(item)
-		this.idToIdx[id] = this.itemData.length - 1
 		this.idxToId[this.itemData.length - 1] = id
+		this.idToIdx[id] = this.itemData.length - 1
 		this.items[id]   = null
 
 		if (this.props.pageSize) {

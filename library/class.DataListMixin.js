@@ -21,7 +21,6 @@ export default class DataListMixin {
 	}
 
 	_applyFilter(filterMap) {
-		console.log('_applyFilter')
 		this._filterMap       = filterMap
 		this.filteredItemData = []
 		this.idxToId          = {}
@@ -38,19 +37,11 @@ export default class DataListMixin {
 	}
 
 	_applySearch() {
-		debugger
-		console.log('_applySearch')
 		for (const itemId of this.buffer) {
 			if (this._searchQuery) {
 				const search = this._searchQuery.toLowerCase().trim().split(/\s+/g).filter(s => s !== '')
-				// if (this.items[itemId].props.data.name.startsWith('ATLANTIC')) {
-				// 	debugger
-				// }
 				this.items[itemId].highlight(search)
 			} else {
-				// if (this.items[itemId].props.data.name.startsWith('ATLANTIC')) {
-				// 	debugger
-				// }
 				this.items[itemId].unhighlight()
 			}
 		}
@@ -77,7 +68,7 @@ export default class DataListMixin {
 
 	_ensureFilterSelection() {
 		if (this._selectedId) {
-			if (this._filterMap[this._selectedId] && this.items[this._selectedId]) {
+			if (this._filterMap && this._filterMap[this._selectedId]) {
 				this.items[this._selectedId]._select()
 			} else {
 				this._selectFirstItem()
@@ -151,12 +142,12 @@ export default class DataListMixin {
 		if (Boolean(this.props.searchName)) {
 			this._applySearch()
 		}
+		
 		this._ensureFilterSelection()
 	}
 
 	_onDataSort(sortMap) {
 		this._sortMap = sortMap
-		// console.log('onStateSortMapChange', sortMap)
 		// TODO: make it sort not elements, but items
 		const elements = []
 		for (const itemId in this.items) {
@@ -217,20 +208,6 @@ export default class DataListMixin {
 	get searchName() {
 		return this.props.searchName
 	}
-
-	// get firstItem() {
-	// 	let item = Object.values(this.items).filter((item, _) => !item.isHidden)[0]
-	// 	if (this._searchQuery) {
-	// 		if (this._filterMap) {
-	// 			item = this.items[
-	// 				Object
-	// 					.keys(this._filterMap)
-	// 					.find(id => this._filterMap[id])
-	// 			]
-	// 		}
-	// 	}
-	// 	return item
-	// }
 
 	get selectedItem() {
 		return this.items[this._selectedId]
