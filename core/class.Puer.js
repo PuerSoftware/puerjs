@@ -73,8 +73,8 @@ class Puer {
 		this._preloadCount --
 		if (this._preloadCount == 0) {
 			this.isPreloading = false
+			this.app.__complete
 			if (this._cssCount == 0) {
-			// console.log('_onDataSourceLoad')
 				this.app.__ready()
 			}
 		}
@@ -208,7 +208,7 @@ class Puer {
 	}
 	
 	dereference(value) {
-		return value && value.isReference 
+		return value && value.isReference
 			? value.dereference()
 			: value
 	}
