@@ -38,7 +38,8 @@ class Form extends $.Component {
 		}
 	}
 
-	_onSubmit() {
+	_onSubmit(e) {
+		e.preventDefault()
 		this.submit(true)
 	}
 
@@ -157,6 +158,7 @@ class Form extends $.Component {
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype,
+					onsubmit     : this._onSubmit
 				}, formChildren)
 			])
 		)

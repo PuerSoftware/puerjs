@@ -34,6 +34,8 @@ export default class DataSet extends PuerObject {
 		this.index            = new Map()
 		this._filterMap       = {}
 		this._searchMap       = {}
+		this._lastFilter      = null
+		this._lastQuery       = null
 		this._itemFilter      = filter    // To get a subset of datasource data
 		this._itemAdapter     = adapter
 	}
@@ -110,6 +112,8 @@ export default class DataSet extends PuerObject {
 		if (ids.length) {
 			this._indexItem(item, item.dataId)
 			this.onItemAdd(item)
+			this.filter()
+			this.search()
 		}
 	}
 
@@ -171,7 +175,8 @@ export default class DataSet extends PuerObject {
 	}
 
 	filter(f) {
-		if (this.isInitialized) {
+		f = f || this._lastFilter
+		if (this.isInitialized && f) {
 			const map = {}
 
 			for (const item of this.items) {
@@ -185,24 +190,28 @@ export default class DataSet extends PuerObject {
 	}
 
 	search(query) {
-		const words  = query.toLowerCase().trim().split(/\s+/g)
-		const result = new Set()
-		const map    = {}
+		query = query || this._lastQuery
+		if (query !== null) {
+			const words  = query.toLowerCase().trim().split(/\s+/g)
+			const result = new Set()
+			const map    = {}
 
-		for (const word of words) {
-			for (const [valueString, indexes] of this.index) {
-				if (valueString.includes(word)) {
-					indexes.forEach(id => result.add(id))
+			for (const word of words) {
+				for (const [valueString, indexes] of this.index) {
+					if (valueString.includes(word)) {
+						indexes.forEach(id => result.add(id))
+					}
 				}
 			}
-		}
 
-		for (const item of this.items) {
-			map[item.dataId] = result.has(item.dataId)
-		}
+			for (const item of this.items) {
+				map[item.dataId] = result.has(item.dataId)
+			}
 
-		this._searchMap = map
-		this._applyFilters()
+			this._lastQuery = query
+			this._searchMap = map
+			this._applyFilters()
+		}
 	}
 
 	sort(f) {

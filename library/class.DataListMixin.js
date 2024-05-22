@@ -50,6 +50,9 @@ export default class DataListMixin {
 	_hasFilterChanges(filterMap) {
 		if (Object.keys(filterMap).length) {
 			if (this._filterMap) {
+				if (Object.keys(filterMap).length !== Object.keys(this._filterMap)) {
+					return true
+				}
 				for (const id in this._filterMap) {
 					if (this._filterMap[id] !== filterMap[id]) {
 						return true

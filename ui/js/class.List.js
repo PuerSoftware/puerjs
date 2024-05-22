@@ -17,8 +17,8 @@ export default class List extends $.Component {
 		this.buffer           = [] // [id]
 		this.itemData         = [] // [data, ...] data is list item data
 		this.filteredItemData = [] // [data, ...] data is list item data
-		this.idxToId          = {} // {idx: id} idx is index of data in in itemData
-		this.idToIdx          = {} // {id: idx} idx is index of data in in itemData
+		this.idxToId          = {} // {idx: id} idx is index of data in in filteredItemData
+		this.idToIdx          = {} // {id: idx} idx is index of data in in filteredItemData
 
 		this.itemRenderer     = this.props.itemRenderer
 		this.itemContainer    = null // may be set manually in child class
@@ -249,8 +249,8 @@ export default class List extends $.Component {
 		
 		this.itemData.push(item)
 		this.filteredItemData.push(item)
-		this.idxToId[this.itemData.length - 1] = id
-		this.idToIdx[id] = this.itemData.length - 1
+		this.idxToId[this.filteredItemData.length - 1] = id
+		this.idToIdx[id] = this.filteredItemData.length - 1
 		this.items[id]   = null
 
 		if (this.props.pageSize) {
