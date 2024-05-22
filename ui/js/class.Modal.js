@@ -10,7 +10,13 @@ class Modal extends $.Component {
 
 	_hide(e) {
 		this.props.hideCallback && this.props.hideCallback()
+		$.app.removeCssClass('modal-open')
 		this.hide()
+	}
+
+	show() {
+		$.app.addCssClass('modal-open')
+		super.show()
 	}
 
 	render() {
