@@ -5,15 +5,16 @@ import DataOwnerMixin from '../../library/class.DataOwnerMixin.js'
 class Form extends $.Component {
 	constructor(props, children) {
 		super(props, children)
-		this.props.default('title',         '')
-		this.props.default('subtitle',      '')
-		this.props.default('buttonLabel', 'Submit')
-		this.props.default('action',        '')
-		this.props.default('method',        'POST')
-		this.props.default('enctype',       'application/json')
-		this.props.default('autocomplete',  'off')
-		this.props.default('doClearOnSave', false)
-		this.props.default('hasButton',     true)
+		this.props.default('title',            '')
+		this.props.default('subtitle',         '')
+		this.props.default('buttonLabel',      'Submit')
+		this.props.default('action',           '')
+		this.props.default('method',           'POST')
+		this.props.default('enctype',          'application/json')
+		this.props.default('autocomplete',     'off')
+		this.props.default('doClearOnSave',    false)
+		this.props.default('doSubmitOnEnter',  false)
+		this.props.default('hasButton',        true)
 		this.props.default('saveNotification', 'Form saved successfully!')
 
 		this.state.error        = ''
@@ -43,6 +44,15 @@ class Form extends $.Component {
 		this.submit(true)
 	}
 
+	_onAppEnter(e) {
+		for (const input of this.inputs) {
+			if (document.activeElement === input.input.element) {
+				return
+			}
+		}
+		this.submit(true)
+	}
+
 	_updateInitialValues() { // copy all values to initial values
 		for (const input of this.inputs) {
 			input._updateInitialValue()
@@ -51,7 +61,7 @@ class Form extends $.Component {
 
 	get hasChange() {
 		for (const input of this.inputs) {
-			if (!input.isHidden) {
+			if (!input._isHidden) {
 				if (input.value !== input.initialValue) {
 					return true
 				}
@@ -117,6 +127,9 @@ class Form extends $.Component {
 		this.inputs = this.$$.FormInput.toArray()
 		this.mixin(DataOwnerMixin)
 		this.on($.Event.FORM_RESPONSE, this._onResponse, this.props.dataSource)
+		if (this.props.doSubmitOnEnter) {
+			this.on($.Event.APP_ENTER, this._onAppEnter)
+		}
 	}
 
 	_onDataLoad(items) {
@@ -133,14 +146,23 @@ class Form extends $.Component {
 		this._isValidateEnabled = true
 	}
 
+	resetInputs() {
+		for (const input of this.inputs) {
+			input.initialValue = undefined
+		}
+	}
+
 	render() {
 		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		const formChildren = [... this.children]
+		const buttonType   = this.props.doSubmitOnEnter
+			? 'button'
+			: 'submit'
 		if (this.props.hasButton) {
 			formChildren.push(
 				$.div ('button-panel', [
 					this.button = $.InputButton ({
-						type    : 'button',
+						type    : buttonType,
 						onclick : this._onSubmit,
 						text    : this.props.buttonLabel,
 						value   : this.props.buttonLabel

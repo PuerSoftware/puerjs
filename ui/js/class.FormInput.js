@@ -13,6 +13,8 @@ class FormInput extends $.Component {
 		
 		this.form         = null
 		this.input        = null
+		this.beforeDiv    = null
+		this.afterDiv     = null
 		this.field        = null
 		this.inPlaceLabel = null
 		this.initialValue = undefined
@@ -122,11 +124,11 @@ class FormInput extends $.Component {
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}
 
 		const children = [
-			$.div('before', beforeProps),
+			this.beforeDiv = $.div('before', beforeProps),
 			this.input,
 			... this.children,
 			this.inPlaceLabel,	
-			$.div('after', afterProps)
+			this.afterDiv = $.div('after', afterProps)
 		]
 
 		return $.div(children)

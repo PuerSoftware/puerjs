@@ -190,7 +190,9 @@ export default class DataSet extends PuerObject {
 	}
 
 	search(query) {
-		query = query || this._lastQuery
+		if (query !== '') {
+			query = query || this._lastQuery
+		}
 		if (query !== null) {
 			const words  = query.toLowerCase().trim().split(/\s+/g)
 			const result = new Set()

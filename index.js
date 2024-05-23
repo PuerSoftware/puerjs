@@ -87,11 +87,14 @@ import * as constant from './constants.js'
 
 $.App = PuerApp
 
-$.Constants.Keys = constant.Keys
+$.Constants.KeyCodeToKey = constant.KeyCodeToKey
 
 $.Events.define('APP_CLICK',              ['event'])
 $.Events.define('APP_KEYUP',              ['event'])
-$.Events.define('APP_ESCAPE',             ['event'])
+
+for (const keyCode in constant.KeyCodeToKey) {
+	$.Events.define(`APP_${constant.KeyCodeToKey[keyCode]}`, ['event'])
+}
 
 $.Events.define('APP_COMPLETE',           [])
 

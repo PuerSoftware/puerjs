@@ -13,11 +13,10 @@ class PuerApp extends $.Component {
 		this.trigger($.Event.APP_CLICK, {event: event})
 	}
 
-	_onAppKeyUp(event) {
-		this.trigger($.Event.APP_KEYUP, {event: event})
-		if (event.keyCode === 27) {
-			this.trigger($.Event.APP_ESCAPE, {event: event})
-		}
+	_onAppKeyUp(e) {
+		this.trigger($.Event.APP_KEYUP, {event: e})
+		const key = $.Constants.KeyCodeToKey[e.keyCode]
+		key && this.trigger($.Event[`APP_${key}`], {event: e})
 	}
 
 	__complete() {

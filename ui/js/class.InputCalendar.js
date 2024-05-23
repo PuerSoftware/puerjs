@@ -272,9 +272,27 @@ export default class InputCalendar extends FormInput {
 		this._renderCalendar()
 	}
 
+	onPropIsEditableChange(isEditable) {
+		if (this.inPlaceLabel) {
+			this.inPlaceLabel.toggle(!isEditable)
+			this.input.toggle(isEditable)
+			for (const child of this.children) {
+				if (child !== this._calendar) {
+					child.toggle(isEditable)
+				}
+			}
+			this.inPlaceLabel.props.text = this.stringValue || '-'
+			if (isEditable) {
+				this.focus()
+			}
+		}
+	}
+
+
 	onInit() {
 		super.onInit()
 		this._on('click', this._toggle)
+		this.afterDiv._on('click', this._toggle.bind(this))
 		this.input.element.setAttribute('readonly', 'true')
 		this.date = Date.now()
 	}

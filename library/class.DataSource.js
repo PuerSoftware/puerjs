@@ -158,13 +158,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		return $.DataStore.get(this.itemIds)
 	}
 
-	// onChange(condition, callback) {
-	// 	this._changeHandlers.push($.when(
-	// 		condition.bind(this),
-	// 		callback.bind(this)
-	// 	))
-	// }
-
 	select(path, data=null) {
 		data = data || this.data
 		return $.Object.select(data, path)
@@ -173,11 +166,9 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 	fill(items) {
 		this._isLoading = true
-		$.defer(() => { // TODO: maybe we can remove this
-			this.clear(() => {
-				this.addItems(items)
-				this._onLoad()
-			})
+		this.clear(() => {
+			this.addItems(items)
+			this._onLoad()
 		})
 	}
 

@@ -18,13 +18,15 @@ export default class Notification extends $.Component {
     }
 
     _onTimeout(notificationId) {
-        const _this        = this
         const notification = $.components[notificationId]
-        notification.addCssClass('fade-out')
-        setTimeout(() => {
-            delete _this._notifications[notificationId]
-            notification.remove()
-        }, 1400)
+		if (notification) {
+			notification.addCssClass('fade-out')
+			const _this = this
+			setTimeout(() => {
+				delete _this._notifications[notificationId]
+				notification.remove()
+			}, 1400)
+		}
     }
 
     _onItemMouseOver(e) {

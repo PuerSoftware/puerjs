@@ -136,6 +136,22 @@ class InputSearchSelect extends FormInput {
 		return $.Tag({label: item.dataId, data: item})
 	}
 
+	onPropIsEditableChange(isEditable) {
+		if (this.inPlaceLabel) {
+			this.inPlaceLabel.toggle(!isEditable)
+			this.input.toggle(isEditable)
+			for (const child of this.children) {
+				if (child !== this._menu) {
+					child.toggle(isEditable)
+				}
+			}
+			this.inPlaceLabel.props.text = this.stringValue || '-'
+			if (isEditable) {
+				this.focus()
+			}
+		}
+	}
+
 	render() {
 		const searchName = $.String.random(6)
 		this._tags = $.div('tags')
