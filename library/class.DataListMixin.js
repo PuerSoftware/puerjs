@@ -74,8 +74,14 @@ export default class DataListMixin {
 	}
 
 	_ensureFilterSelection() {
-		if (this._selectedId) {
-			if (this._filterMap && this._filterMap[this._selectedId]) {
+		if (this.props.isSelectable && this._selectedId) {
+			if (this._filterMap) {
+				if (this._filterMap[this._selectedId]) {
+					this.items[this._selectedId]._select()
+				} else {
+					this._selectFirstItem()
+				}
+			} else if (this.items[this._selectedId]) {
 				this.items[this._selectedId]._select()
 			} else {
 				this._selectFirstItem()

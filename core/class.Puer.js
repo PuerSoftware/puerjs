@@ -15,6 +15,7 @@ class Puer {
 			this._cssCount         = 0
 			this._preloadCount     = 0
 			this.components        = {} // {id: component, ...}
+			this.throttleMap       = {} // {key: Boolean}
 			Puer.instance          = this
 		}
 		return Puer.instance
@@ -225,6 +226,37 @@ class Puer {
 		}, timeout)
 	}
 
+	throttle(key, f, limit, ...args) {
+		if (!this.throttleMap[key]) {
+			const _this = this 
+			this.throttleMap[key] = true
+			f.apply(this, args)
+			setTimeout(() => {
+				delete _this.throttleMap[key]
+			}, limit)
+        }
+	}
+
+	when(c, t) {
+		const _ = {}
+		return (o) => {
+			const r = c(o)
+			_.hasOwnProperty('v') && _.v !== r && t(r)
+			_.v = r
+		}
+	}
+
+	wait(condition, then, interval=50) {
+		if (condition()) {
+			then()
+		} else {
+			setTimeout(() => {
+				$.wait(condition, then)
+			}, interval)
+		}
+		
+	}
+
 	sync(asyncFunc) {
 		return function(...args) {
 			let callback = null
@@ -256,26 +288,6 @@ class Puer {
 		if (o == null) { return o + '' }
 		const className = Object.prototype.toString.call(o)
 		return this._classToType[className] || typeof o
-	}
-
-	when(c, t) {
-		const _ = {}
-		return (o) => {
-			const r = c(o)
-			_.hasOwnProperty('v') && _.v !== r && t(r)
-			_.v = r
-		}
-	}
-
-	wait(condition, then, interval=50) {
-		if (condition()) {
-			then()
-		} else {
-			setTimeout(() => {
-				$.wait(condition, then)
-			}, interval)
-		}
-		
 	}
 
 	timer(name) {

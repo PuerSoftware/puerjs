@@ -155,14 +155,17 @@ class Form extends $.Component {
 	render() {
 		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		const formChildren = [... this.children]
-		const buttonType   = this.props.doSubmitOnEnter
-			? 'button'
-			: 'submit'
+		let submitListener = this._onSubmit
+
+		if (this.props.doSubmitOnEnter) {
+			submitListener = (e) => {e.preventDefault()}
+		}
+
 		if (this.props.hasButton) {
 			formChildren.push(
 				$.div ('button-panel', [
 					this.button = $.InputButton ({
-						type    : buttonType,
+						type    : 'button',
 						onclick : this._onSubmit,
 						text    : this.props.buttonLabel,
 						value   : this.props.buttonLabel
@@ -180,7 +183,7 @@ class Form extends $.Component {
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype,
-					onsubmit     : this._onSubmit
+					onsubmit     : submitListener
 				}, formChildren)
 			])
 		)

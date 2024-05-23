@@ -27,7 +27,7 @@ export default class Search extends $.Component {
 	}
 
 	_onKeyUp(e) {
-		if (e.keyCode === $.Constants.Keys.Escape) {
+		if ($.Constants.KeyCodeToKey[e.keyCode] === 'ESCAPE') {
 			this.input.value = ''
 		}
 		this.search()
