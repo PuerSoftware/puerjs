@@ -2,12 +2,14 @@
     overflow-x : hidden;
     overflow-y : auto;
 }
-    .list ul {
-        list-style : none;
-        margin     : 0;
-        padding    : 0;
-    }
-
+	.list ul {
+		list-style : none;
+		margin     : 0;
+		padding    : 0;
+	}
+		.list.has-search ul li div {
+			color: red !important;
+		}
 .loader {
         width         : 40px !important;
         height        : 40px !important;

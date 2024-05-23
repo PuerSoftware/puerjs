@@ -13,18 +13,28 @@ export default class Search extends $.Component {
 		this.input     = null
 	}
 
-	_onFocus (event) { this.isFocused = true  }
-	_onBlur  (event) { this.isFocused = false }
+	_onFocus(e) { 
+		this.isFocused = true
+		this.trigger($.Event.SEARCH_FOCUS, {
+			name: this.props.name
+		})
+	}
+	_onBlur(e) {
+		this.isFocused = false
+		this.trigger($.Event.SEARCH_BLUR, {
+			name: this.props.name
+		})
+	}
 
-	_onKeyUp(event) {
-		if (event.keyCode === $.Constants.Keys.Escape) {
+	_onKeyUp(e) {
+		if (e.keyCode === $.Constants.Keys.Escape) {
 			this.input.value = ''
 		}
-		this.search()	
+		this.search()
 	}
 
 	search() {
-		this.trigger($.Event.SEARCH, {
+		this.trigger($.Event.SEARCH_CHANGE, {
 			value : this.input.value,
 			name  : this.props.name
 		})

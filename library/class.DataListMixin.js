@@ -13,7 +13,11 @@ export default class DataListMixin {
 		component.isInitialized = false
 		component._searchQuery  = ''
 
-		component.on($.Event.SEARCH, component._onSearch, component.props.searchName)
+		if (component.props.searchName) {
+			component.on($.Event.SEARCH_CHANGE, component._onSearchChange, component.props.searchName)
+			component.on($.Event.SEARCH_FOCUS,  component._onSearchFocus,  component.props.searchName)
+			component.on($.Event.SEARCH_BLUR,   component._onSearchBlur,   component.props.searchName)
+		}
 	}
 
 	_addItem(item) {
@@ -79,13 +83,6 @@ export default class DataListMixin {
 		}
 	}
 
-	_onSearch(event) {
-		if (event.detail.name === this.props.searchName) {
-			this._searchQuery = event.detail.value
-			this._dataSet.search(this._searchQuery)
-		}
-	}
-
 	_handleQueryKey() {
 		const dataId = $.isFunction(this.props.queryKey)
 			? this.props.queryKey(this)
@@ -95,6 +92,18 @@ export default class DataListMixin {
 		}
 	}
 
+	_onSearchChange(e) {
+		this._searchQuery = e.detail.value
+		this._dataSet.search(this._searchQuery)
+	}
+
+	_onSearchFocus(e) {
+		this.addCssClass('has-search')
+	}
+
+	_onSearchBlur(e) {
+		this.removeCssClass('has-search')
+	}
 	/**************************************************************/
 
 	_onDataLoad(items) {
