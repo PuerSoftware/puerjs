@@ -35,4 +35,5 @@
 		background-size  : cover;
 		color            : transparent;
 		cursor           : pointer;
+		z-index          : 10;
 	}

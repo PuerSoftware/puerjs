@@ -175,8 +175,8 @@ class Form extends $.Component {
 		}
 		return (
 			$.div([
-				$.h1 ({text: this.props.title}),
-				$.p  ({text: this.props.subtitle}),
+				$.h1 ('form-title puer',    {text: this.props.title}),
+				$.p  ('form-subtitle puer', {text: this.props.subtitle}),
 				this._errorComponent,
 				$.form ({
 					autocomplete : this.props.autocomplete,

@@ -35,7 +35,7 @@
     --puer-bg-color-btn-active                   : #06325B;
     --puer-bg-color-btn-disabled                 : #303D4D;
     --puer-bg-color-btn-neutral                  : #0C1015;
-    --puer-bg-color-btn-neutral-hover            : #11171E;
+    --puer-bg-color-btn-neutral-hover            : #161b22;
     --puer-bg-color-btn-secondary                : #000;
     --puer-bg-color-btn-secondary-hover          : #081A2C;
     --puer-bg-color-btn-secondary-active         : #072F54;
@@ -65,7 +65,7 @@
 
     --puer-color-btn                          : #FFF;
     --puer-color-btn-active                   : #4C89C2;
-    /* --puer-color-btn-secondary-hover          : #5798D4; */
+    --puer-color-btn-secondary-hover          : #5798D4;
     --puer-color-btn-secondary-active         : #62A9EA;
     --puer-color-btn-secondary-neutral        : #B4B4B4;
     --puer-color-btn-secondary-neutral-hover  : #EFEFEF;
@@ -87,9 +87,9 @@
     --puer-border-color-comment               : #2F4155;
     --puer-border-color-notification          : #43495F;
     --puer-border-color-toggle                : transparent;
-    --puer-border-color-toggle-selected-eta   : transparent;
-    --puer-border-color-toggle-selected-spot  : transparent;
-    --puer-border-color-toggle-selected-fixed : transparent;
+    --puer-border-color-toggle-selected-eta   : #55BCCA;
+    --puer-border-color-toggle-selected-spot  : #81E0A4;
+    --puer-border-color-toggle-selected-fixed : #C4C4C4;
     --puer-divider-color-hi                   : #435261;
     --puer-divider-color-lo                   : #3C404B;
     --puer-loader-color                       : #EEE;

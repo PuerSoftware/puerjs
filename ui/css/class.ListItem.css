@@ -1,15 +1,20 @@
 .list-item {
     padding       : 10px 10px 8px 8px;
     border-radius : 2px;
-    cursor        : pointer;
+    cursor        : default;
 }   
+    .list-item .icon {
+        cursor : pointer;
+    }
+        .list-item .icon.bulka {
+            cursor : default;
+        }
+
     .list-item .highlight {
-        background-color : #FFFFFF;
-        color            : #F73308;
-        display          : inline-block;
-        border-radius    : 1px;
-        padding          : 0 5px;
-        font-weight      : bold;
+        font-weight : bold;
+        color       : var(--puer-text-color-hi);
+        display     : inline-block;
+        
     }
 
     .list-item.selected {
