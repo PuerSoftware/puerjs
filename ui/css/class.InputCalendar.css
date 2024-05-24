@@ -13,11 +13,12 @@
 		width      : 17px;
 		height     : 16px;
 		background : var(--puer-svg-calendar-icon) no-repeat;
+		cursor     : pointer;
 	}
 
 	.input-calendar > .calendar {
 		position         : absolute;
-		top              : 100%;
+		top              : calc(100% + 1px);
 		left             : 0;
 		height           : auto;
 		width            : 100%;
@@ -26,7 +27,7 @@
 		border-radius    : 2px;
 		border           : 1px solid var(--puer-border-color);
 		background-color : var(--puer-bg-color-lo);
-		box-shadow       : 0px 0px 4px 0px rgba(0, 0, 0, 0.31);
+		box-shadow       : 9px 9px 32px 0 rgba(0, 0, 0, 0.31);
 		z-index          : 2;
 	}
 		.input-calendar > .calendar > .head {
@@ -40,7 +41,7 @@
 				user-select : none;
 			}
 
-.input-calendar > .calendar > .head > .arrows {
+			.input-calendar > .calendar > .head > .arrows {
 				flex        : none;
 				display     : flex;
 				align-items : center;

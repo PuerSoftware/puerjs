@@ -7,10 +7,12 @@
 		margin     : 0;
 		padding    : 0;
 	}
-		.list.has-search ul li div {
-			color: red !important;
+        .list.has-search ul li div,
+        .list.has-search div {
+			color : var(--puer-text-color-lowhight) !important;
 		}
-.loader {
+
+    .loader {
         width         : 40px !important;
         height        : 40px !important;
         min-height    : 70px;
