@@ -13,7 +13,6 @@ class Form extends $.Component {
 		this.props.default('enctype',          'application/json')
 		this.props.default('autocomplete',     'off')
 		this.props.default('doClearOnSave',    false)
-		this.props.default('doSubmitOnEnter',  false)
 		this.props.default('hasButton',        true)
 		this.props.default('saveNotification', 'Form saved successfully!')
 
@@ -41,15 +40,6 @@ class Form extends $.Component {
 
 	_onSubmit(e) {
 		e.preventDefault()
-		this.submit(true)
-	}
-
-	_onAppEnter(e) {
-		for (const input of this.inputs) {
-			if (document.activeElement === input.input.element) {
-				return
-			}
-		}
 		this.submit(true)
 	}
 
@@ -155,17 +145,12 @@ class Form extends $.Component {
 	render() {
 		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		const formChildren = [... this.children]
-		let submitListener = this._onSubmit
-
-		if (this.props.doSubmitOnEnter) {
-			submitListener = (e) => {e.preventDefault()}
-		}
 
 		if (this.props.hasButton) {
 			formChildren.push(
 				$.div ('button-panel', [
 					this.button = $.InputButton ({
-						type    : 'button',
+						type    : 'submit',
 						onclick : this._onSubmit,
 						text    : this.props.buttonLabel,
 						value   : this.props.buttonLabel
@@ -183,7 +168,7 @@ class Form extends $.Component {
 					action       : this.props.action,
 					method       : this.props.method,
 					enctype      : this.props.enctype,
-					onsubmit     : submitListener
+					onsubmit     : this._onSubmit
 				}, formChildren)
 			])
 		)
