@@ -61,22 +61,13 @@ class InputSearchSelect extends FormInput {
 		for (const data of this._menuList.filteredItemData) {
 			this._valueToDataId[data.value] = data.dataId
 			if (this._menuList.items[data.dataId]) {
-				if (this._valueSet.has(data.value)) {
-					this._disableItem(data.value)
-				} else {
-					this._enableItem(data.value)
-				}
+				this._disableItem(data.value, this._valueSet.has(data.value))
 			}
 		}
 	}
 
-
-	_disableItem(value) {
-		this._menuList.items[this._valueToDataId[value]].addCssClass('disabled')
-	}
-	
-	_enableItem(value) {
-		this._menuList.items[this._valueToDataId[value]].removeCssClass('disabled')
+	_disableItem(value, disabled) {
+		this._menuList.disableItem([this._valueToDataId[value]], disabled)
 	}
 
 	_select(data) {
@@ -88,7 +79,7 @@ class InputSearchSelect extends FormInput {
 				this._valueSet = new Set()
 			}
 
-			this._disableItem(data.value)
+			this._disableItem(data.value, true)
 			const tag                    = this.props.renderTag(data)
 			this._valueToTag[data.value] = tag
 			this._tags.append(tag)
@@ -99,7 +90,7 @@ class InputSearchSelect extends FormInput {
 	_unselect(value) {
 		delete this._valueToTag[value]
 		this._updateValue(value, 'delete')
-		this._enableItem(value)
+		this._disableItem(value, false)
 	}
 
 	_updateValue(value, func='add') {
@@ -130,6 +121,7 @@ class InputSearchSelect extends FormInput {
 	reset() {
 		super.reset()
 		this._valueSet = new Set()
+		this._tags.removeChildren()
 	}
 
 	renderTag(item) {
@@ -157,7 +149,7 @@ class InputSearchSelect extends FormInput {
 		this._tags = $.div('tags')
 		this._search = $.Search({
 			name        : searchName,
-			placeholder : 'Select port',
+			placeholder : this.props.placeholder,
 			onclick     : this._onClick
 		})
 		this._menu = $.div('menu-body hidden', [

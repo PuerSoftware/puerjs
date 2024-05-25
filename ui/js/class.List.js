@@ -14,6 +14,7 @@ export default class List extends $.Component {
 		this.props.default('itemRenderer', 'ListItem')
 
 		this.items            = {} // { id : itemComponent } for easy lookup when applying sort and filter
+		this.disabledItems    = new Set() // [id, ...]
 		this.buffer           = [] // [id]
 		this.itemData         = [] // [data, ...] data is list item data
 		this.filteredItemData = [] // [data, ...] data is list item data
@@ -90,6 +91,7 @@ export default class List extends $.Component {
 
 	_bufferItem(id, up) {
 		const itemComponent = this.items[id] || this.renderItem(this.filteredItemData[this.idToIdx[id]])
+		this.isItemDisabled(id) && this.disableItem(id, true)
 		itemComponent.bufferId = id
 		if (up) {
 			this.itemContainer.prepend(itemComponent)
@@ -274,6 +276,21 @@ export default class List extends $.Component {
 		this.filteredItemData.splice(idx, 1)
 		delete this.idToIdx[id]
 		delete this.idxToId[idx]
+	}
+
+	disableItem(id, disabled) {
+		if (this.items[id]) {
+			this.items[id].toggleCssClass('disabled', disabled)
+		}
+		if (disabled) {
+			this.disabledItems.add(id)
+		} else {
+			this.disabledItems.delete(id)
+		}
+	}
+
+	isItemDisabled(id) {
+		return this.disabledItems.has(id)
 	}
 
 	clearItems() {
