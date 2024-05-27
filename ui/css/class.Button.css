@@ -33,7 +33,7 @@
 .button.secondary {
 	background-color : var(--puer-bg-color-btn-secondary);
 	border           : 2px solid var(--puer-border-color-btn-secondary);
-	color            : var(--puer-color-btn );
+	color            : var(--puer-color-btn-seconary);
 }
 	.button.secondary:hover {
 		background-color : var(--puer-bg-color-btn-secondary-hover);
