@@ -149,6 +149,12 @@ export default class GoogleMap extends $.Component {
 		}
 	}
 
+	_onDataItemChange(item) {
+		this.updateMaker(item.lat, item.lng, item.icons, item.label, item.data)
+	}
+
+	/***************************************************/
+
 	onPropZoomChange(zoom) {
 		this.map && this.map.setZoom(zoom)
 	}
@@ -200,6 +206,14 @@ export default class GoogleMap extends $.Component {
 		this._setIcon(marker, 'out')
 	}
 
+	updateMaker(lat, lng, iconData, label='', data=null) {
+		const key        = this._getMarkerKey(lat, lng)
+		const isSelected = this._selectMarker === this._markers[key]
+		this.removeMarker(lat, lng)
+		this.addMarker(lat, lng, iconData, label, data)
+		isSelected && this._setIcon[this._markers[key], 'click']
+	}
+
 	removeMarker(... args) {  // (lat, lng) || (key)
 		const key = this._getMarkerKey(... args)
 		this._markers[key].setMap(null)
@@ -217,7 +231,7 @@ export default class GoogleMap extends $.Component {
 
 		markers = markers || Object.values(this._markers)
 		markers.forEach((marker) => {
-		    bounds.extend(marker.getPosition())
+			bounds.extend(marker.getPosition())
 		})
 		this.map.fitBounds(bounds)
 	}
