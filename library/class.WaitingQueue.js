@@ -1,4 +1,3 @@
-
 export default class WaitingQueue {
 	constructor(isDone=null) {
 		this.isDone     = isDone

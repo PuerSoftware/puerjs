@@ -37,7 +37,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		this.isSingular    = isSingular
 		this.isCacheable   = isCacheable
 		this.isPreloadable = isPreloadable
-
+		
 		this._wasLoaded      = false
 		this._isLoading      = false // initial load or reload in progress
 		this._changeHandlers = []
@@ -172,8 +172,12 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		})
 	}
 
-	load(method=null, params=null, headers=null) {
-		$.defer(this._load, arguments, this)
+	load(method=null, params=null, headers=null, defer=true) {
+		if (defer) {
+			$.defer(this._load, arguments, this)
+		} else {
+			this._load(method, params, headers)
+		}
 	}
 
 	reload() {

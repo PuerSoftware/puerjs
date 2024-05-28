@@ -50,7 +50,7 @@ class Request {
 				}
 			})
 	}
-	  
+	
 	static get(url, callback, urlParams=null, headers=null) {
 		Request.request(url, 'GET', urlParams, headers, callback)
 	}
