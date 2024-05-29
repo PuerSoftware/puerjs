@@ -636,6 +636,12 @@ class BasePuerComponent extends PuerObject {
 		this._cascade('unhighlight')
 	}
 
+	redraw() {
+		const display = this.element.style.display 
+		this.element.style.display = 'none'
+		this.element.offsetHeight // This line is necessary to trigger reflow
+		this.element.style.display = display
+	}
 }
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'

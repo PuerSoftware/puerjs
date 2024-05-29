@@ -19,9 +19,8 @@ class InputSelect extends FormInput {
 	}
 
 	_onDataFilter(map) {
-		for (const dataId in map) {
-			this._options[dataId].toggle(map[dataId])
-		}
+		this.empty()
+		this.addOptions(this.dataSet.filteredItems)
 	}
 
 	_onDataLoad(data) {
@@ -74,6 +73,11 @@ class InputSelect extends FormInput {
 	// 		}
 	// 	}
 	// }
+
+	empty() {
+		this.input.removeChildren()
+		this._options = {}
+	}
 
 	load(query) {
 		this.dataSource.load('GET', query)

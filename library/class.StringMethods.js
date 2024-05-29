@@ -32,7 +32,7 @@ class StringMethods {
 	}
 
 	static toKebab(s) {
-		return s.toLowerCase().replace(' ', '-')
+		return s.toLowerCase().replace(/[\s\t]+/g, '-')
 	}
 
 	static titleDivider(title, n = 20, ch = '=') {
