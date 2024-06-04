@@ -21,9 +21,9 @@ class Link extends $.Component {
             window.open(this.props.href, this.props.target)
         } else {
             if (this._linkSet) {
-		    	this._linkSet.select(this)
-	    	}
-		    this.props.hash && this.route(this.props.hash, null)
+				this._linkSet.select(this)
+			}
+			this.props.hash && this.route(this.props.hash, null)
         }
 	}
 
@@ -51,7 +51,7 @@ class Link extends $.Component {
 	onRoute(path) {
         if (this.props.href) {
             this.selected = false
-        } else {
+        } else if (this.props.hash) {
             this.selected = this._pathToHash(path).includes(this.props.hash)
         }
 	}
