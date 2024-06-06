@@ -38,13 +38,15 @@ class PuerEvents extends EventTarget {
 
 	/*********************** PUBLIC ***********************/
 
-	connect(endpoint) {
+	connect(endpoint, onOpen=null, onClose=null) {
 		this.isConnecting = true
 		this.socket = new WebSocket(endpoint)
 
-		this.socket.onopen = () => {
+		this.socket.onopen = (event) => {
 			this.isConnected  = true
 			this.isConnecting = false
+			onOpen && onOpen(event)
+			console.log('Websocket connection open')
 		}
 
 		this.socket.onmessage = (event) => {
@@ -68,6 +70,7 @@ class PuerEvents extends EventTarget {
 		}
 
 		this.socket.onclose = (event) => {
+			onClose && onClose(event)
 			console.log('WebSocket connection closed:', event)
 		}
 	}

@@ -359,12 +359,13 @@ window.$ = $
 
 import * as Core from './index.js'
 
-$.Component           = Core.PuerComponent
-$.PuerRouter          = Core.PuerRouter
-$.PuerEvents          = Core.PuerEvents
-$.Error               = Core.PuerError
-$.HtmlElement         = Core.PuerHtmlElement
-$.TextElement         = Core.PuerTextElement
+$.Component   = Core.PuerComponent
+$.PuerRouter  = Core.PuerRouter
+$.PuerEvents  = Core.PuerEvents
+$.Error       = Core.PuerError
+$.HtmlElement = Core.PuerHtmlElement
+$.TextElement = Core.PuerTextElement
+$.Tracking    = Core.PuerTracking
 
 $.init()
 

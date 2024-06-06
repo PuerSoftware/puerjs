@@ -59,7 +59,6 @@ class Request {
 		Request.request(url, 'POST', data, headers, callback)
 	}
 
-
 	static pollStart(url, callback, urlParams=null, headers=null, interval=1000, id=null) {
 		if (!id) {
 			id = $.String.randomHex(5)
@@ -101,6 +100,5 @@ class Request {
 		this._listeners.add(f)
 	}
 }
-
 
 export default Request
