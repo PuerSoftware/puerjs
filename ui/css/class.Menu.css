@@ -48,17 +48,17 @@
             }
 
             .menu > .popup > .box.user-chat {
-                background-image: var(--puer-svg-icon-open-chat);
+                background-image : var(--puer-svg-icon-open-chat);
             }
 
             .menu > .popup > .box.vessel-chat {
-                background-image: var(--puer-svg-icon-open-chat);
+                background-image : var(--puer-svg-icon-open-chat);
             }
 
             .menu > .popup > .box.make-offer {
-                background-image: var(--puer-svg-icon-information);
+                background-image : var(--puer-svg-icon-make-offer);
             }
 
             .menu > .popup > .box.update-status {
-                background-image: var(--puer-svg-icon-information);
+                background-image : var(--puer-svg-icon-update-status);
             }

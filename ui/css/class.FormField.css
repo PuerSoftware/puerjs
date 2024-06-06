@@ -10,6 +10,7 @@
     	text-overflow : ellipsis;   /* Replaces the end of the overflowed text with ellipsis */
 		font-size     : var(--puer-font-size-lo);
 		font-family   : var(--puer-font-label);
+		line-height   : 1;
 		color         : var(--puer-text-color-form-error);
 	}
 	.form-field > label {

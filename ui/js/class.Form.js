@@ -160,9 +160,11 @@ class Form extends $.Component {
 		}
 		return (
 			$.div([
-				$.h1 ('form-title puer',    {text: this.props.title}),
-				$.p  ('form-subtitle puer', {text: this.props.subtitle}),
-				this._errorComponent,
+				$.Rows('form-header puer unselectable', [
+					$.h1 ('form-title puer',    {text: this.props.title}),
+					$.p  ('form-subtitle puer', {text: this.props.subtitle}),
+					this._errorComponent,
+				]),
 				$.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
