@@ -130,6 +130,7 @@ export default class DataListMixin {
 		if (!this.items[item.dataId]) {
 			this._addItem(item)
 			this._handleQueryKey()
+			!this._selectedId && this._ensureSelection()
 		}
 	}
 

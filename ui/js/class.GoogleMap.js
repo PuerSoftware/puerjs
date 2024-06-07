@@ -149,6 +149,10 @@ export default class GoogleMap extends $.Component {
 		}
 	}
 
+	_onDataItemAdd(item) {
+		this.addMarker(item.lat, item.lng, item.icons, item.label, item.data)
+	}
+
 	_onDataItemChange(item) {
 		this.updateMaker(item.lat, item.lng, item.icons, item.label, item.data)
 	}
