@@ -26,11 +26,12 @@ export default class GoogleMap extends $.Component {
 		this.props.default('rotateControl',     false)
 		this.props.default('fullscreenControl', false)
 
-		this.map              = null  // google.maps.Map
-		this._markers         = {}    // { lat_lng: google.maps.Marker }
-		this._markersData     = {}    // { lat_lng: data }
-		this._markerIcons     = {}    // { lat_lng: {out: '', over: '', click: ''} }
-		this._selectedMarker  = null  // google.maps.Marker
+		this.map                = null  // google.maps.Map
+		this._markers           = {}    // { lat_lng: google.maps.Marker }
+		this._markersData       = {}    // { lat_lng: data }
+		this._markerIcons       = {}    // { lat_lng: {out: '', over: '', click: ''} }
+		this._selectedMarker    = null  // google.maps.Marker
+		this._selectedMarkerKey = null  // lat_lng
 
 		if (window.google && window.google.maps) {
 			this._initMap()
@@ -94,8 +95,13 @@ export default class GoogleMap extends $.Component {
 	}
 
 	_reloadMap() {
-		this._initMap(false)
-		this.dataSet && this._onDataLoad()
+		if (window.google && window.google.maps) {
+			this._initMap(false)
+			this.dataSet && this._onDataLoad()
+			if (this._selectedMarkerKey && this._markers[this._selectedMarkerKey]) {
+				this._selectMarker(this._markers[this._selectedMarkerKey])
+			}
+		}
 	}
 
 	_onMarkerMouseOver(marker) {
@@ -142,7 +148,8 @@ export default class GoogleMap extends $.Component {
 		if (this._selectedMarker) {
 			this._setIcon(this._selectedMarker, 'out')
 		}
-		this._selectedMarker = marker
+		this._selectedMarker    = marker
+		this._selectedMarkerKey = this._getMarkerKey(marker.position.lat, marker.position.lng) 
 		this._setIcon(marker, 'click')
 		this.trigger($.Event.MAP_MARKER_SELECT, {data: this._getMarkerData(marker)})
 	}
@@ -182,7 +189,9 @@ export default class GoogleMap extends $.Component {
 	}
 
 	onPropMapIdChange(mapId) {
-		google && this._reloadMap()
+		if (window.google) {
+			this._reloadMap()
+		}
 	}
 
 	/***************************************************/
