@@ -61,8 +61,10 @@ export default class GoogleMap extends $.Component {
 		$.Html.load(url, null, 'js')
 	}
 
-	_initMap() {
-		this.props.dataSource && this.mixin($.DataOwnerMixin)
+	_initMap(doMixin=true) {
+		if (doMixin && this.props.dataSource) {
+			this.mixin($.DataOwnerMixin)
+		}
 		this.map = new google.maps.Map(this.element, {
 			center    : { lat: this.props.center[0] , lng: this.props.center[1] },
 			zoom      : this.props.zoom,
@@ -89,6 +91,11 @@ export default class GoogleMap extends $.Component {
 				}
 			}
 		})
+	}
+
+	_reloadMap() {
+		this._initMap(false)
+		this.dataSet && this._onDataLoad()
 	}
 
 	_onMarkerMouseOver(marker) {
@@ -172,6 +179,10 @@ export default class GoogleMap extends $.Component {
 
 	onPropMapTypeChange(mapType) {
 		this.map && this.map.setMapTypeId(mapType)
+	}
+
+	onPropMapIdChange(mapId) {
+		google && this._reloadMap()
 	}
 
 	/***************************************************/
