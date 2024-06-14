@@ -69,11 +69,13 @@
 			opacity        : 1;
 		}
 
-		.form-input > input:focus::placeholder {
+		.form-input > input:focus::placeholder,
+		.form-input > textarea:focus::placeholder {
 			opacity : 0;
 		}
 	
-		.form-input > input:focus::-ms-input-placeholder {
+		.form-input > input:focus::-ms-input-placeholder,
+		.form-input > textarea:focus::-ms-input-placeholder {
 			opacity : 0;
 		}
 
