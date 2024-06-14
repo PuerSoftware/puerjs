@@ -50,6 +50,7 @@
         color       : var(--puer-loader-color);
     }
 
+
     @keyframes loader-spin {to{transform: rotate(1turn)}}
 
 /*-------------------- Old version loader --------------------*/
