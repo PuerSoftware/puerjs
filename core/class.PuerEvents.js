@@ -52,7 +52,7 @@ class PuerEvents extends EventTarget {
 		this.socket.onmessage = (event) => {
 			const eventData = JSON.parse(event.data)
 			const data      = eventData.data
-			// console.log('Received event: ', eventData.name, data)
+			console.log('Received event: ', eventData.name, data)
 	
 			if (Array.isArray(data)) {
 				data.forEach((item) => {
@@ -60,10 +60,8 @@ class PuerEvents extends EventTarget {
 				})
 			} else {
 
-				// data.detail = {
-					data.targetName = 'backend'
-					data.target     = {id: 0, isActiveEventTarget: true}
-				// }
+				data.targetName = 'backend'
+				data.target     = {id: 0, isActiveEventTarget: true}
 				this.trigger(eventData.name, data)
 			}
 			this.send($.Event.SYS_CONFIRM, {name: eventData.name, key: eventData.key})
@@ -107,7 +105,7 @@ class PuerEvents extends EventTarget {
 				throw new $.Error('$.Events.connect() must be called prior to sending events', this, 'send')
 			}
 		} else {
-			// console.log('Sent event:', name, data)
+			console.log('Sent event:', name, data)
 			this.socket.send(JSON.stringify({ 'name' : name, 'data' : data }))
 		}
 	}
