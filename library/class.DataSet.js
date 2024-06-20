@@ -108,7 +108,7 @@ export default class DataSet extends PuerObject {
 	_onItemAdd(e) {
 		const item = e.detail.item
 		const ids  = this._applyInitialFilter([item.dataId])
-
+		this._itemIds.push(...ids)
 		if (ids.length) {
 			this._indexItem(item, item.dataId)
 			this.onItemAdd(item)
