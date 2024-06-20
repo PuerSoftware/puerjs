@@ -18,9 +18,9 @@ export default class FormDataSource extends DataSource {
 			method,
 			params,
 			headers,
-			(items) => {
+			(items, headers) => {
 				this.isCacheable && this.db.clear()
-				this.addItems(items)
+				this.addItems(items, headers)
 				this._onLoad()
 				this.queue.isDone(true)
 			}
