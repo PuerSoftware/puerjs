@@ -35,6 +35,7 @@ class Form extends $.Component {
 			this._updateInitialValues()
 			$.notify(this.props.saveNotification)
 			this._trigger('save')
+			this.removeCssClass('saving')
 		}
 	}
 
@@ -105,6 +106,7 @@ class Form extends $.Component {
 			const formData    = this.getData()
 			const headers     = this.getHeaders()
 			formData.formName = this.props.name
+			save && this.addCssClass('saving')
 			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
 		}
 	}
