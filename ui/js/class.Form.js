@@ -35,8 +35,8 @@ class Form extends $.Component {
 			this._updateInitialValues()
 			$.notify(this.props.saveNotification)
 			this._trigger('save')
-			this.removeCssClass('saving')
 		}
+        this.removeCssClass('saving')
 	}
 
 	_onSubmit(e) {
