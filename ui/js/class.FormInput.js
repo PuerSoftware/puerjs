@@ -10,7 +10,8 @@ class FormInput extends $.Component {
 		this.props.default('disabled', false) // TODO: rename to isDisabled
 		this.props.default('isEditable', true)
 		this.props.default('isReadOnly', false)
-		
+		this.props.default('overlayPlaceholder', '-')
+
 		this.form         = null
 		this.input        = null
 		this.beforeDiv    = null
@@ -100,7 +101,12 @@ class FormInput extends $.Component {
 			for (const child of this.children) {
 				child.toggle(isEditable)
 			}
-			this.inPlaceLabel.props.text = this.stringValue || '-'
+			this.inPlaceLabel.props.text = this.stringValue || this.props.overlayPlaceholder
+			if(this.stringValue) {
+				this.inPlaceLabel.removeCssClass('input-empty')
+			} else {
+				this.inPlaceLabel.addCssClass('input-empty')
+			}
 			if (isEditable) {
 				this.focus()
 			}
@@ -130,7 +136,6 @@ class FormInput extends $.Component {
 			this.inPlaceLabel,	
 			this.afterDiv = $.div('after', afterProps)
 		]
-
 		return $.div(children)
 	}
 }

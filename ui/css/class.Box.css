@@ -104,6 +104,7 @@
     --puer-divider-color-lo                   : #3C404B;
     --puer-loader-color                       : #EEE;
     --puer-placeholder-color                  : #263546;
+    --puer-placeholder-color-neutral          : #5E616C;
     --puer-placeholder-color-search           : #808080;
     --puer-pagination-color-hi                : #5798D4;
     --puer-pagination-color-lo                : #768799;
@@ -229,6 +230,7 @@
     --puer-pagination-color-hi                : #0E6EC6;
     --puer-pagination-color-lo                : #7B7D8E;
     --puer-placeholder-color                  : rgba(126, 130, 150, 0.898);
+    --puer-placeholder-color-neutral          : #B1B3BD;
 
     --puer-text-color-hi         : #262832;
     --puer-text-color-lo         : #5A5F77;
