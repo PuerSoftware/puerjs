@@ -106,6 +106,10 @@ html, body {
 			flex: none;
 		}
 
+		.app .sidebar > .link.selected > a {
+			text-decoration : underline;
+		}
+
 	/******************** ICONS ********************/
 
 	.app .icon {

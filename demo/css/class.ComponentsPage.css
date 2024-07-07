@@ -1,10 +1,14 @@
 .components-page {}
 
 	.components-page .body {
-		padding: 30px 60px;
+		min-width  : 0;
+		padding    : 30px 60px;
+		overflow-y : auto;
 	}
+
 	.components-page .body > * {
-		display: block;
+		display   : block;
+		max-width : 100%;
 	}
 
 	.components-page .body .text-highlight textarea {

@@ -35,6 +35,10 @@
 
     --puer-main-view-form-img : url('/static/img/main-view-form-image.jpg');
 
+    --puer-vessel-color-eta   : #3EA0AE;
+	--puer-vessel-color-spot  : #57A25F;
+	--puer-vessel-color-fixed : #9BA7B9;
+
     --puer-bg-color-lo                           : #1B2734;
     --puer-bg-color-dark                         : #121A23;
     --puer-bg-color-btn                          : #07569E;
@@ -128,6 +132,7 @@
     --puer-font-size-hi : 14px;
     --puer-font-size-md : 13px;
     --puer-font-size-lo : 12px;
+    --puer-font-size-sm : 11px;
 }
 
 :root .scheme1 {

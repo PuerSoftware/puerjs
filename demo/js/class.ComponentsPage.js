@@ -74,6 +74,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Calendar',                hash: 'cmp:calendar'              }),
 				$.Link({label: 'Checkbox',                hash: 'cmp:checkbox'              }),
 				$.Link({label: 'Code',                    hash: 'cmp:code'                  }),
+				$.Link({label: 'CodeEditable',            hash: 'cmp:editablecode'          }),
 				$.Link({label: 'Flag',                    hash: 'cmp:flag'                  }),
 				$.Link({label: 'Google Map',              hash: 'cmp:map'                   }),
 				$.Link({label: 'Google Static Map',       hash: 'cmp:staticmap'             }),
@@ -99,6 +100,9 @@ export default class ComponentsPage extends $.Component {
 				]),
 				this.codeContainer = $.Box({route: 'cmp:code'}, [
 					$.Code({lang: 'javascript', code: this.state.code})
+				]),
+				$.Box({route: 'cmp:editablecode'}, [
+					$.CodeEditable()
 				]),
 				$.Box({route: 'cmp:flag'}, [
 					$.h3({text: 'Square'}),
