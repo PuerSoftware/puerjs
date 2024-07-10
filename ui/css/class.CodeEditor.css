@@ -1,25 +1,26 @@
-.code-editable {
+.code-editor {
     width            : 100%;
     min-width        : 460px;
+    min-height       : 56px;
     max-height       : 100%;
     display          : block;
     overflow-y       : auto;
     background-color : #f5f2f0;
 }
-    .code-editable.columns {
+    .code-editor.columns {
         height : auto;
     }
 
-    .code-editable > .container {
+    .code-editor > .container {
         width : auto;
     }
-        .code-editable > .container > .editor {
+        .code-editor > .container > .editor {
             height     : auto;
             width      : auto;
             min-height : 100%;
             position   : relative;
         }
-            .code-editable > .container > .editor > .code-input {
+            .code-editor > .container > .editor > .code-input {
                 font-family             : Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
                 font-size               : 1em;
                 line-height             : 1.5;
@@ -42,11 +43,11 @@
                 -webkit-text-fill-color : transparent;
                 border                  : none;
             }
-                .code-editable > .container > .editor > .code-input:focus-visible {
+                .code-editor > .container > .editor > .code-input:focus-visible {
                     outline : none;
                 }
 
-            .code-editable > .container > .editor > .code-output {
+            .code-editor > .container > .editor > .code-output {
                 background-color : transparent;
                 pointer-events   : none;
                 margin           : 0;
@@ -55,17 +56,17 @@
                 overflow         : visible;
                 position         : relative;
             }
-                .code-editable > .container > .editor > .code-input::selection {
+                .code-editor > .container > .editor > .code-input::selection {
                     background-color : rgba(0, 96, 128, 0.3);
                     color            : transparent; 
                 }
 
-                .code-editable > .container > .editor > .code-output > code {
+                .code-editor > .container > .editor > .code-output > code {
                     text-shadow : inherit;
                     color       : inherit;
                 }
 
-        .code-editable > .container > .line-numbers {
+        .code-editor > .container > .line-numbers {
             font-family   : Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
             font-size     : 1em;
             line-height   : 1.5;

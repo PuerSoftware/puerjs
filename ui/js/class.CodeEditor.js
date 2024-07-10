@@ -1,35 +1,37 @@
 import $ from '../../index.js'
 
-
-export default class CodeEditable extends $.Component {
+export default class CodeEditor extends $.Component {
     constructor(...args) {
         super(...args)
-        this.props.default( 'lang',    'html'   )
-        this.props.default( 'code',    '<div id="1205"><h1 class="title" title="Hello World">Hello World</h1></div>')
+        this.props.default( 'lang',    ''       )
+        this.props.default( 'code',    ''       )
         this.props.default( 'theme',   'prism'  )
         this.props.default( 'version', '1.25.0' )
 
-        const cdn      = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0'
-        const cssCdn   = `${cdn}/themes/${this.props.theme}.min.css`
-        const jsCdn    = `${cdn}/prism.min.js`
-        const langCdn  = `${cdn}/components/prism-${this.props.lang}.min.js`
-
-        const urls = [cssCdn, jsCdn, langCdn]
+        const cdn      = `https://cdnjs.cloudflare.com/ajax/libs/${this.props.theme}/${this.props.version}`
+        const cdnCss   = `${cdn}/themes/${this.props.theme}.min.css`
+        const cdnJs    = `${cdn}/${this.props.theme}.min.js`
+        const cdnLang  = `${cdn}/components/${this.props.theme}-${this.props.lang}.min.js`
+        const urls     = [cdnCss, cdnJs, cdnLang]
 
         $.Html.loadBatch(urls, this._onLoad.bind(this))
-
-        this.state.codeEdited = this.props.code
     }
 
-    _onLoad(success) { //TODO: loading check must be global
-    	// if (success) {
-    		if (this.props.code) {
-                this.highlightCode(this.state.codeEdited)
-                this.updateLineNumbers(this.state.codeEdited)
-		    }
-	    // } else {
-	    // 	console.error('There were errors loading Prism code api')
-	    // }
+    _onLoad(success) {
+        if (this.props.code) {
+            this.highlightCode(this.props.code)
+            this.updateLineNumbers(this.props.code)
+        }
+        if (this.props.code === '') {
+            $.defer(() => {
+                this.codeInput.element.focus()
+            })
+        }
+    }
+
+    onPropCodeChange(code) {
+        this.highlightCode(code)
+        this.updateLineNumbers(code)
     }
 
     highlightCode(code) {
@@ -42,17 +44,15 @@ export default class CodeEditable extends $.Component {
     }
 
     onCodeChange(event) {
-        this.state.codeEdited = event.target.value
-        this.highlightCode(this.state.codeEdited)
-        this.updateLineNumbers(this.state.codeEdited)
+        this.props.code = event.target.value
     }
 
     onCodeSave(event) {
-        console.log('Code saved:', this.state.codeEdited) // Optionally, display a result in console
+        console.log('Code saved:', this.props.code)
     }
 
     onKeydown(event) {
-        if (event.key === 'Tab') {
+        if ($.Constants.KeyCodeToKey[event.keyCode] === 'TAB') {
             event.preventDefault()
             const codeInputElement = this.codeInput.element
             const start            = codeInputElement.selectionStart
@@ -61,7 +61,7 @@ export default class CodeEditable extends $.Component {
 
             codeInputElement.value          = text.substring(0, start) + '\t' + text.substring(end)
             codeInputElement.selectionStart = codeInputElement.selectionEnd = start + 1
-            this.onCodeChange(event)
+            this.props.code = codeInputElement.value
         }
     }
 
@@ -75,15 +75,6 @@ export default class CodeEditable extends $.Component {
         }
         this.lineNumbers.append(lineNumbersArr)
     }
-    // updateLineNumbers(code) {
-    //     const lines = code.split('\n').length
-    //     let lineNumbersHtml = ''
-
-    //     for (let i = 1; i <= lines; i++) {
-    //         lineNumbersHtml += `<div class="line-number">${i}</div>\n`
-    //     }
-    //     this.lineNumbers.element.innerHTML = lineNumbersHtml
-    // }
 
     render() {
         const langClass    = `language-${this.props.lang.toLowerCase()}`
@@ -92,7 +83,7 @@ export default class CodeEditable extends $.Component {
                 this.lineNumbers = $.div('line-numbers'),
                 $.Columns('editor', [
                     this.codeInput = $.textarea('code-input', {
-                        text      : this.state.codeEdited,
+                        text      : this.props.code,
                         oninput   : this.onCodeChange,
                         onblur    : this.onCodeSave,
                         onkeydown : this.onKeydown
@@ -104,4 +95,4 @@ export default class CodeEditable extends $.Component {
     }
 }
 
-$.define(CodeEditable, import.meta.url)
+$.define(CodeEditor, import.meta.url)
