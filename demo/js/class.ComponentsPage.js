@@ -5,6 +5,7 @@ import * as ui from '../../ui/index.js'
 export default class ComponentsPage extends $.Component {
 	constructor(... args) {
 		super(... args)
+		this.props.code = '<div id="1205"><h1 class="title" title="Hello World">Hello World</h1></div>'
 		
 		this._highlightString = 'Words ```[blue]foo```, ```[pink]bar``` and ```[purple]baz``` are highlighted in this text.'
 
@@ -74,6 +75,7 @@ export default class ComponentsPage extends $.Component {
 				$.Link({label: 'Calendar',                hash: 'cmp:calendar'              }),
 				$.Link({label: 'Checkbox',                hash: 'cmp:checkbox'              }),
 				$.Link({label: 'Code',                    hash: 'cmp:code'                  }),
+				$.Link({label: 'CodeEditor',              hash: 'cmp:editorcode'            }),
 				$.Link({label: 'Flag',                    hash: 'cmp:flag'                  }),
 				$.Link({label: 'Google Map',              hash: 'cmp:map'                   }),
 				$.Link({label: 'Google Static Map',       hash: 'cmp:staticmap'             }),
@@ -99,6 +101,9 @@ export default class ComponentsPage extends $.Component {
 				]),
 				this.codeContainer = $.Box({route: 'cmp:code'}, [
 					$.Code({lang: 'javascript', code: this.state.code})
+				]),
+				$.Box({route: 'cmp:editorcode'}, [
+					$.CodeEditor({lang: 'html', code: this.props.code})
 				]),
 				$.Box({route: 'cmp:flag'}, [
 					$.h3({text: 'Square'}),

@@ -1,5 +1,6 @@
 export const KeyCodeToKey = {
-	9 : 'BACKSPACE',
+	8 : 'BACKSPACE',
+	9 : 'TAB',
 	13: 'ENTER',
 	16: 'SHIFT',
 	17: 'CTRL',

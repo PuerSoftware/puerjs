@@ -1,4 +1,4 @@
-.tag {
+.tag.puer-component {
     font-size        : var(--puer-font-size-lo);
     line-height      : 1;
     white-space      : nowrap;
@@ -16,16 +16,16 @@
     cursor           : default;
     user-select      : none;
 }
-    .light-theme .tag {
+    .light-theme .tag.puer-component {
         box-shadow : 1px 1px 4px rgba(0, 0, 0, 0.14);
     }
 
-    .tag > .content {
+    .tag.puer-component > .content {
         white-space : nowrap;
         flex-grow   : 1;
     }
 
-    .tag > .link {
+    .tag.puer-component > .link {
         flex            : none;
         color           : transparent;
         width           : 8px;
