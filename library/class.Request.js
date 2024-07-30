@@ -1,7 +1,11 @@
 class Request {
+	static Authorization = Settings 
+		? Settings.ACCESS_TOKEN || null
+		: null
+
 	static $($) { window.$ = $ }
 	static _pollMap = {}
-
+	
 	static define(name, url, method) {
 		if (Request.hasOwnProperty(name)) {
 			throw `Request class already has property "${name}"`
@@ -16,29 +20,49 @@ class Request {
 		return request
 	}
 
-	static request(url, method = null, data = null, headers = null, callback) {
+	static request(url, method = null, data = null, headers = null, callback, redirect = 'manual') {
 		const conf = {
-			method  : method ? method.toUpperCase() : 'GET',
-			headers : headers || {'Content-Type': 'application/json'}
+			method   : method ? method.toUpperCase() : 'GET',
+			headers  : headers || {},
+			redirect : redirect
 		}
+
+		if (Request.Authorization) {
+			conf.headers['Authorization'] = 'Bearer ' + Request.Authorization
+		}
+		conf.headers['Content-Type'] = headers
+			? headers['Content-Type'] || 'application/json'
+			: 'application/json'
+			
 		if (data) {
-			if (conf.method === 'GET') {
-				url = url + '?' + $.String.toQuery(data)
+			if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(conf.method)) {
+				if (conf.headers['Content-Type'] === 'application/json') {
+					conf.body = JSON.stringify(data)
+				} else {
+					conf.body = data
+				}
 			} else {
-				conf.body = JSON.stringify(data)
+				url = url + '?' + $.String.toQuery(data)
 			}
 		}
 		fetch(url, conf)
 			.then(response => {
 				const headers = {}
 				response.headers.forEach((value, key) => {
-                    headers[key] = value;
-                })
-				return response.json().then(data => {
-					return {data, headers}
+					headers[key] = value
 				})
+				switch (response.status) {
+					case 200:
+						return response.json().then(data => {
+							return {data, headers}
+						})
+					default: // TODO: Handle other status codes
+						return response.text().then(data => {
+							return {data: data, headers}
+						})
+				}
 			})
-			.then(({data, headers}) => {
+			.then(({data, headers}) => {	
 				if (callback && typeof callback === 'function') {
 					callback(data, headers)
 				}

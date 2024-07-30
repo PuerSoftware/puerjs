@@ -8,19 +8,18 @@ class Form extends $.Component {
 		this.props.default('title',            '')
 		this.props.default('subtitle',         '')
 		this.props.default('buttonLabel',      'Submit')
-		this.props.default('action',           '')
-		this.props.default('method',           'POST')
-		this.props.default('enctype',          'application/json')
 		this.props.default('autocomplete',     'off')
 		this.props.default('doClearOnSave',    false)
 		this.props.default('hasButton',        true)
 		this.props.default('saveNotification', 'Form saved successfully!')
 
-		this.state.error        = ''
-		this._errorComponent    = null
-		this._isValidateEnabled = true
-		this.inputs             = null
-		this.button             = null
+		this.state.error         = ''
+		this._errorComponent     = null
+		this._isValidateEnabled  = true
+		this._isSavingWithAction = false
+		this.form                = null
+		this.inputs              = null
+		this.button              = null
 	}
 
 	_onResponse(event) {
@@ -32,6 +31,9 @@ class Form extends $.Component {
 			}
 		}
 		if (event.detail.isSaved) {
+			if (event.detail.redirectUri) {
+				window.location.href = event.detail.redirectUri
+			}
 			this._updateInitialValues()
 			$.notify(this.props.saveNotification)
 			this._trigger('save')
@@ -167,7 +169,7 @@ class Form extends $.Component {
 					$.p  ('form-subtitle puer', {text: this.props.subtitle}),
 					this._errorComponent,
 				]),
-				$.form ({
+				this.form =$.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
 					method       : this.props.method,

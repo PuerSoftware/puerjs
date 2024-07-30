@@ -172,7 +172,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		})
 	}
 
-	load(method=null, params=null, headers=null, defer=true) {
+	load(method=null, params=null, headers=null, defer=this.true) {
 		if (defer) {
 			$.defer(this._load, arguments, this)
 		} else {

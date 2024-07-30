@@ -32,10 +32,11 @@ export default class FormDataSource extends DataSource {
 		const isSaved      = this.isSaving && !items.error
 		const adaptedItems = []
 		this.trigger($.Event.FORM_RESPONSE, {
-			formName : items.formName,
-			error    : items.error,
-			errors   : items.errors,
-			isSaved  : isSaved
+			formName    : items.form_name,
+			error       : items.error,
+			errors      : items.errors,
+			redirectUri : items.redirect_uri,
+			isSaved     : isSaved
 		})
 		if (isSaved) {
 			this.clear(() => {
