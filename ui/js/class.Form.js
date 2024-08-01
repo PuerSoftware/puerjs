@@ -76,7 +76,11 @@ class Form extends $.Component {
 		if (this.inputs) {
 			for (const input of this.inputs) {
 				if (!input.props.isHeader && !input.props.isReadOnly) {
-					data[input.props.name] = input.value
+					let value = input.value || null
+					if (value === 'undefined') {
+						value = null
+					}
+					data[input.props.name] = value
 				}
 			}
 		}
@@ -107,7 +111,7 @@ class Form extends $.Component {
 		if (this._isValidateEnabled && this._dataSource) {
 			const formData    = this.getData()
 			const headers     = this.getHeaders()
-			formData.formName = this.props.name
+			formData.form_name = this.props.name
 			save && this.addCssClass('saving')
 			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
 		}

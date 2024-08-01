@@ -56,6 +56,10 @@ class Request {
 						return response.json().then(data => {
 							return {data, headers}
 						})
+					case 422:
+						response.text().then(error => {
+							console.log(error)
+						})
 					default: // TODO: Handle other status codes
 						return response.text().then(data => {
 							return {data: data, headers}
