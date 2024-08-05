@@ -71,7 +71,7 @@ class InputSearchSelect extends FormInput {
 	}
 
 	_select(data) {
-		if (!this._valueSet.has(data.value)) {
+		if (data && !this._valueSet.has(data.value)) {
 			if (this.props.isSingular) {
 				for (const value in this._valueToTag) {
 					this._valueToTag[value]._onClose()

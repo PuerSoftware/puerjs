@@ -138,9 +138,11 @@ export default class InputCalendar extends FormInput {
 
 	_parseRangeString(rangeString) {
 		const dates = []
-		for (const s of rangeString.split('-')) {
-			const [d, m, y] = s.split('/')
-			dates.push(new Date(y, m - 1, d))
+		if (rangeString) {
+			for (const s of rangeString.split('-')) {
+				const [d, m, y] = s.split('/')
+				dates.push(new Date(y, m - 1, d))
+			}
 		}
 		return dates
 	}
