@@ -6,6 +6,7 @@ export default class FormDataSource extends DataSource {
 	constructor(name, url) {
 		super(name, url, false, false)
 		this.isSaving      = false
+		this.hasError      = false
 		this.doClearOnSave = false
 		this.queue         = new AsyncWaitingQueue()
 	}
@@ -38,6 +39,7 @@ export default class FormDataSource extends DataSource {
 			redirectUri : items.redirect_uri,
 			isSaved     : isSaved
 		})
+		this.hasError = Boolean(items.error)
 		if (isSaved) {
 			this.clear(() => {
 				for (const field in items.data) {
