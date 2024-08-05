@@ -21,7 +21,11 @@ export default class InPlaceEditForm extends Form {
 
 	submit(save) {
 		if (this._isValidateEnabled && this._dataSource) {
-			const formData     = {[this.changedInput.props.name]: this.changedInput.value}
+			let value = this.changedInput.value || null
+			if (value === 'undefined') {
+				value = null
+			}
+			const formData     = {[this.changedInput.props.name]: value}
 			const headers      = this.getHeaders()
 			formData.form_name = this.props.name
 			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
