@@ -45,7 +45,6 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 
 		if (isPreloadable) {
 			$._loadDataSource()
-			// console.log($._preloadCount, this.name)
 			this.load()
 		}
 	}
@@ -80,7 +79,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 		})
 	}
 
-	_load(method=null, params=null, headers=null) {
+	_load(method=null, params=null, headers=null, callback=null) {
 		this._lastLoad = {
 			method  : method,
 			params  : params,
@@ -95,34 +94,35 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 					db.getCount(count => {
 						if (count > 0) {
 							_this.count = count
-							_this._loadFromDb()
+							_this._loadFromDb(callback)
 						} else {
-							_this._loadFromUrl(method, params, headers)
+							_this._loadFromUrl(method, params, headers, callback)
 						}
 					})
 				})
 			} else {
-				this._loadFromUrl(method, params, headers)
+				this._loadFromUrl(method, params, headers, callback)
 			}
 		})
 	}
 
-	_loadFromUrl(method=null, params=null, headers=null) {
+	_loadFromUrl(method=null, params=null, headers=null, callback=null) {
 		method = method || 'GET'
 		$.Request.request(
 			this.url,
 			method,
 			params,
 			headers,
-			(items) => {
+			(items, headers) => {
 				this.isCacheable && this.db.clear()
-				this.addItems(items)
+				items = this.addItems(items)
 				this._onLoad()
-			}
+				callback && callback(items)
+			},
 		)
 	}
 
-	_loadFromDb() {
+	_loadFromDb(callback) {
 		const _this = this
 
 		this.db.readItems(0, _this.count, (items) => {
@@ -131,6 +131,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 				this._onItemAdd(item)
 			}
 			this._onLoad()
+			callback && callback(items)
 		})
 	}
 
@@ -164,26 +165,45 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	}
 	
 
-	fill(items) {
+	fill(items, callback=null) {
 		this._isLoading = true
 		this.clear(() => {
-			this.addItems(items)
+			items = this.addItems(items)
 			this._onLoad()
+			callback && callback(items)
 		})
 	}
 
-	load(method=null, params=null, headers=null, defer=this.true) {
+	load(
+		method   = null,
+		params   = null,
+		headers  = null,
+		defer    = true,
+		callback = null
+	) {
 		if (defer) {
-			$.defer(this._load, arguments, this)
+			$.defer(this._load, [method, params, headers, callback], this)
 		} else {
-			this._load(method, params, headers)
+			this._load(method, params, headers, callback)
 		}
 	}
 
-	reload() {
+	reload(callback=null) {
 		if (this._lastLoad) {
-			this._load(this._lastLoad.method, this._lastLoad.params, this._lastLoad.headers)
+			this._load(
+				this._lastLoad.method,
+				this._lastLoad.params,
+				this._lastLoad.headers,
+				callback
+			)
 		}
+	}
+	
+	update() {
+		for (const item of this.data) {
+			this.trigger($.Event.DATASOURCE_ITEM_ADD, { item: item })
+		}	
+		this.trigger($.Event.DATASOURCE_DATA, { itemIds: this.itemIds })
 	}
 
 	clear(callback) {
@@ -221,6 +241,7 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 			}
 		}
 		this._recalculate()
+		return items
 	}
 
 	changeItem(item) {

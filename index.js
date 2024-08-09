@@ -102,6 +102,8 @@ $.Events.define('CLICK',                  ['data'])
 
 $.Events.define('COUNTER_UPDATE',         ['count'])
 
+$.Events.define('RESPONSE',               ['txId', 'data'])
+
 $.Events.define('DATASOURCE_DATA',        ['itemIds'])
 $.Events.define('DATASOURCE_ITEM_ADD',    ['item'])
 $.Events.define('DATASOURCE_ITEM_CHANGE', ['item'])
@@ -114,7 +116,7 @@ $.Events.define('SEARCH_FOCUS',           [])
 $.Events.define('SEARCH_BLUR',            [])
 $.Events.define('SEARCH_CHANGE',          ['value'])
 $.Events.define('PAGINATE',               ['page'])
-$.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'isSaved'])
+$.Events.define('FORM_RESPONSE',          ['formName', 'error', 'errors', 'data', 'isSaved'])
 $.Events.define('TAG_REMOVE',             ['label'])
 $.Events.define('TAG_CLICK',              ['label'])
 $.Events.define('NOTIFICATION',           ['text'])

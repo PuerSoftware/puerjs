@@ -10,6 +10,8 @@ class FormInput extends $.Component {
 		this.props.default('disabled', false) // TODO: rename to isDisabled
 		this.props.default('isEditable', true)
 		this.props.default('isReadOnly', false)
+		this.props.default('isPreviewMode', false)
+		this.props.default('presentAs', 'text')
 		this.props.default('defaultValue', '-')
 
 		this.form         = null
@@ -21,6 +23,8 @@ class FormInput extends $.Component {
 		this.initialValue = undefined
 
 		this.disabledByDefault = this.props.disabled
+
+		this.state.value = null
 	}
 
 	_triggerChange(oldValue, newValue) {
@@ -41,13 +45,15 @@ class FormInput extends $.Component {
 	}
 
 	set disabled(value) {
-		this.field && this.field.toggleCssClass('disabled', value)
-		if (value) {
-			this.input.setAttribute('disabled', true)
-		} else {
-			this.input.element.removeAttribute('disabled')
+		if (this.input) {
+			this.field && this.field.toggleCssClass('disabled', value)
+			if (value) {
+				this.input.setAttribute('disabled', true)
+			} else {
+				this.input.element.removeAttribute('disabled')
+			}
+			this.props.disabled = value
 		}
-		this.props.disabled = value
 	}
 
 	get disabled() {
@@ -55,10 +61,13 @@ class FormInput extends $.Component {
 	}
 
 	set value(value) {
-		value          = value || ''
-		const oldValue = this.input.element.value
-		this.input.element.value = value
-		this._triggerChange(oldValue, value)
+		this.state.value = value
+		if (this.input) {
+			value            = value || ''
+			const oldValue   = this.input.element.value
+			this.input.element.value = value
+			this._triggerChange(oldValue, value)
+		}
 	}
 
 	get value() {
@@ -118,9 +127,31 @@ class FormInput extends $.Component {
 	}
 
 	render() {
+		if (this.props.isPreviewMode) {
+			switch(this.props.presentAs) {
+				case 'text':
+					return $.Box([
+						$.div({text: this.state.value})
+					])
+				case 'link':
+					return $.Box([
+						$.a({
+							href   : this.state.value,
+							target : '_blank'
+						}, [
+							$.text(this.state.value)
+						])
+					])
+				case 'image':
+					return $.Box([
+						$.img({src: this.state.value})
+					])
+			}
+		}
+
 		this.input        = $[this.props.tagName]({ ... this.props })
 		this.inPlaceLabel = $.Box('in-place-label hidden')
-		
+
 		this._eventTarget = this.input
 		const beforeProps = this.events.beforeclick ? { onclick: this.events.beforeclick } : {}
 		const afterProps  = this.events.afterclick  ? { onclick: this.events.afterclick }  : {}

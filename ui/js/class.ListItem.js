@@ -48,9 +48,13 @@ export default class ListItem extends $.Component {
 		this.element.scrollIntoView({ behavior: 'smooth', block: 'start' })
 	}
 
+	onClick(e) {
+		this._select(e)	
+	}
+
 	onInit() {
 		if (!this._isClickSubscribed) {
-			this._on('click', this._select)
+			this._on('click', this.onClick)
 			this._isClickSubscribed = true
 		}
 	}

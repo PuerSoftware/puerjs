@@ -213,8 +213,8 @@ class BasePuerComponent extends PuerObject {
 
 	_applyProp(prop) {
 		if (this.element) {
+
 			let value = $.dereference(this.props[prop])
-			// if (value && value.isReference) 
 			if (prop.startsWith('css')) {
 				const cssProp = $.String.camelToLower(prop.replace(/^css/, ''))
 				if ($.isPxCssProp(cssProp) && $.String.isNumeric(String(value))) {

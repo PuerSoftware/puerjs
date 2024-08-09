@@ -5,7 +5,6 @@ import AsyncWaitingQueue from './class.AsyncWaitingQueue.js'
 export default class FormDataSource extends DataSource {
 	constructor(name, url) {
 		super(name, url, false, false)
-		this.isSaving      = false
 		this.hasError      = false
 		this.doClearOnSave = false
 		this.queue         = new AsyncWaitingQueue()
@@ -30,12 +29,13 @@ export default class FormDataSource extends DataSource {
 
 	adaptItems(items, headers) {
 		// items.error is sent from back-end
-		const isSaved      = this.isSaving && !items.error
+		const isSaved      = items.is_saved
 		const adaptedItems = []
 		this.trigger($.Event.FORM_RESPONSE, {
 			formName    : items.form_name,
 			error       : items.error,
 			errors      : items.errors,
+			data        : items.data,
 			redirectUri : items.redirect_uri,
 			isSaved     : isSaved
 		})
@@ -49,7 +49,6 @@ export default class FormDataSource extends DataSource {
 					adaptedItems.push({field: field, value: value})
 				}
 			})
-			this.isSaving = false
 		} else {
 			for (const field in items.data) {
 				adaptedItems.push({field: field, value: items.data[field]})
@@ -62,21 +61,15 @@ export default class FormDataSource extends DataSource {
 		return item
 	}
 
-	adaptSubmit(params, headers, isSaving) {
-		return [params, headers, isSaving]
+	adaptSubmit(params, headers) {
+		return [params, headers]
 	}
 
-	submit(params, isSaving, doClearOnSave, headers=null) {
-		if (!this.queue.isDone()) {
-			this.queue.enqueue(this.submit, this, [params, isSaving, doClearOnSave, headers])
-		} else {
-			[params, headers]  = this.adaptSubmit(params, headers, isSaving)
-			headers            = headers || {}
-			headers.isSaving   = isSaving ? 1 : 0
-			this.isSaving      = isSaving
-			this.doClearOnSave = doClearOnSave
-			this.load('POST', params, headers)
-		}
+	submit(params, doClearOnSave, headers=null) {
+		[params, headers]  = this.adaptSubmit(params, headers)
+		headers            = headers || {}
+		this.doClearOnSave = doClearOnSave
+		this.load('POST', params, headers)
 	}
 }
 

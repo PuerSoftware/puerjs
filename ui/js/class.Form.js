@@ -36,7 +36,6 @@ class Form extends $.Component {
 			}
 			this._updateInitialValues()
 			$.notify(this.props.saveNotification)
-			this._trigger('save')
 		}
         this.removeCssClass('saving')
 	}
@@ -109,11 +108,12 @@ class Form extends $.Component {
 
 	submit(save) {
 		if (this._isValidateEnabled && this._dataSource) {
-			const formData    = this.getData()
-			const headers     = this.getHeaders()
+			const formData     = this.getData()
+			const headers      = this.getHeaders()
 			formData.form_name = this.props.name
+			formData.is_saving = save
 			save && this.addCssClass('saving')
-			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
+			this._dataSource.submit(formData, this.props.doClearOnSave, headers)
 		}
 	}
 
@@ -151,10 +151,13 @@ class Form extends $.Component {
 	}
 
 	render() {
+		if (this.props.readOnly) {
+			return $.div([this.children])
+		}
 		this._errorComponent = $.p({text: this.state.error, class: 'error form-error'})
 		const formChildren = [... this.children]
 
-		if (this.props.hasButton) {
+		if (this.props.hasButton && !this.props.isPreviewMode) {
 			formChildren.push(
 				$.div ('button-panel', [
 					this.button = $.InputButton ({
@@ -173,7 +176,7 @@ class Form extends $.Component {
 					$.p  ('form-subtitle puer', {text: this.props.subtitle}),
 					this._errorComponent,
 				]),
-				this.form =$.form ({
+				this.form = $.form ({
 					autocomplete : this.props.autocomplete,
 					action       : this.props.action,
 					method       : this.props.method,

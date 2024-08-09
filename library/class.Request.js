@@ -20,7 +20,14 @@ class Request {
 		return request
 	}
 
-	static request(url, method = null, data = null, headers = null, callback, redirect = 'manual') {
+	static request(url,
+		method   = null,
+		data     = null,
+		headers  = null, 
+		callback, 
+		redirect = 'manual',
+	) {
+
 		const conf = {
 			method   : method ? method.toUpperCase() : 'GET',
 			headers  : headers || {},
@@ -45,6 +52,7 @@ class Request {
 				url = url + '?' + $.String.toQuery(data)
 			}
 		}
+
 		fetch(url, conf)
 			.then(response => {
 				const headers = {}
@@ -52,7 +60,7 @@ class Request {
 					headers[key] = value
 				})
 				switch (response.status) {
-					case 200:
+					case 200:	
 						return response.json().then(data => {
 							return {data, headers}
 						})
