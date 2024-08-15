@@ -1,5 +1,5 @@
-import $             from './core/class.Puer.js'
-import PuerApp       from './core/class.PuerApp.js'
+import $             from './core/Puer.js'
+import PuerApp       from './core/PuerApp.js'
 import * as constant from './constants.js'
 
 (() => {
@@ -72,7 +72,7 @@ import * as constant from './constants.js'
 	for (const tag of tags) {
 		$.define(tag)
 	}
-	
+
 	function dirName(filePath) {
 		filePath = new URL(filePath).pathname
 		return filePath.slice(0, filePath.lastIndexOf('/'))

@@ -1,9 +1,9 @@
 import $       from '../../index.js'
 import * as ui from '../../ui/index.js'
 
-import IndexPage       from './class.IndexPage.js'
-import ComponentsPage  from './class.ComponentsPage.js'
-import HeaderMenu      from './class.HeaderMenu.js'
+import IndexPage       from './IndexPage.js'
+import ComponentsPage  from './ComponentsPage.js'
+import HeaderMenu      from './HeaderMenu.js'
 
 $.Constants.GOOGLE_DYNAMIC_MAPS_API_KEY = GOOGLE_DYNAMIC_MAPS_API_KEY
 $.Constants.GOOGLE_STATIC_MAPS_API_KEY  = GOOGLE_STATIC_MAPS_API_KEY
