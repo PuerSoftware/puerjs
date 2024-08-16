@@ -2,7 +2,7 @@ import $              from '../../index.js'
 import DataOwnerMixin from '../../library/DataOwnerMixin.js'
 
 
-class Form extends $.Component {
+export default class Form extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('title',            '')
@@ -37,7 +37,7 @@ class Form extends $.Component {
 			this._updateInitialValues()
 			$.notify(this.props.saveNotification)
 		}
-        this.removeCssClass('saving')
+		this.removeCssClass('saving')
 	}
 
 	_onSubmit(e) {
@@ -190,4 +190,3 @@ class Form extends $.Component {
 
 
 $.define(Form, import.meta.url)
-export default Form

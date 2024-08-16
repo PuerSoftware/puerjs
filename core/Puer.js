@@ -8,7 +8,7 @@ class Puer {
 			this._path
 			this.appPath
 			this.isReferencing
-			
+
 			this.isRouting         = false
 			this.isPreloading      = false
 			this._cssUrls          = new Set()
@@ -55,7 +55,7 @@ class Puer {
 
 	_loadCss(componentUrl) {
 		if (componentUrl) {
-			let cssUrl = componentUrl.includes('puerjs') 
+			let cssUrl = componentUrl.includes('puerjs')
 				? this._path + componentUrl.split(this._path)[1].replace(/\bjs\b/g, 'css')
 				: componentUrl.replace(/\bjs\b/g, 'css')
 
@@ -153,7 +153,7 @@ class Puer {
 		this._loadCss(importUrl)
 		cls.prototype.chainName = cls.name
 		window[cls.name] = cls
-		
+
 		this._defineGetter(cls.name, (... args) => {
 			return new cls(... this._getConstructorArgs(args))
 		})
@@ -207,7 +207,7 @@ class Puer {
 	router(getRoutes) {
 		return this.Router.define(getRoutes)
 	}
-	
+
 	dereference(value) {
 		return value && value.isReference
 			? value.dereference()
@@ -228,7 +228,7 @@ class Puer {
 
 	throttle(key, f, limit, ...args) {
 		if (!this.throttleMap[key]) {
-			const _this = this 
+			const _this = this
 			this.throttleMap[key] = true
 			f.apply(this, args)
 			setTimeout(() => {
@@ -254,7 +254,7 @@ class Puer {
 				$.wait(condition, then)
 			}, interval)
 		}
-		
+
 	}
 
 	sync(asyncFunc) {
@@ -340,6 +340,12 @@ class Puer {
 			}
 		}
 		console.log( ... newArgs )
+	}
+
+	assert(b, message) {
+        if (!b) {
+            throw Error(message)
+        }
 	}
 
     notify(text) {

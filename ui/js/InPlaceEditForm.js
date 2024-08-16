@@ -2,6 +2,7 @@ import $           from '../../index.js'
 import Form        from './Form.js'
 import InputSelect from './InputSelect.js'
 
+
 export default class InPlaceEditForm extends Form {
 	constructor(... args) {
 		super(... args)
@@ -28,7 +29,8 @@ export default class InPlaceEditForm extends Form {
 			const formData     = {[this.changedInput.props.name]: value}
 			const headers      = this.getHeaders()
 			formData.form_name = this.props.name
-			this._dataSource.submit(formData, save, this.props.doClearOnSave, headers)
+			formData.is_saving = save
+			this._dataSource.submit(formData, this.props.doClearOnSave, headers)
 		}
 	}
 
