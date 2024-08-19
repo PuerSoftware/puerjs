@@ -10,6 +10,35 @@ export default class InputTextArea extends FormInput {
 		this.props.default('type',    'text')
 	}
 
+    autoResize() {
+        if (this.input && this.input.element) {
+            this.input.element.style.height = 'auto';
+            this.input.element.style.height = `${this.input.element.scrollHeight}px`;
+        }
+    }
+
+	resetHeight() {
+		if (this.input && this.input.element) {
+			this.input.element.style.height = 'auto';
+		}
+	}
+
+    render() {
+        this.input = $[this.props.tagName]({
+            ...this.props,
+            oninput: (event) => {
+                this.autoResize();
+            }
+        })
+
+        const children = [
+            this.input,
+            ...this.children,
+        ];
+
+        return $.div(children)
+    }
+
 	moveCaretDown() {
 		document.execCommand('insertText', false, '\n')
 	}
