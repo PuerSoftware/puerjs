@@ -99,8 +99,13 @@ class FormInput extends $.Component {
 		this.input.element.blur()
 	}
 
+	onFocus(e) {
+		this.addCssClass('focus')
+	}
+
 	onBlur(e) {
 		this.props.isEditable = false
+		this.removeCssClass('focus')
 	}
 
 	onPropIsEditableChange(isEditable) {
