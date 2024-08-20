@@ -42,7 +42,8 @@ export default class InPlaceEditForm extends Form {
 				input.inPlaceLabel._on('click', (e) => {
 					_this.edit(input)
 				})
-				input._on('blur', input.onBlur.bind(input))
+				input._on('focus', input.onFocus.bind(input))
+				input._on('blur',  input.onBlur.bind(input))
 			}
 		}
 	}
