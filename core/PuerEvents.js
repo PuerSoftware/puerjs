@@ -1,6 +1,7 @@
 import $              from './Puer.js'
 import {WaitingQueue} from '../library/index.js'
 
+
 class PuerEvents extends EventTarget {
 	static Authorization = Settings
 		? Settings.ACCESS_TOKEN || null
@@ -70,7 +71,6 @@ class PuerEvents extends EventTarget {
 				data.target     = {id: 0, isActiveEventTarget: true}
 				this.trigger(eventData.name, data)
 			}
-			this.send($.Event.SYS_CONFIRM, {name: eventData.name, key: eventData.key})
 		}
 
 		this.socket.onclose = (event) => {
