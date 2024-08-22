@@ -10,12 +10,12 @@ export default class InputTextArea extends FormInput {
 		this.props.default('type',    'text')
 	}
 
-    autoResize() {
-        if (this.input && this.input.element) {
-            this.input.element.style.height = 'auto';
-            this.input.element.style.height = `${this.input.element.scrollHeight}px`;
-        }
-    }
+	autoResize() {
+		if (this.input && this.input.element) {
+			this.input.element.style.height = 'auto';
+			this.input.element.style.height = `${this.input.element.scrollHeight}px`;
+		}
+	}
 
 	resetHeight() {
 		if (this.input && this.input.element) {
@@ -23,38 +23,23 @@ export default class InputTextArea extends FormInput {
 		}
 	}
 
-    render() {
-        if (!this.props.isPreviewMode) {
-            this.input = $[this.props.tagName]({
-                ...this.props,
-                oninput: (event) => {
-                    this.autoResize()
-                }
-            })
-            const children = [
-                this.input,
-                ...this.children,
-            ];
-            return $.div(children)
-        } else {
-            return $.Box([
-                $.div({text: this.state.value})
-            ])
-        }
-        // this.input = $[this.props.tagName]({
-        //     ...this.props,
-        //     oninput: (event) => {
-        //         this.autoResize();
-        //     }
-        // })
-
-        // const children = [
-        //     this.input,
-        //     ...this.children,
-        // ];
-
-        // return $.div(children)
-    }
+	render() {
+		if (!this.props.isPreviewMode) {
+			this.input = $[this.props.tagName]({
+				...this.props,
+				oninput: this.autoResize
+			})
+			const children = [
+				this.input,
+				...this.children,
+			];
+			return $.div(children)
+		} else {
+			return $.Box([
+				$.div({text: this.state.value})
+			])
+		}
+	}
 
 	moveCaretDown() {
 		document.execCommand('insertText', false, '\n')
