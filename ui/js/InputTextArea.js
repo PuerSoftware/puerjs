@@ -24,19 +24,36 @@ export default class InputTextArea extends FormInput {
 	}
 
     render() {
-        this.input = $[this.props.tagName]({
-            ...this.props,
-            oninput: (event) => {
-                this.autoResize();
-            }
-        })
+        if (!this.props.isPreviewMode) {
+            this.input = $[this.props.tagName]({
+                ...this.props,
+                oninput: (event) => {
+                    this.autoResize()
+                }
+            })
+            const children = [
+                this.input,
+                ...this.children,
+            ];
+            return $.div(children)
+        } else {
+            return $.Box([
+                $.div({text: this.state.value})
+            ])
+        }
+        // this.input = $[this.props.tagName]({
+        //     ...this.props,
+        //     oninput: (event) => {
+        //         this.autoResize();
+        //     }
+        // })
 
-        const children = [
-            this.input,
-            ...this.children,
-        ];
+        // const children = [
+        //     this.input,
+        //     ...this.children,
+        // ];
 
-        return $.div(children)
+        // return $.div(children)
     }
 
 	moveCaretDown() {
