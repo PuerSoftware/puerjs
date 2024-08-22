@@ -126,14 +126,15 @@
     --puer-text-color-today      : #0E6EC6;
     --puer-text-color-hover      : #FFF;
 
-    --puer-font-label   : 'Inter',  sans-serif;
-	--puer-font-text    : 'Roboto', sans-serif;
-    --puer-font-size-xl : 20px;
-    --puer-font-size-lg : 16px;
-    --puer-font-size-hi : 14px;
-    --puer-font-size-md : 13px;
-    --puer-font-size-lo : 12px;
-    --puer-font-size-sm : 11px;
+    --puer-font-label    : 'Inter',  sans-serif;
+	--puer-font-text     : 'Roboto', sans-serif;
+    --puer-font-size-xxl : 24px;
+    --puer-font-size-xl  : 20px;
+    --puer-font-size-lg  : 16px;
+    --puer-font-size-hi  : 14px;
+    --puer-font-size-md  : 13px;
+    --puer-font-size-lo  : 12px;
+    --puer-font-size-sm  : 11px;
 }
 
 :root .scheme1 {
