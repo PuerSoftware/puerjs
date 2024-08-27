@@ -196,8 +196,7 @@ export default class RouteRoot extends BaseRoute {
 	getPath(hash) { return new RouteParser().parse(hash) }
 
 
-	updateHash(hash, config) {
-		// view:news view:ad_cargo
+	updateHash(hash) {
 		RouteParser.validateChars(hash)
 		const paths = this.getPath(hash)
 		this.setActivePath(paths)

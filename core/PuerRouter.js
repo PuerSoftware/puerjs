@@ -1,16 +1,12 @@
-import $                         from './Puer.js'
-import {WaitingQueue, RouteRoot} from '../library/index.js'
-
-// page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
-
-// 1. Implement isDefaultRoute on corresponding level.
-//	If no corresponding set member is present, default becomes active and hash reflects that.
-// 2. Implement implied "*". If in a member of a route set is present in hash, it remains if not overwritten
-// if more than one default is present in a route set, error is thrown
-// if no default is set in route set, error is thrown
+import $ from './Puer.js'
+import {
+	RouteRoot,
+	RouteParser,
+	WaitingQueue
+} from '../library/index.js'
 
 
-class PuerRouter {
+export default class PuerRouter {
 	static instance = null
 
 	constructor(app) {
@@ -28,6 +24,21 @@ class PuerRouter {
 
 	/********************** PRIVATE ***********************/
 
+	/**
+	 * Called on hashchange event.
+	 * @param {HashChangeEvent} e
+	 * @private
+	 */
+	_onHashChange(e) {
+		let hash = this._getHash(e.newURL)
+		if (hash) {
+			hash = this.routeRoot.updateHash(hash)
+			this._route(hash)
+		} else { // if hash is empty string or undefined /#
+			this.navigate(this.routeRoot.getDefaultHash())
+		}
+	}
+
 	_flattenPath(path, flatPath=null) {
 		flatPath = flatPath || {}
 		for (const route of path) {
@@ -36,7 +47,7 @@ class PuerRouter {
 		}
 		return flatPath
 	}
-
+	
 	_getHash() {
 		let hash  = window.location.hash.split('#')[1]
 		let query = ''
@@ -75,6 +86,9 @@ class PuerRouter {
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
+			console.log(this.app.__getRoutingPath(
+				new RouteParser().parse(hash)
+			))
 			hash  = this.routeRoot.updateHash(hash)
 			const queryString = $.String.toQuery(query)
 			query = queryString
@@ -88,18 +102,8 @@ class PuerRouter {
 		this.routeRoot = new RouteRoot(this.getConfig())
 		this.navigate(this.initialHash || this.routeRoot.getDefaultHash(), this.query)
 
-		window.addEventListener('hashchange', (event) => {
-			let hash = this._getHash(event.newURL)
-			if (hash) {
-				hash = this.routeRoot.updateHash(hash)
-				this._route(hash)
-			} else { // if hash is empty string or undefined /#
-				this.navigate(this.routeRoot.getDefaultHash())
-			}
-		})
+		window.addEventListener('hashchange', this._onHashChange.bind(this))
 
 		this._route(this.initialHash || this.routeRoot.getDefaultHash())
 	}
 }
-
-export default PuerRouter

@@ -1,4 +1,5 @@
 export { default as RouteRoot         } from './Route.js'
+export { default as RouteParser       } from './RouteParser.js'
 export { default as Constants         } from './Constants.js'
 export { default as DataBase   		  } from './DataBase.js'
 export { default as DataSet    		  } from './DataSet.js'

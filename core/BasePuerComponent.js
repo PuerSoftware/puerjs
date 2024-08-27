@@ -123,6 +123,72 @@ class BasePuerComponent extends PuerObject {
 		this.onReady && this.onReady()
 	}
 
+	/**
+	 * Completes partial path based on the last active child.
+	 *
+	 * 
+	 * @param {Array<Object>} paths - Full or partial path.
+	 * @param {String} paths[].name - The name of the route.
+	 * @param {String} paths[].value - The value of the route.
+	 * @param {Array<Object>} paths[].routes - The array of routing paths to traverse.
+	 * @param {String} lastActiveChild - The name and value of the last active child route.
+	 * @param {String} idnt - The indentation string for the debug console log.
+	 * @return {Array<Object>} Full path of the same signature as paths.
+	 */
+	__getRoutingPath(paths, lastActiveChild, idnt='') {
+		// this.props.route && console.log(idnt, this.className, this.props.route, paths)
+		let routes = []
+		if (this.props.route) {
+			if (paths.length) {
+				// console.log(idnt, 'if')
+				for (const path of paths) {
+					const route = `${path.name}:${path.value}`
+					if (this.props.route === route) {
+						routes.push({
+							name   : path.name,
+							value  : path.value,
+							routes : this._cascade('__getRoutingPath',[
+								path.routes,
+								this._lastActiveChildRoute,
+								idnt + '| '
+							]) || []
+						})
+					}
+				}
+			} else {
+				if (lastActiveChild) {
+					const [name, value] = lastActiveChild.split(':')
+					const childRoutes = this._cascade('__getRoutingPath',[
+						[{name: name, value: value}],
+						lastActiveChild,
+						idnt + '| '
+					]) || []
+					routes.push({
+						name   : name,
+						value  : value,	
+						routes : childRoutes
+					})
+				} else {
+					// terminal case, last component with route
+					const [name, value] = this.props.route.split(':')
+					routes.push({
+						name   : name,
+						value  : value,
+						routes : []
+					})
+				}
+			}
+		} else {
+			routes = this._cascade('__getRoutingPath', [
+				paths,
+				lastActiveChild,
+				idnt + '| '
+			]) || []
+		}
+		// this.props.route && console.log(idnt, 'Return:', routes)
+		return routes
+	}
+
 	/******************** CHAIN GETTERS ********************/
 
 	getImmediateChainDescendants(chainName) {
@@ -295,7 +361,16 @@ class BasePuerComponent extends PuerObject {
 	_cascade(methodName, args=[]) {
 		let result = null
 		for (const child of this._iterChildren()) {
-			result = child[methodName](... args) || result
+			// result = child[methodName](... args) || result
+
+			const r = child[methodName](... args)
+			if (Array.isArray(r)) {
+				if (r.length) {
+					result = r
+				}
+			} else {
+				result = r || result
+			}
 		}
 		return result
 	}

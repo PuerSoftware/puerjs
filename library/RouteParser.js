@@ -1,4 +1,5 @@
-class RouteParser {
+
+export default class RouteParser {
 	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789_'
 	static META  = ':[],'
 	static VALID_CHARS = RouteParser.ALPHA + RouteParser.META
@@ -184,6 +185,19 @@ class RouteParser {
 				}
 			}
 		}
+		
+		routes.toHash = () => {
+			let hashList = []
+			for (const route of routes) {
+				let hash = `${route.name}:${route.value}`
+				let children = route.routes.toHash()
+				if (children) {
+					hash += `[${children}]`
+				}
+				hashList.push(hash)
+			}
+			return hashList.sort().join(',')
+		}
 		for (const route of routes) {
 			this._augmentPath(route.routes)
 		}
@@ -201,5 +215,3 @@ class RouteParser {
 		return []
 	}
 }
-
-export default RouteParser
