@@ -1,5 +1,15 @@
 class RouteParser {
-	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789'
+	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789_'
+	static META  = ':[],'
+	static VALID_CHARS = RouteParser.ALPHA + RouteParser.META
+
+	static validateChars(hash) {
+		for (let char of hash) {
+			if (!RouteParser.VALID_CHARS.includes(char)) {
+				throw Error(`Invalid char "${char}" in "${hash}"`)
+			}
+		}
+	}
 
 	/********************** PRIVATE ***********************/
 
@@ -183,7 +193,7 @@ class RouteParser {
 
 	parse(path) {
 		if (path) {
-			this._reset(path.toLowerCase())
+			this._reset(path)
 			this._parseRoutes()
 			this._augmentPath(this.a)
 			return this.a

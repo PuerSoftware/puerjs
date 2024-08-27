@@ -1,5 +1,5 @@
-import $              from './Puer.js'
-import {WaitingQueue} from '../library/index.js'
+import $                         from './Puer.js'
+import {WaitingQueue, RouteRoot} from '../library/index.js'
 
 // page:home[ltab:cargo{param:value}[mail{id:1321321}],rtab:system]
 
@@ -85,8 +85,7 @@ class PuerRouter {
 	}
 
 	start() {
-		// console.log('Router.start()')
-		this.routeRoot = new $.RouteRoot(this.getConfig())
+		this.routeRoot = new RouteRoot(this.getConfig())
 		this.navigate(this.initialHash || this.routeRoot.getDefaultHash(), this.query)
 
 		window.addEventListener('hashchange', (event) => {

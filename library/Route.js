@@ -2,11 +2,30 @@ import RouteParser from './RouteParser.js'
 
 
 class BaseRoute {
-	constructor(routes) {
+	/**
+	* Constructs a new instance of BaseRoute.
+	*
+	* @param {Array<Object>} routes - An array of route objects.
+	* @param {string}        routes[].name - The name of the route.
+	* @param {string}        routes[].className - The className of the component, that has this route.
+	* @param {string}        routes[].value - The value of the route.
+	* @param {boolean}       routes[].isDefault - Whether the route is default.
+	* @param {Array<Object>} routes[].routes - An array of sub-routes.
+	* @param {RouteSet}      parentSet - The parent route set.
+	*/
+	constructor(routes, parentSet) {
+		this.parentSet = parentSet
 		this.routeSets = {}
 		this.addRouteSets(routes)
+		this.assertDefaultRoutes()
 	}
 
+	/**
+	* Retrieves an array of hashes for the current route sets.
+	*
+	* @param {boolean} active - Whether to retrieve the active route or the default route.
+	* @return {Array<string>} An array of hashes for the current route sets.
+	*/
 	_getHashes(active=false) {
 		const hashes = []
 		for (const name in this.routeSets) {
@@ -20,10 +39,45 @@ class BaseRoute {
 		return hashes
 	}
 
+	/**
+	* Adds multiple route sets to the current route sets.
+	*
+	* @param {Array<Object>} routes - An array of route objects.
+	* @param {string}        routes[].name - The name of the route.
+	* @param {string}        routes[].className - The className of the component, that has this route.
+	* @param {string}        routes[].value - The value of the route.
+	* @param {boolean}       routes[].isDefault - Whether the route is default.
+	* @param {Array<Object>} routes[].routes - An array of sub-routes.
+	*/
 	addRouteSets(routes) {
 		for (const route of routes) {
 			this.addRouteSet(route)
+		}	
+	}
+
+	/**
+	 * Adds a route set to the current route sets.
+	 *
+	 * @param {Object} route - The route object to add.
+	 * @param {string} route.name - The name of the route.
+	 * @param {string} route.className - The className of the component, that has this route.
+	 * @param {string} route.value - The value of the route.
+	 * @param {boolean} route.isDefault - Whether the route is default.
+	 * @param {Array<Object>} route.routes - An array of sub-routes.
+	 */
+	addRouteSet(route) {
+		if (!this.routeSets[route.name]) {
+			this.routeSets[route.name] = new RouteSet(route.name, this)
 		}
+		this.routeSets[route.name].addRoute(route)
+	}
+
+	/**
+	 * Asserts that a default route is registered for each route set.
+	 *
+	 * @throws {Error} If a default route is not registered for a route set.
+	 */
+	assertDefaultRoutes() {
 		for (const name in this.routeSets) {
 			const routeSet = this.routeSets[name]
 			if (!routeSet.getDefaultRoute()) {
@@ -32,17 +86,10 @@ class BaseRoute {
 		}
 	}
 
-	addRouteSet(route) {
-		if (!this.routeSets[route.name]) {
-			this.routeSets[route.name] = new RouteSet(route.name, this)
-		}
-		this.routeSets[route.name].addRoute(route)
-	}
-
 	findAndActivate(path) {
 		const name     = path.name
 		const value    = path.value
-		const routeSet =  this.routeSets[name]
+		const routeSet = this.routeSets[name]
 		if (routeSet) {
 			const route = routeSet.routes[value]
 			if (route) {
@@ -86,6 +133,11 @@ class BaseRoute {
 		}
 	}
 
+	/**
+	 * Converts the BaseRoute object to a plain JavaScript object.
+	 *
+	 * @return {Object} A plain JavaScript object representation of the BaseRoute.
+	 */
 	toObject() {
 		const result = {}
 		if (this.isDefault) { result.isDefault = true }
@@ -98,9 +150,6 @@ class BaseRoute {
 		return result
 	}
 }
-
-/**************************************************************/
-/**************************************************************/
 
 class Route extends BaseRoute {
 	constructor(route, parentSet) {
@@ -124,12 +173,20 @@ class Route extends BaseRoute {
 	get id() { return this.name + ':' + this.value }
 }
 
-/**************************************************************/
-/**************************************************************/
 
-class RouteRoot extends BaseRoute {
+export default class RouteRoot extends BaseRoute {
+	/**
+	* Constructs a new instance of RouteRoot.
+	*
+	* @param {Array<Object>} routes - An array of route objects.
+	* @param {string}        routes[].name - The name of the route.
+	* @param {string}        routes[].className - The className of the component, that has this route.
+	* @param {string}        routes[].value - The value of the route.
+	* @param {boolean}       routes[].isDefault - Whether the route is default.
+	* @param {Array<Object>} routes[].routes - An array of sub-routes.
+	*/
 	constructor(routes) {
-		super(routes)
+		super(routes, null)
 		this.isRoot = true
 	}
 
@@ -138,7 +195,10 @@ class RouteRoot extends BaseRoute {
 
 	getPath(hash) { return new RouteParser().parse(hash) }
 
-	updateHash(hash) {
+
+	updateHash(hash, config) {
+		// view:news view:ad_cargo
+		RouteParser.validateChars(hash)
 		const paths = this.getPath(hash)
 		this.setActivePath(paths)
 		this.activateDefaultMissingPaths()
@@ -148,8 +208,6 @@ class RouteRoot extends BaseRoute {
 	activate() {}
 }
 
-/**************************************************************/
-/**************************************************************/
 
 class RouteSet {
 	constructor(name, parentRoute) {
@@ -209,8 +267,3 @@ class RouteSet {
 		return result
 	}
 }
-
-/**************************************************************/
-/**************************************************************/
-
-export default RouteRoot

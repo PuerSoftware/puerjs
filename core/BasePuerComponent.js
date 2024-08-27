@@ -18,12 +18,14 @@ class BasePuerComponent extends PuerObject {
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
-		this.jsCode     = this._toCode(this.classes, props, children)
-		this.isCustom   = false
-		this._isActive  = true
-		this._isHidden  = false
-		this._isRemoved = false
-
+		this.jsCode                = this._toCode(this.classes, props, children)
+		this.isCustom              = false
+		this._isActive             = true
+		this._isHidden             = false
+		this._isRemoved            = false
+		// initially set to default child route, than set by child activation
+		this._lastActiveChildRoute = null
+		
 		this.elementCopy       = null
 		this.parentElementCopy = null
 
@@ -61,7 +63,9 @@ class BasePuerComponent extends PuerObject {
 		*  ------- 0  - route parent did not change _isActive
 		*  ------- 1  - route parent activated
 		*/
-		let hasMatch = false
+		let   hasMatch = false
+		const wasActive = this._isActive
+		
 		if (this.props.route) {
 			const [routeName, routeValue] = this.props.route.split(':')
 			for (const name in flatPath) {
@@ -72,14 +76,13 @@ class BasePuerComponent extends PuerObject {
 						activation = this._isActive ? activation : 1
 						this.activate()
 						this.onActivate && this.onActivate()
-						this._cascade('__route', [flatPath, activation])
+						this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
 					} else {
-						activation = !this._isActive ? 0 : -1 // TODO: check if need to use activation in condition
+						activation = !this._isActive ? 0 : -1
 						this.onDeactivate
 							? this.onDeactivate()
 							: this.deactivate()
-
-						this._cascade('__route', [flatPath, activation])
+						this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
 					}
 				}
 			}
@@ -92,8 +95,17 @@ class BasePuerComponent extends PuerObject {
 		}
 		if (!hasMatch) {
 			this.activate()
-			this._cascade('__route', [flatPath, activation])
+			this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
 		}
+		// return last active child if activated
+		if (this.props.route) {
+			const hasActivated    = this._isActive && this._isActive !== wasActive 
+			const isActiveDefault = this._isActive && this.props.isDefaultRoute
+			if (hasActivated || isActiveDefault) {
+				return this.props.route
+			}
+		}   
+		return null || this._lastActiveChildRoute
 	}
 
 	__routeChange() {
@@ -273,16 +285,35 @@ class BasePuerComponent extends PuerObject {
 		this._eventTarget.element.dispatchEvent(event)
 	}
 
+	/**
+	 * Calls a method on all children. If the method returns a boolean value, the
+	 * first falsy return value will stop the iteration and be returned.
+	 * @param {string} methodName - The name of the method to call
+	 * @param {array} [args] - Arguments to pass to the method
+	 * @return {any} The result of calling the method on the children
+	 */
 	_cascade(methodName, args=[]) {
-		let b = true
+		let result = null
+		for (const child of this._iterChildren()) {
+			result = child[methodName](... args) || result
+		}
+		return result
+	}
+
+	/**
+	 * Iterate over children components.
+	 * If component is a custom component, yield its root component.
+	 * If component is a built-in component, yield its children.
+	 * @return {Generator<BasePuerComponent>}
+	 */
+	*_iterChildren() {
 		if (this.isCustom) {
-			b = this.root[methodName](... args)
+			yield this.root
 		} else {
 			for (const child of this.children) {
-				b = child[methodName](... args)
+				yield child
 			}
 		}
-		return b
 	}
 
 	_toCode(classes, props, children) {
@@ -422,11 +453,13 @@ class BasePuerComponent extends PuerObject {
 		if (this.props.route) {
 			const [name, value] = this.props.route.split(':')
 			config = {
-				name      : name,
-				value     : value,
-				className : this.className,
-				isDefault : this.props.isDefaultRoute,
-				routes    : []
+				name            : name,
+				value           : value,
+				className       : this.className,
+				isDefault       : this.props.isDefaultRoute,
+				isActive        : this.isActive,
+				lastActiveChild : this._lastActiveChildRoute,
+				routes          : []
 			}
 		}
 
