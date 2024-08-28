@@ -8,7 +8,6 @@ export default class Search extends $.Component {
 
 		this.props.require('name')
 		this.props.default('placeholder', 'Search ...')
-		this.props.default('hide', 'false')
 		// this.props.hide = false;
 
 		this.isFocused = false
@@ -26,10 +25,6 @@ export default class Search extends $.Component {
 		this.trigger($.Event.SEARCH_BLUR, {
 			name: this.props.name
 		})
-		if(this.props.hide === true) {
-			this.hide()
-			this.parent.removeCssClass('search-show')
-		}
 	}
 
 	_onKeyUp(e) {
