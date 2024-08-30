@@ -3,8 +3,10 @@ import PuerProps        from './PuerProps.js'
 import PuerObject       from './PuerObject.js'
 import PuerComponentSet from './PuerComponentSet.js'
 
+import RoutingMixin     from '../library/RoutingMixin.js'
 
-class BasePuerComponent extends PuerObject {
+
+export default class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
 		super()
 		this.owner    = $.owner
@@ -15,16 +17,15 @@ class BasePuerComponent extends PuerObject {
 		this.children = new PuerComponentSet(children, this._onChildrenChange.bind(this))
 		this.props    = new PuerProps(props, '_onPropChange', this)
 
+		this.name     = this.props.name || null
 		this.events   = this.props.extractEvents(this.owner)
 		this.classes  = this.props.pop('classes') || []
 
-		this.jsCode                = this._toCode(this.classes, props, children)
-		this.isCustom              = false
-		this._isActive             = true
-		this._isHidden             = false
-		this._isRemoved            = false
-		// initially set to default child route, than set by child activation
-		this._lastActiveChildRoute = null
+		this.jsCode     = this._toCode(this.classes, props, children)
+		this.isCustom   = false
+		this._isActive  = true
+		this._isHidden  = false
+		this._isRemoved = false
 		
 		this.elementCopy       = null
 		this.parentElementCopy = null
@@ -33,9 +34,8 @@ class BasePuerComponent extends PuerObject {
 		this._eventTarget = this
 
 		$.components[this.id] = this
-		this.props.default('isDefaultRoute', false)
 
-		this.name = this.props.name || null
+		this.mixin(RoutingMixin)
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -56,63 +56,6 @@ class BasePuerComponent extends PuerObject {
 		this._applyProps()
 	}
 
-	__route(flatPath, activation) {
-		/*
-		*  activation can be: -1 0 1
-		*  ------ -1  - route parent deactivated
-		*  ------- 0  - route parent did not change _isActive
-		*  ------- 1  - route parent activated
-		*/
-		let   hasMatch = false
-		const wasActive = this._isActive
-		
-		if (this.props.route) {
-			const [routeName, routeValue] = this.props.route.split(':')
-			for (const name in flatPath) {
-
-				if (routeName === name) {
-					hasMatch = true
-					if (routeValue === flatPath[name]) {
-						activation = this._isActive ? activation : 1
-						this.activate()
-						this.onActivate && this.onActivate()
-						this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
-					} else {
-						activation = !this._isActive ? 0 : -1
-						this.onDeactivate
-							? this.onDeactivate()
-							: this.deactivate()
-						this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
-					}
-				}
-			}
-		} else {
-			if (activation < 0) {
-				this.onDeactivate && this.onDeactivate()
-			} else if (activation > 0) {
-				this.onActivate && this.onActivate()
-			}
-		}
-		if (!hasMatch) {
-			this.activate()
-			this._lastActiveChildRoute = this._cascade('__route', [flatPath, activation])
-		}
-		// return last active child if activated
-		if (this.props.route) {
-			const hasActivated    = this._isActive && this._isActive !== wasActive 
-			const isActiveDefault = this._isActive && this.props.isDefaultRoute
-			if (hasActivated || isActiveDefault) {
-				return this.props.route
-			}
-		}   
-		return null || this._lastActiveChildRoute
-	}
-
-	__routeChange() {
-		this.onRoute && this.onRoute($.Router.path)
-		this._cascade('__routeChange', [])
-	}
-
 	__init() {
 		this._cascade('__init')
 		this.onInit && this.onInit()
@@ -121,72 +64,6 @@ class BasePuerComponent extends PuerObject {
 	__ready() {
 		this._cascade('__ready')
 		this.onReady && this.onReady()
-	}
-
-	/**
-	 * Completes partial path based on the last active child.
-	 *
-	 * 
-	 * @param {Array<Object>} paths - Full or partial path.
-	 * @param {String} paths[].name - The name of the route.
-	 * @param {String} paths[].value - The value of the route.
-	 * @param {Array<Object>} paths[].routes - The array of routing paths to traverse.
-	 * @param {String} lastActiveChild - The name and value of the last active child route.
-	 * @param {String} idnt - The indentation string for the debug console log.
-	 * @return {Array<Object>} Full path of the same signature as paths.
-	 */
-	__getRoutingPath(paths, lastActiveChild, idnt='') {
-		// this.props.route && console.log(idnt, this.className, this.props.route, paths)
-		let routes = []
-		if (this.props.route) {
-			if (paths.length) {
-				// console.log(idnt, 'if')
-				for (const path of paths) {
-					const route = `${path.name}:${path.value}`
-					if (this.props.route === route) {
-						routes.push({
-							name   : path.name,
-							value  : path.value,
-							routes : this._cascade('__getRoutingPath',[
-								path.routes,
-								this._lastActiveChildRoute,
-								idnt + '| '
-							]) || []
-						})
-					}
-				}
-			} else {
-				if (lastActiveChild) {
-					const [name, value] = lastActiveChild.split(':')
-					const childRoutes = this._cascade('__getRoutingPath',[
-						[{name: name, value: value}],
-						lastActiveChild,
-						idnt + '| '
-					]) || []
-					routes.push({
-						name   : name,
-						value  : value,	
-						routes : childRoutes
-					})
-				} else {
-					// terminal case, last component with route
-					const [name, value] = this.props.route.split(':')
-					routes.push({
-						name   : name,
-						value  : value,
-						routes : []
-					})
-				}
-			}
-		} else {
-			routes = this._cascade('__getRoutingPath', [
-				paths,
-				lastActiveChild,
-				idnt + '| '
-			]) || []
-		}
-		// this.props.route && console.log(idnt, 'Return:', routes)
-		return routes
 	}
 
 	/******************** CHAIN GETTERS ********************/
@@ -352,27 +229,15 @@ class BasePuerComponent extends PuerObject {
 	}
 
 	/**
-	 * Calls a method on all children. If the method returns a boolean value, the
-	 * first falsy return value will stop the iteration and be returned.
-	 * @param {string} methodName - The name of the method to call
-	 * @param {array} [args] - Arguments to pass to the method
-	 * @return {any} The result of calling the method on the children
+	 * Call a method on all children components.
+	 * @param {string} methodName - Name of the method to call.
+	 * @param {Array} [args=null] - Optional arguments to pass to the method.
 	 */
-	_cascade(methodName, args=[]) {
-		let result = null
+	_cascade(methodName, args=null) {
+		args = args || []
 		for (const child of this._iterChildren()) {
-			// result = child[methodName](... args) || result
-
-			const r = child[methodName](... args)
-			if (Array.isArray(r)) {
-				if (r.length) {
-					result = r
-				}
-			} else {
-				result = r || result
-			}
+			child[methodName](... args)
 		}
-		return result
 	}
 
 	/**
@@ -499,60 +364,6 @@ class BasePuerComponent extends PuerObject {
 		}
 	}
 
-	route(path, query=null, relative=false) {
-		if (this.props.route) {
-			const [routeName, routeValue] = this.props.route.split(':')
-			if (path.startsWith('*')) {
-				relative = true
-				path     = path.substring(1)
-			} else if (relative) {
-				path = `${routeName}:${routeValue}[${path}]`
-			}
-		}
-		this.parent.route(path, query, relative)
-	}
-
-	getRouteConfig() {
-		/*
-			{
-				route      : 'page:main',
-				isRelative : true,
-				className  : 'mycomp'
-				routes : [
-					...
-				]
-			}
-		*/
-
-		let config = null
-		if (this.props.route) {
-			const [name, value] = this.props.route.split(':')
-			config = {
-				name            : name,
-				value           : value,
-				className       : this.className,
-				isDefault       : this.props.isDefaultRoute,
-				isActive        : this.isActive,
-				lastActiveChild : this._lastActiveChildRoute,
-				routes          : []
-			}
-		}
-
-		const descendants       = this.getDescendants()
-		let   descendantConfigs = []
-
-		for (const descendant of descendants) {
-			let descendantConfig = descendant.getRouteConfig()
-			descendantConfigs = descendantConfigs.concat(descendantConfig)
-		}
-
-		if (config) {
-			config.routes = descendantConfigs
-			descendantConfigs = [config]
-		}
-		return descendantConfigs
-	}
-
 	on(name, f, validTargets=null) {
 		validTargets = validTargets || (
 			this.props.triggers
@@ -565,13 +376,40 @@ class BasePuerComponent extends PuerObject {
 	as(mixinClass) {
 		const handler = {
 			get: (target, prop, receiver) => {
-				if (prop in mixinprototype) {
-					return mixinprototype[prop].bind(target)
+				if (prop in mixinClass.prototype) {
+					return mixinClass.prototype[prop].bind(target)
 				}
 				return Reflect.get(target, prop, receiver)
 			}
 		}
 		return new Proxy(this, handler)
+	}
+
+	mixin(mixinClass, data=null, overwrite=true) {
+		const methods = Object.getOwnPropertyDescriptors(mixinClass.prototype)
+		for (let key in methods) {
+			if (key !== 'constructor') {
+				const descriptor = methods[key]
+				if (typeof descriptor.value === 'function') {
+					if (this[key] && !overwrite) {
+						const original = this[key]
+						this[key] = (... args) => {
+							descriptor.value.apply(this, args)
+							original.apply(this, args)
+						}
+					} else {
+						this[key] = descriptor.value.bind(this)
+					}
+				} else {
+					if (this[key] && !overwrite) {
+						throw `Mixin overrides existing property "${this.className}.${key}"`
+					} else {
+						Object.defineProperty(this, key, descriptor)
+					}
+				}
+			}
+		}
+		mixinClass.init(this, data || {})
 	}
 
 	/********************* DOM METHODS *********************/
@@ -754,4 +592,3 @@ class BasePuerComponent extends PuerObject {
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'
 
-export default BasePuerComponent

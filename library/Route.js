@@ -1,268 +1,149 @@
-import RouteParser from './RouteParser.js'
+export default class Route {
+	static $($) { window.$ = $ }
 
-
-class BaseRoute {
-	/**
-	* Constructs a new instance of BaseRoute.
-	*
-	* @param {Array<Object>} routes - An array of route objects.
-	* @param {string}        routes[].name - The name of the route.
-	* @param {string}        routes[].className - The className of the component, that has this route.
-	* @param {string}        routes[].value - The value of the route.
-	* @param {boolean}       routes[].isDefault - Whether the route is default.
-	* @param {Array<Object>} routes[].routes - An array of sub-routes.
-	* @param {RouteSet}      parentSet - The parent route set.
-	*/
-	constructor(routes, parentSet) {
-		this.parentSet = parentSet
-		this.routeSets = {}
-		this.addRouteSets(routes)
-		this.assertDefaultRoutes()
-	}
-
-	/**
-	* Retrieves an array of hashes for the current route sets.
-	*
-	* @param {boolean} active - Whether to retrieve the active route or the default route.
-	* @return {Array<string>} An array of hashes for the current route sets.
-	*/
-	_getHashes(active=false) {
-		const hashes = []
-		for (const name in this.routeSets) {
-			const routeSet = this.routeSets[name]
-
-			const route = active
-				? routeSet.getActiveRoute()
-				: routeSet.getDefaultRoute()
-			route && hashes.push(route.getHash(active))
-		}
-		return hashes
-	}
-
-	/**
-	* Adds multiple route sets to the current route sets.
-	*
-	* @param {Array<Object>} routes - An array of route objects.
-	* @param {string}        routes[].name - The name of the route.
-	* @param {string}        routes[].className - The className of the component, that has this route.
-	* @param {string}        routes[].value - The value of the route.
-	* @param {boolean}       routes[].isDefault - Whether the route is default.
-	* @param {Array<Object>} routes[].routes - An array of sub-routes.
-	*/
-	addRouteSets(routes) {
-		for (const route of routes) {
-			this.addRouteSet(route)
-		}	
-	}
-
-	/**
-	 * Adds a route set to the current route sets.
-	 *
-	 * @param {Object} route - The route object to add.
-	 * @param {string} route.name - The name of the route.
-	 * @param {string} route.className - The className of the component, that has this route.
-	 * @param {string} route.value - The value of the route.
-	 * @param {boolean} route.isDefault - Whether the route is default.
-	 * @param {Array<Object>} route.routes - An array of sub-routes.
-	 */
-	addRouteSet(route) {
-		if (!this.routeSets[route.name]) {
-			this.routeSets[route.name] = new RouteSet(route.name, this)
-		}
-		this.routeSets[route.name].addRoute(route)
-	}
-
-	/**
-	 * Asserts that a default route is registered for each route set.
-	 *
-	 * @throws {Error} If a default route is not registered for a route set.
-	 */
-	assertDefaultRoutes() {
-		for (const name in this.routeSets) {
-			const routeSet = this.routeSets[name]
-			if (!routeSet.getDefaultRoute()) {
-				throw `Default is not registered for RouteSet: "${routeSet.name}"`
+	static treeToPaths(root, path=null) {
+		path = path || []
+		if (Array.isArray(root)) {
+			root = {
+				name   : '',
+				routes : root
 			}
 		}
-	}
+		let paths = []
 
-	findAndActivate(path) {
-		const name     = path.name
-		const value    = path.value
-		const routeSet = this.routeSets[name]
-		if (routeSet) {
-			const route = routeSet.routes[value]
-			if (route) {
-				if (path.routes && path.routes.length) {
-					route.setActivePath(path.routes)
-				} else {
-					route.activate()
-				}
+		if (root.routes.length) {
+			for (let route of root.routes) {
+				paths = paths.concat(Route.treeToPaths(route, path.concat([route.name])))
 			}
 		} else {
-			for (const routeSetName in this.routeSets) {
-				const routeSet = this.routeSets[routeSetName]
-				for (const routeValue in routeSet.routes) {
-					routeSet.routes[routeValue].findAndActivate(path)
-				}
-			}
+			return [path]
 		}
-	}
-
-	setActivePath(paths) {
-		for (const path of paths) {
-			this.findAndActivate(path)
-		}
-	}
-
-	activate() {
-		this.parentSet.activateRoute(this.value)
-		this.parentSet.parentRoute.activate()
-	}
-
-	activateDefaultMissingPaths() {
-		for (const routeSetName in this.routeSets) {
-			const routeSet = this.routeSets[routeSetName]
-			const route    = routeSet.getActiveRoute()
-			if (!route) {
-				routeSet.getDefaultRoute().isActive = true
-			}
-			for (const routeValue in routeSet.routes) {
-				routeSet.routes[routeValue].activateDefaultMissingPaths()
-			}
-		}
+		return paths
 	}
 
 	/**
-	 * Converts the BaseRoute object to a plain JavaScript object.
+	 * Constructs a new instance of Route.
 	 *
-	 * @return {Object} A plain JavaScript object representation of the BaseRoute.
+	 * @param {BasePuerComponent} component - The component reference associated with the route.
 	 */
-	toObject() {
-		const result = {}
-		if (this.isDefault) { result.isDefault = true }
-		if (this.isActive)  { result.isActive  = true }
-		result.routes = {}
-		for (const name in this.routeSets) {
-			const routeSet = this.routeSets[name]
-			result.routes[name] = routeSet.toObject()
+	constructor(component, parentRoute=null) {
+		this.parent    = parentRoute
+		this.name      = component.props.route
+		this.component = component
+		this.routes    = this._getRoutes(component)
+	}
+
+	_getRoutes(component, parentRoute=null) {
+		let routes = []
+		for (const child of component._iterChildren()) {
+			if (child.props.route) {
+				routes.push(new Route(child, this))
+			} else {
+				routes = routes.concat(this._getRoutes(child, this))
+			}
 		}
-		return result
-	}
-}
-
-class Route extends BaseRoute {
-	constructor(route, parentSet) {
-		super(route.routes)
-		this.parentSet = parentSet
-		this.value     = route.value
-		this.name      = route.name
-		this.isActive  = false
-		this.isDefault = route.isDefault
+		return routes
 	}
 
-	getHash(active=false) {
-		const hashes = this._getHashes(active)
-		let hash = this.id
-		if (hashes.length > 0) {
-			hash += `[${hashes.join(',')}]`
-		}
-		return hash
-	}
-
-	get id() { return this.name + ':' + this.value }
-}
-
-
-export default class RouteRoot extends BaseRoute {
 	/**
-	* Constructs a new instance of RouteRoot.
+	 * Returns route node corresponding to path.
+	 *
+	 * @param {Array<String>} path - array of node names.
+	 * @returns {Array<Route>}
+	 */
+	_getRoutesByPath(path, idx=0, isFound=false) {
+		let routes = []
+		if (this.name === path[idx]) {
+			isFound = true
+		}
+
+		if (isFound) {
+			idx ++
+			const theEnd = idx >= path.length || !this.routes.length
+			if (theEnd) {
+				return [this]
+			}
+		}
+
+		for (const route of this.routes) {
+			routes = routes.concat(
+				route._getRoutesByPath(path, idx, isFound)
+			)
+		}
+		return routes
+	}
+
+	/**
+	 * Returns array route nodes corresponding to paths.
+	 *
+	 * @param {Array<Array<String>>} hashPaths - array of arrays of node names.
+	 * @returns {Array<Route>}
+	 */
+	_getRoutesByPaths(hashPaths) {
+		let routes = []
+		for (const path of hashPaths) {
+			const childRoutes = this._getRoutesByPath(path)
+			routes = routes.concat(childRoutes)
+		}
+		return Array.from(new Set(routes))
+	}
+
+	activateParents(activatedRoutes=null) {
+		activatedRoutes = activatedRoutes || []
+		this.component.activate()
+		activatedRoutes.push(this)
+		if (this.parent) {
+			this.parent.activateParents(activatedRoutes)
+		}
+		return activatedRoutes
+	}
+
+	activate(hashPaths) {
+		const routes = this._getRoutesByPaths(hashPaths)
+		console.log(routes)
+		// let activatedRoutes = []
+		// for (const route of routes) {
+		// 	activatedRoutes = activatedRoutes.concat(
+		// 		route.activateParents()
+		// 	)
+		// }
+		// return new Set(activatedRoutes)
+	}
+
+	/**
+	* Collects array of route names from leaf to root
 	*
-	* @param {Array<Object>} routes - An array of route objects.
-	* @param {string}        routes[].name - The name of the route.
-	* @param {string}        routes[].className - The className of the component, that has this route.
-	* @param {string}        routes[].value - The value of the route.
-	* @param {boolean}       routes[].isDefault - Whether the route is default.
-	* @param {Array<Object>} routes[].routes - An array of sub-routes.
+	* @param {Array<String>} path - Array of route names.
+	* @returns {Array<String>}
 	*/
-	constructor(routes) {
-		super(routes, null)
-		this.isRoot = true
-	}
-
-	getDefaultHash () { return this._getHashes(false).join(',') }
-	getActiveHash  () { return this._getHashes(true).join(',') }
-
-	getPath(hash) { return new RouteParser().parse(hash) }
-
-
-	updateHash(hash) {
-		RouteParser.validateChars(hash)
-		const paths = this.getPath(hash)
-		this.setActivePath(paths)
-		this.activateDefaultMissingPaths()
-		return this.getActiveHash()
-	}
-
-	activate() {}
-}
-
-
-class RouteSet {
-	constructor(name, parentRoute) {
-		this.name        = name
-		this.parentRoute = parentRoute
-		this.routes      = {}
-	}
-
-	addRoute(route) {
-		if (this.routes[route.value]) {
-			if (route.isDefault) {
-				this.routes[route.value].isDefault = true
-			}
-		} else {
-			this.routes[route.value] = new Route(route, this)
+	getPath(path=null) {
+		path = path || []
+		if (this.parent) {
+			// not root
+			path.unshift(this.name)
+			path = this.parent.getPath(path)
 		}
-	}
-
-	getDefaultRoute() {
-		let defaultRoute = null
-		for (const value in this.routes) {
-			const route = this.routes[value]
-			if (route.isDefault) {
-				if (defaultRoute === true) {
-					throw `More than one default is registered for RouteSet "${this.name}"`
-				} else {
-					defaultRoute = route
-				}
-			}
-		}
-		return defaultRoute
-	}
-
-	getActiveRoute() {
-		for (const value in this.routes) {
-			if (this.routes[value].isActive) {
-				return this.routes[value]
-			}
-		}
-		return null
-	}
-
-	activateRoute(activeValue) {
-		if (activeValue) {
-			for (const value in this.routes) {
-				this.routes[value].isActive = (value === activeValue)
-			}
-		}
+		return path
 	}
 
 	toObject() {
-		const result = {}
-		for (const name in this.routes) {
-			const route = this.routes[name]
-			result[route.value] = route.toObject()
+		return {
+			name      : this.name,
+			parent    : this.parent ? this.parent.name : '',
+			component : this.component.className,
+			routes    : this.routes.map(route => route.toObject())
 		}
-		return result
+	}
+
+	toString() {
+		return JSON.stringify(this.toObject(), null, 4)
+	}
+
+	log() {
+		console.log(this.toString())
+	}
+
+	logPath() {
+		console.log(this.getPath().join('/'))
 	}
 }

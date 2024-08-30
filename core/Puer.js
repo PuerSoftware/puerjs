@@ -394,7 +394,7 @@ $.FormDataSource = Library.FormDataSource
 
 $.Reference      = Library.Reference
 $.ReferenceOwner = Library.ReferenceOwner
-$.RouteRoot      = Library.RouteRoot
+$.Route          = Library.Route
 
 $.Constants.$($)
 $.DataSet.$($)
@@ -402,5 +402,6 @@ $.DataSource.$($)
 $.DataStore.$($)
 $.Reference.$($)
 $.Request.$($)
+$.Route.$($)
 
 export default $

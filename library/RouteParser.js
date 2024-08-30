@@ -1,9 +1,14 @@
 
 export default class RouteParser {
 	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789_'
-	static META  = ':[],'
+	static META  = '[],'
 	static VALID_CHARS = RouteParser.ALPHA + RouteParser.META
 
+	/**
+	 * Validate that all characters in the route path are valid.
+	 * @param {string} hash - route path
+	 * @throws {Error} - if the route path contains any invalid characters
+	 */
 	static validateChars(hash) {
 		for (let char of hash) {
 			if (!RouteParser.VALID_CHARS.includes(char)) {
@@ -11,40 +16,43 @@ export default class RouteParser {
 			}
 		}
 	}
+	/**
+	 * @param {string} hash - route path
+	 * @prop {string} s - route path
+	 * @prop {string} c - current char
+	 * @prop {number} n - current position
+	 * @prop {array} a - parsed routes
+	 * @prop {array} routes - parsed routes
+	 * @prop {object} route - current route
+	 * @prop {number} indent - current indent
+	 */
+	constructor(hash) {
+		this.s = hash
+		this.c = this.s[0]
+		this.n = 0
+		this.a = []
 
+		this.routes = this.a
+		this.route  = null
+		this.indent = 0
+	}
 	/********************** PRIVATE ***********************/
 
 	_in(s) {
-		// console.log('+ '.repeat(this.indent), '[', s)
 		this.indent += 1
 	}
 
 	_out(s) {
 		this.indent -= 1
-		// console.log('- '.repeat(this.indent), ']', s)
 	}
 
 	_next() {
-		// console.log(this.c)
 		this.n ++
 		if (this.n < this.s.length) {
 			this.c = this.s[this.n]
 		} else {
 			this.c = null
 		}
-	}
-
-	_reset(s=null) {
-		if (s) {
-			this.c = s[0]
-		}
-		this.s = s
-		this.n = 0
-		this.a = []
-
-		this.routes = this.a
-		this.route  = null
-		this.indent     = 0
 	}
 
 	_error(s) {
@@ -88,46 +96,30 @@ export default class RouteParser {
 
 	_parseSbOpen  () { return this._parseChar('[') }
 	_parseSbClose () { return this._parseChar(']') }
-	_parseCbOpen  () { return this._parseChar('{') }
-	_parseCbClose () { return this._parseChar('}') }
 	_parseComma   () { return this._parseChar(',') }
-	_parseColon   () { return this._parseChar(':') }
-	_parseStar    () { return this._parseChar('*') }
 
-	_parseProps() {
-		if (this._parseCbOpen()) {
-			return true
-		}
-		return false
-	}
 
 	_parseRoute() {
 		const routeName = this._getAlpha()
 		const route     = this.route
 
+		this._parseSpace()
 		if (routeName) {
-			if (this._parseColon()) {
-				const routeValue = this._getAlpha()
-				if (routeValue) {
-					this.route = {
-						name       : routeName,
-						value      : routeValue,
-						routes : []
+			this.route = {
+				name   : routeName,
+				routes : []
+			}
+			let existingIndex = this.routes.findIndex(o => o.name === routeName)
+			if (existingIndex != -1) {
+				this.routes[existingIndex] = this.route
+			} else {
+				this.routes.push(this.route)
+			}
+			if (this._parseSbOpen()) {
+				if (this._parseRoutes()) {
+					if (!this._parseSbClose()) {
+						this._error('Missing "]" at the end of routes clause')
 					}
-					let existingIndex = this.routes.findIndex(o => o.name === routeName)
-					if (existingIndex != -1) {
-						this.routes[existingIndex] = this.route
-					} else {
-						this.routes.push(this.route)
-					}
-					if (this._parseSbOpen()) {
-						if (this._parseRoutes()) {
-							if (!this._parseSbClose()) {
-								this._error('Missing "]" at the end of routes clause')
-							}
-						}
-					}
-					this._parseProps()
 				}
 			}
 			this.route = route
@@ -167,49 +159,20 @@ export default class RouteParser {
 		return result
 	}
 
-	_augmentPath(routes) {
-		routes.getRoute = (name, value=null) => {
-			for (let route of routes) {
-				if (value) {
-					if (route.name === name && route.value === value) {
-						return route
-					}
-				} else {
-					if (route.name === name) {
-						return route
-					}
-				}
-				route = route.routes.getRoute(name, value)
-				if (route) {
-					return route
-				}
-			}
-		}
-		
-		routes.toHash = () => {
-			let hashList = []
-			for (const route of routes) {
-				let hash = `${route.name}:${route.value}`
-				let children = route.routes.toHash()
-				if (children) {
-					hash += `[${children}]`
-				}
-				hashList.push(hash)
-			}
-			return hashList.sort().join(',')
-		}
-		for (const route of routes) {
-			this._augmentPath(route.routes)
-		}
-	}
+	
 
 	/********************** PUBLIC ***********************/
 
-	parse(path) {
-		if (path) {
-			this._reset(path)
+
+	/**
+	 * Parse route string.
+	 * @param {string} [hash] - Route string.
+	 * @returns {array<object>} - Parsed route.
+	 */
+	parse() {
+		if (this.s) {
+			// this._reset(hash)
 			this._parseRoutes()
-			this._augmentPath(this.a)
 			return this.a
 		}
 		return []
