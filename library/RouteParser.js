@@ -1,4 +1,8 @@
+import Route from './Route.js'
 
+/**
+ * Parse route string and convert it to a tree of routes.
+ */
 export default class RouteParser {
 	static ALPHA = 'abcdefghijklmnopqrstuvwxyz0123456789_'
 	static META  = '[],'
@@ -6,7 +10,8 @@ export default class RouteParser {
 
 	/**
 	 * Validate that all characters in the route path are valid.
-	 * @param {string} hash - route path
+	 * @public
+	 * @param  {String} hash - route path
 	 * @throws {Error} - if the route path contains any invalid characters
 	 */
 	static validateChars(hash) {
@@ -16,15 +21,17 @@ export default class RouteParser {
 			}
 		}
 	}
+	
 	/**
-	 * @param {string} hash - route path
-	 * @prop {string} s - route path
-	 * @prop {string} c - current char
-	 * @prop {number} n - current position
-	 * @prop {array} a - parsed routes
-	 * @prop {array} routes - parsed routes
-	 * @prop {object} route - current route
-	 * @prop {number} indent - current indent
+	 * @class
+	 * @param {String} hash   - route path
+	 * @prop  {String} s      - route path
+	 * @prop  {String} c      - current char
+	 * @prop  {Number} n      - current position
+	 * @prop  {Array}  a      - parsed routes
+	 * @prop  {Array}  routes - parsed routes
+	 * @prop  {Object} route  - current route
+	 * @prop  {Number} indent - current indent
 	 */
 	constructor(hash) {
 		this.s = hash
@@ -38,14 +45,26 @@ export default class RouteParser {
 	}
 	/********************** PRIVATE ***********************/
 
-	_in(s) {
+	/**
+	 * Increase indent level.
+	 * @private
+	 */
+	_in() {
 		this.indent += 1
 	}
 
-	_out(s) {
+	/**
+	 * Decrease indent level.
+	 * @private
+	 */
+	_out() {
 		this.indent -= 1
 	}
 
+	/**
+	 * Move to next char.
+	 * @private
+	 */
 	_next() {
 		this.n ++
 		if (this.n < this.s.length) {
@@ -55,12 +74,23 @@ export default class RouteParser {
 		}
 	}
 
+	/**
+	 * Throw an error with given string.
+	 * @private
+	 * @param  {String} s - Error message
+	 * @throws {Error}
+	 */
 	_error(s) {
 		throw Error(s)
 	}
 
 	/********************** GETTER ***********************/
-
+	/**
+	 * Get all alpha characters from current position and move pointer
+	 * to the end of them.
+	 * @private
+	 * @returns {String} - All alpha characters
+	 */
 	_getAlpha() {
 		let s = ''
 		while (RouteParser.ALPHA.includes(this.c)) {
@@ -70,6 +100,11 @@ export default class RouteParser {
 		return s
 	}
 
+	/**
+	 * Get next char without moving pointer.
+	 * @private
+	 * @returns {String|null} - Next char or null if there is no next char.
+	 */
 	_peek() {
 		if (this.n + 1 < this.s.length) {
 			return this.s[this.n + 1]
@@ -79,6 +114,12 @@ export default class RouteParser {
 
 	/********************** PARSER ***********************/
 
+	/**
+	 * Parse given character and move pointer if it matches.
+	 * @private
+	 * @param   {String} c - Character to parse
+	 * @returns {Boolean} - True if character matches, false otherwise
+	 */
 	_parseChar(c) {
 		if (this.c === c) {
 			this._next()
@@ -87,6 +128,11 @@ export default class RouteParser {
 		return false
 	}
 
+	/**
+	 * Skip space characters and move pointer.
+	 * @private
+	 * @returns {Boolean} - Always true
+	 */
 	_parseSpace() {
 		while (this.c == ' ') {
 			this._next()
@@ -94,11 +140,32 @@ export default class RouteParser {
 		return true
 	}
 
+	/**
+	 * Parse opening square bracket and move pointer if it matches.
+	 * @private
+	 * @returns {Boolean} - True if character matches, false otherwise
+	 */
 	_parseSbOpen  () { return this._parseChar('[') }
+
+	/**
+	 * Parse closing square bracket and move pointer if it matches.
+	 * @private
+	 * @returns {Boolean} - True if character matches, false otherwise
+	 */
 	_parseSbClose () { return this._parseChar(']') }
+
+	/**
+	 * Parse comma and move pointer if it matches.
+	 * @private
+	 * @returns {Boolean} - True if character matches, false otherwise
+	 */
 	_parseComma   () { return this._parseChar(',') }
 
-
+	/**
+	 * Parse a route definition.
+	 * @private
+	 * @returns {Boolean} - True if route definition was parsed, false otherwise
+	 */
 	_parseRoute() {
 		const routeName = this._getAlpha()
 		const route     = this.route
@@ -128,6 +195,11 @@ export default class RouteParser {
 		return false
 	}
 
+	/**
+	 * Check if there is another route definition after the current one.
+	 * @private
+	 * @returns {Boolean} - True if there is another route definition, false otherwise
+	 */
 	_expectNextRoute() {
 		this._parseSpace()
 		if (this._parseComma()) {
@@ -140,6 +212,11 @@ export default class RouteParser {
 		return false
 	}
 
+	/**
+	 * Parse all route definitions.
+	 * @private
+	 * @returns {Boolean} - True if at least one route definition was parsed, false otherwise
+	 */
 	_parseRoutes() {
 		let   result     = false
 		const routes = this.routes
@@ -159,22 +236,32 @@ export default class RouteParser {
 		return result
 	}
 
-	
-
 	/********************** PUBLIC ***********************/
-
 
 	/**
 	 * Parse route string.
-	 * @param {string} [hash] - Route string.
-	 * @returns {array<object>} - Parsed route.
+	 * @public
+	 * @returns {Array<Object>} - Parsed route.
 	 */
 	parse() {
 		if (this.s) {
-			// this._reset(hash)
 			this._parseRoutes()
 			return this.a
 		}
 		return []
+	}
+
+	/**
+	 * Parse route string and convert it to a tree of routes.
+	 * @public
+	 * @returns {Route} - Root route of parsed route tree.
+	 */
+	toTree() {
+		return new Route({
+			name      : '',
+			isActive  : true,
+			isDefault : true,
+			routes    : this.parse()
+		})
 	}
 }

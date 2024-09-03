@@ -3,8 +3,6 @@ import PuerProps        from './PuerProps.js'
 import PuerObject       from './PuerObject.js'
 import PuerComponentSet from './PuerComponentSet.js'
 
-import RoutingMixin     from '../library/RoutingMixin.js'
-
 
 export default class BasePuerComponent extends PuerObject {
 	constructor(props, children) {
@@ -26,7 +24,7 @@ export default class BasePuerComponent extends PuerObject {
 		this._isActive  = true
 		this._isHidden  = false
 		this._isRemoved = false
-		
+
 		this.elementCopy       = null
 		this.parentElementCopy = null
 
@@ -35,7 +33,7 @@ export default class BasePuerComponent extends PuerObject {
 
 		$.components[this.id] = this
 
-		this.mixin(RoutingMixin)
+		// this.mixin(RoutingMixin)
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -64,6 +62,19 @@ export default class BasePuerComponent extends PuerObject {
 	__ready() {
 		this._cascade('__ready')
 		this.onReady && this.onReady()
+	}
+
+	__route(activeComponents) {
+		if (activeComponents.has(this)) {
+			if (!this._isActive) {
+				this.activate()
+			}
+		} else {
+			if (this._isActive) {
+				this.deactivate()
+			}
+		}
+		this._cascade('__route', [activeComponents])
 	}
 
 	/******************** CHAIN GETTERS ********************/
@@ -346,21 +357,27 @@ export default class BasePuerComponent extends PuerObject {
 	/********************* DIRECTIVES *********************/
 
 	activate() {
-		if (!this._isActive && this.elementCopy) {
-			this.element = this.elementCopy
-			this.parentElementCopy.appendChild(this.element)
-			this.elementCopy = null
+		if (!this._isActive) { // TODO: refactor
+			if (this.props.route && this.elementCopy) {
+				this.element = this.elementCopy
+				this.parentElementCopy.appendChild(this.element)
+				this.elementCopy = null
+			}
 			this._isActive   = true
+			this.onActivate && this.onActivate()
 		}
 	}
 
-	deactivate() {
+	deactivate() { // TODO: refactor
 		if (this._isActive) {
-			this.elementCopy       = this.element
-			this.parentElementCopy = this.element.parentNode
-			this.element.remove()
-			this.element   = null
+			if (this.props.route) {
+				this.elementCopy = this.element
+				this.parentElementCopy = this.element.parentNode
+				this.element.remove()
+				this.element = null
+			}
 			this._isActive = false
+			this.onDeactivate && this.onDeactivate()
 		}
 	}
 
@@ -410,6 +427,20 @@ export default class BasePuerComponent extends PuerObject {
 			}
 		}
 		mixinClass.init(this, data || {})
+	}
+
+	getDescendants() {
+		if (this.isCustom) {
+			return [this.root]
+		} else {
+			return this.children
+		}
+	}
+
+	getParents() {
+		return this.parent
+			? [this].concat(this.parent.getParents())
+			: [this]
 	}
 
 	/********************* DOM METHODS *********************/
@@ -463,14 +494,6 @@ export default class BasePuerComponent extends PuerObject {
 	setAttribute    (name, value) { return this.element.setAttribute(name, value) }
 	getAttribute    (name)        { return this.element.getAttribute(name)        }
 	removeAttribute (name)        { return this.element.removeAttribute(name)     }
-
-	getDescendants() {
-		if (this.isCustom) {
-			return [this.root]
-		} else {
-			return this.children
-		}
-	}
 
 	append(component) {
 		if ($.isArray(component)) {
@@ -591,4 +614,3 @@ export default class BasePuerComponent extends PuerObject {
 }
 
 BasePuerComponent.prototype.chainName = 'BasePuerComponent'
-

@@ -29,7 +29,7 @@ class PuerApp extends $.Component {
 
 	__ready() {
 		super.__ready()
-		// $.Router.start()
+		$.Router.start()
 		this.props.onReady && this.props.onReady()
 		this.css('display', 'block') // Display after css has loaded
 	}
@@ -43,9 +43,6 @@ class PuerApp extends $.Component {
 		document.addEventListener('keyup', this._onAppKeyUp.bind(this))
 		this.onRender && this.onRender()
 		return this.element
-	}
-	route(path, query=null) {
-		$.Router.navigate(path, query)
 	}
 
 	toTreeString(root, indent='') {
