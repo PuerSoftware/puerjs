@@ -62,23 +62,21 @@ export default class BasePuerComponent extends PuerObject {
 		this.onReady && this.onReady()
 	}
 
-	__route(activeComponents, foundTopmostRoute=false) {
+	__route(activeComponents, isActiveParent=true) {
 		if (this.props.route) {
-			foundTopmostRoute = true
+			isActiveParent = activeComponents.has(this)
 		}
-		if (foundTopmostRoute) {
-			if (activeComponents.has(this)) {
-				if (!this._isActive) {
-					this.activate()
-				}
-			} else {
-				if (this._isActive) {
-					this.deactivate()
-				}
+		if (isActiveParent) {
+			if (!this._isActive) {
+				this.activate()
+			}
+		} else {
+			if (this._isActive) {
+				this.deactivate()
 			}
 		}
 
-		this._cascade('__route', [activeComponents, foundTopmostRoute])
+		this._cascade('__route', [activeComponents, isActiveParent])
 		this.onRoute && this.onRoute($.Router.lastHash, $.Router.lastResolvedHash)
 	}
 

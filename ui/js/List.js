@@ -1,6 +1,4 @@
 import $              from '../../index.js'
-import ListItem       from './ListItem.js'
-import DataOwnerMixin from '../../library/DataOwnerMixin.js'
 
 
 export default class List extends $.Component {

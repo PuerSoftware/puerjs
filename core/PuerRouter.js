@@ -42,16 +42,19 @@ export default class PuerRouter {
 	/********************** PRIVATE ***********************/
 
 	/**
-	 * For the given paths returns components to activate.
+	 * For the given paths returns routing components to activate.
 	 * @private
 	 * @param   {Array<String>} activePaths - Array of paths
 	 * @return  {Set<PuerComponent>}  - Set of active components
 	 */
 	_getActiveComponents(activePaths) {
-		let active = []
+		activePaths = activePaths.map(path => path.split('/'))
+		const active = []
 		for (const path of activePaths) {
-			active = active.concat(this.paths[path].component.getParents())
-			active = active.concat(this.paths[path].component.getSubtreeComponents())
+			for (let i=0; i < path.length; i ++) {
+				const routeKey = path.slice(0, i + 1).join('/')
+				active.push(this.paths[routeKey].component)
+			}
 		}
 		return new Set(active)
 	}
