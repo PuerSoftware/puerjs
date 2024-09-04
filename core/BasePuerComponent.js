@@ -62,17 +62,24 @@ export default class BasePuerComponent extends PuerObject {
 		this.onReady && this.onReady()
 	}
 
-	__route(activeComponents) {
-		if (activeComponents.has(this)) {
-			if (!this._isActive) {
-				this.activate()
-			}
-		} else {
-			if (this._isActive) {
-				this.deactivate()
+	__route(activeComponents, foundTopmostRoute=false) {
+		if (this.props.route) {
+			foundTopmostRoute = true
+		}
+		if (foundTopmostRoute) {
+			if (activeComponents.has(this)) {
+				if (!this._isActive) {
+					this.activate()
+				}
+			} else {
+				if (this._isActive) {
+					this.deactivate()
+				}
 			}
 		}
-		this._cascade('__route', [activeComponents])
+
+		this._cascade('__route', [activeComponents, foundTopmostRoute])
+		this.onRoute && this.onRoute($.Router.lastHash, $.Router.lastResolvedHash)
 	}
 
 	/******************** CHAIN GETTERS ********************/
@@ -454,6 +461,14 @@ export default class BasePuerComponent extends PuerObject {
 		return this.parent
 			? [this].concat(this.parent.getParents())
 			: [this]
+	}
+
+	getSubtreeComponents() {
+		let subtree = [this]
+		for (const child of this.getDescendants()) {
+			subtree = subtree.concat(child.getSubtreeComponents())
+		}
+		return subtree
 	}
 
 	/********************* DOM METHODS *********************/

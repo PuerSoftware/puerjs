@@ -13,42 +13,47 @@ export default class PuerRouter {
 
 	/**
 	 * @class
-	 * @param  {PuerApp}                 app   - Puer application instance
-	 * @prop   {PuerApp}                 app   - Puer application instance
-	 * @prop   {Route}                   tree  - Route tree
-	 * @prop   {Object.<String, Route>}  paths - Lookup object for all routes
-	 * @prop   {Object.<String, String>} query - Query parameters
-	 * @prop   {WaitingQueue}            queue - Waiting queue
-	 * @prop   {Boolean}                 isInitialized - Whether the router is initialized
+	 * @param  {PuerApp}                 app              - Puer application instance
+	 * @prop   {PuerApp}                 app              - Puer application instance
+	 * @prop   {Route}                   tree             - Route tree
+	 * @prop   {Object.<String, Route>}  paths            - Lookup object for all routes
+	 * @prop   {Object.<String, String>} query            - Query parameters
+	 * @prop   {WaitingQueue}            queue            - Waiting queue
+	 * @prop   {String}                  lastHash         - last hash passed to navigate method
+	 * @prop   {String}                  lastResolvedHash - absolute hash resolved from lastHash
+	 * @prop   {Boolean}                 isInitialized    - Whether the router is initialized
 	 * @return {PuerRouter}  - PuerRouter instance
 	 */
 	constructor(app) {
 		if (!PuerRouter.instance) {
-			this.app   = app
-			this.tree  = null
-			this.paths = null
-			this.query = {}
-			this.queue = new WaitingQueue(() => { return !$.isRouting })
-			this.isInitialized = false
-			PuerRouter.instance = this
+			this.app              = app
+			this.tree             = null
+			this.paths            = null
+			this.query            = {}
+			this.queue            = new WaitingQueue(() => { return !$.isRouting })
+			this.lastHash         = null
+			this.lastResolvedHash = null
+			this.isInitialized    = false
+			PuerRouter.instance   = this
 		}
 		return PuerRouter.instance
 	}
 
 	/********************** PRIVATE ***********************/
 
-	/** 
+	/**
 	 * For the given paths returns components to activate.
 	 * @private
 	 * @param   {Array<String>} activePaths - Array of paths
 	 * @return  {Set<PuerComponent>}  - Set of active components
 	 */
 	_getActiveComponents(activePaths) {
-		let parents = []
+		let active = []
 		for (const path of activePaths) {
-			parents = parents.concat(this.paths[path].component.getParents())
+			active = active.concat(this.paths[path].component.getParents())
+			active = active.concat(this.paths[path].component.getSubtreeComponents())
 		}
-		return new Set(parents)
+		return new Set(active)
 	}
 
 	/**
@@ -86,13 +91,14 @@ export default class PuerRouter {
 	/**
 	 * Get all matching absolute paths for the given hash.
 	 * @private
-	 * @param   {String} hash   - The hash to match
-	 * @return  {Array<String>} - The matched paths keys
+	 * @param   {String} hash                    - The hash to match
+	 * @param   {Boolean} [assertDefaults=false] - Whether to assert the default paths (optional, defaults to `true`).
+	 * @return  {Array<String>}                  - The matched paths keys
 	 */
-	_match(hash) {
+	_resolve(hash, assertDefaults=true) {
 		this.tree  = new Route(this.app)
 		this.paths = this.tree.getAllPaths()
-		this.tree.assertDefaults()
+		assertDefaults && this.tree.assertDefaults()
 		return this.tree.match(hash, !this.isInitialized)
 	}
 
@@ -116,16 +122,16 @@ export default class PuerRouter {
 	 * @param   {String} hash - The hash to route to
 	 */
 	_engage(hash) {
-		let paths = this._match(hash)
+		let paths = this._resolve(hash)
 		if (paths.length === 0) {
 			console.warn(`No path found for "${hash}"`)
 			paths = [this.tree.getDefaultPath()]
 		}
-		const normalizedHash = Route.toHash(paths)
-		if (hash === normalizedHash) {
+		this.lastResolvedHash = Route.toHash(paths)
+		if (hash === this.lastResolvedHash) {
 			this._route(paths)
 		} else {
-			this._updateHash(normalizedHash, this.query)
+			this._updateHash(this.lastResolvedHash, this.query)
 		}
 	}
 
@@ -150,6 +156,7 @@ export default class PuerRouter {
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
+			this.lastHash = hash
 			this._engage(hash)
 		}
 	}
@@ -171,6 +178,20 @@ export default class PuerRouter {
 	 */
 	getQueryValue(name) {
 		return this.query[name]
+	}
+
+	/**
+	* Checks if the given relative hash resolves to the specified absolute hash.
+	* @param   {String} relativeHash                  - The relative hash to be resolved.
+	* @param   {String|null} [absoluteHash=null]      - The absolute hash to compare against (optional, defaults to the last resolved hash).
+	* @return  {Boolean}                              - Returns true if the relative hash resolves to the absolute hash, otherwise false.
+	*/
+	doesResolve(relativeHash, absoluteHash=null) {
+		absoluteHash = absoluteHash || this.lastResolvedHash
+		if (relativeHash === this.lastHash && absoluteHash === this.lastResolvedHash) {
+			return true
+		}
+		return absoluteHash === Route.toHash(this._resolve(relativeHash, false))
 	}
 
 	/**

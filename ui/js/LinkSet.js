@@ -8,15 +8,26 @@ export default class LinkSet extends $.Component {
 	}
 
 	select(selected) {
-		for (const link of this.$$.Link) {
-			link.selected = false
-		}
 		this._selectedLink          = selected
 		this._selectedLink.selected = true
 	}
 
 	get selected() {
 		return this._selectedLink
+	}
+
+	onRoute(hash, resolvedHash) {
+		console.log('onRoute', this.isActive)
+		if (this.isActive) {
+			for (const link of this.$$.Link) {
+				const linkHash = link.props.hash
+				if (linkHash && $.Router.doesResolve(linkHash)) {
+					this.select(link)
+				} else {
+					link.selected = false
+				}
+			}
+		}
 	}
 
 	render() {
