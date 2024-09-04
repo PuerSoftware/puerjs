@@ -1,11 +1,11 @@
-class PuerObject {
+export default class PuerObject {
 	constructor() {
 		this.id              = $.String.randomHex(4)
 		this.classProperties = Object.getOwnPropertyNames(this.constructor.prototype)
 		this.className       = this.constructor.name
 		this.isPuerObject    = true
 		this.listeners       = new WeakMap()
-		this._eventListeners = {} // {enventName: [f, ...], ...} | users for off() on remmove() in components 
+		this._eventListeners = {} // {enventName: [f, ...], ...} | users for off() on remmove() in components
 	}
 
 	isInstanceProperty(prop) { return Object.prototype.hasOwnProperty.call(this, prop) }
@@ -151,5 +151,3 @@ class PuerObject {
 }
 
 PuerObject.prototype.chainName = 'PuerObject'
-
-export default PuerObject

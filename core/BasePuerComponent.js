@@ -32,8 +32,6 @@ export default class BasePuerComponent extends PuerObject {
 		this._eventTarget = this
 
 		$.components[this.id] = this
-
-		// this.mixin(RoutingMixin)
 	}
 
 	/********************** FRAMEWORK **********************/
@@ -348,6 +346,21 @@ export default class BasePuerComponent extends PuerObject {
 			}
 		}
 		return false
+	}
+
+	hasPropInTree(prop, idnt='') {
+		let has = false
+		if (this.props[prop]) {
+			has = true
+		} else {
+			for (const child of this.root.children) {
+				if (child.hasPropInTree(prop, idnt + '| ')) {
+					has = true
+					break
+				}
+			}
+		}
+		return has
 	}
 
     isDomEventTarget(e) {

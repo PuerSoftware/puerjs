@@ -1,7 +1,7 @@
 import $ from './Puer.js'
 
 
-class PuerApp extends $.Component {
+export default class PuerApp extends $.Component {
     constructor(props, children) {
 		super(props, children)
 		this.props.default('onReady', () => {})
@@ -29,7 +29,7 @@ class PuerApp extends $.Component {
 
 	__ready() {
 		super.__ready()
-		$.Router.start()
+		this.hasPropInTree('route') && $.Router.start()
 		this.props.onReady && this.props.onReady()
 		this.css('display', 'block') // Display after css has loaded
 	}
@@ -65,4 +65,3 @@ class PuerApp extends $.Component {
 }
 
 $.define(PuerApp)
-export default PuerApp
