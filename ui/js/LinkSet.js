@@ -17,7 +17,6 @@ export default class LinkSet extends $.Component {
 	}
 
 	onRoute(hash, resolvedHash) {
-		console.log('onRoute', this.isActive)
 		if (this.isActive) {
 			for (const link of this.$$.Link) {
 				const linkHash = link.props.hash

@@ -20,7 +20,7 @@ export default class Link extends $.Component {
         if (this.props.href) {
             window.open(this.props.href, this.props.target)
         } else {
-			this.props.hash && $.Router.navigate(this.props.hash, null)
+			this.props.hash && $.Router.navigate(this.props.hash)
         }
 	}
 

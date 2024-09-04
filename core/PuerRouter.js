@@ -130,9 +130,8 @@ export default class PuerRouter {
 		this.lastResolvedHash = Route.toHash(paths)
 		if (hash === this.lastResolvedHash) {
 			this._route(paths)
-		} else {
-			this._updateHash(this.lastResolvedHash, this.query)
 		}
+		this._updateHash(this.lastResolvedHash, this.query)
 	}
 
 	/**
