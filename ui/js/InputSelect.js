@@ -1,8 +1,8 @@
-import $              from '../../index.js'
-import FormInput      from './FormInput.js'
+import $         from '../../index.js'
+import FormInput from './FormInput.js'
 
 
-class InputSelect extends FormInput {
+export default class InputSelect extends FormInput {
 	constructor(props, children) {
 		super(props, children)
 		this.props.default('tagName', 'select')
@@ -24,10 +24,12 @@ class InputSelect extends FormInput {
 	}
 
 	_onDataLoad(data) {
-		this.input.removeChildren()
-		this.addOptions(data)
-		this.hasData = true
-		this.events.change && this.events.change()
+		if (!this.props.isPreviewMode) {
+			this.input.removeChildren()
+			this.addOptions(data)
+			this.hasData = true
+			this.events.change && this.events.change()
+		}
 	}
 
 	addOptions(data) {
@@ -62,18 +64,6 @@ class InputSelect extends FormInput {
 			: ''
 	}
 
-	// reset() {
-	// 	if (this.props.selected) {
-	// 		this.value = this.props.selected
-	// 	} else {
-	// 		if (this.props.allowEmpty) {
-	// 			this.value = '0'
-	// 		} else {
-	// 			this.value = null
-	// 		}
-	// 	}
-	// }
-
 	empty() {
 		this.input.removeChildren()
 		this._options = {}
@@ -90,4 +80,3 @@ class InputSelect extends FormInput {
 }
 
 $.define(InputSelect, import.meta.url)
-export default InputSelect

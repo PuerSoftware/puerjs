@@ -1,7 +1,7 @@
 import $ from '../../index.js'
 
 
-class FormInput extends $.Component {
+export default class FormInput extends $.Component {
 	constructor(props, children) {
 		super(props, children)
 		this.props.require('name')
@@ -165,7 +165,7 @@ class FormInput extends $.Component {
 			this.beforeDiv = $.div('before', beforeProps),
 			this.input,
 			... this.children,
-			this.inPlaceLabel,	
+			this.inPlaceLabel,
 			this.afterDiv = $.div('after', afterProps)
 		]
 		return $.div(children)
@@ -173,4 +173,3 @@ class FormInput extends $.Component {
 }
 
 $.define(FormInput, import.meta.url)
-export default FormInput

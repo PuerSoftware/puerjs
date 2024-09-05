@@ -10,7 +10,9 @@ export default class DataSource extends PuerObject { // TODO: add ORM
 	/**************************************************************/
 
 	static define(name, cls, url, isSingular=false, isCacheable=false, isPreloadable=false) {
-		cls = cls || DataSource
+		if (!cls) {
+			throw Error(`Class for dataSource "${name}" is "${cls}"`)
+		}
 		if (DataSource.hasOwnProperty(name)) {
 			throw `DataSource class already has property "${name}"`
 		}
