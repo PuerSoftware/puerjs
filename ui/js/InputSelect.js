@@ -8,8 +8,16 @@ export default class InputSelect extends FormInput {
 		this.props.default('tagName', 'select')
 		this.props.default('allowEmpty', true)
 
-		this.hasData  = false
-		this._options = {}
+		this.hasData           = false
+		this._previewModeValue = null
+		this._options          = {}
+		this._optionsLabels    = null
+	}
+
+	_updateLabelValue() {
+		if (this.props.isPreviewMode && this._optionsLabels && this._previewModeValue) {
+			this.state.value = this._optionsLabels[this._previewModeValue]
+		}
 	}
 
 	onPropSelectedChange(value) {
@@ -29,6 +37,12 @@ export default class InputSelect extends FormInput {
 			this.addOptions(data)
 			this.hasData = true
 			this.events.change && this.events.change()
+		} else {
+			this._optionsLabels = {}
+			for (const item of data) {
+				this._optionsLabels[item.value] = item.text
+			}
+			this._updateLabelValue()
 		}
 	}
 
@@ -55,6 +69,27 @@ export default class InputSelect extends FormInput {
 		const option = $.option(props)
 		this._options[item.dataId] = option
 		this.input.append(option)
+	}
+
+	set value(value) {
+		if (this.props.isPreviewMode) {
+			this._previewModeValue = value
+			this._updateLabelValue()
+		} else {
+			this.state.value = value
+		}
+		if (this.input) {
+			value            = value || ''
+			const oldValue   = this.input.element.value
+			this.input.element.value = value
+			this._triggerChange(oldValue, value)
+		}
+	}
+
+	get value() {
+		return this.input && this.input.element
+			? this.input.element.value
+			: null
 	}
 
 	get stringValue() {

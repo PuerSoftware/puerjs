@@ -228,7 +228,7 @@ export default class Route {
 
 	/******************************************************************/
 
-	/** 
+	/**
 	 * Get longest paths from hash tree
 	 * @public
 	 * @param  {?String} path - The base path.
