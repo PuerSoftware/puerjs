@@ -9,10 +9,13 @@ export default class PuerAnalytics {
 	static info = {}  // { user_agent: required, ip: optional, user_id: optional, visitor_id: optional}
 
 	static _refreshIp(callback) {
-		$.Request.get(
-			API_URL,
-			callback,
-			{format: 'json'},
+		// $.Request.get(
+		// 	API_URL,
+		// 	callback,
+		// 	{format: 'json'},
+		// )
+		callback(
+			{ip: null},
 			{}
 		)
 	}

@@ -371,7 +371,7 @@ $.PuerEvents  = Core.PuerEvents
 $.Error       = Core.PuerError
 $.HtmlElement = Core.PuerHtmlElement
 $.TextElement = Core.PuerTextElement
-$.Tracking    = Core.PuerTracking
+$.Analytics   = Core.PuerAnalytics
 
 $.init()
 
