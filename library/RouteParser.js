@@ -21,7 +21,7 @@ export default class RouteParser {
 			}
 		}
 	}
-	
+
 	/**
 	 * @class
 	 * @param {String} hash   - route path
@@ -34,6 +34,7 @@ export default class RouteParser {
 	 * @prop  {Number} indent - current indent
 	 */
 	constructor(hash) {
+		RouteParser.validateChars(hash)
 		this.s = hash
 		this.c = this.s[0]
 		this.n = 0
