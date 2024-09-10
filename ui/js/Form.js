@@ -20,6 +20,7 @@ export default class Form extends $.Component {
 		this.form                = null
 		this.inputs              = null
 		this.button              = null
+
 	}
 
 	_onResponse(event) {
@@ -30,6 +31,7 @@ export default class Form extends $.Component {
 				input.field.error = event.detail.errors[input.props.name]
 			}
 		}
+		this.onResponse && this.onResponse(event.detail)
 		if (event.detail.isSaved) {
 			if (event.detail.redirectUri) {
 				window.location.href = event.detail.redirectUri

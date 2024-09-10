@@ -18,8 +18,6 @@ class PuerEvents extends EventTarget {
 			this.isConnected       = false
 			this._listenerMap      = new WeakMap()
 			PuerEvents.instance    = this
-			puer.Event.SYS_CONFIRM = 'SYS_CONFIRM'
-
 		}
 		return PuerEvents.instance
 	}
