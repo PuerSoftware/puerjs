@@ -3,6 +3,7 @@ import {
 	Route,
 	WaitingQueue
 } from '../library/index.js'
+import Puer from './Puer.js'
 
 
 /**
@@ -10,6 +11,8 @@ import {
  */
 export default class PuerRouter {
 	static instance = null
+
+	static DEBUG = true
 
 	/**
 	 * @class
@@ -34,6 +37,7 @@ export default class PuerRouter {
 			this.lastHash         = null
 			this.lastResolvedHash = null
 			this.isInitialized    = false
+			this.DEBUG            = PuerRouter.DEBUG
 			PuerRouter.instance   = this
 		}
 		return PuerRouter.instance
@@ -101,7 +105,7 @@ export default class PuerRouter {
 	_resolve(hash, assertDefaults=true) {
 		this.tree  = new Route(this.app)
 		this.paths = this.tree.getAllPaths()
-		assertDefaults && this.tree.assertDefaults()
+		assertDefaults && this.tree.assertStructure()
 		return this.tree.match(hash, !this.isInitialized)
 	}
 
@@ -114,6 +118,10 @@ export default class PuerRouter {
 	_route(paths) {
 		$.isRouting = true
 		this.app.__route(this._getActiveComponents(paths))
+		if (this.DEBUG) {
+			const tree = new Route(this.app)
+			tree.log()
+		}
 		$.isRouting = false
 	}
 
@@ -125,11 +133,8 @@ export default class PuerRouter {
 	 * @param   {String} hash - The hash to route to
 	 */
 	_engage(hash) {
-		let paths = this._resolve(hash)
-		if (paths.length === 0) {
-			console.warn(`No path found for "${hash}"`)
-			paths = [this.tree.getDefaultPath()]
-		}
+		const paths = this._resolve(hash)
+		this.debugList('Engaging paths', paths)
 		this.lastResolvedHash = Route.toHash(paths)
 		if (hash === this.lastResolvedHash) {
 			this._route(paths)
@@ -158,6 +163,7 @@ export default class PuerRouter {
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
+			this.debug('Navigating to', hash)
 			this.lastHash = hash
 			this._engage(hash)
 		}
@@ -206,5 +212,11 @@ export default class PuerRouter {
 		const hash = this._getCurrentHash()
 		this.navigate(hash)
 		this.isInitialized = true
+	}
+
+	debug() { PuerRouter.DEBUG && console.log(... arguments)        }
+
+	debugList (label, list) {
+		this.debug(`${label}:` + (list.length > 0 ? `\n\t${list.join('\n\t')}` : ' [no results]'))
 	}
 }

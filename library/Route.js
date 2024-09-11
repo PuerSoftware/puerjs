@@ -1,18 +1,13 @@
 import RouteParser from './RouteParser.js'
 
-const DEBUG = false
-
-function debug() {
-	if (DEBUG) {
-		console.log(... arguments)
-	}
-}
 
 /**
  * Routes manager.
  */
 export default class Route {
 	static $($) { window.$ = $ }
+
+	/******************************************************************/
 
 	/**
 	 * Filter all route paths by given hash path.
@@ -21,6 +16,7 @@ export default class Route {
 	 * @returns {Array<String>} - filtered route paths
 	 */
 	static _filterPathsByString(hashPath) {
+		if (hashPath === '') { return [] }
 		const matches = []
 		for (const path of Object.keys($.Router.paths)) {
 			if (`/${path}`.endsWith(`/${hashPath}`)) {
@@ -80,30 +76,51 @@ export default class Route {
 	 */
 	static _matchPath(hashPath, isInitial=false) {
 		let matches  = Route._filterPathsByString(hashPath)
-		debug('_filterPathsByString', hashPath, ':')
-		debug(matches.join('\n'))
+		$.Router.debugList(`_filterPathsByString("${hashPath}")`, matches)
 
 		if (matches.length > 1) {
-			debug(`"${hashPath}" matches more than one path`)
-			debug(matches.join('\n'))
-			debug('Looking for match with best path')
-
+			const oldMatches = matches
 			matches = Route._getBestParentPaths(matches, isInitial)
-
-			debug('_getBestParentPaths:')
-			debug(matches.join('\n'))
+			$.Router.debugList(`_getBestParentPaths([${oldMatches.join(', ')}], ${isInitial}) (found more then one path: choosing one by looking at parents)`, matches)
 		} else if (matches.length === 1) {
-			debug(`"${hashPath}" matches has only one path`)
-			debug(matches[0])
+			$.Router.debug(`"${hashPath}" matches has only one path, skipping _getBestParentPaths:\n\t${matches[0]}`)
 		} else if (matches.length === 0) {
 			return []
 		}
-
 		matches = Route._getBestChildPaths(matches)
-		debug('_getBestChildPaths:')
-		debug(matches.join('\n'))
+		$.Router.debugList(`_getBestChildPaths([${matches.join(', ')}]) (Completing paths with children)`, matches)
 		return matches
 	}
+
+	/**
+	 * @private
+	 * @param {Array<String>} oldActivePaths - active paths before navigation
+	 * @param {Array<String>} newActivePaths - active paths after matching
+	 *
+	 * @returns {Array<String>} - updated paths to activate
+	 */
+	static _addPreviouslyActivePaths(oldActivePaths, newActivePaths) {
+		const matches = []
+		for (const oldActivePath of oldActivePaths) {
+			const oldActiveRouteSets = new Set($.Router.paths[oldActivePath]._getRouteSets())
+			let   intersects = false
+			for (const newActivePath of newActivePaths) {
+				const newActiveRouteSets = new Set($.Router.paths[newActivePath]._getRouteSets())
+				const commonRouteSets    = newActiveRouteSets.intersection(oldActiveRouteSets)
+				if (commonRouteSets.size > 0) {
+					intersects = true
+					break
+				}
+			}
+			if (!intersects) {
+				matches.push(oldActivePath)
+			}
+		}
+		$.Router.debugList('_addPreviouslyActivePaths', matches)
+		return newActivePaths.concat(matches)
+	}
+
+	/******************************************************************/
 
 	/**
 	 * @public
@@ -141,6 +158,8 @@ export default class Route {
 			: tail
 	}
 
+	/******************************************************************/
+
 	/**
 	 * Constructs a new instance of Route.
 	 * @class
@@ -150,8 +169,9 @@ export default class Route {
 	 * @prop  {BasePuerComponent} component   - The component reference associated with the route.
 	 * @prop  {String}            name        - The name of the route.
 	 * @prop  {String}            path        - The path of the route.
-	 * @prop  {Boolean}           _isDefault  - Whether the route is the default route.
-	 * @prop  {Boolean}           _isActive   - Whether the route is the active route.
+	 * @prop  {Boolean}           _isDefault  - Whether the route is a default route.
+	 * @prop  {Boolean}           _isRouteSet - Whether the route is a route set.
+	 * @prop  {Boolean}           _isActive   - Whether the route is an active route.
 	 * @prop  {Array<Route>}      routes      - The array of routes.
 	 */
 	constructor(component, parentRoute=null) {
@@ -160,11 +180,14 @@ export default class Route {
 		this.name       = component.props ? component.props.route : component.name
 		this.path       = null
 
-		this._isDefault = !parentRoute || Boolean(component.props ? component.props.isDefaultRoute : component.isDefault)
-		this._isActive  = !parentRoute || Boolean(component._isActive || component.isActive)
+		this._isDefault  = !parentRoute || Boolean(component.props ? component.props.isDefaultRoute : component.isDefault)
+		this._isRouteSet = !parentRoute || Boolean(component.props ? component.props.isRouteSet     : component.isRouteSet)
+		this._isActive   = !parentRoute || Boolean(component._isActive || component.isActive)
 
 		this.routes     = this._getRoutes(component)
 	}
+
+	/******************************************************************/
 
 	/**
 	 * Recursively iterates over component tree and/or the routes hash and
@@ -190,8 +213,56 @@ export default class Route {
 				routes.push(new Route(child, this))
 			}
 		}
-
 		return routes
+	}
+
+	/**
+	 * @private
+	 * @returns {Array<String>} - list of default paths
+	*/
+	_getDefaultPaths() {
+		const paths   = this.getPaths()
+		const matches = []
+
+		for (const path of paths) {
+			if ($.Router.paths[path].isDefault()) {
+				matches.push(path)
+			}
+		}
+		return matches
+	}
+
+	/**
+	 * @private
+	 * @returns {Array<String>} - list of active paths
+	*/
+	_getActivePaths() {
+		const paths   = this.getPaths()
+		const matches = []
+
+		for (const path of paths) {
+			if ($.Router.paths[path]._isActive) {
+				matches.push(path)
+			}
+		}
+		return matches
+	}
+
+	/**
+	 * @private
+	 * @param {Array<String>} [matches=null]- for recursive purposes
+	 * @returns {Array<String>} - list of paths for ancestral route sets
+	 */
+	_getRouteSets(matches = null) {
+		matches = matches || []
+
+		if (this.parent) {
+			if (this._isRouteSet) {
+				matches.push(this.path)
+			}
+			matches = matches.concat(this.parent._getRouteSets())
+		}
+		return matches
 	}
 
 	/**
@@ -229,7 +300,7 @@ export default class Route {
 	/******************************************************************/
 
 	/**
-	 * Get longest paths from hash tree
+	 * Get the longest paths from hash tree
 	 * @public
 	 * @param  {?String} path - The base path.
 	 * @return {Array<String>} - The array of paths.
@@ -273,20 +344,6 @@ export default class Route {
 	}
 
 	/**
-	 * Get the default path from component tree.
-	 * @public
-	 * @returns {String} - The default path.
-	 */
-	getDefaultPath() {
-		for (const route of this.routes) {
-			if (route._isDefault) {
-				return route.getDefaultPath()
-			}
-		}
-		return this.path
-	}
-
-	/**
 	 * Check if this route is default in the route set.
 	 * The route is default if it is default in its own route set and all
 	 * its parent routes are default.
@@ -295,31 +352,43 @@ export default class Route {
 	 */
 	isDefault() {
 		if (this.parent) {
-			return Boolean(this._isDefault && this.parent.isDefault())
+			return Boolean((this._isDefault || this._isRouteSet) && this.parent.isDefault())
 		}
 		return this._isDefault
 	}
 
 	/**
 	 * Assert that there is only one default route in the route set.
+	 * Assert that route set is not set as default.
 	 * @public
-	 * @throws {Error} - If there is not exactly one default route.
+	 * @throws {Error}
 	 */
-	assertDefaults() {
-		const defaults   = []
-		let defaultCount = 0
-		for (const route of this.routes) {
-			route.assertDefaults()
-			defaults.push(
-				`\t${route.component.className} route: "${route.name}" is ${route._isDefault ? '' : 'not'} default.`
-			)
-			route._isDefault && defaultCount ++
-		}
+	assertStructure() {
+		const defaults  = []
+		const routeSets = []
 
-		if ((this.routes.length > 0) && (defaultCount > 1 || defaultCount === 0)) {
-			throw Error(
-				`Routing set must have one and only one default. Found ${defaultCount}:\n${defaults.join('\n')}`
-			)
+		for (const route of this.routes) {
+			route.assertStructure()
+			if (route._isDefault)  { defaults.push(route.name) }
+			if (route._isRouteSet) { routeSets.push(route.name) }
+			if (route._isDefault && route._isRouteSet) {
+				throw Error(`Routing set "${route.name}" can not be set as default.`)
+			}
+		}
+		if (this.routes.length > 0) {
+			const defaultsString = defaults.join(', ')
+			const routeSetsString = routeSets.join(', ')
+			if (defaults.length && routeSets.length) {
+				throw Error(`Route sets and defaults can not occupy the same level:
+					\n\tDefaults: ${defaultsString}
+					\n\tRoute sets: ${routeSetsString}`
+				)
+			}
+			if (!routeSets.length && (defaults.length === 0 || defaults.length > 1)) {
+				throw Error(`Routing set must have one and only one default. Found ${defaults.length}:
+					\n\t${defaultsString}`
+				)
+			}
 		}
 	}
 
@@ -328,10 +397,12 @@ export default class Route {
 	 * @public
 	 * @param  {String}  hash      - The hash to match against.
 	 * @param  {Boolean} isInitial - If true, the match is for the initial route.
-	 * @return {Array<Object>}     - An array of matches.
+	 * @return {Array<String>}     - An array of matches.
 	 */
 	match(hash, isInitial=false) {
-		debug(this.toString())
+		const oldActivePaths = this._getActivePaths()
+		$.Router.DEBUG && this.log()
+		$.Router.debug(`Matching "${hash}"`)
 		const hashTree    = new RouteParser(hash).toTree()
 		const hashPaths   = hashTree.getPaths()
 
@@ -341,7 +412,12 @@ export default class Route {
 			matches = matches.concat(Route._matchPath(hashPath, isInitial))
 		}
 
-		return matches
+		if (matches.length === 0) {
+			$.Router.debug('No matches found, using default paths')
+			matches = this._getDefaultPaths()
+			$.Router.debugList('_getDefaultPaths', matches)
+		}
+		return Route._addPreviouslyActivePaths(oldActivePaths, matches)
 	}
 
 	/**
@@ -374,15 +450,32 @@ export default class Route {
 	 * Logs a string representation of the route to the console.
 	 * @public
 	 */
-	log() {
-		debug(this.toString())
-	}
+	log(node=null, indent='', last=true) {
+		node = node || this
 
-	/**
-	 * Logs the path of the route to the console.
-	 * @public
-	 */
-	logPath() {
-		debug(this.path)
+		let style  = node._isDefault  ? 'text-decoration: underline; font-weight:bold;' : ''
+		    style += node._isActive   ? 'color: yellow;'                                : ''
+		    style += node._isRouteSet ? 'text-decoration: underline; font-weight:bold;' : ''
+
+		let prefix     = indent === '' ? '  ' : last ? '└─ ' : '├─ '
+		let name = node.name || 'App'
+		let label      = node._isRouteSet ? `[${name}]` : name
+		let line       = `%c${indent}${prefix}%c${label}\n`
+		let styles     = ['', style]
+		let nextIndent = last ? `${indent}    ` : `${indent}│   `
+		let newLine, newStyles
+
+		if (node.routes && node.routes.length) {
+			node.routes.forEach((child, index, arr) => {
+				[newLine, newStyles] = this.log(child, nextIndent, index === arr.length - 1)
+				line += newLine
+				styles = styles.concat(newStyles)
+			})
+		}
+
+		if (indent === '') {
+			console.log(line, ... styles)
+		}
+		return [line, styles]
 	}
 }
