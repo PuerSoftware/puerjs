@@ -1,9 +1,9 @@
 import $ from './Puer.js'
 import {
 	Route,
+	RouteParser,
 	WaitingQueue
 } from '../library/index.js'
-import Puer from './Puer.js'
 
 
 /**
@@ -200,6 +200,20 @@ export default class PuerRouter {
 			return true
 		}
 		return absoluteHash === Route.toHash(this._resolve(relativeHash, false))
+	}
+
+	/**
+	 * Checks if the given relative hash contains in the specified absolute hash.
+	 * @param   {String} relativeHash                  - The relative hash to be resolved.
+	 * @param   {String|null} [absoluteHash=null]      - The absolute hash to compare against (optional, defaults to the last resolved hash).
+	 * @return  {Boolean}                              - Returns true if the relative hash resolves to the absolute hash, otherwise false.
+	 */
+	doesContain(relativeHash, absoluteHash=null) {
+		absoluteHash = absoluteHash || this.lastResolvedHash
+		const relatives = new Set(Object.keys((new RouteParser(relativeHash)).toTree().getAllPaths()))
+		const absolutes = new Set(Object.keys((new RouteParser(absoluteHash)).toTree().getAllPaths()))
+
+		return absolutes.intersection(relatives).size === relatives.size
 	}
 
 	/**

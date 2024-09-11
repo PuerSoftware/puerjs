@@ -20,7 +20,7 @@ export default class LinkSet extends $.Component {
 		if (this.isActive) {
 			for (const link of this.$$.Link) {
 				const linkHash = link.props.hash
-				if (linkHash && $.Router.doesResolve(linkHash)) {
+				if (linkHash && ($.Router.doesContain(linkHash) || $.Router.doesResolve(linkHash))) {
 					this.select(link)
 				} else {
 					link.selected = false

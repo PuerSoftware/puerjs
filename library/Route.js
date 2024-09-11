@@ -285,7 +285,7 @@ export default class Route {
 					return [route.path]
 				}
 			}
-		} else if (this._isDefault) {
+		} else if (this._isDefault || this._isRouteSet) {
 			for (const route of this.routes) {
 				if (route.routes.length) {
 					matches = matches.concat(route._getActiveAndDefaultChildPaths())
