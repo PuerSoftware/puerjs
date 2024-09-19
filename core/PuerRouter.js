@@ -12,7 +12,7 @@ import {
 export default class PuerRouter {
 	static instance = null
 
-	static DEBUG = true
+	static DEBUG = false
 
 	/**
 	 * @class

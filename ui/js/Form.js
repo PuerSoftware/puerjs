@@ -9,6 +9,8 @@ export default class Form extends $.Component {
 		this.props.default('subtitle',         '')
 		this.props.default('buttonLabel',      'Submit')
 		this.props.default('autocomplete',     'off')
+		this.props.default('readOnly',         false)
+		this.props.default('isPreviewMode',    false)
 		this.props.default('doClearOnSave',    false)
 		this.props.default('hasButton',        true)
 		this.props.default('saveNotification', 'Form saved successfully!')

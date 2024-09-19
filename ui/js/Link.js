@@ -4,6 +4,7 @@ import $ from '../../index.js'
 export default class Link extends $.Component {
 	constructor(... args) {
 		super(... args)
+		this.props.default('navigateOnClick', true)
 		this.props.default('selected', false)
 		this.props.default('label', '')
 		this.props.default('hash', '')
@@ -13,15 +14,17 @@ export default class Link extends $.Component {
 
 	_navigate(e) {
 		this.props.stopPropagation && e.stopPropagation()
-		this.trigger($.Event.CLICK, {
-			data: {},
-			name: this.name
-		})
-        if (this.props.href) {
-            window.open(this.props.href, this.props.target)
-        } else {
-			this.props.hash && $.Router.navigate(this.props.hash)
-        }
+		if (this.props.navigateOnClick ) {
+			this.trigger($.Event.CLICK, {
+				data: {},
+				name: this.name
+			})
+			if (this.props.href) {
+				window.open(this.props.href, this.props.target)
+			} else {
+				this.props.hash && $.Router.navigate(this.props.hash)
+			}
+		}
 	}
 
 	set selected(select) {

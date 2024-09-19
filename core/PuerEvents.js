@@ -38,6 +38,16 @@ class PuerEvents extends EventTarget {
 		// }
 	}
 
+	_compileMeta() {
+		const data    = {'user_agent' : navigator.userAgent}
+		const cookies = document.cookie.split(';')
+		cookies.forEach(cookie => {
+			const [key, value] = cookie.split('=')
+			data[key.trim()] = decodeURIComponent(value)
+		})
+		return data
+	}
+
 	/*********************** PUBLIC ***********************/
 
 	connect(endpoint, onOpen=null, onClose=null) {
@@ -110,7 +120,11 @@ class PuerEvents extends EventTarget {
 			}
 		} else {
 			console.log('Sent event:', name, data)
-			this.socket.send(JSON.stringify({ 'name' : name, 'data' : data }))
+			this.socket.send(JSON.stringify({
+				'name' : name,
+				'data' : data,
+				'meta' : this._compileMeta()
+			}))
 		}
 	}
 
