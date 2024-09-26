@@ -147,6 +147,7 @@ export default class PuerRouter {
 		const paths = this._resolve(hash)
 
 		this.lastResolvedHash = Route.toHash(paths)
+		console.log(hash, this.lastResolvedHash)
 
 		this.debugList('Engaging paths', paths)
 
@@ -240,7 +241,7 @@ export default class PuerRouter {
 	 */
 	start() {
 		window.addEventListener('hashchange', this._onHashChange.bind(this))
-		this._engage()
+		this.navigate()
 	}
 
 	debug() { PuerRouter.DEBUG && console.log(... arguments)        }
