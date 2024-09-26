@@ -64,21 +64,29 @@ export default class PuerRouter {
 	}
 
 	/**
-	 * Gets the current hash of the page and parses its query string.
-	 * Sets prop query.
+	 * Gets the current hash of the page.
 	 * @private
 	 * @return {String} - The hash value
 	 */
 	_getCurrentHash() {
+		let hash = window.location.hash.split('#')[1] || ''
+		return decodeURIComponent(hash.split('?')[0])
+	}
+
+	/**
+	 * Gets the current query object from the hash
+	 * Sets prop query.
+	 * @private
+	 * @return {String} - The hash value
+	 */
+	_getCurrentQuery() {
 		let hash = window.location.hash.split('#')[1]
 		let query = ''
 		if (hash) {
 			[hash, query] = hash.split('?')
-			hash = hash || decodeURIComponent(hash)
-			query = $.String.fromQuery(query)
+			query = $.String.fromQueryString(query)
 		}
-		this.query = query || {}
-		return hash || ''
+		return query || {}
 	}
 
 	/**
@@ -88,7 +96,7 @@ export default class PuerRouter {
 	 * @param   {Object} query - The query string object
 	 */
 	_updateHash(hash, query) {
-		const queryString = $.String.toQuery(query)
+		const queryString = $.String.toQueryString(query)
 		query = queryString
 			? '?' + queryString
 			: ''
@@ -117,6 +125,7 @@ export default class PuerRouter {
 	 */
 	_route(paths) {
 		$.isRouting = true
+		this.isInitialized = true
 		this.app.__route(this._getActiveComponents(paths))
 		if (this.DEBUG) {
 			const tree = new Route(this.app)
@@ -132,14 +141,18 @@ export default class PuerRouter {
 	 * @private
 	 * @param   {String} hash - The hash to route to
 	 */
-	_engage(hash) {
+	_engage() {
+		const hash  = this._getCurrentHash()
+		const query = this._getCurrentQuery()
 		const paths = this._resolve(hash)
-		this.debugList('Engaging paths', paths)
+
 		this.lastResolvedHash = Route.toHash(paths)
-		if (hash === this.lastResolvedHash) {
+
+		this.debugList('Engaging paths', paths)
+
+		if (hash === this.lastResolvedHash) { // hash was not default
 			this._route(paths)
 		}
-		this._updateHash(this.lastResolvedHash, this.query)
 	}
 
 	/**
@@ -148,7 +161,7 @@ export default class PuerRouter {
 	 * @param {Event} e - The hashchange event
 	 */
 	_onHashChange(e) {
-		this._engage(this._getCurrentHash())
+		this._engage()
 	}
 
 	/*********************** PUBLIC ***********************/
@@ -159,14 +172,18 @@ export default class PuerRouter {
 	 * @param {String} hash  - The relative hash to route to
 	 * @param {Object} query - The query object to set
 	 */
-	navigate(hash, query=null) {
-		if (!this.queue.isDone()) {
-			this.queue.enqueue(this.navigate, this, [hash, query]).start()
-		} else {
-			this.debug('Navigating to', hash)
-			this.lastHash = hash
-			this._engage(hash)
-		}
+	navigate(hash=null, query=null) {
+		hash  = hash  || this._getCurrentHash()
+		query = query || this._getCurrentQuery()
+		// if (!this.queue.isDone()) {
+			// console.log('queue', hash, query)
+			// this.queue.enqueue(this.navigate, this, [hash, query]).start()
+		// } else {
+			this.debug('Navigating to', hash, query)
+			this.lastHash         = hash
+			this.lastResolvedHash = Route.toHash(this._resolve(hash))
+			this._updateHash(this.lastResolvedHash, query)
+		// }
 	}
 
 	/**
@@ -223,9 +240,7 @@ export default class PuerRouter {
 	 */
 	start() {
 		window.addEventListener('hashchange', this._onHashChange.bind(this))
-		const hash = this._getCurrentHash()
-		this.navigate(hash)
-		this.isInitialized = true
+		this._engage()
 	}
 
 	debug() { PuerRouter.DEBUG && console.log(... arguments)        }

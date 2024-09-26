@@ -70,6 +70,22 @@ class DateMethods {
 	    }
 	}
 
+	static formatShort(isoDateString) { // Aug 21, '24, 1:02 PM
+		const optionsDate = {
+			year: '2-digit',
+			month: 'short',
+			day: 'numeric'
+		}
+		const optionsTime = {
+			hour: 'numeric',
+			minute: 'numeric',
+			hour12: true
+		}
+		const date = new Date(isoDateString)
+		const formattedDate = date.toLocaleDateString('en-US', optionsDate) + ', ' + date.toLocaleTimeString('en-US', optionsTime)
+		return formattedDate
+	}
+
 	static intlMonthYear(date, code='en-US') { // TODO: rename this method
 		date = DateMethods._dateToMilliSeconds(date)
 		date = new Date(date)

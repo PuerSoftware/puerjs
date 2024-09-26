@@ -199,7 +199,7 @@ export default class DataListMixin {
 
 	onDataInit() {} // items are available
 
-	onRoute(routes) {
+	onRoute() {
 		if (this.isActive && this.isInitialized) {
 			this._handleQueryKey()
 			this._ensureSelection()

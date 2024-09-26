@@ -49,7 +49,7 @@ class Request {
 					conf.body = data
 				}
 			} else {
-				url = url + '?' + $.String.toQuery(data)
+				url = url + '?' + $.String.toQueryString(data)
 			}
 		}
 

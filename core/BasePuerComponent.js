@@ -77,7 +77,7 @@ export default class BasePuerComponent extends PuerObject {
 		}
 
 		this._cascade('__route', [activeComponents, isActiveParent])
-		this.onRoute && this.onRoute($.Router.lastHash, $.Router.lastResolvedHash)
+		this.onRoute && this.onRoute()
 	}
 
 	/******************** CHAIN GETTERS ********************/
@@ -374,21 +374,23 @@ export default class BasePuerComponent extends PuerObject {
 
 	/********************* DIRECTIVES *********************/
 
-	activate() {
+	activate(force = false) {
 		if (!this._isActive) { // TODO: refactor
-			if (this.props.route && this.elementCopy) {
-				this.element = this.elementCopy
-				this.parentElementCopy.appendChild(this.element)
-				this.elementCopy = null
+			if (this.props.route || force) {
+				if (this.elementCopy) {
+					this.element = this.elementCopy
+					this.parentElementCopy.appendChild(this.element)
+					this.elementCopy = null
+				}
 			}
 			this._isActive   = true
 			this.onActivate && this.onActivate()
 		}
 	}
 
-	deactivate() { // TODO: refactor
+	deactivate(force = false) { // TODO: refactor
 		if (this._isActive) {
-			if (this.props.route) {
+			if (this.props.route || force) {
 				this.elementCopy = this.element
 				this.parentElementCopy = this.element.parentNode
 				this.element.remove()

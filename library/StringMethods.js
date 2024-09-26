@@ -112,7 +112,7 @@ class StringMethods {
 		return result
 	}
 
-	static toQuery(o, array_encoder=null) {
+	static toQueryString(o, array_encoder=null) {
 		const params = new URLSearchParams()
 		for (const key in o) {
 			if (Array.isArray(o[key]) && array_encoder) {
@@ -125,8 +125,8 @@ class StringMethods {
 		return params.toString()
 	}
 
-	static fromQuery(q) {
-		return Object.fromEntries(new URLSearchParams(q))
+	static fromQueryString(q) {
+		return q ? Object.fromEntries(new URLSearchParams(q)) : {}
 	}
 }
 

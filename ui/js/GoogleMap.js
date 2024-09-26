@@ -50,7 +50,7 @@ export default class GoogleMap extends $.Component {
 	}
 
 	_loadApi() {
-		const query = $.String.toQuery({
+		const query = $.String.toQueryString({
 			key       : this.props.apiKey,
 			map_ids   : this.props.mapIds.join(','),
 			loading   : 'async',
