@@ -147,8 +147,6 @@ export default class PuerRouter {
 		const paths = this._resolve(hash)
 
 		this.lastResolvedHash = Route.toHash(paths)
-		console.log(hash, this.lastResolvedHash)
-
 		this.debugList('Engaging paths', paths)
 
 		if (hash === this.lastResolvedHash) { // hash was not default
@@ -176,10 +174,10 @@ export default class PuerRouter {
 	navigate(hash=null, query=null) {
 		hash  = hash  || this._getCurrentHash()
 		query = query || this._getCurrentQuery()
-		// if (!this.queue.isDone()) {
-			// console.log('queue', hash, query)
-			// this.queue.enqueue(this.navigate, this, [hash, query]).start()
-		// } else {
+
+		if (!this.queue.isDone()) {
+			this.queue.enqueue(this.navigate, this, [hash, query]).start()
+		} else {
 			this.debug('Navigating to', hash, query)
 			this.lastHash         = hash
 			this.lastResolvedHash = Route.toHash(this._resolve(hash))
@@ -187,7 +185,7 @@ export default class PuerRouter {
 			if (!this.isInitialized) {
 				this._engage()
 			}
-		// }
+		}
 	}
 
 	/**
