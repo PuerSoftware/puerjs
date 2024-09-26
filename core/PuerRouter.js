@@ -184,6 +184,9 @@ export default class PuerRouter {
 			this.lastHash         = hash
 			this.lastResolvedHash = Route.toHash(this._resolve(hash))
 			this._updateHash(this.lastResolvedHash, query)
+			if (!this.isInitialized) {
+				this._engage()
+			}
 		// }
 	}
 
