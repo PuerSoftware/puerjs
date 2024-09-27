@@ -11,7 +11,6 @@ class Modal extends $.Component {
 		const isHidden = this.isHidden
 		super.hide()
 		if (!isHidden) {
-			console.log('modal hide')
 			this.trigger($.Event.MODAL_HIDE)
 		}
 	}
@@ -20,7 +19,6 @@ class Modal extends $.Component {
 		const isShown = !this.isHidden
 		super.show()
 		if (!isShown) {
-			console.log('modal show')
 			this.trigger($.Event.MODAL_SHOW)
 		}
 	}

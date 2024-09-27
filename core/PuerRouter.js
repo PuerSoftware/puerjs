@@ -146,8 +146,6 @@ export default class PuerRouter {
 		const query = this._getCurrentQuery()
 		const paths = this._resolve(hash)
 
-		console.log('Engaging', hash, query)
-
 		this.lastResolvedHash = Route.toHash(paths)
 		this.query            = query
 		this.debugList('Engaging paths', paths)
@@ -182,7 +180,6 @@ export default class PuerRouter {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
 			this.debug('Navigating to', hash, query)
-			console.log('Navigating to', hash, query)
 			this.lastHash         = hash
 			this.lastResolvedHash = Route.toHash(this._resolve(hash))
 			this.query            = query

@@ -107,6 +107,7 @@ class Puer {
 		if (props.text && this.isString(props.text)) {
 			props.text = this.String.decodeHtmlEntities(props.text)
 		}
+		children = children.filter(child => child !== null)
 		props.classes = this._toClassesArray(props.classes)
 		cssClass      = this._toClassesArray(cssClass)
 		props.classes = props.classes.concat(cssClass)
