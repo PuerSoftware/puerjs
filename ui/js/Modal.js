@@ -7,13 +7,27 @@ class Modal extends $.Component {
 		this.props.default('canClose', true)
 	}
 
-	_hide(e) {
-		this.hide()
+	hide() {
+		const isHidden = this.isHidden
+		super.hide()
+		if (!isHidden) {
+			console.log('modal hide')
+			this.trigger($.Event.MODAL_HIDE)
+		}
+	}
+
+	show() {
+		const isShown = !this.isHidden
+		super.show()
+		if (!isShown) {
+			console.log('modal show')
+			this.trigger($.Event.MODAL_SHOW)
+		}
 	}
 
 	render() {
 		const closeBtn = this.props.canClose
-			? $.button('close-btn', {text: 'x', onclick: this._hide})
+			? $.button('close-btn', {text: 'x', onclick: this.hide})
 			: $.div('hidden')
 
 		return $.div('hidden', [

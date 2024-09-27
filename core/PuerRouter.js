@@ -146,7 +146,10 @@ export default class PuerRouter {
 		const query = this._getCurrentQuery()
 		const paths = this._resolve(hash)
 
+		console.log('Engaging', hash, query)
+
 		this.lastResolvedHash = Route.toHash(paths)
+		this.query            = query
 		this.debugList('Engaging paths', paths)
 
 		if (hash === this.lastResolvedHash) { // hash was not default
@@ -173,14 +176,16 @@ export default class PuerRouter {
 	 */
 	navigate(hash=null, query=null) {
 		hash  = hash  || this._getCurrentHash()
-		query = query || this._getCurrentQuery()
+		query = query || {}
 
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
 			this.debug('Navigating to', hash, query)
+			console.log('Navigating to', hash, query)
 			this.lastHash         = hash
 			this.lastResolvedHash = Route.toHash(this._resolve(hash))
+			this.query            = query
 			this._updateHash(this.lastResolvedHash, query)
 			if (!this.isInitialized) {
 				this._engage()
@@ -205,6 +210,27 @@ export default class PuerRouter {
 	 */
 	getQueryValue(name) {
 		return this.query[name]
+	}
+
+	/**
+	 * Clears mentioned param names in query, if none – clears all.
+	 * @param  {...String} names - The query parameter names
+	 */
+	removeQueryValues(... names) {
+		for (const name in this.query) {
+			if (names.includes(name) || names.length === 0) {
+				delete this.query[name]
+			}
+		}
+		this.navigate(null, this.query)
+	}
+
+	/**
+	 * Adds given key value pairs into the query
+	 * @param  {Object} query - The query object
+	 */
+	addQueryValues(query) {
+		this.navigate(null, Object.assign(this.query, query))
 	}
 
 	/**

@@ -136,6 +136,7 @@ export default class PuerObject {
 	}
 
 	trigger(name, data) {
+		data = data || {}
 		if (this.isActiveEventTarget) {
 			data.target     = this
 			data.targetName = this.name || null

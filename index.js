@@ -124,4 +124,7 @@ $.Events.define('MAP_MARKER_SELECT',      ['data'])
 $.Events.define('MAP_MARKER_OVER',        ['data'])
 $.Events.define('MAP_MARKER_OUT',         ['data'])
 
+$.Events.define('MODAL_SHOW',             [])
+$.Events.define('MODAL_HIDE',             [])
+
 export default $

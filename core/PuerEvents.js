@@ -103,6 +103,7 @@ class PuerEvents extends EventTarget {
 	}
 
 	trigger(name, detail) {
+		detail = detail || {}
 		if (!this.innerQueue.isDone()) {
 			this.innerQueue.enqueue(this.trigger, this, [name, detail]).start()
 		} else {
