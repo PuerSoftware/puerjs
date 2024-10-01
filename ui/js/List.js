@@ -45,7 +45,7 @@ export default class List extends $.Component {
 					this._selectedId = itemId
 					item.select()
 				} else {
-					item  && item.deselect()
+					item && item.deselect()
 				}
 			}
 		}

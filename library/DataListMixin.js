@@ -90,11 +90,12 @@ export default class DataListMixin {
 	}
 
 	_handleQueryKey() {
-		const dataId = $.isFunction(this.props.queryKey)
+		const dataId = Number($.isFunction(this.props.queryKey)
 			? this.props.queryKey(this)
-			: $.Router.getQueryValue(this.props.queryKey)
+			: $.Router.getQueryValue(this.props.queryKey))
 		if (dataId) {
-			this.items[parseInt(dataId)]._select()
+			this.items[dataId]._select()
+			this._selectedId = dataId
 		}
 	}
 
@@ -202,7 +203,7 @@ export default class DataListMixin {
 	onRoute() {
 		if (this.isActive && this.isInitialized) {
 			this._handleQueryKey()
-			// this._ensureSelection()
+			this._ensureSelection()
 			// Results in bug - item double selected when handling query key
 		}
 	}
