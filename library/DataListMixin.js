@@ -7,7 +7,7 @@ export default class DataListMixin {
 
 	static init(component, data) {
 		component.mixin(DataOwnerMixin, data)
-		component.props.default('searchName',  null)   // if not set search is inactive
+		component.props.default('searchName',  null)    // if not set search is inactive
 		component.props.default('queryKey',   'dataId') // key from url query to select item
 
 		component.isInitialized = false
@@ -202,7 +202,8 @@ export default class DataListMixin {
 	onRoute() {
 		if (this.isActive && this.isInitialized) {
 			this._handleQueryKey()
-			this._ensureSelection()
+			// this._ensureSelection()
+			// Results in bug - item double selected when handling query key
 		}
 	}
 

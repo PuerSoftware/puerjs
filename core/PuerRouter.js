@@ -174,7 +174,7 @@ export default class PuerRouter {
 	 */
 	navigate(hash=null, query=null) {
 		hash  = hash  || this._getCurrentHash()
-		query = query || {}
+		query = query || this._getCurrentQuery()
 
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
@@ -201,12 +201,17 @@ export default class PuerRouter {
 	}
 
 	/**
-	 * Returns the value of the given query parameter.
-	 * @param  {String} name - The query parameter name
-	 * @return {String}      - The value of the query parameter
+	 * Returns the value of the given query parameter and maybe removes it from url.
+	 * @param  {String}  name   - The query parameter name
+	 * @param  {Boolean} remove - Remove value from query?
+	 * @return {String}         - The value of the query parameter
 	 */
-	getQueryValue(name) {
-		return this.query[name]
+	getQueryValue(name, remove=false) {
+		const value = this.query[name]
+		if (remove) {
+			this.removeQueryValues(name)
+		}
+		return value
 	}
 
 	/**

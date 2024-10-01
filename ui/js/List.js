@@ -38,7 +38,6 @@ export default class List extends $.Component {
 	}
 
 	_onItemSelect(e) {
-		// Its mean, that these items is owned by this list
 		if (this.props.isSelectable) {
 			for (const itemId in this.items) {
 				const item = this.items[itemId]
