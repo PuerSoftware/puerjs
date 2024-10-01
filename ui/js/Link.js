@@ -30,7 +30,7 @@ export default class Link extends $.Component {
 				this.props.hash && $.Router.navigate(this.props.hash)
 			}
 
-			if (this.props.isSelectable) {
+			if (this.props.isSelectable && this.linkSet) {
 				this.linkSet.select(this)
 			}
 		}
