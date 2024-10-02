@@ -8,8 +8,10 @@ export default class Link extends $.Component {
 		this.props.default('selected', false)
 		this.props.default('label', '')
 		this.props.default('hash', '')
+		this.props.default('href', null)
 		this.props.default('stopPropagation', false)
 		this.props.default('canNavigate', null)
+		this.props.default('hashTriggers', [])
 		this.linkSet = null
 		this._isSelected = false
 	}
@@ -36,6 +38,9 @@ export default class Link extends $.Component {
 		}
 	}
 
+	select()   { this.isSelected = true }
+	deselect() { this.isSelected = false }
+
 	set isSelected(select) {
 		this._isSelected = select
 		this.toggleCssClass('selected', select)
@@ -53,11 +58,18 @@ export default class Link extends $.Component {
 		} else {
 			this.selected = this.props.selected
 		}
+
+		if (this.props.hash) {
+			this.props.hashTriggers.push(this.props.hash)
+		}
 	}
 
 	render() {
+		const status = this.props.href ? this.props.href : this.props.hash
 		return $.div({onclick : this.navigate}, [
-			$.a ({text : this.props.label}),
+			$.a({
+				text: this.props.label
+			}),
 			... this.children
 		])
 	}

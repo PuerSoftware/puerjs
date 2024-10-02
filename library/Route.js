@@ -403,7 +403,7 @@ export default class Route {
 		const oldActivePaths = this._getActivePaths()
 		$.Router.DEBUG && this.log()
 		$.Router.debug(`Matching "${hash}"`)
-		const hashTree    = new RouteParser(hash).toTree()
+		const hashTree    = RouteParser.toTree(hash)
 		const hashPaths   = hashTree.getPaths()
 
 		let matches = []

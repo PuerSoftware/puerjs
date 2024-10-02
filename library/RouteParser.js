@@ -255,14 +255,16 @@ export default class RouteParser {
 	/**
 	 * Parse route string and convert it to a tree of routes.
 	 * @public
+	 * @static
 	 * @returns {Route} - Root route of parsed route tree.
 	 */
-	toTree() {
+	static toTree(hash) {
+		const parser = new RouteParser(hash)
 		return new Route({
 			name      : '',
 			isActive  : true,
 			isDefault : true,
-			routes    : this.parse()
+			routes    : parser.parse()
 		})
 	}
 }

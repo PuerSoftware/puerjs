@@ -12,11 +12,7 @@ export default class LinkSet extends $.Component {
 			return link === linkToSelect
 		}
 		if (link.props.isSelectable) {
-			const linkHash = link.props.hash
-			return Boolean(linkHash) && (
-				$.Router.doesContain(linkHash) &&
-				$.Router.doesResolve(linkHash)
-			)
+			return $.Router.intersects(link.props.hashTriggers)
 		}
 		return false
 	}

@@ -64,32 +64,6 @@ export default class PuerRouter {
 	}
 
 	/**
-	 * Gets the current hash of the page.
-	 * @private
-	 * @return {String} - The hash value
-	 */
-	_getCurrentHash() {
-		let hash = window.location.hash.split('#')[1] || ''
-		return decodeURIComponent(hash.split('?')[0])
-	}
-
-	/**
-	 * Gets the current query object from the hash
-	 * Sets prop query.
-	 * @private
-	 * @return {String} - The hash value
-	 */
-	_getCurrentQuery() {
-		let hash = window.location.hash.split('#')[1]
-		let query = ''
-		if (hash) {
-			[hash, query] = hash.split('?')
-			query = $.String.fromQueryString(query)
-		}
-		return query || {}
-	}
-
-	/**
 	 * Updates the current hash and hash query of the page.
 	 * @private
 	 * @param   {String} hash  - The hash value
@@ -142,8 +116,8 @@ export default class PuerRouter {
 	 * @param   {String} hash - The hash to route to
 	 */
 	_engage() {
-		const hash  = this._getCurrentHash()
-		const query = this._getCurrentQuery()
+		const hash  = this.getCurrentHash()
+		const query = this.getCurrentQuery()
 		const paths = this._resolve(hash)
 
 		this.lastResolvedHash = Route.toHash(paths)
@@ -173,8 +147,8 @@ export default class PuerRouter {
 	 * @param {Object} query - The query object to set
 	 */
 	navigate(hash=null, query=null) {
-		hash  = hash  || this._getCurrentHash()
-		query = query || this._getCurrentQuery()
+		hash  = hash  || this.getCurrentHash()
+		query = query || this.getCurrentQuery()
 
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
@@ -236,6 +210,30 @@ export default class PuerRouter {
 	}
 
 	/**
+	 * Gets the current hash of the page.
+	 * @return {String} - The hash value
+	 */
+	getCurrentHash() {
+		let hash = window.location.hash.split('#')[1] || ''
+		return decodeURIComponent(hash.split('?')[0])
+	}
+
+	/**
+	 * Gets the current query object from the hash
+	 * Sets prop query.
+	 * @return {String} - The hash value
+	 */
+	getCurrentQuery() {
+		let hash = window.location.hash.split('#')[1]
+		let query = ''
+		if (hash) {
+			[hash, query] = hash.split('?')
+			query = $.String.fromQueryString(query)
+		}
+		return query || {}
+	}
+
+	/**
 	* Checks if the given relative hash resolves to the specified absolute hash.
 	* @param   {String} relativeHash                  - The relative hash to be resolved.
 	* @param   {String|null} [absoluteHash=null]      - The absolute hash to compare against (optional, defaults to the last resolved hash).
@@ -255,12 +253,32 @@ export default class PuerRouter {
 	 * @param   {String|null} [absoluteHash=null]      - The absolute hash to compare against (optional, defaults to the last resolved hash).
 	 * @return  {Boolean}                              - Returns true if the relative hash resolves to the absolute hash, otherwise false.
 	 */
-	doesContain(relativeHash, absoluteHash=null) {
-		absoluteHash = absoluteHash || this.lastResolvedHash
-		const relatives = new Set(Object.keys((new RouteParser(relativeHash)).toTree().getAllPaths()))
-		const absolutes = new Set(Object.keys((new RouteParser(absoluteHash)).toTree().getAllPaths()))
+	// doesContain(relativeHash, absoluteHash=null) {
+	// 	absoluteHash = absoluteHash || this.lastResolvedHash
+	// 	const relatives = new Set(Object.keys((new RouteParser(relativeHash)).toTree().getAllPaths()))
+	// 	const absolutes = new Set(Object.keys((new RouteParser(absoluteHash)).toTree().getAllPaths()))
 
-		return absolutes.intersection(relatives).size === relatives.size
+	// 	return absolutes.intersection(relatives).size === relatives.size
+	// }
+
+	/**
+	 * Checks if a set of paths derived from any of given hashes intersect with set of paths derived from current hash.
+	 * @param   {Array<String>} hashes                 - Hashes to check for intersection.
+	 * @return  {Boolean}                              - Returns true if the relative hash resolves to the absolute hash, otherwise false.
+	 */
+	intersects(hashes) {
+		const currentPaths = new Set(Object.keys(
+				RouteParser.toTree(
+					this.getCurrentHash()
+				).getAllPaths()
+			))
+		for (const hash of hashes) {
+			const paths = new Set(RouteParser.toTree(hash).getPaths())
+			if (currentPaths.intersection(paths).size > 0) {
+				return true
+			}
+		}
+		return false
 	}
 
 	/**
