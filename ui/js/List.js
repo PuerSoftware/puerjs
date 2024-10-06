@@ -262,6 +262,7 @@ export default class List extends $.Component {
 		} else {
 			this._bufferItem(id, false)
 		}
+		this.scrollToBottom()
 		return id
 	}
 
