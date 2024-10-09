@@ -4,24 +4,18 @@ import $ from '../../index.js'
 export default class Modals extends $.Component {
 	constructor(... args) {
 		super(... args)
-		this.props.default('canClose', true)
 		this.modals = {}
-
-		this.on($.Event.MODAL_HIDE, this._onModalHide)
 	}
 
-	_onModalHide() {
-		$.Router.removeQueryValues('modal')
-	}
-
-	onRoute() {
-		const modalName = $.Router.getQueryValue('modal')
+	showModal(name) {
 		for (let m in this.modals) {
 			this.modals[m].hide()
 		}
-		if (modalName) {
-			this.modals[modalName] && this.modals[modalName].show()
-		}
+		name && this.modals[name] && this.modals[name].show()
+	}
+
+	onRoute() {
+		this.showModal($.Router.getQueryValue('modal'))
 	}
 
 	onInit() {

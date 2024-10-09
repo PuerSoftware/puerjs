@@ -8,19 +8,20 @@ class Modal extends $.Component {
 	}
 
 	hide() {
-		const isHidden = this.isHidden
-		super.hide()
-		if (!isHidden) {
-			this.trigger($.Event.MODAL_HIDE)
+		if (!this.isHidden && this.name) {
+			const modalInQuery = $.Router.getQueryValue('modal')
+			if (modalInQuery === this.name) {
+				$.Router.removeQueryValues('modal')
+			}
 		}
+		super.hide()
 	}
 
 	show() {
-		const isShown = !this.isHidden
-		super.show()
-		if (!isShown) {
-			this.trigger($.Event.MODAL_SHOW)
+		if (this.isHidden && this.name) {
+			$.Router.addQueryValues({ modal: this.name })
 		}
+		super.show()
 	}
 
 	render() {

@@ -21,7 +21,7 @@ export default class DataOwnerMixin {
 		const dsName = `${name}__${this.className}__${this.name}` + $.String.randomHex(3)
 		// console.log(dsName)
 		$.assert($.DataSource[this.props.dataSource],
-		  `DataSource "${this.props.dataSource}" is undefined in "${this.className}.${this.props.name}"`
+		  `DataSource "${this.props.dataSource}" does not exist`
 		)
 
 		this.props.dataSource    = name

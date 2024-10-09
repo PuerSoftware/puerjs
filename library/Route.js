@@ -177,11 +177,11 @@ export default class Route {
 	constructor(component, parentRoute=null) {
 		this.parent     = parentRoute
 		this.component  = component
-		this.name       = component.props ? component.props.route : component.name
+		this.name       = component.props ? $.dereference(component.props.route) : component.name
 		this.path       = null
 
-		this._isDefault  = !parentRoute || Boolean(component.props ? component.props.isDefaultRoute : component.isDefault)
-		this._isRouteSet = !parentRoute || Boolean(component.props ? component.props.isRouteSet     : component.isRouteSet)
+		this._isDefault  = !parentRoute || Boolean(component.props ? $.dereference(component.props.isDefaultRoute) : component.isDefault)
+		this._isRouteSet = !parentRoute || Boolean(component.props ? $.dereference(component.props.isRouteSet)     : component.isRouteSet)
 		this._isActive   = !parentRoute || Boolean(component._isActive || component.isActive)
 
 		this.routes     = this._getRoutes(component)

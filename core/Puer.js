@@ -155,10 +155,14 @@ class Puer {
 		cls.prototype.chainName = cls.name
 		window[cls.name] = cls
 
-		this._defineGetter(cls.name, (... args) => {
+		const constructor = (... args) => {
 			return new cls(... this._getConstructorArgs(args))
-		})
+		}
+
+		this._defineGetter(cls.name, constructor)
 	}
+
+	/*********************************************************/
 
 	define(cls, importUrl) {
 		if (typeof cls === 'string') {

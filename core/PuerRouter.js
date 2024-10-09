@@ -70,11 +70,7 @@ export default class PuerRouter {
 	 * @param   {Object} query - The query string object
 	 */
 	_updateHash(hash, query) {
-		const queryString = $.String.toQueryString(query)
-		query = queryString
-			? '?' + queryString
-			: ''
-		window.location.hash = '#' + hash + query
+		window.location.hash = this.toHash(hash, query)
 	}
 
 	/**
@@ -153,15 +149,32 @@ export default class PuerRouter {
 		if (!this.queue.isDone()) {
 			this.queue.enqueue(this.navigate, this, [hash, query]).start()
 		} else {
-			this.debug('Navigating to', hash, query)
-			this.lastHash         = hash
-			this.lastResolvedHash = Route.toHash(this._resolve(hash))
-			this.query            = query
-			this._updateHash(this.lastResolvedHash, query)
-			if (!this.isInitialized) {
-				this._engage()
+			const fullHash = this.toHash(hash, query)
+			if (fullHash != window.location.hash || !this.isInitialized) {
+				this.debug('Navigating to', fullHash)
+				this.lastHash         = hash
+				this.lastResolvedHash = Route.toHash(this._resolve(hash))
+				this.query            = query
+				this._updateHash(this.lastResolvedHash, query)
+				if (!this.isInitialized) {
+					this._engage()
+				}
 			}
 		}
+	}
+
+	/**
+	 * Converts hash and query object to single hash string
+	 * @param  {String} hash  - Hash string without query
+	 * @param  {Object} query - Query object
+	 * @return {String}
+	 */
+	toHash(hash, query) {
+		const queryString = $.String.toQueryString(query)
+		query = queryString
+			? '?' + queryString
+			: ''
+		return '#' + hash + query
 	}
 
 	/**
